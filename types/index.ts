@@ -35,16 +35,15 @@ export interface Question {
   uri: string;
   cid: string;
   rkey: string;
-  boxRkey: string;
-  encryptedPayload: string;
-  senderDid?: string;
+  boxUri: string;        // AT-URI of the box: at://ownerDid/blue.mado.box/rkey
+  encryptedFrom: string; // base64 ECIES-encrypted sender DID
+  body: string;          // plaintext question text (public on PDS)
+  senderDid?: string;    // decrypted sender DID (only visible to box owner)
   senderHandle?: string;
   senderDisplayName?: string;
   senderAvatar?: string;
   isRead: boolean;
   createdAt: string;
-  // Decrypted fields (only available to box owner)
-  body?: string;
 }
 
 export interface Answer {
@@ -75,9 +74,9 @@ export interface BlueMadoBox {
 
 export interface BlueMadoKoe {
   $type: "blue.mado.koe";
-  boxOwnerDid: string;
-  boxRkey: string;
-  encryptedPayload: string; // base64 encoded
+  encryptedFrom: string; // base64 ECIES-encrypted sender DID
+  body: string;          // plaintext question text (public on PDS)
+  box: string;           // AT-URI: at://ownerDid/blue.mado.box/rkey
   createdAt: string;
 }
 
@@ -86,12 +85,6 @@ export interface BlueMadoAnswer {
   koeUri: string;
   body: string;
   createdAt: string;
-}
-
-// Decrypted question payload
-export interface QuestionPayload {
-  from: string; // sender DID
-  body: string; // question text
 }
 
 // API response types
