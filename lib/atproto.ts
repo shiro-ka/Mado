@@ -14,18 +14,55 @@ export const NSID = {
   ANSWER: "blue.mado.answer",
 } as const;
 
-/**
- * Create an authenticated ATProto agent for a given user.
- */
-function createAgent(serviceUrl?: string): AtpAgent {
-  return new AtpAgent({ service: serviceUrl ?? "https://bsky.social" });
+const DEFAULT_PDS = "https://bsky.social";
+
+/** Unauthenticated agent for public reads via the Bluesky App View. */
+function publicAgent(): AtpAgent {
+  return new AtpAgent({ service: DEFAULT_PDS });
 }
+
+/**
+ * Make an authenticated XRPC call directly with fetch.
+ * Avoids the read-only `session` property on AtpAgent.
+ */
+async function xrpc<T = unknown>(params: {
+  pdsUrl: string;
+  accessJwt: string;
+  method: "GET" | "POST";
+  lexicon: string;
+  body?: object;
+  query?: Record<string, string | number | boolean>;
+}): Promise<T> {
+  const url = new URL(`${params.pdsUrl}/xrpc/${params.lexicon}`);
+  if (params.query) {
+    for (const [k, v] of Object.entries(params.query)) {
+      url.searchParams.set(k, String(v));
+    }
+  }
+  const res = await fetch(url.toString(), {
+    method: params.method,
+    headers: {
+      Authorization: `Bearer ${params.accessJwt}`,
+      ...(params.body ? { "Content-Type": "application/json" } : {}),
+    },
+    body: params.body ? JSON.stringify(params.body) : undefined,
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`XRPC ${params.lexicon} failed (${res.status}): ${text}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// ---------------------------------------------------------------------------
+// Public reads
+// ---------------------------------------------------------------------------
 
 /**
  * Fetch a user's public profile from the Bluesky App View.
  */
 export async function getProfile(handleOrDid: string) {
-  const agent = createAgent();
+  const agent = publicAgent();
   try {
     const res = await agent.getProfile({ actor: handleOrDid });
     return res.data;
@@ -38,7 +75,7 @@ export async function getProfile(handleOrDid: string) {
  * Resolve a handle to a DID.
  */
 export async function resolveHandle(handle: string): Promise<string | null> {
-  const agent = createAgent();
+  const agent = publicAgent();
   try {
     const res = await agent.resolveHandle({ handle });
     return res.data.did;
@@ -48,7 +85,7 @@ export async function resolveHandle(handle: string): Promise<string | null> {
 }
 
 /**
- * Get the service URL for a DID from the PLC directory.
+ * Get the PDS service URL for a DID from the PLC directory.
  */
 export async function getPdsUrl(did: string): Promise<string | null> {
   try {
@@ -71,14 +108,13 @@ export async function getBoxRecord(
   did: string,
   rkey: string
 ): Promise<QuestionBox | null> {
-  const agent = createAgent();
+  const agent = publicAgent();
   try {
     const res = await agent.com.atproto.repo.getRecord({
       repo: did,
       collection: NSID.BOX,
       rkey,
     });
-
     const record = res.data.value as BlueMadoBox;
     return {
       uri: res.data.uri,
@@ -101,14 +137,13 @@ export async function getBoxRecord(
  * List all question boxes for a user.
  */
 export async function listBoxes(did: string): Promise<QuestionBox[]> {
-  const agent = createAgent();
+  const agent = publicAgent();
   try {
     const res = await agent.com.atproto.repo.listRecords({
       repo: did,
       collection: NSID.BOX,
       limit: 100,
     });
-
     return res.data.records.map((r) => {
       const record = r.value as BlueMadoBox;
       const rkey = r.uri.split("/").pop() ?? "";
@@ -142,17 +177,16 @@ export async function findBoxBySlug(
 }
 
 /**
- * List all questions (koe records) in a user's box.
+ * List all questions (koe records) for a user's PDS.
  */
 export async function listQuestions(did: string): Promise<Question[]> {
-  const agent = createAgent();
+  const agent = publicAgent();
   try {
     const res = await agent.com.atproto.repo.listRecords({
       repo: did,
       collection: NSID.KOE,
       limit: 100,
     });
-
     return res.data.records.map((r) => {
       const record = r.value as BlueMadoKoe;
       const rkey = r.uri.split("/").pop() ?? "";
@@ -160,9 +194,10 @@ export async function listQuestions(did: string): Promise<Question[]> {
         uri: r.uri,
         cid: r.cid,
         rkey,
-        boxRkey: record.boxRkey,
-        encryptedPayload: record.encryptedPayload,
-        isRead: false, // TODO: persist read status separately
+        boxUri: record.box,
+        encryptedFrom: record.encryptedFrom,
+        body: record.body,
+        isRead: false, // TODO: persist read status in Redis
         createdAt: record.createdAt,
       };
     });
@@ -171,56 +206,46 @@ export async function listQuestions(did: string): Promise<Question[]> {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Authenticated writes (direct XRPC fetch to avoid AtpAgent session issues)
+// ---------------------------------------------------------------------------
+
 /**
  * Write a new question record to the box owner's PDS.
- * Uses the sender's access JWT to authenticate.
+ * Uses the owner's stored access JWT — Mado acts on behalf of the owner per spec:
+ * "Madoが受け取り手のOAuthトークンを使い、受け取り手のPDSに書き込む".
  */
 export async function writeQuestion(params: {
-  senderAccessJwt: string;
-  senderDid: string;
+  ownerAccessJwt: string;
   ownerDid: string;
-  boxRkey: string;
-  encryptedPayload: string; // base64
+  boxUri: string;        // AT-URI: at://ownerDid/blue.mado.box/rkey
+  encryptedFrom: string; // base64 ECIES-encrypted sender DID
+  body: string;          // plaintext question text
   pdsUrl?: string;
 }): Promise<{ uri: string; cid: string } | null> {
-  const { senderAccessJwt, ownerDid, boxRkey, encryptedPayload, pdsUrl } =
-    params;
-
-  const agent = createAgent(pdsUrl ?? "https://bsky.social");
-  agent.session = {
-    did: params.senderDid,
-    handle: "",
-    accessJwt: senderAccessJwt,
-    refreshJwt: "",
-    email: undefined,
-    emailConfirmed: undefined,
-    emailAuthFactor: undefined,
-    active: true,
-  };
-
+  const { ownerAccessJwt, ownerDid, boxUri, encryptedFrom, body, pdsUrl } = params;
   try {
     const record: BlueMadoKoe = {
       $type: NSID.KOE,
-      boxOwnerDid: ownerDid,
-      boxRkey,
-      encryptedPayload,
+      encryptedFrom,
+      body,
+      box: boxUri,
       createdAt: new Date().toISOString(),
     };
-
-    const res = await agent.com.atproto.repo.createRecord({
-      repo: params.senderDid,
-      collection: NSID.KOE,
-      record,
+    return await xrpc<{ uri: string; cid: string }>({
+      pdsUrl: pdsUrl ?? DEFAULT_PDS,
+      accessJwt: ownerAccessJwt,
+      method: "POST",
+      lexicon: "com.atproto.repo.createRecord",
+      body: { repo: ownerDid, collection: NSID.KOE, record },
     });
-
-    return { uri: res.data.uri, cid: res.data.cid };
   } catch {
     return null;
   }
 }
 
 /**
- * Write an answer to a question.
+ * Write an answer record to the owner's PDS.
  */
 export async function writeAnswer(params: {
   ownerAccessJwt: string;
@@ -230,19 +255,6 @@ export async function writeAnswer(params: {
   pdsUrl?: string;
 }): Promise<{ uri: string; cid: string } | null> {
   const { ownerAccessJwt, ownerDid, koeUri, body, pdsUrl } = params;
-
-  const agent = createAgent(pdsUrl ?? "https://bsky.social");
-  agent.session = {
-    did: ownerDid,
-    handle: "",
-    accessJwt: ownerAccessJwt,
-    refreshJwt: "",
-    email: undefined,
-    emailConfirmed: undefined,
-    emailAuthFactor: undefined,
-    active: true,
-  };
-
   try {
     const record: BlueMadoAnswer = {
       $type: NSID.ANSWER,
@@ -250,21 +262,20 @@ export async function writeAnswer(params: {
       body,
       createdAt: new Date().toISOString(),
     };
-
-    const res = await agent.com.atproto.repo.createRecord({
-      repo: ownerDid,
-      collection: NSID.ANSWER,
-      record,
+    return await xrpc<{ uri: string; cid: string }>({
+      pdsUrl: pdsUrl ?? DEFAULT_PDS,
+      accessJwt: ownerAccessJwt,
+      method: "POST",
+      lexicon: "com.atproto.repo.createRecord",
+      body: { repo: ownerDid, collection: NSID.ANSWER, record },
     });
-
-    return { uri: res.data.uri, cid: res.data.cid };
   } catch {
     return null;
   }
 }
 
 /**
- * Delete a record from the user's PDS.
+ * Delete a record from the owner's PDS.
  */
 export async function deleteRecord(params: {
   accessJwt: string;
@@ -274,24 +285,13 @@ export async function deleteRecord(params: {
   pdsUrl?: string;
 }): Promise<boolean> {
   const { accessJwt, did, collection, rkey, pdsUrl } = params;
-
-  const agent = createAgent(pdsUrl ?? "https://bsky.social");
-  agent.session = {
-    did,
-    handle: "",
-    accessJwt,
-    refreshJwt: "",
-    email: undefined,
-    emailConfirmed: undefined,
-    emailAuthFactor: undefined,
-    active: true,
-  };
-
   try {
-    await agent.com.atproto.repo.deleteRecord({
-      repo: did,
-      collection,
-      rkey,
+    await xrpc({
+      pdsUrl: pdsUrl ?? DEFAULT_PDS,
+      accessJwt,
+      method: "POST",
+      lexicon: "com.atproto.repo.deleteRecord",
+      body: { repo: did, collection, rkey },
     });
     return true;
   } catch {
@@ -300,7 +300,7 @@ export async function deleteRecord(params: {
 }
 
 /**
- * Create a box record on the user's PDS.
+ * Create a box record on the owner's PDS.
  */
 export async function createBoxRecord(params: {
   accessJwt: string;
@@ -312,21 +312,7 @@ export async function createBoxRecord(params: {
   publicKeyHex: string;
   pdsUrl?: string;
 }): Promise<{ uri: string; cid: string; rkey: string } | null> {
-  const { accessJwt, did, slug, title, description, isOpen, publicKeyHex, pdsUrl } =
-    params;
-
-  const agent = createAgent(pdsUrl ?? "https://bsky.social");
-  agent.session = {
-    did,
-    handle: "",
-    accessJwt,
-    refreshJwt: "",
-    email: undefined,
-    emailConfirmed: undefined,
-    emailAuthFactor: undefined,
-    active: true,
-  };
-
+  const { accessJwt, did, slug, title, description, isOpen, publicKeyHex, pdsUrl } = params;
   try {
     const record: BlueMadoBox = {
       $type: NSID.BOX,
@@ -337,22 +323,22 @@ export async function createBoxRecord(params: {
       publicKeyHex,
       createdAt: new Date().toISOString(),
     };
-
-    const res = await agent.com.atproto.repo.createRecord({
-      repo: did,
-      collection: NSID.BOX,
-      record,
+    const res = await xrpc<{ uri: string; cid: string }>({
+      pdsUrl: pdsUrl ?? DEFAULT_PDS,
+      accessJwt,
+      method: "POST",
+      lexicon: "com.atproto.repo.createRecord",
+      body: { repo: did, collection: NSID.BOX, record },
     });
-
-    const rkey = res.data.uri.split("/").pop() ?? "";
-    return { uri: res.data.uri, cid: res.data.cid, rkey };
+    const rkey = res.uri.split("/").pop() ?? "";
+    return { ...res, rkey };
   } catch {
     return null;
   }
 }
 
 /**
- * Update an existing box record on the user's PDS.
+ * Update (put) an existing box record on the owner's PDS.
  */
 export async function updateBoxRecord(params: {
   accessJwt: string;
@@ -365,21 +351,7 @@ export async function updateBoxRecord(params: {
   slug: string;
   pdsUrl?: string;
 }): Promise<boolean> {
-  const { accessJwt, did, rkey, title, description, isOpen, publicKeyHex, slug, pdsUrl } =
-    params;
-
-  const agent = createAgent(pdsUrl ?? "https://bsky.social");
-  agent.session = {
-    did,
-    handle: "",
-    accessJwt,
-    refreshJwt: "",
-    email: undefined,
-    emailConfirmed: undefined,
-    emailAuthFactor: undefined,
-    active: true,
-  };
-
+  const { accessJwt, did, rkey, title, description, isOpen, publicKeyHex, slug, pdsUrl } = params;
   try {
     const record: BlueMadoBox = {
       $type: NSID.BOX,
@@ -390,14 +362,13 @@ export async function updateBoxRecord(params: {
       publicKeyHex,
       createdAt: new Date().toISOString(),
     };
-
-    await agent.com.atproto.repo.putRecord({
-      repo: did,
-      collection: NSID.BOX,
-      rkey,
-      record,
+    await xrpc({
+      pdsUrl: pdsUrl ?? DEFAULT_PDS,
+      accessJwt,
+      method: "POST",
+      lexicon: "com.atproto.repo.putRecord",
+      body: { repo: did, collection: NSID.BOX, rkey, record },
     });
-
     return true;
   } catch {
     return false;
