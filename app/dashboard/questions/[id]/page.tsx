@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, User, ExternalLink, Trash2, Ban, Lock } from "lucide-react";
 import { requireSession, getTokens } from "@/lib/auth";
 import { getRedis, Keys } from "@/lib/redis";
-import { decryptFromBase64 } from "@/lib/crypto";
+import { decryptDid } from "@/lib/crypto";
 import { getProfile } from "@/lib/atproto";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,21 +28,21 @@ export default async function QuestionDetailPage({ params }: Props) {
     notFound();
   }
 
-  // Decrypt the question body using the stored private key
-  let decryptedBody: string | null = null;
+  // body is plaintext (spec v3); decrypt only encryptedFrom to reveal sender's DID
+  const decryptedBody = question.body;
   let senderDid: string | null = null;
   let decryptError = false;
 
   try {
     const redis = getRedis();
+    // keyPair is keyed by boxRkey, which we can extract from the boxUri
+    const boxRkey = question.boxUri.split("/").pop() ?? "";
     const privateKeyHex = await redis.get<string>(
-      Keys.keyPair(session.did, question.boxRkey)
+      Keys.keyPair(session.did, boxRkey)
     );
 
     if (privateKeyHex) {
-      const payload = decryptFromBase64(privateKeyHex, question.encryptedPayload);
-      decryptedBody = payload.body;
-      senderDid = payload.from;
+      senderDid = decryptDid(privateKeyHex, question.encryptedFrom);
     }
   } catch {
     decryptError = true;
@@ -80,43 +80,31 @@ export default async function QuestionDetailPage({ params }: Props) {
           </span>
         </div>
 
-        {/* Decrypted content */}
+        {/* Question body (plaintext per spec v3) */}
         <div className="mb-5">
-          {decryptedBody ? (
-            <p
-              className="text-base leading-relaxed whitespace-pre-wrap"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {decryptedBody}
-            </p>
-          ) : decryptError ? (
-            <div
-              className="rounded-lg p-4 flex items-center gap-2"
-              style={{
-                background: "rgba(248, 113, 113, 0.08)",
-                border: "1px solid rgba(248, 113, 113, 0.2)",
-              }}
-            >
-              <Lock style={{ width: 15, height: 15, color: "var(--error)" }} />
-              <p className="text-sm" style={{ color: "var(--error)" }}>
-                復号に失敗しました。鍵が見つかりません。
-              </p>
-            </div>
-          ) : (
-            <div
-              className="rounded-lg p-4 flex items-center gap-2"
-              style={{
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <Lock style={{ width: 15, height: 15, color: "var(--text-subtle)" }} />
-              <p className="text-sm" style={{ color: "var(--text-subtle)" }}>
-                秘密鍵が見つかりません
-              </p>
-            </div>
-          )}
+          <p
+            className="text-base leading-relaxed whitespace-pre-wrap"
+            style={{ color: "var(--text-primary)" }}
+          >
+            {decryptedBody}
+          </p>
         </div>
+
+        {/* Sender DID decryption status */}
+        {decryptError && (
+          <div
+            className="mb-4 rounded-lg p-3 flex items-center gap-2"
+            style={{
+              background: "rgba(248, 113, 113, 0.08)",
+              border: "1px solid rgba(248, 113, 113, 0.2)",
+            }}
+          >
+            <Lock style={{ width: 14, height: 14, color: "var(--error)" }} />
+            <p className="text-sm" style={{ color: "var(--error)" }}>
+              送信者の特定に失敗しました。秘密鍵が見つかりません。
+            </p>
+          </div>
+        )}
 
         {/* Sender info */}
         <div
