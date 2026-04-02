@@ -1,5 +1,4 @@
 import { PrivateKey, PublicKey, encrypt as eciesEncrypt, decrypt as eciesDecrypt } from "eciesjs";
-import type { QuestionPayload } from "@/types";
 
 /**
  * Generate a new ECIES key pair for a question box.
@@ -10,57 +9,31 @@ export function generateKeyPair(): { publicKey: string; privateKey: string } {
   const publicKey = privateKey.publicKey;
 
   return {
-    privateKey: privateKey.secret.toString("hex"),
+    privateKey: Buffer.from(privateKey.secret).toString("hex"),
     publicKey: publicKey.toHex(),
   };
 }
 
 /**
- * Encrypt a question payload using the box owner's public key.
- * Returns a Buffer containing the encrypted bytes.
+ * Encrypt a sender DID using the box owner's public key.
+ * ECIES generates a random ephemeral key each time, so the same DID
+ * produces a different ciphertext on every call — sender tracking is impossible.
+ * Returns base64-encoded ciphertext.
  */
-export function encrypt(
-  publicKeyHex: string,
-  data: QuestionPayload
-): Buffer {
+export function encryptDid(publicKeyHex: string, senderDid: string): string {
   const publicKey = PublicKey.fromHex(publicKeyHex);
-  const plaintext = Buffer.from(JSON.stringify(data), "utf-8");
+  const plaintext = Buffer.from(senderDid, "utf-8");
   const encrypted = eciesEncrypt(publicKey.toBytes(), plaintext);
-  return Buffer.from(encrypted);
+  return Buffer.from(encrypted).toString("base64");
 }
 
 /**
- * Decrypt a question payload using the box owner's private key.
- * Returns the decrypted QuestionPayload.
+ * Decrypt an encrypted sender DID using the box owner's private key.
+ * Returns the sender's DID string.
  */
-export function decrypt(
-  privateKeyHex: string,
-  payload: Buffer
-): QuestionPayload {
+export function decryptDid(privateKeyHex: string, encryptedFrom: string): string {
   const privateKey = PrivateKey.fromHex(privateKeyHex);
-  const decrypted = eciesDecrypt(privateKey.secret, payload);
-  const parsed = JSON.parse(decrypted.toString("utf-8")) as QuestionPayload;
-  return parsed;
-}
-
-/**
- * Encrypt and encode to base64 for storage.
- */
-export function encryptToBase64(
-  publicKeyHex: string,
-  data: QuestionPayload
-): string {
-  const encrypted = encrypt(publicKeyHex, data);
-  return encrypted.toString("base64");
-}
-
-/**
- * Decode from base64 and decrypt.
- */
-export function decryptFromBase64(
-  privateKeyHex: string,
-  base64Payload: string
-): QuestionPayload {
-  const buffer = Buffer.from(base64Payload, "base64");
-  return decrypt(privateKeyHex, buffer);
+  const ciphertext = Buffer.from(encryptedFrom, "base64");
+  const decrypted = eciesDecrypt(privateKey.secret, ciphertext);
+  return Buffer.from(decrypted).toString("utf-8");
 }
