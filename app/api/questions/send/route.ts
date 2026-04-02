@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getSession } from "@/lib/auth";
-import { encryptToBase64 } from "@/lib/crypto";
+import { getSession, getTokens } from "@/lib/auth";
+import { encryptDid } from "@/lib/crypto";
 import { writeQuestion } from "@/lib/atproto";
 
 const sendSchema = z.object({
@@ -14,11 +14,13 @@ const sendSchema = z.object({
 /**
  * POST /api/questions/send
  *
- * Encrypts the question and writes it to the sender's PDS.
- * Requires authentication.
+ * Verifies sender's DID via their session, encrypts only the sender's DID
+ * (body is stored as plaintext per spec v3), then writes the koe record to
+ * the box owner's PDS using the owner's stored access token.
  */
 export async function POST(request: NextRequest) {
   try {
+    // Verify sender is authenticated (proves their DID)
     const session = await getSession();
     if (!session) {
       return NextResponse.json(
@@ -27,8 +29,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json() as unknown;
-    const parsed = sendSchema.safeParse(body);
+    const raw = await request.json() as unknown;
+    const parsed = sendSchema.safeParse(raw);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -37,28 +39,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { body: questionBody, boxOwnerDid, boxRkey, publicKeyHex } = parsed.data;
+    const { body, boxOwnerDid, boxRkey, publicKeyHex } = parsed.data;
 
-    // Encrypt the question payload
-    const encryptedPayload = encryptToBase64(publicKeyHex, {
-      from: session.did,
-      body: questionBody,
-    });
+    // Encrypt only the sender's DID (body is plaintext per spec v3)
+    const encryptedFrom = encryptDid(publicKeyHex, session.did);
 
-    if (!session.accessJwt) {
+    // Build the AT-URI for the box
+    const boxUri = `at://${boxOwnerDid}/blue.mado.box/${boxRkey}`;
+
+    // Get the owner's stored access token from Redis
+    // Mado uses the owner's token to write to the owner's PDS
+    const ownerTokens = await getTokens(boxOwnerDid);
+    if (!ownerTokens) {
       return NextResponse.json(
-        { error: "No access token", message: "再ログインが必要です" },
-        { status: 401 }
+        { error: "Box unavailable", message: "この質問箱は現在利用できません" },
+        { status: 503 }
       );
     }
 
-    // Write the question record to the PDS
     const result = await writeQuestion({
-      senderAccessJwt: session.accessJwt,
-      senderDid: session.did,
+      ownerAccessJwt: ownerTokens.accessJwt,
       ownerDid: boxOwnerDid,
-      boxRkey,
-      encryptedPayload,
+      boxUri,
+      encryptedFrom,
+      body,
     });
 
     if (!result) {
