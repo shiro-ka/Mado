@@ -17,6 +17,7 @@ const MAX_CHARS = 1000;
 
 export function AnswerForm({ koeUri, onSuccess }: AnswerFormProps) {
   const [body, setBody] = React.useState("");
+  const [crosspost, setCrosspost] = React.useState(false);
   const [formState, setFormState] = React.useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = React.useState("");
 
@@ -33,7 +34,7 @@ export function AnswerForm({ koeUri, onSuccess }: AnswerFormProps) {
       const res = await fetch("/api/answers/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ koeUri, body: body.trim() }),
+        body: JSON.stringify({ koeUri, body: body.trim(), crosspost }),
       });
 
       if (!res.ok) {
@@ -103,7 +104,19 @@ export function AnswerForm({ koeUri, onSuccess }: AnswerFormProps) {
         </div>
       )}
 
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={crosspost}
+            onChange={(e) => setCrosspost(e.target.checked)}
+            disabled={formState === "submitting"}
+            className="w-4 h-4 accent-violet-500 cursor-pointer"
+          />
+          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+            Bskyにもポスト
+          </span>
+        </label>
         <Button
           type="submit"
           loading={formState === "submitting"}
