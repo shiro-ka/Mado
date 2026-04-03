@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 interface SendQuestionFormProps {
   boxOwnerDid: string;
   boxRkey: string;
-  publicKeyHex: string;
   senderHandle: string;
   onSuccess?: () => void;
 }
@@ -20,7 +19,6 @@ const MAX_CHARS = 500;
 export function SendQuestionForm({
   boxOwnerDid,
   boxRkey,
-  publicKeyHex,
   senderHandle,
   onSuccess,
 }: SendQuestionFormProps) {
@@ -45,7 +43,6 @@ export function SendQuestionForm({
           body: body.trim(),
           boxOwnerDid,
           boxRkey,
-          publicKeyHex,
         }),
       });
 

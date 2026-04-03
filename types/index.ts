@@ -82,7 +82,7 @@ export interface BlueMadoKoe {
 
 export interface BlueMadoAnswer {
   $type: "blue.mado.answer";
-  koeUri: string;
+  koe: string;   // AT-URI of the question (blue.mado.koe record)
   body: string;
   createdAt: string;
 }

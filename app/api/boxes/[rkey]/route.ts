@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { getRedis, Keys } from "@/lib/redis";
-import { getBoxRecord, updateBoxRecord, deleteRecord } from "@/lib/atproto";
-import { NSID } from "@/lib/atproto";
+import { getBoxRecord, updateBoxRecord, deleteRecord, NSID } from "@/lib/atproto";
 import { restoreOAuthSession } from "@/lib/oauth";
 
 const updateSchema = z.object({
@@ -83,6 +82,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       isOpen: isOpen ?? box.isOpen,
       publicKeyHex: box.publicKeyHex,
       slug: box.slug,
+      createdAt: box.createdAt,
     });
 
     if (!success) {

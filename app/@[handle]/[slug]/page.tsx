@@ -210,7 +210,6 @@ export default async function SendQuestionPage({ params }: Props) {
               <SendQuestionForm
                 boxOwnerDid={box.ownerDid}
                 boxRkey={box.rkey}
-                publicKeyHex={box.publicKeyHex}
                 senderHandle={session.handle}
               />
             </div>

@@ -175,6 +175,36 @@ export async function findBoxBySlug(
 }
 
 /**
+ * Fetch a single koe record by rkey.
+ */
+export async function getKoeRecord(
+  did: string,
+  rkey: string
+): Promise<Question | null> {
+  const agent = publicAgent();
+  try {
+    const res = await agent.com.atproto.repo.getRecord({
+      repo: did,
+      collection: NSID.KOE,
+      rkey,
+    });
+    const record = res.data.value as BlueMadoKoe;
+    return {
+      uri: res.data.uri,
+      cid: res.data.cid ?? "",
+      rkey,
+      boxUri: record.box,
+      encryptedFrom: record.encryptedFrom,
+      body: record.body,
+      isRead: false,
+      createdAt: record.createdAt,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
  * List all questions (koe records) for a user's PDS.
  */
 export async function listQuestions(did: string): Promise<Question[]> {
@@ -254,7 +284,7 @@ export async function writeAnswer(params: {
   try {
     const record: BlueMadoAnswer = {
       $type: NSID.ANSWER,
-      koeUri,
+      koe: koeUri,
       body,
       createdAt: new Date().toISOString(),
     };
@@ -340,8 +370,9 @@ export async function updateBoxRecord(params: {
   isOpen: boolean;
   publicKeyHex: string;
   slug: string;
+  createdAt: string;
 }): Promise<boolean> {
-  const { sessionFetch, did, rkey, title, description, isOpen, publicKeyHex, slug } = params;
+  const { sessionFetch, did, rkey, title, description, isOpen, publicKeyHex, slug, createdAt } = params;
   try {
     const record: BlueMadoBox = {
       $type: NSID.BOX,
@@ -350,7 +381,7 @@ export async function updateBoxRecord(params: {
       description,
       isOpen,
       publicKeyHex,
-      createdAt: new Date().toISOString(),
+      createdAt,
     };
     await xrpc({
       sessionFetch,

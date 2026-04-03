@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { encryptDid } from "@/lib/crypto";
-import { writeQuestion } from "@/lib/atproto";
+import { writeQuestion, getBoxRecord } from "@/lib/atproto";
 import { restoreOAuthSession } from "@/lib/oauth";
 
 const sendSchema = z.object({
   body: z.string().min(1).max(500),
   boxOwnerDid: z.string().min(1),
   boxRkey: z.string().min(1),
-  publicKeyHex: z.string().min(1),
 });
 
 /**
@@ -40,13 +39,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { body, boxOwnerDid, boxRkey, publicKeyHex } = parsed.data;
+    const { body, boxOwnerDid, boxRkey } = parsed.data;
+
+    // Fetch the box record server-side to get the canonical publicKeyHex.
+    // Never trust publicKeyHex from the client — a malicious actor could supply
+    // a bogus key, making the question undecryptable by the box owner.
+    const box = await getBoxRecord(boxOwnerDid, boxRkey);
+    if (!box) {
+      return NextResponse.json(
+        { error: "Box not found", message: "質問箱が見つかりません" },
+        { status: 404 }
+      );
+    }
+    if (!box.isOpen) {
+      return NextResponse.json(
+        { error: "Box closed", message: "この質問箱は現在受け付けていません" },
+        { status: 403 }
+      );
+    }
 
     // Encrypt only the sender's DID (body is plaintext per spec v3)
-    const encryptedFrom = encryptDid(publicKeyHex, session.did);
+    const encryptedFrom = encryptDid(box.publicKeyHex, session.did);
 
-    // Build the AT-URI for the box
-    const boxUri = `at://${boxOwnerDid}/blue.mado.box/${boxRkey}`;
+    // Use the AT-URI from the fetched record (authoritative)
+    const boxUri = box.uri;
 
     // Restore the box owner's OAuth session from Redis.
     // Mado uses the owner's stored session to write to the owner's PDS.
