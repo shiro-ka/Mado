@@ -62,6 +62,23 @@ export async function createSession(session: Session): Promise<string> {
 }
 
 /**
+ * Returns the remaining TTL (in seconds) for the current mado session in Redis.
+ * Returns null if there is no session or the TTL cannot be determined.
+ */
+export async function getSessionTtl(): Promise<number | null> {
+  try {
+    const cookieStore = await cookies();
+    const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
+    if (!sessionId) return null;
+    const redis = getRedis();
+    const ttl = await redis.ttl(Keys.session(sessionId));
+    return ttl >= 0 ? ttl : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Clear the session cookie and delete from Redis.
  */
 export async function destroySession(): Promise<void> {

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { MessageSquare, Inbox, ChevronRight, Plus } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { MessageSquare, Inbox, ChevronRight, Plus, AlertTriangle } from "lucide-react";
+import { requireSession, getSessionTtl } from "@/lib/auth";
 import { listBoxes, listQuestions } from "@/lib/atproto";
 import { getRedis, Keys } from "@/lib/redis";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,17 @@ export default async function DashboardPage() {
   const session = await requireSession();
 
   const redis = getRedis();
-  const [boxes, questionsRaw, readRkeysArr] = await Promise.all([
+  const [boxes, questionsRaw, readRkeysArr, sessionTtl] = await Promise.all([
     listBoxes(session.did),
     listQuestions(session.did),
     redis.smembers<string[]>(Keys.read(session.did)),
+    getSessionTtl(),
   ]);
+
+  // Warn when fewer than 7 days remain in the mado session
+  const SESSION_WARN_SECONDS = 7 * 24 * 60 * 60;
+  const sessionExpiringSoon = sessionTtl !== null && sessionTtl < SESSION_WARN_SECONDS;
+  const sessionDaysLeft = sessionTtl !== null ? Math.ceil(sessionTtl / (24 * 60 * 60)) : null;
   const readRkeys = new Set(readRkeysArr);
   const questions = questionsRaw.map((q) => ({ ...q, isRead: readRkeys.has(q.rkey) }));
 
@@ -32,6 +38,29 @@ export default async function DashboardPage() {
           今日も窓から声が届いていますよ
         </p>
       </div>
+
+      {/* Session expiry warning */}
+      {sessionExpiringSoon && (
+        <div
+          className="mb-6 rounded-xl px-4 py-3 flex items-center gap-3"
+          style={{
+            background: "rgba(251, 191, 36, 0.08)",
+            border: "1px solid rgba(251, 191, 36, 0.3)",
+          }}
+        >
+          <AlertTriangle style={{ width: 16, height: 16, color: "#fbbf24", flexShrink: 0 }} />
+          <p className="text-sm flex-1" style={{ color: "#fbbf24" }}>
+            セッションがあと{sessionDaysLeft}日で期限切れになります。
+          </p>
+          <Link
+            href="/auth/login"
+            className="text-xs font-medium underline"
+            style={{ color: "#fbbf24" }}
+          >
+            再ログイン
+          </Link>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
