@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, User, ExternalLink, Trash2, Ban, Lock } from "lucide-react";
-import { requireSession, getTokens } from "@/lib/auth";
+import { requireSession } from "@/lib/auth";
 import { getRedis, Keys } from "@/lib/redis";
 import { decryptDid } from "@/lib/crypto";
 import { getProfile } from "@/lib/atproto";
