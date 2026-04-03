@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getRedis, Keys, TTL } from "@/lib/redis";
-import type { Session, StoredTokens } from "@/types";
+import type { Session } from "@/types";
 
 const SESSION_COOKIE = "mado_session";
 
@@ -75,54 +75,3 @@ export async function destroySession(): Promise<void> {
   }
 }
 
-/**
- * Store OAuth tokens for a user DID.
- */
-export async function storeTokens(
-  did: string,
-  tokens: StoredTokens
-): Promise<void> {
-  const redis = getRedis();
-  await redis.setex(Keys.token(did), TTL.TOKEN, tokens);
-}
-
-/**
- * Retrieve stored OAuth tokens for a user DID.
- */
-export async function getTokens(did: string): Promise<StoredTokens | null> {
-  const redis = getRedis();
-  return redis.get<StoredTokens>(Keys.token(did));
-}
-
-/**
- * Check if the stored tokens are expiring soon (within 30 days)
- * and refresh them if needed.
- * Returns updated tokens or null if refresh failed.
- */
-export async function refreshTokensIfNeeded(
-  did: string
-): Promise<StoredTokens | null> {
-  const tokens = await getTokens(did);
-  if (!tokens) return null;
-
-  const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
-  const expiresAt = tokens.expiresAt;
-  const needsRefresh = expiresAt - Date.now() < thirtyDaysMs;
-
-  if (!needsRefresh) return tokens;
-
-  // TODO: Implement actual token refresh using @atproto/oauth-client-node
-  // For now, return existing tokens
-  return tokens;
-}
-
-/**
- * Check if the user's token is expiring within the given number of days.
- */
-export function isTokenExpiringSoon(
-  tokens: StoredTokens,
-  withinDays: number = 30
-): boolean {
-  const ms = withinDays * 24 * 60 * 60 * 1000;
-  return tokens.expiresAt - Date.now() < ms;
-}
