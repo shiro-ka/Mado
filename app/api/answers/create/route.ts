@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { writeAnswer, NSID } from "@/lib/atproto";
+import { writeAnswer, createBskyPost, NSID } from "@/lib/atproto";
 import { restoreOAuthSession } from "@/lib/oauth";
 
 const createAnswerSchema = z.object({
   koeUri: z.string().min(1), // AT-URI of the question: at://ownerDid/blue.mado.koe/rkey
   body: z.string().min(1).max(1000),
+  crosspost: z.boolean().optional().default(false),
 });
 
 /**
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { koeUri, body } = parsed.data;
+    const { koeUri, body, crosspost } = parsed.data;
 
     // Security: verify the koeUri belongs to the logged-in user's repo.
     // Format: at://<ownerDid>/blue.mado.koe/<rkey>
@@ -72,6 +73,11 @@ export async function POST(request: NextRequest) {
         { error: "Write failed", message: "回答の投稿に失敗しました" },
         { status: 500 }
       );
+    }
+
+    // Crosspost to Bluesky feed if requested (non-fatal if it fails)
+    if (crosspost) {
+      await createBskyPost({ sessionFetch, ownerDid: session.did, text: body });
     }
 
     return NextResponse.json({ success: true, uri: result.uri });
