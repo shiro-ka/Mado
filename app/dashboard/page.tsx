@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { MessageSquare, Inbox, AlertTriangle, ChevronRight, Plus } from "lucide-react";
-import { requireSession, getTokens, isTokenExpiringSoon } from "@/lib/auth";
+import { MessageSquare, Inbox, ChevronRight, Plus } from "lucide-react";
+import { requireSession } from "@/lib/auth";
 import { listBoxes, listQuestions } from "@/lib/atproto";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,45 +8,16 @@ import { Card } from "@/components/ui/card";
 export default async function DashboardPage() {
   const session = await requireSession();
 
-  const [boxes, questions, tokens] = await Promise.all([
+  const [boxes, questions] = await Promise.all([
     listBoxes(session.did),
     listQuestions(session.did),
-    getTokens(session.did),
   ]);
 
   const unreadCount = questions.filter((q) => !q.isRead).length;
   const openBoxCount = boxes.filter((b) => b.isOpen).length;
-  const tokenExpiringSoon = tokens ? isTokenExpiringSoon(tokens, 30) : false;
 
   return (
     <div className="px-6 py-8 max-w-4xl mx-auto">
-      {/* Token expiry warning */}
-      {tokenExpiringSoon && (
-        <div
-          className="mb-6 rounded-xl p-4 flex items-start gap-3"
-          style={{
-            background: "rgba(251, 191, 36, 0.08)",
-            border: "1px solid rgba(251, 191, 36, 0.25)",
-          }}
-        >
-          <AlertTriangle
-            className="shrink-0 mt-0.5"
-            style={{ width: 16, height: 16, color: "#fbbf24" }}
-          />
-          <div>
-            <p className="text-sm font-medium" style={{ color: "#fbbf24" }}>
-              認証の有効期限が近づいています
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-              継続してご利用いただくには再ログインが必要です。
-              <Link href="/auth/login" className="ml-1 underline">
-                再認証する
-              </Link>
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* Welcome */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>

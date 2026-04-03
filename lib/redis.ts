@@ -21,12 +21,6 @@ export function getRedis(): Redis {
 // Key schema
 export const Keys = {
   /**
-   * Stores StoredTokens for a user DID.
-   * TTL: 90 days
-   */
-  token: (did: string) => `token:${did}`,
-
-  /**
    * Stores the ECIES private key (hex) for a question box.
    * TTL: forever (until box is deleted)
    */
@@ -36,6 +30,18 @@ export const Keys = {
    * Stores the blocklist (Set) for a user DID.
    */
   blocklist: (did: string) => `blocklist:${did}`,
+
+  /**
+   * Rate limit counter: sender → specific box. Limit: 1 per minute.
+   * TTL: 60 seconds
+   */
+  rateBox: (senderDid: string, boxRkey: string) => `rate:box:${senderDid}:${boxRkey}`,
+
+  /**
+   * Rate limit counter: sender → all boxes. Limit: 5 per 5 minutes.
+   * TTL: 300 seconds
+   */
+  rateGlobal: (senderDid: string) => `rate:global:${senderDid}`,
 
   /**
    * Stores session data (JSON) for a session ID.
@@ -51,7 +57,8 @@ export const Keys = {
 } as const;
 
 export const TTL = {
-  TOKEN: 90 * 24 * 60 * 60, // 90 days in seconds
   SESSION: 30 * 24 * 60 * 60, // 30 days in seconds
   OAUTH_STATE: 10 * 60, // 10 minutes in seconds
+  RATE_BOX: 60, // 1 minute in seconds
+  RATE_GLOBAL: 5 * 60, // 5 minutes in seconds
 } as const;

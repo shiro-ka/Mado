@@ -4,15 +4,6 @@ export interface Session {
   handle: string;
   displayName?: string;
   avatar?: string;
-  accessJwt?: string;
-  refreshJwt?: string;
-  expiresAt?: number;
-}
-
-export interface StoredTokens {
-  accessJwt: string;
-  refreshJwt: string;
-  expiresAt: number;
 }
 
 // Question box types
