@@ -1,5 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  themeColor: "#7c3aed",
+};
 
 export const metadata: Metadata = {
   title: {
@@ -18,6 +22,12 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Mado (窓) - 半匿名質問箱",
     description: "ATProtocol基盤の半匿名質問箱。送り主はあなただけに届きます。",
+  },
+  applicationName: "Mado",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Mado",
   },
 };
 
