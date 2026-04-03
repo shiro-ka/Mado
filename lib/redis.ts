@@ -32,6 +32,12 @@ export const Keys = {
   blocklist: (did: string) => `blocklist:${did}`,
 
   /**
+   * Stores a Set of rkeys that the user has read.
+   * TTL: none (permanent until deleted)
+   */
+  read: (did: string) => `read:${did}`,
+
+  /**
    * Rate limit counter: sender → specific box. Limit: 1 per minute.
    * TTL: 60 seconds
    */

@@ -33,6 +33,9 @@ export default async function QuestionDetailPage({ params }: Props) {
 
   try {
     const redis = getRedis();
+    // Mark this question as read
+    await redis.sadd(Keys.read(session.did), rkey);
+
     // keyPair is keyed by boxRkey, which we can extract from the boxUri
     const boxRkey = question.boxUri.split("/").pop() ?? "";
     const privateKeyHex = await redis.get<string>(

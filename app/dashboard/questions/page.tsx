@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Inbox, RefreshCw } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { listQuestions } from "@/lib/atproto";
+import { getRedis, Keys } from "@/lib/redis";
 import { QuestionCard } from "@/components/mado/question-card";
 import type { FilterTab } from "@/types";
 
@@ -14,7 +15,13 @@ export default async function QuestionsPage({ searchParams }: Props) {
   const params = await searchParams;
   const tab = (params.tab as FilterTab | undefined) ?? "all";
 
-  const allQuestions = await listQuestions(session.did);
+  const redis = getRedis();
+  const [questionsRaw, readRkeysArr] = await Promise.all([
+    listQuestions(session.did),
+    redis.smembers<string[]>(Keys.read(session.did)),
+  ]);
+  const readRkeys = new Set(readRkeysArr);
+  const allQuestions = questionsRaw.map((q) => ({ ...q, isRead: readRkeys.has(q.rkey) }));
 
   const filtered = allQuestions.filter((q) => {
     if (tab === "unread") return !q.isRead;
