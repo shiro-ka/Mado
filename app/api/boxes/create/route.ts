@@ -5,6 +5,7 @@ import { getSession } from "@/lib/auth";
 import { getRedis, Keys } from "@/lib/redis";
 import { generateKeyPair } from "@/lib/crypto";
 import { createBoxRecord } from "@/lib/atproto";
+import { restoreOAuthSession } from "@/lib/oauth";
 
 const createBoxSchema = z.object({
   title: z.string().min(1).max(100),
@@ -18,12 +19,12 @@ const createBoxSchema = z.object({
  * Creates a new question box:
  * 1. Generates an ECIES key pair
  * 2. Stores the private key in Redis
- * 3. Writes the box record (with public key) to the user's PDS
+ * 3. Writes the box record (with public key) to the user's PDS via their OAuth session
  */
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
-    if (!session?.accessJwt) {
+    if (!session) {
       return NextResponse.json(
         { error: "Unauthorized", message: "ログインが必要です" },
         { status: 401 }
@@ -41,6 +42,18 @@ export async function POST(request: NextRequest) {
 
     const { title, description, isOpen } = parsed.data;
 
+    // Restore the OAuth session for the current user
+    const sessionFetch = await restoreOAuthSession(session.did);
+    if (!sessionFetch) {
+      return NextResponse.json(
+        {
+          error: "Session expired",
+          message: "セッションが期限切れです。再ログインしてください。",
+        },
+        { status: 401 }
+      );
+    }
+
     // Generate a unique slug
     const slug = nanoid(8);
 
@@ -49,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     // Write box record to PDS
     const result = await createBoxRecord({
-      accessJwt: session.accessJwt,
+      sessionFetch,
       did: session.did,
       slug,
       title,

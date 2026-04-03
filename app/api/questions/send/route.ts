@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getSession, getTokens } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { encryptDid } from "@/lib/crypto";
 import { writeQuestion } from "@/lib/atproto";
+import { restoreOAuthSession } from "@/lib/oauth";
 
 const sendSchema = z.object({
   body: z.string().min(1).max(500),
@@ -16,7 +17,7 @@ const sendSchema = z.object({
  *
  * Verifies sender's DID via their session, encrypts only the sender's DID
  * (body is stored as plaintext per spec v3), then writes the koe record to
- * the box owner's PDS using the owner's stored access token.
+ * the box owner's PDS using the owner's stored OAuth session.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -47,10 +48,10 @@ export async function POST(request: NextRequest) {
     // Build the AT-URI for the box
     const boxUri = `at://${boxOwnerDid}/blue.mado.box/${boxRkey}`;
 
-    // Get the owner's stored access token from Redis
-    // Mado uses the owner's token to write to the owner's PDS
-    const ownerTokens = await getTokens(boxOwnerDid);
-    if (!ownerTokens) {
+    // Restore the box owner's OAuth session from Redis.
+    // Mado uses the owner's stored session to write to the owner's PDS.
+    const ownerSessionFetch = await restoreOAuthSession(boxOwnerDid);
+    if (!ownerSessionFetch) {
       return NextResponse.json(
         { error: "Box unavailable", message: "この質問箱は現在利用できません" },
         { status: 503 }
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await writeQuestion({
-      ownerAccessJwt: ownerTokens.accessJwt,
+      sessionFetch: ownerSessionFetch,
       ownerDid: boxOwnerDid,
       boxUri,
       encryptedFrom,
