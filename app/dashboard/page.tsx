@@ -2,16 +2,21 @@ import Link from "next/link";
 import { MessageSquare, Inbox, ChevronRight, Plus } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { listBoxes, listQuestions } from "@/lib/atproto";
+import { getRedis, Keys } from "@/lib/redis";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export default async function DashboardPage() {
   const session = await requireSession();
 
-  const [boxes, questions] = await Promise.all([
+  const redis = getRedis();
+  const [boxes, questionsRaw, readRkeysArr] = await Promise.all([
     listBoxes(session.did),
     listQuestions(session.did),
+    redis.smembers<string[]>(Keys.read(session.did)),
   ]);
+  const readRkeys = new Set(readRkeysArr);
+  const questions = questionsRaw.map((q) => ({ ...q, isRead: readRkeys.has(q.rkey) }));
 
   const unreadCount = questions.filter((q) => !q.isRead).length;
   const openBoxCount = boxes.filter((b) => b.isOpen).length;
