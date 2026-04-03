@@ -6,8 +6,8 @@ import { getRedis, Keys } from "@/lib/redis";
 import { decryptDid } from "@/lib/crypto";
 import { getProfile } from "@/lib/atproto";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { AnswerForm } from "@/components/mado/answer-form";
 import { formatDateFull } from "@/lib/utils";
 
 interface Props {
@@ -18,11 +18,8 @@ export default async function QuestionDetailPage({ params }: Props) {
   const session = await requireSession();
   const { id: rkey } = await params;
 
-  // Fetch the question record from the user's PDS
-  // For now, we need to find it via list
-  const { listQuestions } = await import("@/lib/atproto");
-  const questions = await listQuestions(session.did);
-  const question = questions.find((q) => q.rkey === rkey);
+  const { getKoeRecord } = await import("@/lib/atproto");
+  const question = await getKoeRecord(session.did, rkey);
 
   if (!question) {
     notFound();
@@ -171,19 +168,9 @@ export default async function QuestionDetailPage({ params }: Props) {
         <h2 className="text-sm font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
           回答を書く
         </h2>
-        <form className="flex flex-col gap-4">
-          <Textarea
-            placeholder="回答を入力してください..."
-            rows={4}
-            maxLength={1000}
-            showCount
-          />
-          <div className="flex justify-end">
-            <Button type="submit">
-              回答を投稿
-            </Button>
-          </div>
-        </form>
+        <AnswerForm
+          koeUri={`at://${session.did}/blue.mado.koe/${rkey}`}
+        />
       </div>
 
       {/* Danger zone */}
