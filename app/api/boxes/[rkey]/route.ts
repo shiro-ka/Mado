@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { getRedis, Keys } from "@/lib/redis";
 import { getBoxRecord, updateBoxRecord, deleteRecord } from "@/lib/atproto";
 import { NSID } from "@/lib/atproto";
+import { restoreOAuthSession } from "@/lib/oauth";
 
 const updateSchema = z.object({
   title: z.string().min(1).max(100).optional(),
@@ -47,8 +48,16 @@ export async function GET(_request: NextRequest, { params }: Params) {
 export async function PATCH(request: NextRequest, { params }: Params) {
   try {
     const session = await getSession();
-    if (!session?.accessJwt) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const sessionFetch = await restoreOAuthSession(session.did);
+    if (!sessionFetch) {
+      return NextResponse.json(
+        { error: "Session expired", message: "再ログインが必要です" },
+        { status: 401 }
+      );
     }
 
     const { rkey } = await params;
@@ -66,7 +75,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     const { title, description, isOpen } = parsed.data;
 
     const success = await updateBoxRecord({
-      accessJwt: session.accessJwt,
+      sessionFetch,
       did: session.did,
       rkey,
       title: title ?? box.title,
@@ -97,14 +106,22 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 export async function DELETE(_request: NextRequest, { params }: Params) {
   try {
     const session = await getSession();
-    if (!session?.accessJwt) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const sessionFetch = await restoreOAuthSession(session.did);
+    if (!sessionFetch) {
+      return NextResponse.json(
+        { error: "Session expired", message: "再ログインが必要です" },
+        { status: 401 }
+      );
     }
 
     const { rkey } = await params;
 
     const success = await deleteRecord({
-      accessJwt: session.accessJwt,
+      sessionFetch,
       did: session.did,
       collection: NSID.BOX,
       rkey,

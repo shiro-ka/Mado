@@ -6,6 +6,7 @@ import type {
   QuestionBox,
   Question,
 } from "@/types";
+import type { SessionFetch } from "@/lib/oauth";
 
 // Lexicon NSIDs
 export const NSID = {
@@ -22,40 +23,37 @@ function publicAgent(): AtpAgent {
 }
 
 /**
- * Make an authenticated XRPC call directly with fetch.
- * Avoids the read-only `session` property on AtpAgent.
+ * Make an authenticated XRPC call via OAuthSession.fetchHandler.
+ *
+ * The sessionFetch function is bound to an OAuthSession and handles:
+ *   - Constructing the full URL from the PDS base (tokenSet.aud)
+ *   - Setting the Authorization header (DPoP or Bearer)
+ *   - Attaching the DPoP proof header
+ *   - Automatically refreshing the access token if expired
+ *
+ * pathname is relative to the PDS root, e.g. "/xrpc/com.atproto.repo.createRecord".
  */
 async function xrpc<T = unknown>(params: {
-  pdsUrl: string;
-  accessJwt: string;
+  sessionFetch: SessionFetch;
   method: "GET" | "POST";
   lexicon: string;
   body?: object;
-  query?: Record<string, string | number | boolean>;
 }): Promise<T> {
-  const url = new URL(`${params.pdsUrl}/xrpc/${params.lexicon}`);
-  if (params.query) {
-    for (const [k, v] of Object.entries(params.query)) {
-      url.searchParams.set(k, String(v));
-    }
-  }
-  const res = await fetch(url.toString(), {
-    method: params.method,
-    headers: {
-      Authorization: `Bearer ${params.accessJwt}`,
-      ...(params.body ? { "Content-Type": "application/json" } : {}),
-    },
-    body: params.body ? JSON.stringify(params.body) : undefined,
+  const { sessionFetch, method, lexicon, body } = params;
+  const res = await sessionFetch(`/xrpc/${lexicon}`, {
+    method,
+    headers: body ? { "Content-Type": "application/json" } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`XRPC ${params.lexicon} failed (${res.status}): ${text}`);
+    throw new Error(`XRPC ${lexicon} failed (${res.status}): ${text}`);
   }
   return res.json() as Promise<T>;
 }
 
 // ---------------------------------------------------------------------------
-// Public reads
+// Public reads (unauthenticated)
 // ---------------------------------------------------------------------------
 
 /**
@@ -207,23 +205,23 @@ export async function listQuestions(did: string): Promise<Question[]> {
 }
 
 // ---------------------------------------------------------------------------
-// Authenticated writes (direct XRPC fetch to avoid AtpAgent session issues)
+// Authenticated writes — all use OAuthSession.fetchHandler (DPoP + auto-refresh)
 // ---------------------------------------------------------------------------
 
 /**
  * Write a new question record to the box owner's PDS.
- * Uses the owner's stored access JWT — Mado acts on behalf of the owner per spec:
- * "Madoが受け取り手のOAuthトークンを使い、受け取り手のPDSに書き込む".
+ *
+ * Uses the owner's OAuth session (sessionFetch) — Mado acts on behalf of the
+ * owner per spec: "Madoが受け取り手のOAuthトークンを使い、受け取り手のPDSに書き込む".
  */
 export async function writeQuestion(params: {
-  ownerAccessJwt: string;
+  sessionFetch: SessionFetch;
   ownerDid: string;
   boxUri: string;        // AT-URI: at://ownerDid/blue.mado.box/rkey
   encryptedFrom: string; // base64 ECIES-encrypted sender DID
   body: string;          // plaintext question text
-  pdsUrl?: string;
 }): Promise<{ uri: string; cid: string } | null> {
-  const { ownerAccessJwt, ownerDid, boxUri, encryptedFrom, body, pdsUrl } = params;
+  const { sessionFetch, ownerDid, boxUri, encryptedFrom, body } = params;
   try {
     const record: BlueMadoKoe = {
       $type: NSID.KOE,
@@ -233,8 +231,7 @@ export async function writeQuestion(params: {
       createdAt: new Date().toISOString(),
     };
     return await xrpc<{ uri: string; cid: string }>({
-      pdsUrl: pdsUrl ?? DEFAULT_PDS,
-      accessJwt: ownerAccessJwt,
+      sessionFetch,
       method: "POST",
       lexicon: "com.atproto.repo.createRecord",
       body: { repo: ownerDid, collection: NSID.KOE, record },
@@ -248,13 +245,12 @@ export async function writeQuestion(params: {
  * Write an answer record to the owner's PDS.
  */
 export async function writeAnswer(params: {
-  ownerAccessJwt: string;
+  sessionFetch: SessionFetch;
   ownerDid: string;
   koeUri: string;
   body: string;
-  pdsUrl?: string;
 }): Promise<{ uri: string; cid: string } | null> {
-  const { ownerAccessJwt, ownerDid, koeUri, body, pdsUrl } = params;
+  const { sessionFetch, ownerDid, koeUri, body } = params;
   try {
     const record: BlueMadoAnswer = {
       $type: NSID.ANSWER,
@@ -263,8 +259,7 @@ export async function writeAnswer(params: {
       createdAt: new Date().toISOString(),
     };
     return await xrpc<{ uri: string; cid: string }>({
-      pdsUrl: pdsUrl ?? DEFAULT_PDS,
-      accessJwt: ownerAccessJwt,
+      sessionFetch,
       method: "POST",
       lexicon: "com.atproto.repo.createRecord",
       body: { repo: ownerDid, collection: NSID.ANSWER, record },
@@ -278,17 +273,15 @@ export async function writeAnswer(params: {
  * Delete a record from the owner's PDS.
  */
 export async function deleteRecord(params: {
-  accessJwt: string;
+  sessionFetch: SessionFetch;
   did: string;
   collection: string;
   rkey: string;
-  pdsUrl?: string;
 }): Promise<boolean> {
-  const { accessJwt, did, collection, rkey, pdsUrl } = params;
+  const { sessionFetch, did, collection, rkey } = params;
   try {
     await xrpc({
-      pdsUrl: pdsUrl ?? DEFAULT_PDS,
-      accessJwt,
+      sessionFetch,
       method: "POST",
       lexicon: "com.atproto.repo.deleteRecord",
       body: { repo: did, collection, rkey },
@@ -303,16 +296,15 @@ export async function deleteRecord(params: {
  * Create a box record on the owner's PDS.
  */
 export async function createBoxRecord(params: {
-  accessJwt: string;
+  sessionFetch: SessionFetch;
   did: string;
   slug: string;
   title: string;
   description?: string;
   isOpen: boolean;
   publicKeyHex: string;
-  pdsUrl?: string;
 }): Promise<{ uri: string; cid: string; rkey: string } | null> {
-  const { accessJwt, did, slug, title, description, isOpen, publicKeyHex, pdsUrl } = params;
+  const { sessionFetch, did, slug, title, description, isOpen, publicKeyHex } = params;
   try {
     const record: BlueMadoBox = {
       $type: NSID.BOX,
@@ -324,8 +316,7 @@ export async function createBoxRecord(params: {
       createdAt: new Date().toISOString(),
     };
     const res = await xrpc<{ uri: string; cid: string }>({
-      pdsUrl: pdsUrl ?? DEFAULT_PDS,
-      accessJwt,
+      sessionFetch,
       method: "POST",
       lexicon: "com.atproto.repo.createRecord",
       body: { repo: did, collection: NSID.BOX, record },
@@ -341,7 +332,7 @@ export async function createBoxRecord(params: {
  * Update (put) an existing box record on the owner's PDS.
  */
 export async function updateBoxRecord(params: {
-  accessJwt: string;
+  sessionFetch: SessionFetch;
   did: string;
   rkey: string;
   title: string;
@@ -349,9 +340,8 @@ export async function updateBoxRecord(params: {
   isOpen: boolean;
   publicKeyHex: string;
   slug: string;
-  pdsUrl?: string;
 }): Promise<boolean> {
-  const { accessJwt, did, rkey, title, description, isOpen, publicKeyHex, slug, pdsUrl } = params;
+  const { sessionFetch, did, rkey, title, description, isOpen, publicKeyHex, slug } = params;
   try {
     const record: BlueMadoBox = {
       $type: NSID.BOX,
@@ -363,8 +353,7 @@ export async function updateBoxRecord(params: {
       createdAt: new Date().toISOString(),
     };
     await xrpc({
-      pdsUrl: pdsUrl ?? DEFAULT_PDS,
-      accessJwt,
+      sessionFetch,
       method: "POST",
       lexicon: "com.atproto.repo.putRecord",
       body: { repo: did, collection: NSID.BOX, rkey, record },
