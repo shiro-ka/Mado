@@ -300,6 +300,39 @@ export async function writeAnswer(params: {
 }
 
 /**
+ * Create an app.bsky.feed.post record on the owner's PDS (crosspost to Bluesky feed).
+ * Truncates text to 280 characters if needed.
+ */
+export async function createBskyPost(params: {
+  sessionFetch: SessionFetch;
+  ownerDid: string;
+  text: string;
+}): Promise<{ uri: string; cid: string } | null> {
+  const { sessionFetch, ownerDid, text } = params;
+  const LIMIT = 280;
+  const truncated = text.length > LIMIT ? text.slice(0, LIMIT - 1) + "…" : text;
+  try {
+    return await xrpc<{ uri: string; cid: string }>({
+      sessionFetch,
+      method: "POST",
+      lexicon: "com.atproto.repo.createRecord",
+      body: {
+        repo: ownerDid,
+        collection: "app.bsky.feed.post",
+        record: {
+          $type: "app.bsky.feed.post",
+          text: truncated,
+          createdAt: new Date().toISOString(),
+          langs: ["ja"],
+        },
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Delete a record from the owner's PDS.
  */
 export async function deleteRecord(params: {
