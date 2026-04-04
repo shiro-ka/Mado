@@ -3,6 +3,8 @@ node_modules/
 .vercel/
 coverage/
 .vitest-cache/
+__tests__/
+vitest.config.ts
 *.local
 .env
 .env.local
