@@ -60,6 +60,12 @@ export const Keys = {
    * TTL: 10 minutes
    */
   oauthState: (state: string) => `oauth_state:${state}`,
+
+  /**
+   * Set of all registered user DIDs (Mado owners who have completed OAuth).
+   * Used by the session-check cron to iterate over all registered users.
+   */
+  users: "mado:users",
 } as const;
 
 export const TTL = {
