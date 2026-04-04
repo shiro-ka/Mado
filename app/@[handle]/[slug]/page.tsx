@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { SendQuestionForm } from "@/components/mado/send-question-form";
 import { resolveHandle, findBoxBySlug, getProfile } from "@/lib/atproto";
 import { getSession } from "@/lib/auth";
+import { hasOAuthSession } from "@/lib/oauth";
 import type { Metadata } from "next";
 
 interface Props {
@@ -38,10 +39,11 @@ export default async function SendQuestionPage({ params }: Props) {
   const did = await resolveHandle(cleanHandle);
   if (!did) notFound();
 
-  const [box, ownerProfile, session] = await Promise.all([
+  const [box, ownerProfile, session, ownerRegistered] = await Promise.all([
     findBoxBySlug(did, slug),
     getProfile(did),
     getSession(),
+    hasOAuthSession(did),
   ]);
 
   if (!box || !ownerProfile) notFound();
@@ -145,8 +147,26 @@ export default async function SendQuestionPage({ params }: Props) {
             </p>
           </div>
 
+          {/* Owner not registered in Mado */}
+          {!ownerRegistered && (
+            <div
+              className="rounded-xl p-6 text-center"
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border)",
+              }}
+            >
+              <p className="font-semibold text-sm mb-1" style={{ color: "var(--text-primary)" }}>
+                このユーザーはMadoに登録されていません
+              </p>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                質問を送るには、オーナーがMadoにログインしている必要があります。
+              </p>
+            </div>
+          )}
+
           {/* Box closed state */}
-          {!box.isOpen && (
+          {ownerRegistered && !box.isOpen && (
             <div
               className="rounded-xl p-6 text-center"
               style={{
@@ -164,7 +184,7 @@ export default async function SendQuestionPage({ params }: Props) {
           )}
 
           {/* Auth state: not logged in */}
-          {box.isOpen && !session && (
+          {ownerRegistered && box.isOpen && !session && (
             <div
               className="rounded-2xl p-6 text-center flex flex-col items-center gap-4"
               style={{
@@ -199,7 +219,7 @@ export default async function SendQuestionPage({ params }: Props) {
           )}
 
           {/* Auth state: logged in */}
-          {box.isOpen && session && (
+          {ownerRegistered && box.isOpen && session && (
             <div
               className="rounded-2xl p-6"
               style={{

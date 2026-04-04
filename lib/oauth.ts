@@ -120,6 +120,16 @@ async function loadKeyset() {
 }
 
 /**
+ * Returns true if a stored OAuth session exists for the given DID.
+ * Cheaper than restoreOAuthSession — only checks Redis key existence.
+ */
+export async function hasOAuthSession(did: string): Promise<boolean> {
+  const redis = getRedis();
+  const exists = await redis.exists(`${SESSION_PREFIX}${did}`);
+  return exists === 1;
+}
+
+/**
  * Restore a stored OAuth session for the given DID, returning a fetch function
  * that automatically handles DPoP proofs and token refresh.
  *
