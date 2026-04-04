@@ -26,16 +26,25 @@ export async function GET(request: NextRequest) {
   const redis = getRedis();
   const dids = await redis.smembers<string[]>(Keys.users);
 
+  // Process all users in parallel to avoid Vercel timeout on large user sets.
+  // Promise.allSettled ensures individual failures don't abort the whole run.
+  const results = await Promise.allSettled(
+    dids.map(async (did) => {
+      const sessionFetch = await restoreOAuthSession(did);
+      if (!sessionFetch) {
+        await clearOAuthSession(did);
+        return "revoked" as const;
+      }
+      return "valid" as const;
+    })
+  );
+
   let valid = 0;
   let revoked = 0;
-
-  for (const did of dids) {
-    const sessionFetch = await restoreOAuthSession(did);
-    if (sessionFetch) {
-      valid++;
-    } else {
-      await clearOAuthSession(did);
-      revoked++;
+  for (const result of results) {
+    if (result.status === "fulfilled") {
+      if (result.value === "valid") valid++;
+      else revoked++;
     }
   }
 
