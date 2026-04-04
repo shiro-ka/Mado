@@ -8,7 +8,7 @@ interface BlockButtonProps {
   senderDid: string;
 }
 
-type State = "idle" | "confirm" | "submitting" | "done" | "error";
+type State = "idle" | "confirm" | "submitting" | "done" | "unblocking" | "error";
 
 export function BlockButton({ senderDid }: BlockButtonProps) {
   const [state, setState] = React.useState<State>("idle");
@@ -40,14 +40,43 @@ export function BlockButton({ senderDid }: BlockButtonProps) {
     }
   };
 
-  if (state === "done") {
+  const handleUnblock = async () => {
+    setState("unblocking");
+    try {
+      const res = await fetch("/api/blocks/remove", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ senderDid }),
+      });
+      if (!res.ok) {
+        setState("done");
+      } else {
+        setState("idle");
+      }
+    } catch {
+      setState("done");
+    }
+  };
+
+  if (state === "done" || state === "unblocking") {
     return (
-      <div
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm"
-        style={{ color: "var(--text-muted)" }}
-      >
-        <CheckCircle2 style={{ width: 14, height: 14 }} />
-        ブロックしました
+      <div className="flex items-center gap-2 flex-1 sm:flex-none">
+        <div
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <CheckCircle2 style={{ width: 14, height: 14 }} />
+          ブロックしました
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          loading={state === "unblocking"}
+          onClick={handleUnblock}
+          style={{ color: "var(--text-subtle)", fontSize: "0.75rem" }}
+        >
+          解除
+        </Button>
       </div>
     );
   }
