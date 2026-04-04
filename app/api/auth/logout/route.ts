@@ -19,13 +19,13 @@ export async function POST() {
     }
 
     await destroySession();
-    return NextResponse.redirect(`${appUrl}/`);
+    return NextResponse.redirect(`${appUrl}/`, 303);
   } catch (err) {
     console.error("[/api/auth/logout]", err);
     // Still destroy the local session even if revocation failed
     try {
       await destroySession();
     } catch { /* ignore */ }
-    return NextResponse.redirect(`${appUrl}/`);
+    return NextResponse.redirect(`${appUrl}/`, 303);
   }
 }

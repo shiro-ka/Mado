@@ -12,12 +12,12 @@ import { hasOAuthSession } from "@/lib/oauth";
 import type { Metadata } from "next";
 
 interface Props {
-  params: Promise<{ handle: string; slug: string }>;
+  params: Promise<{ user: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { handle, slug } = await params;
-  const cleanHandle = decodeURIComponent(handle).replace(/^@/, "");
+  const { user, slug } = await params;
+  const cleanHandle = decodeURIComponent(user).replace(/^@/, "");
   const did = await resolveHandle(cleanHandle).catch(() => null);
   if (!did) return { title: "質問箱が見つかりません" };
 
@@ -33,8 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function SendQuestionPage({ params }: Props) {
-  const { handle, slug } = await params;
-  const cleanHandle = decodeURIComponent(handle).replace(/^@/, "");
+  const { user, slug } = await params;
+  const cleanHandle = decodeURIComponent(user).replace(/^@/, "");
 
   const did = await resolveHandle(cleanHandle);
   if (!did) notFound();

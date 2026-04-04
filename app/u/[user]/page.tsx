@@ -8,12 +8,12 @@ import { resolveHandle, getProfile, listBoxes } from "@/lib/atproto";
 import type { Metadata } from "next";
 
 interface Props {
-  params: Promise<{ handle: string }>;
+  params: Promise<{ user: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { handle } = await params;
-  const cleanHandle = decodeURIComponent(handle).replace(/^@/, "");
+  const { user } = await params;
+  const cleanHandle = decodeURIComponent(user).replace(/^@/, "");
   const profile = await getProfile(cleanHandle).catch(() => null);
 
   if (!profile) {
@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProfilePage({ params }: Props) {
-  const { handle } = await params;
-  const cleanHandle = decodeURIComponent(handle).replace(/^@/, "");
+  const { user } = await params;
+  const cleanHandle = decodeURIComponent(user).replace(/^@/, "");
 
   const did = await resolveHandle(cleanHandle);
   if (!did) notFound();

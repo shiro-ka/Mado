@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Edit3, Trash2, Link2, Power, PowerOff } from "lucide-react";
+import { Plus, Edit3, Link2 } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { listBoxes } from "@/lib/atproto";
 import { Button } from "@/components/ui/button";
@@ -117,17 +117,6 @@ export default async function BoxesPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    className="p-2 rounded-lg transition-colors duration-200 cursor-pointer"
-                    style={{ color: "var(--text-subtle)" }}
-                    title="URLをコピー"
-                    onClick={() => {
-                      // Client-side copy — handled by a client wrapper in production
-                    }}
-                  >
-                    <Link2 style={{ width: 15, height: 15 }} />
-                  </button>
-
                   <Link href={`/dashboard/boxes/${box.rkey}`}>
                     <button
                       className="p-2 rounded-lg transition-colors duration-200 cursor-pointer"
@@ -137,26 +126,6 @@ export default async function BoxesPage() {
                       <Edit3 style={{ width: 15, height: 15 }} />
                     </button>
                   </Link>
-
-                  <button
-                    className="p-2 rounded-lg transition-colors duration-200 cursor-pointer"
-                    style={{ color: box.isOpen ? "#34d399" : "var(--text-subtle)" }}
-                    title={box.isOpen ? "受付を停止する" : "受付を再開する"}
-                  >
-                    {box.isOpen ? (
-                      <Power style={{ width: 15, height: 15 }} />
-                    ) : (
-                      <PowerOff style={{ width: 15, height: 15 }} />
-                    )}
-                  </button>
-
-                  <button
-                    className="p-2 rounded-lg transition-colors duration-200 cursor-pointer hover:text-red-400"
-                    style={{ color: "var(--text-subtle)" }}
-                    title="削除"
-                  >
-                    <Trash2 style={{ width: 15, height: 15 }} />
-                  </button>
                 </div>
               </div>
             </div>

@@ -118,7 +118,7 @@ export default async function QuestionsPage({ searchParams }: Props) {
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((question) => (
-            <QuestionCard key={question.rkey} question={question} />
+            <QuestionCard key={question.rkey} question={question} preview={question.body} />
           ))}
         </div>
       )}
