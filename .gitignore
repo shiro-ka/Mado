@@ -5,6 +5,7 @@ coverage/
 .vitest-cache/
 __tests__/
 vitest.config.ts
+tsconfig.tsbuildinfo
 *.local
 .env
 .env.local
