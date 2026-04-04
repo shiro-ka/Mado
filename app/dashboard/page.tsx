@@ -221,7 +221,7 @@ export default async function DashboardPage() {
                     className="text-sm truncate"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    暗号化メッセージ
+                    {q.body}
                   </span>
                   <span
                     className="text-xs ml-auto shrink-0 tabular-nums"

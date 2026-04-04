@@ -46,12 +46,6 @@ export interface Answer {
   createdAt: string;
 }
 
-export interface BlockedUser {
-  did: string;
-  handle: string;
-  blockedAt: string;
-}
-
 // ATProtocol Lexicon record types
 export interface BlueMadoBox {
   $type: "blue.mado.box";

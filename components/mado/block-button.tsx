@@ -14,8 +14,8 @@ export function BlockButton({ senderDid }: BlockButtonProps) {
   const [state, setState] = React.useState<State>("idle");
 
   const handleClick = async () => {
-    // First click: ask for confirmation
-    if (state === "idle") {
+    // First click (or retry after error): ask for confirmation
+    if (state === "idle" || state === "error") {
       setState("confirm");
       return;
     }

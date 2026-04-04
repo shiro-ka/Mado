@@ -69,14 +69,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Rate limiting: per-box (1 per minute) and global (5 per 5 minutes)
+    // Rate limiting: per-box (1 per minute) and global (5 per 5 minutes).
+    // Always call expire after incr (not only on first increment) to ensure
+    // keys never lose their TTL if the process crashed between the two calls.
+    // This uses sliding-window semantics: the window resets on each request.
+    const boxRateKey = Keys.rateBox(session.did, boxRkey);
+    const globalRateKey = Keys.rateGlobal(session.did);
     const [boxCount, globalCount] = await Promise.all([
-      redis.incr(Keys.rateBox(session.did, boxRkey)),
-      redis.incr(Keys.rateGlobal(session.did)),
+      redis.incr(boxRateKey),
+      redis.incr(globalRateKey),
     ]);
-    // Set expiry only on first increment (new key)
-    if (boxCount === 1) await redis.expire(Keys.rateBox(session.did, boxRkey), TTL.RATE_BOX);
-    if (globalCount === 1) await redis.expire(Keys.rateGlobal(session.did), TTL.RATE_GLOBAL);
+    await Promise.all([
+      redis.expire(boxRateKey, TTL.RATE_BOX),
+      redis.expire(globalRateKey, TTL.RATE_GLOBAL),
+    ]);
 
     if (boxCount > 1) {
       return NextResponse.json(

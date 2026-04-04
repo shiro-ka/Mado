@@ -225,7 +225,7 @@ export async function listQuestions(did: string): Promise<Question[]> {
         boxUri: record.box,
         encryptedFrom: record.encryptedFrom,
         body: record.body,
-        isRead: false, // TODO: persist read status in Redis
+        isRead: false, // resolved at page level via Redis.smembers(Keys.read(did))
         createdAt: record.createdAt,
       };
     });

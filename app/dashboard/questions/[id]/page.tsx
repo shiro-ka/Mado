@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, User, ExternalLink, Trash2, Lock } from "lucide-react";
+import { ArrowLeft, User, ExternalLink, Lock } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { getRedis, Keys } from "@/lib/redis";
 import { decryptDid } from "@/lib/crypto";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AnswerForm } from "@/components/mado/answer-form";
 import { BlockButton } from "@/components/mado/block-button";
+import { DeleteQuestionButton } from "@/components/mado/delete-question-button";
 import { formatDateFull } from "@/lib/utils";
 
 interface Props {
@@ -185,14 +186,7 @@ export default async function QuestionDetailPage({ params }: Props) {
           border: "1px solid rgba(248, 113, 113, 0.15)",
         }}
       >
-        <Button
-          variant="destructive"
-          size="sm"
-          leftIcon={<Trash2 style={{ width: 14, height: 14 }} />}
-          className="flex-1 sm:flex-none"
-        >
-          削除
-        </Button>
+        <DeleteQuestionButton rkey={rkey} />
         {senderDid && <BlockButton senderDid={senderDid} />}
       </div>
     </div>
