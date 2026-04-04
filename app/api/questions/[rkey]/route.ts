@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { getRedis, Keys } from "@/lib/redis";
 import { deleteRecord } from "@/lib/atproto";
 import { restoreOAuthSession } from "@/lib/oauth";
@@ -9,7 +9,10 @@ interface Params {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const session = await requireSession();
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const { rkey } = await params;
 
   const sessionFetch = await restoreOAuthSession(session.did);
