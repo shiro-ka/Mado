@@ -130,6 +130,16 @@ export async function hasOAuthSession(did: string): Promise<boolean> {
 }
 
 /**
+ * Remove the stored OAuth session for the given DID from Redis.
+ * Called when a session is confirmed invalid (e.g. token revoked).
+ * After this, hasOAuthSession(did) returns false.
+ */
+export async function clearOAuthSession(did: string): Promise<void> {
+  const redis = getRedis();
+  await redis.del(`${SESSION_PREFIX}${did}`);
+}
+
+/**
  * Restore a stored OAuth session for the given DID, returning a fetch function
  * that automatically handles DPoP proofs and token refresh.
  *

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getOAuthClient } from "@/lib/oauth";
 import { createSession } from "@/lib/auth";
 import { getProfile } from "@/lib/atproto";
+import { getRedis, Keys } from "@/lib/redis";
 import type { Session } from "@/types";
 
 /**
@@ -47,6 +48,10 @@ export async function GET(request: NextRequest) {
     };
 
     await createSession(appSession);
+
+    // Track this DID in the registered users set for cron-based session checks
+    const redis = getRedis();
+    await redis.sadd(Keys.users, did);
 
     return NextResponse.redirect(`${appUrl}/dashboard`);
   } catch (err) {
