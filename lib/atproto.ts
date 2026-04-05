@@ -16,10 +16,16 @@ export const NSID = {
 } as const;
 
 const DEFAULT_PDS = "https://bsky.social";
+const APPVIEW_URL = "https://public.api.bsky.app";
 
 /** Unauthenticated agent for public reads via the Bluesky App View. */
 function publicAgent(): AtpAgent {
   return new AtpAgent({ service: DEFAULT_PDS });
+}
+
+/** Unauthenticated agent for app.bsky.* AppView calls. */
+function appViewAgent(): AtpAgent {
+  return new AtpAgent({ service: APPVIEW_URL });
 }
 
 /**
@@ -60,7 +66,7 @@ async function xrpc<T = unknown>(params: {
  * Fetch a user's public profile from the Bluesky App View.
  */
 export async function getProfile(handleOrDid: string) {
-  const agent = publicAgent();
+  const agent = appViewAgent();
   try {
     const res = await agent.getProfile({ actor: handleOrDid });
     return res.data;
