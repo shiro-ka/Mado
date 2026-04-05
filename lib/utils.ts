@@ -74,7 +74,7 @@ export function isValidHandle(handle: string): boolean {
  */
 export function profileUrl(handle: string): string {
   const normalized = normalizeHandle(handle);
-  return `/@${normalized}`;
+  return `/u/@${normalized}`;
 }
 
 /**
@@ -82,5 +82,5 @@ export function profileUrl(handle: string): string {
  */
 export function boxUrl(handle: string, slug: string): string {
   const normalized = normalizeHandle(handle);
-  return `/@${normalized}/${slug}`;
+  return `/u/@${normalized}/${slug}`;
 }
