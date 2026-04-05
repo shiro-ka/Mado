@@ -129,7 +129,7 @@ export default async function ProfilePage({ params }: Props) {
                 <QuestionBoxCard
                   key={box.rkey}
                   box={box}
-                  ownerHandle={profile.handle}
+                  ownerHandle={profile?.handle ?? cleanHandle}
                 />
               ))}
             </div>
