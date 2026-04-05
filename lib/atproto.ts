@@ -73,6 +73,7 @@ export async function getProfile(handleOrDid: string) {
  * Resolve a handle to a DID.
  */
 export async function resolveHandle(handle: string): Promise<string | null> {
+  if (handle.startsWith("did:")) return handle;
   const agent = publicAgent();
   try {
     const res = await agent.resolveHandle({ handle });
