@@ -39,20 +39,28 @@ export async function GET(request: NextRequest) {
     // Fetch profile for display info
     const profile = await getProfile(did);
 
-    if (!profile?.handle) {
-      const params = new URLSearchParams({
-        error: "oauth_error",
-        message: "プロフィールの取得に失敗しました。もう一度お試しください。",
-      });
-      return NextResponse.redirect(`${appUrl}/auth/login?${params}`);
+    // Fallback: resolve handle via com.atproto.repo.describeRepo if getProfile failed
+    let handle = profile?.handle;
+    if (!handle) {
+      try {
+        const res = await fetch(
+          `https://bsky.social/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`
+        );
+        if (res.ok) {
+          const data = await res.json() as { handle?: string };
+          handle = data.handle;
+        }
+      } catch {
+        // ignore
+      }
     }
 
     // Create app-level session (cookie → Redis) — separate from the OAuth session
     const appSession: Session = {
       did,
-      handle: profile.handle,
-      displayName: profile.displayName,
-      avatar: profile.avatar,
+      handle: handle ?? did,
+      displayName: profile?.displayName,
+      avatar: profile?.avatar,
     };
 
     await createSession(appSession);
