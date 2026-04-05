@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { Plus, Edit3, Link2 } from "lucide-react";
 import { requireSession } from "@/lib/auth";
-import { listBoxes } from "@/lib/atproto";
+import { listBoxes, getProfile } from "@/lib/atproto";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { boxUrl } from "@/lib/utils";
 
 export default async function BoxesPage() {
   const session = await requireSession();
-  const boxes = await listBoxes(session.did);
+  const [boxes, resolvedProfile] = await Promise.all([
+    listBoxes(session.did),
+    session.handle.startsWith("did:") ? getProfile(session.did) : null,
+  ]);
+  const ownerHandle = resolvedProfile?.handle ?? session.handle;
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
@@ -65,7 +69,7 @@ export default async function BoxesPage() {
       {/* Box list */}
       <div className="flex flex-col gap-4">
         {boxes.map((box) => {
-          const publicUrl = `${appUrl}${boxUrl(session.handle, box.slug)}`;
+          const publicUrl = `${appUrl}${boxUrl(ownerHandle, box.slug)}`;
 
           return (
             <div
