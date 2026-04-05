@@ -40,8 +40,6 @@ export default async function ProfilePage({ params }: Props) {
     listBoxes(did),
   ]);
 
-  if (!profile) notFound();
-
   const openBoxes = boxes.filter((b) => b.isOpen);
 
   return (
@@ -57,7 +55,7 @@ export default async function ProfilePage({ params }: Props) {
               border: "1px solid var(--border)",
             }}
           >
-            {profile.avatar ? (
+            {profile?.avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={profile.avatar}
@@ -69,7 +67,7 @@ export default async function ProfilePage({ params }: Props) {
                 className="w-16 h-16 rounded-full flex items-center justify-center shrink-0 font-bold text-2xl"
                 style={{ background: "var(--accent)", color: "white" }}
               >
-                {profile.handle[0]?.toUpperCase() ?? "?"}
+                {(profile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
               </div>
             )}
             <div className="flex-1 min-w-0">
@@ -77,12 +75,12 @@ export default async function ProfilePage({ params }: Props) {
                 className="text-xl font-bold"
                 style={{ color: "var(--text-primary)" }}
               >
-                {profile.displayName ?? `@${profile.handle}`}
+                {profile?.displayName ?? `@${profile?.handle ?? cleanHandle}`}
               </h1>
               <p className="text-sm mt-0.5" style={{ color: "var(--text-muted)" }}>
-                @{profile.handle}
+                @{profile?.handle ?? cleanHandle}
               </p>
-              {profile.description && (
+              {profile?.description && (
                 <p
                   className="text-sm mt-2 leading-relaxed"
                   style={{ color: "var(--text-muted)" }}
@@ -91,7 +89,7 @@ export default async function ProfilePage({ params }: Props) {
                 </p>
               )}
               <a
-                href={`https://bsky.app/profile/${profile.handle}`}
+                href={`https://bsky.app/profile/${profile?.handle ?? cleanHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 mt-2 text-xs hover:opacity-80 transition-opacity"
