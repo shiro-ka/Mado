@@ -208,7 +208,7 @@ export default async function SendQuestionPage({ params }: Props) {
                 </p>
               </div>
               <Link
-                href={`/auth/login?next=/@${cleanHandle}/${slug}`}
+                href={`/auth/login?next=/u/@${cleanHandle}/${slug}`}
                 className="w-full"
               >
                 <Button size="lg" className="w-full">
@@ -238,7 +238,7 @@ export default async function SendQuestionPage({ params }: Props) {
           {/* Back link */}
           <div className="mt-5 text-center">
             <Link
-              href={`/@${cleanHandle}`}
+              href={`/u/@${cleanHandle}`}
               className="text-xs hover:opacity-80 transition-opacity"
               style={{ color: "var(--text-subtle)" }}
             >
