@@ -44,6 +44,7 @@ export async function getOAuthClient(): Promise<NodeOAuthClient> {
       grant_types: ["authorization_code", "refresh_token"],
       response_types: ["code"],
       token_endpoint_auth_method: "private_key_jwt",
+      token_endpoint_auth_signing_alg: "ES256",
       application_type: "web",
       dpop_bound_access_tokens: true,
       jwks_uri: `${appUrl}/api/oauth/jwks.json`,
