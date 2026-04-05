@@ -46,7 +46,7 @@ export default async function SendQuestionPage({ params }: Props) {
     hasOAuthSession(did),
   ]);
 
-  if (!box || !ownerProfile) notFound();
+  if (!box) notFound();
 
   return (
     <div className="flex flex-col min-h-dvh">
@@ -55,7 +55,7 @@ export default async function SendQuestionPage({ params }: Props) {
         <div className="mx-auto max-w-lg">
           {/* Owner header */}
           <div className="flex items-center gap-3 mb-6">
-            {ownerProfile.avatar ? (
+            {ownerProfile?.avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={ownerProfile.avatar}
@@ -67,22 +67,22 @@ export default async function SendQuestionPage({ params }: Props) {
                 className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold"
                 style={{ background: "var(--accent)", color: "white" }}
               >
-                {ownerProfile.handle[0]?.toUpperCase() ?? "?"}
+                {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
               </div>
             )}
             <div className="min-w-0">
               <p className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
-                {ownerProfile.displayName ?? `@${ownerProfile.handle}`}
+                {ownerProfile?.displayName ?? `@${ownerProfile?.handle ?? cleanHandle}`}
               </p>
               <a
-                href={`https://bsky.app/profile/${ownerProfile.handle}`}
+                href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-xs hover:opacity-80 transition-opacity"
                 style={{ color: "#a78bfa" }}
               >
                 <Globe style={{ width: 10, height: 10 }} />
-                @{ownerProfile.handle}
+                @{ownerProfile?.handle ?? cleanHandle}
               </a>
             </div>
           </div>
