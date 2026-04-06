@@ -6,6 +6,30 @@ import type { Session } from "@/types";
 const SESSION_COOKIE = "mado_session";
 
 /**
+ * Update the profile fields of the current session in Redis.
+ */
+export async function updateSessionProfile(
+  did: string,
+  profile: { handle: string; displayName?: string; avatar?: string }
+): Promise<void> {
+  try {
+    const cookieStore = await cookies();
+    const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
+    if (!sessionId) return;
+
+    const redis = getRedis();
+    const session = await redis.get<Session>(Keys.session(sessionId));
+    if (!session || session.did !== did) return;
+
+    const ttl = await redis.ttl(Keys.session(sessionId));
+    const updated: Session = { ...session, ...profile };
+    await redis.setex(Keys.session(sessionId), ttl > 0 ? ttl : TTL.SESSION, updated);
+  } catch {
+    // ignore
+  }
+}
+
+/**
  * Get the current session from the session cookie + Redis.
  * Returns null if not authenticated.
  */
