@@ -19,20 +19,9 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-dvh">
       <Header />
-
       <main className="flex-1">
         {/* Hero */}
         <section className="relative overflow-hidden px-4 pt-24 pb-20 md:pt-32 md:pb-28">
-          {/* Gradient orbs */}
-          <div
-            className="absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
-            style={{ background: "radial-gradient(circle, #7c3aed, transparent)" }}
-          />
-          <div
-            className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-15 pointer-events-none"
-            style={{ background: "radial-gradient(circle, #4f46e5, transparent)" }}
-          />
-
           <div className="relative mx-auto max-w-3xl text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6"

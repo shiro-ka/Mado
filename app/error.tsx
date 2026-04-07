@@ -16,7 +16,7 @@ export default function GlobalError({ error, reset }: ErrorProps) {
 
   return (
     <html lang="ja">
-      <body>
+      <body className="bg-slate-950">
         <div
           style={{
             minHeight: "100dvh",
@@ -24,7 +24,6 @@ export default function GlobalError({ error, reset }: ErrorProps) {
             alignItems: "center",
             justifyContent: "center",
             padding: "1rem",
-            background: "#0a0a0f",
           }}
         >
           <div style={{ textAlign: "center", maxWidth: "24rem" }}>

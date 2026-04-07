@@ -7,13 +7,7 @@ export async function Header() {
   const session = await getSession();
 
   return (
-    <header
-      className="sticky top-0 z-40 w-full backdrop-blur-md"
-      style={{
-        background: "rgba(13, 11, 20, 0.85)",
-        borderBottom: "1px solid var(--border)",
-      }}
-    >
+    <header className="sticky top-0 z-40 w-full h-16 bg-blue-950 border-b-indigo-500">
       <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
