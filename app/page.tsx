@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   MessageCircle,
   Lock,
@@ -14,8 +15,11 @@ import {
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
+import { getSession } from "@/lib/auth";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const session = await getSession();
+  if (session) redirect("/dashboard");
   return (
     <div className="flex flex-col min-h-dvh">
       <Header />
