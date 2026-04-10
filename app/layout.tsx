@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
+
+const zenMaruGothic = Zen_Maru_Gothic({
+  weight: "500",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-zen-maru",
+});
 
 export const viewport: Viewport = {
   themeColor: "#7c3aed",
@@ -7,7 +15,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Mado (窓) - 半匿名質問箱",
+    default: "Mado - 半匿名の箱",
     template: "%s | Mado",
   },
   description:
@@ -37,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja">
+    <html lang="ja" className={zenMaruGothic.variable}>
       <body className="bg-slate-950">
         {children}
       </body>
