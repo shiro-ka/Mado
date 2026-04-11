@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   MessageSquare,
   Inbox,
+  Send,
   LogOut,
   MessageCircle,
   Menu,
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "ダッシュボード" },
   { href: "/dashboard/boxes", icon: MessageSquare, label: "質問箱" },
   { href: "/dashboard/questions", icon: Inbox, label: "受信トレイ" },
+  { href: "/dashboard/sent", icon: Send, label: "送信トレイ" },
 ];
 
 interface Props {
