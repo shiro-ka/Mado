@@ -5,6 +5,7 @@ import type {
   BlueMadoAnswer,
   QuestionBox,
   Question,
+  Answer,
 } from "@/types";
 import type { SessionFetch } from "@/lib/oauth";
 
@@ -236,6 +237,40 @@ export async function listQuestions(did: string): Promise<Question[]> {
         createdAt: record.createdAt,
       };
     });
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * List answer records for a given question (koe) AT-URI.
+ */
+export async function listAnswers(
+  ownerDid: string,
+  koeUri: string
+): Promise<Answer[]> {
+  const agent = publicAgent();
+  try {
+    const res = await agent.com.atproto.repo.listRecords({
+      repo: ownerDid,
+      collection: NSID.ANSWER,
+      limit: 100,
+    });
+    return res.data.records
+      .filter((r) => (r.value as BlueMadoAnswer).koe === koeUri)
+      .map((r) => {
+        const record = r.value as BlueMadoAnswer;
+        const rkey = r.uri.split("/").pop() ?? "";
+        return {
+          uri: r.uri,
+          cid: r.cid,
+          rkey,
+          questionRkey: koeUri.split("/").pop() ?? "",
+          body: record.body,
+          createdAt: record.createdAt,
+        };
+      })
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   } catch {
     return [];
   }
