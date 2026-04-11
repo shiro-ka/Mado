@@ -5,6 +5,7 @@ import { encryptDid } from "@/lib/crypto";
 import { writeQuestion, getBoxRecord, getProfile } from "@/lib/atproto";
 import { restoreOAuthSession } from "@/lib/oauth";
 import { getRedis, Keys, TTL } from "@/lib/redis";
+import type { SentRef } from "@/types";
 
 const sendSchema = z.object({
   body: z.string().min(1).max(500),
@@ -147,6 +148,12 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Store sent ref for sender's outbox
+    const koeRkey = result.uri.split("/").pop() ?? "";
+    const sentRef: SentRef = { ownerDid: boxOwnerDid, koeRkey, sentAt: new Date().toISOString(), body };
+    await redis.lpush(Keys.sent(session.did), sentRef);
+    await redis.ltrim(Keys.sent(session.did), 0, 199);
 
     return NextResponse.json({ success: true, uri: result.uri });
   } catch (err) {

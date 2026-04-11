@@ -72,6 +72,13 @@ export interface BlueMadoAnswer {
   createdAt: string;
 }
 
+export interface SentRef {
+  ownerDid: string;
+  koeRkey: string;
+  sentAt: string;
+  body: string;
+}
+
 // API response types
 export interface ApiError {
   error: string;
