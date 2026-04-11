@@ -11,6 +11,7 @@ import { AnswerForm } from "@/components/mado/answer-form";
 import { BlockButton } from "@/components/mado/block-button";
 import { DeleteQuestionButton } from "@/components/mado/delete-question-button";
 import { formatDateFull } from "@/lib/utils";
+import { MessageCircle } from "lucide-react";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -20,8 +21,12 @@ export default async function QuestionDetailPage({ params }: Props) {
   const session = await requireSession();
   const { id: rkey } = await params;
 
-  const { getKoeRecord } = await import("@/lib/atproto");
-  const question = await getKoeRecord(session.did, rkey);
+  const { getKoeRecord, listAnswers } = await import("@/lib/atproto");
+  const koeUri = `at://${session.did}/blue.mado.koe/${rkey}`;
+  const [question, answers] = await Promise.all([
+    getKoeRecord(session.did, rkey),
+    listAnswers(session.did, koeUri),
+  ]);
 
   if (!question) {
     notFound();
@@ -162,6 +167,46 @@ export default async function QuestionDetailPage({ params }: Props) {
         </div>
       </div>
 
+      {/* Existing answers */}
+      {answers.length > 0 && (
+        <div className="mb-5 flex flex-col gap-3">
+          <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            回答済み（{answers.length}件）
+          </h2>
+          {answers.map((answer) => (
+            <div
+              key={answer.rkey}
+              className="rounded-2xl p-5"
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border)",
+              }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div
+                  className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+                  style={{ background: "var(--accent-light)" }}
+                >
+                  <MessageCircle style={{ width: 12, height: 12, color: "var(--accent)" }} />
+                </div>
+                <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>
+                  あなたの回答
+                </span>
+                <span className="text-xs ml-auto" style={{ color: "var(--text-subtle)" }}>
+                  {formatDateFull(answer.createdAt)}
+                </span>
+              </div>
+              <p
+                className="text-sm leading-relaxed whitespace-pre-wrap"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {answer.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Answer form */}
       <div
         className="rounded-2xl p-6 mb-5"
@@ -174,7 +219,7 @@ export default async function QuestionDetailPage({ params }: Props) {
           回答を書く
         </h2>
         <AnswerForm
-          koeUri={`at://${session.did}/blue.mado.koe/${rkey}`}
+          koeUri={koeUri}
         />
       </div>
 

@@ -10,7 +10,11 @@ const items = [
   { href: "/dashboard/semi-anon", icon: Eye, label: "半匿名の仕組み" },
 ];
 
-export function InfoNav() {
+interface InfoNavProps {
+  onNavigate?: () => void;
+}
+
+export function InfoNav({ onNavigate }: InfoNavProps) {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -37,6 +41,7 @@ export function InfoNav() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onNavigate}
               className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200"
               style={{ color: "var(--text-subtle)" }}
             >
