@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.733332 67.733333"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   sodipodi:docname="Mado.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     inkscape:zoom="2.6593477"
+     inkscape:cx="125.78272"
+     inkscape:cy="137.81575"
+     inkscape:window-width="1920"
+     inkscape:window-height="1123"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="powerclip"
+       message=""
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false" />
+    <inkscape:path-effect
+       effect="powerclip"
+       message=""
+       id="path-effect16"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false" />
+    <inkscape:path-effect
+       effect="powerclip"
+       message=""
+       id="path-effect15"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false" />
+    <inkscape:path-effect
+       effect="powerclip"
+       message=""
+       id="path-effect14"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false" />
+    <inkscape:path-effect
+       effect="powerclip"
+       message=""
+       id="path-effect11"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath13">
+      <path
+         style="display:block;fill:none;fill-opacity:1;stroke-width:0.264999;stroke-dasharray:none"
+         d="M 4.2333333,4.2333333 H 31.75 V 63.499999 H 4.2333333 Z"
+         id="path13"
+         inkscape:label="clip左"
+         sodipodi:nodetypes="ccccc" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath14">
+      <path
+         style="display:none;fill:none;fill-opacity:1;stroke-width:0.264999;stroke-dasharray:none"
+         d="M 4.2333333,4.2333333 H 31.75 V 63.499999 H 4.2333333 Z"
+         id="path14"
+         inkscape:label="clip左"
+         sodipodi:nodetypes="ccccc" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3">
+      <path
+         id="path3"
+         style="display:none;fill:none;stroke-width:0.264999"
+         d="M 4.2333333,4.2333333 V 63.499999 H 31.75 V 4.2333333 Z m 31.7499997,0 V 63.499999 H 63.499999 V 4.2333333 Z" />
+      <path
+         id="lpe_path-effect3"
+         style="fill:none;stroke-width:0.264999"
+         class="powerclip"
+         d="M -5,-5 H 72.733332 V 72.733332 H -5 Z M 4.2333333,4.2333333 V 63.499999 H 31.75 V 4.2333333 Z m 31.7499997,0 V 63.499999 H 63.499999 V 4.2333333 Z" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="雲">
+    <path
+       style="fill:#afc6e9;stroke:#373e48;stroke-width:0.52916666;stroke-opacity:1;stroke-dasharray:none"
+       d="M 3.7041666,3.7041666 H 64.029166 V 14.816666 c 0,0 -1.037851,3.155772 -2.841698,4.186271 -2.310538,1.319961 -3.979674,0.397967 -3.979674,0.397967 l 2.487294,12.834445 -8.158326,-11.043592 c 0,0 -1.061491,1.858965 -6.466969,2.288311 -5.723266,0.454588 -7.561378,-2.885262 -7.561378,-2.885262 0,0 -3.224831,4.796154 -12.336986,4.576623 -8.17111,-0.196859 -9.053755,-5.571541 -9.053755,-5.571541 0,0 -3.518601,3.04414 -8.2578206,0.09949 C 4.8424485,17.824554 3.7041666,11.641667 3.7041666,11.641667 Z"
+       id="path4"
+       sodipodi:nodetypes="cccscccscscscc" />
+  </g>
+  <g
+     inkscape:label="窓枠"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#2c5aa0;fill-opacity:1;stroke-width:0.264583"
+       d="m 0,4.2333333 c 0,0 0.11692241,-1.7365485 1.3229167,-2.9104166 C 2.4657663,0.21051126 4.2333333,0 4.2333333,0 H 63.499999 c 0,0 2.109154,0.27506978 2.910417,1.3229167 1.033471,1.3515159 1.322916,2.9104166 1.322916,2.9104166 V 63.499999 c 0,0 -0.181193,1.784083 -1.322916,2.910417 -1.197204,1.181067 -2.910417,1.322916 -2.910417,1.322916 H 4.2333333 c 0,0 -1.8436821,-0.256884 -2.9104166,-1.322916 C 0.1122417,65.200538 0,63.499999 0,63.499999 Z"
+       id="path2"
+       sodipodi:nodetypes="csccsccsccscc"
+       inkscape:label="外枠"
+       clip-path="url(#clipPath3)"
+       inkscape:path-effect="#path-effect3"
+       inkscape:original-d="m 0,4.2333333 c 0,0 0.11692241,-1.7365485 1.3229167,-2.9104166 C 2.4657663,0.21051126 4.2333333,0 4.2333333,0 H 63.499999 c 0,0 2.109154,0.27506978 2.910417,1.3229167 1.033471,1.3515159 1.322916,2.9104166 1.322916,2.9104166 V 63.499999 c 0,0 -0.181193,1.784083 -1.322916,2.910417 -1.197204,1.181067 -2.910417,1.322916 -2.910417,1.322916 H 4.2333333 c 0,0 -1.8436821,-0.256884 -2.9104166,-1.322916 C 0.1122417,65.200538 0,63.499999 0,63.499999 Z" />
+  </g>
+</svg>

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/lib/auth";
 
@@ -11,15 +10,8 @@ export async function Header() {
       <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200"
-            style={{ background: "var(--accent)" }}
-          >
-            <MessageCircle
-              className="text-white"
-              style={{ width: 16, height: 16 }}
-            />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/mado-logo.svg" alt="Mado" className="w-8 h-8" />
           <span className="font-bold text-lg" style={{ color: "var(--text-primary)" }}>
             Mado
           </span>
