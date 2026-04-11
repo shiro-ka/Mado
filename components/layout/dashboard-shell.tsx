@@ -8,7 +8,6 @@ import {
   Inbox,
   Send,
   LogOut,
-  MessageCircle,
   Menu,
   X,
 } from "lucide-react";
@@ -45,12 +44,8 @@ export function DashboardShell({ children, session }: Props) {
           className="flex items-center gap-2"
           onClick={() => setOpen(false)}
         >
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: "var(--accent)" }}
-          >
-            <MessageCircle className="text-white" style={{ width: 16, height: 16 }} />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/mado-logo.svg" alt="Mado" className="w-8 h-8" />
           <span className="font-bold text-base" style={{ color: "var(--text-primary)" }}>
             Mado
           </span>
@@ -146,12 +141,8 @@ export function DashboardShell({ children, session }: Props) {
           <Menu style={{ width: 20, height: 20 }} />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center"
-            style={{ background: "var(--accent)" }}
-          >
-            <MessageCircle className="text-white" style={{ width: 14, height: 14 }} />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/mado-logo.svg" alt="Mado" className="w-7 h-7" />
           <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>
             Mado
           </span>
