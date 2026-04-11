@@ -243,6 +243,40 @@ export async function listQuestions(did: string): Promise<Question[]> {
 }
 
 /**
+ * Fetch all answer records for an owner, grouped by koe AT-URI.
+ * Used to batch-check replies for the sent outbox.
+ */
+export async function getAnswersByOwner(ownerDid: string): Promise<Map<string, Answer[]>> {
+  const agent = publicAgent();
+  try {
+    const res = await agent.com.atproto.repo.listRecords({
+      repo: ownerDid,
+      collection: NSID.ANSWER,
+      limit: 100,
+    });
+    const map = new Map<string, Answer[]>();
+    for (const r of res.data.records) {
+      const record = r.value as BlueMadoAnswer;
+      const rkey = r.uri.split("/").pop() ?? "";
+      const answer: Answer = {
+        uri: r.uri,
+        cid: r.cid,
+        rkey,
+        questionRkey: record.koe.split("/").pop() ?? "",
+        body: record.body,
+        createdAt: record.createdAt,
+      };
+      const list = map.get(record.koe) ?? [];
+      list.push(answer);
+      map.set(record.koe, list);
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
+}
+
+/**
  * List answer records for a given question (koe) AT-URI.
  */
 export async function listAnswers(

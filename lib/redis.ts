@@ -66,6 +66,17 @@ export const Keys = {
    * Used by the session-check cron to iterate over all registered users.
    */
   users: "mado:users",
+
+  /**
+   * List of SentRef objects for a sender. Newest first (LPUSH).
+   * Capped at 200 entries.
+   */
+  sent: (senderDid: string) => `sent:${senderDid}`,
+
+  /**
+   * Set of "ownerDid:koeRkey" strings the sender has read replies for.
+   */
+  sentRead: (senderDid: string) => `sent_read:${senderDid}`,
 } as const;
 
 export const TTL = {
