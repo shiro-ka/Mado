@@ -37,14 +37,19 @@ export async function Header() {
 
         {/* Nav links */}
         <nav className="hidden md:flex items-center gap-1">
-          <Link href="/#how-it-works">
+          <Link href="/about">
+            <Button variant="ghost" size="sm">
+              Madoについて
+            </Button>
+          </Link>
+          <Link href="/guide">
             <Button variant="ghost" size="sm">
               使い方
             </Button>
           </Link>
-          <Link href="/#features">
+          <Link href="/semi-anon">
             <Button variant="ghost" size="sm">
-              特徴
+              半匿名の仕組み
             </Button>
           </Link>
         </nav>

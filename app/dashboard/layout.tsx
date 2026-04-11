@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { getSession, updateSessionProfile } from "@/lib/auth";
 import { getProfile } from "@/lib/atproto";
+import { InfoNav } from "@/components/layout/info-nav";
 
 const navItems = [
   {
@@ -68,7 +69,7 @@ export default async function DashboardLayout({
           className="h-16 px-5 flex items-center gap-2"
           style={{ borderBottom: "1px solid var(--border)" }}
         >
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/dashboard" className="flex items-center gap-2 group">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{ background: "var(--accent)" }}
@@ -98,6 +99,7 @@ export default async function DashboardLayout({
                 {item.label}
               </Link>
             ))}
+            <InfoNav />
           </div>
         </nav>
 
