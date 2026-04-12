@@ -12,8 +12,8 @@ import {
   Send,
   Inbox,
 } from "lucide-react";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/shell/header";
+import { Footer } from "@/components/shell/footer";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/lib/auth";
 
