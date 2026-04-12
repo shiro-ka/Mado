@@ -10,7 +10,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: "bg-violet-600/15 text-violet-400 border border-violet-600/30",
+  default: "bg-blue-600/15 text-blue-400 border border-blue-600/30",
   success: "bg-emerald-400/10 text-emerald-400 border border-emerald-400/25",
   warning: "bg-amber-400/10 text-amber-400 border border-amber-400/25",
   error: "bg-red-400/10 text-red-400 border border-red-400/25",
@@ -18,7 +18,7 @@ const variantClasses: Record<BadgeVariant, string> = {
 };
 
 const dotClasses: Record<BadgeVariant, string> = {
-  default: "bg-violet-400",
+  default: "bg-blue-400",
   success: "bg-emerald-400",
   warning: "bg-amber-400",
   error: "bg-red-400",

@@ -28,11 +28,11 @@ export function SemiAnonContent() {
         {[
           {
             icon: User,
-            color: "text-violet-400",
-            bg: "bg-violet-600/12",
+            color: "text-blue-400",
+            bg: "bg-blue-600/12",
             title: "ボックスオーナー",
             items: ["質問の本文", "送り主のDIDおよびBlueskyハンドル"],
-            itemColor: "text-violet-400",
+            itemColor: "text-blue-400",
           },
           {
             icon: Eye,

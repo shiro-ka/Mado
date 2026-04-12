@@ -101,7 +101,7 @@ export default function NewBoxPage() {
               aria-checked={isOpen}
               onClick={() => setIsOpen((v) => !v)}
               className={cn(
-                "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500/40 border border-border",
+                "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/40 border border-border",
                 isOpen ? "bg-accent" : "bg-elevated"
               )}
               disabled={formState === "submitting"}

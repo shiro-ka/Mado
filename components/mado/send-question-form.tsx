@@ -74,9 +74,9 @@ export function SendQuestionForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {/* Sender disclosure */}
-      <div className="rounded-lg p-3 flex items-start gap-2.5 text-sm bg-accent-light border border-violet-600/25">
-        <AlertCircle size={15} className="mt-0.5 shrink-0 text-violet-400" />
-        <p className="text-violet-300">
+      <div className="rounded-lg p-3 flex items-start gap-2.5 text-sm bg-accent-light border border-blue-600/25">
+        <AlertCircle size={15} className="mt-0.5 shrink-0 text-blue-400" />
+        <p className="text-blue-300">
           この質問は{" "}
           <span className="font-semibold">@{senderHandle}</span> として相手に届きます。
           送り主はボックスのオーナーのみに開示されます。

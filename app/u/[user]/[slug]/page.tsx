@@ -75,7 +75,7 @@ export default async function SendQuestionPage({ params }: Props) {
                 href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs hover:opacity-80 transition-opacity text-violet-400"
+                className="inline-flex items-center gap-1 text-xs hover:opacity-80 transition-opacity text-blue-400"
               >
                 <Globe size={10} />
                 @{ownerProfile?.handle ?? cleanHandle}
@@ -145,7 +145,7 @@ export default async function SendQuestionPage({ params }: Props) {
           {ownerRegistered && box.isOpen && !session && (
             <div className="rounded-2xl p-6 text-center flex flex-col items-center gap-4 bg-surface border border-border">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-accent-light">
-                <LogIn size={20} className="text-violet-400" />
+                <LogIn size={20} className="text-blue-400" />
               </div>
               <div>
                 <p className="font-semibold text-sm mb-1 text-primary">
