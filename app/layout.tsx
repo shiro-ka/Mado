@@ -15,28 +15,23 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Mado - 半匿名の箱",
+    default: "Mado - 半匿名メッセージ",
     template: "%s | Mado",
   },
   description:
-    "ATProtocol基盤の半匿名質問箱。送り主はあなただけに届きます。Blueskyアカウントで質問を送ろう。",
+    "ATProtocol基盤の半匿名メッセージサービス。Blueskyアカウントで声を送ろう。",
   openGraph: {
-    title: "Mado (窓) - 半匿名質問箱",
-    description: "ATProtocol基盤の半匿名質問箱。送り主はあなただけに届きます。",
+    title: "Mado - 半匿名メッセージ",
+    description: "ATProtocol基盤の半匿名メッセージサービス。Blueskyアカウントで声を送ろう。",
     type: "website",
     locale: "ja_JP",
   },
   twitter: {
     card: "summary",
-    title: "Mado (窓) - 半匿名質問箱",
-    description: "ATProtocol基盤の半匿名質問箱。送り主はあなただけに届きます。",
+    title: "Mado - 半匿名メッセージ",
+    description: "ATProtocol基盤の半匿名メッセージサービス。Blueskyアカウントで声を送ろう。",
   },
   applicationName: "Mado",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Mado",
-  },
 };
 
 export default function RootLayout({

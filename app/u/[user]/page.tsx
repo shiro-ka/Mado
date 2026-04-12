@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Globe, MessageCircle } from "lucide-react";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/shell/header";
+import { Footer } from "@/components/shell/footer";
 import { QuestionBoxCard } from "@/components/mado/question-box-card";
 import { resolveHandle, getProfile, listBoxes } from "@/lib/atproto";
 import type { Metadata } from "next";

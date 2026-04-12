@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession, updateSessionProfile } from "@/lib/auth";
 import { getProfile } from "@/lib/atproto";
-import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { DashboardShell } from "@/components/shell/dashboard";
 
 export default async function DashboardLayout({
   children,
