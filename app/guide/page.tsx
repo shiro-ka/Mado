@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/shell/header";
+import { Footer } from "@/components/shell/footer";
 import { GuideContent } from "@/components/mado/guide-content";
 
 export const metadata: Metadata = { title: "使い方" };
