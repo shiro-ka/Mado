@@ -28,7 +28,7 @@ export default async function LandingPage() {
         <section className="relative overflow-hidden px-4 pt-24 pb-20 md:pt-32 md:pb-28">
           <div className="relative mx-auto max-w-3xl text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-accent-light border border-violet-600/30 text-violet-300">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-accent-light border border-blue-600/30 text-blue-300">
               <Sparkles size={14} />
               ATProtocol基盤
             </div>
@@ -36,7 +36,7 @@ export default async function LandingPage() {
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-primary">
               窓越しに、
               <br />
-              <span className="text-violet-400">想いを届けよう</span>
+              <span className="text-blue-400">想いを届けよう</span>
             </h1>
 
             <p className="text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed text-muted">
@@ -96,8 +96,8 @@ export default async function LandingPage() {
               {[
                 {
                   icon: Eye,
-                  iconClass: "text-violet-400",
-                  bgClass: "bg-violet-600/12",
+                  iconClass: "text-blue-400",
+                  bgClass: "bg-blue-600/12",
                   title: "半匿名性",
                   description:
                     "送り主はボックスオーナーにのみ開示。質問内容と送信者情報は暗号化されて保存されるため、第三者には一切見えません。",
@@ -155,7 +155,7 @@ export default async function LandingPage() {
                 {
                   step: "01",
                   icon: UserCheck,
-                  iconClass: "text-violet-400",
+                  iconClass: "text-blue-400",
                   title: "Blueskyでログイン",
                   description:
                     "Blueskyアカウントで認証します。質問箱を開設するにはログインが必要です。",
@@ -203,16 +203,16 @@ export default async function LandingPage() {
         {/* CTA */}
         <section className="px-4 py-16">
           <div className="mx-auto max-w-2xl text-center">
-            <div className="rounded-3xl p-10 md:p-14 relative overflow-hidden bg-gradient-to-br from-violet-600/20 to-indigo-600/15 border border-violet-600/35">
+            <div className="rounded-3xl p-10 md:p-14 relative overflow-hidden bg-gradient-to-br from-blue-600/20 to-blue-900/20 border border-blue-600/35">
               <div
                 className="absolute inset-0 opacity-30 pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.4), transparent 70%)",
+                    "radial-gradient(ellipse at 50% 0%, rgba(0,133,255,0.4), transparent 70%)",
                 }}
               />
               <div className="relative">
-                <Send size={36} className="mx-auto mb-4 opacity-80 text-violet-400" />
+                <Send size={36} className="mx-auto mb-4 opacity-80 text-blue-400" />
                 <h2 className="text-2xl md:text-3xl font-bold mb-3 text-primary">
                   今すぐ始めよう
                 </h2>

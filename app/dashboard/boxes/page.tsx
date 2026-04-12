@@ -33,7 +33,7 @@ export default async function BoxesPage() {
       {boxes.length === 0 && (
         <div className="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-accent-light">
-            <Plus size={24} className="text-violet-400" />
+            <Plus size={24} className="text-blue-400" />
           </div>
           <div>
             <h3 className="font-semibold text-base mb-1 text-primary">質問箱を作成しましょう</h3>
@@ -73,7 +73,7 @@ export default async function BoxesPage() {
                       href={publicUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs hover:opacity-80 transition-opacity truncate text-violet-400"
+                      className="text-xs hover:opacity-80 transition-opacity truncate text-blue-400"
                     >
                       {publicUrl}
                     </a>

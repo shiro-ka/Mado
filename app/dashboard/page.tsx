@@ -57,8 +57,8 @@ export default async function DashboardPage() {
             label: "質問箱",
             value: boxes.length,
             sub: `${openBoxCount}件 受付中`,
-            color: "text-violet-400",
-            bg: "bg-violet-600/10",
+            color: "text-blue-400",
+            bg: "bg-blue-600/10",
           },
           {
             label: "未読の質問",
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
         <Card variant="default">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <MessageSquare size={16} className="text-violet-400" />
+              <MessageSquare size={16} className="text-blue-400" />
               <h2 className="text-sm font-semibold text-primary">質問箱</h2>
             </div>
             <Link href="/dashboard/boxes">
@@ -112,7 +112,7 @@ export default async function DashboardPage() {
                 <Link
                   key={box.rkey}
                   href={`/dashboard/boxes/${box.rkey}`}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-violet-950/20"
+                  className="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-blue-950/20"
                 >
                   <span className="text-sm truncate text-primary">{box.title}</span>
                   <span className={cn("text-xs ml-2 shrink-0", box.isOpen ? "text-success" : "text-subtle")}>
@@ -154,7 +154,7 @@ export default async function DashboardPage() {
                 <Link
                   key={q.rkey}
                   href={`/dashboard/questions/${q.rkey}`}
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-violet-950/20"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-blue-950/20"
                 >
                   {!q.isRead && (
                     <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-accent" />
