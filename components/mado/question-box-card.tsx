@@ -23,7 +23,7 @@ export function QuestionBoxCard({
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0">
             <div className="mt-0.5 w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 bg-accent-light">
-              <MessageCircle size={16} className="text-violet-400" />
+              <MessageCircle size={16} className="text-blue-400" />
             </div>
             <div className="min-w-0">
               <h3 className="font-semibold text-sm leading-snug truncate text-primary">

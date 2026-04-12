@@ -127,7 +127,7 @@ export function SentList({ items }: Props) {
                 key={key}
                 className={cn(
                   "rounded-2xl overflow-hidden bg-surface",
-                  hasAnswer && !isRead ? "border border-violet-600/40" : "border border-border"
+                  hasAnswer && !isRead ? "border border-blue-600/40" : "border border-border"
                 )}
               >
                 {/* Header */}
@@ -146,7 +146,7 @@ export function SentList({ items }: Props) {
                           "text-xs px-2 py-0.5 rounded-full font-medium",
                           isRead
                             ? "bg-elevated text-subtle border border-border"
-                            : "bg-violet-600/15 text-violet-400 border border-violet-600/30"
+                            : "bg-blue-600/15 text-blue-400 border border-blue-600/30"
                         )}
                       >
                         {isRead ? "返信済み" : "返信あり"}

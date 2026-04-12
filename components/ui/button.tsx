@@ -25,15 +25,15 @@ export interface ButtonProps
 
 const variantClasses: Record<ButtonVariant, string> = {
   default:
-    "bg-violet-600 hover:bg-violet-700 text-white shadow-sm hover:shadow-violet-900/30 hover:shadow-md",
+    "bg-accent hover:bg-accent-hover text-white shadow-sm hover:shadow-blue-900/30 hover:shadow-md",
   secondary:
-    "bg-violet-950/40 hover:bg-violet-950/60 text-violet-200 border border-violet-900/40 hover:border-violet-700/60",
+    "bg-blue-950/40 hover:bg-blue-950/60 text-blue-200 border border-blue-900/40 hover:border-blue-700/60",
   ghost:
-    "bg-transparent hover:bg-violet-950/30 text-violet-300 hover:text-violet-200",
+    "bg-transparent hover:bg-blue-950/30 text-blue-300 hover:text-blue-200",
   destructive:
     "bg-red-600/90 hover:bg-red-600 text-white shadow-sm",
   outline:
-    "bg-transparent border border-violet-700/40 hover:border-violet-600/60 text-violet-300 hover:text-violet-200 hover:bg-violet-950/20",
+    "bg-transparent border border-blue-700/40 hover:border-blue-600/60 text-blue-300 hover:text-blue-200 hover:bg-blue-950/20",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -65,7 +65,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         className={cn(
           "inline-flex items-center justify-center font-medium transition-all duration-200",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 focus-visible:ring-offset-1",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-1",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           "select-none cursor-pointer",
           variantClasses[variant],

@@ -24,8 +24,8 @@ export function AboutContent() {
         {[
           {
             icon: Eye,
-            color: "text-violet-400",
-            bg: "bg-violet-600/12",
+            color: "text-blue-400",
+            bg: "bg-blue-600/12",
             title: "半匿名性",
             body: "送り主はボックスオーナーにのみ開示されます。第三者が質問と送信者の紐付けを知る手段はありません。",
           },

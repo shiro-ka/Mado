@@ -39,7 +39,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               "bg-elevated text-primary",
               error
                 ? "border border-red-600/40 ring-1 ring-red-500/50 focus:ring-red-500/60"
-                : "border border-border focus:ring-violet-500/40",
+                : "border border-border focus:ring-blue-500/40",
               leftAddon && "pl-10",
               rightAddon && "pr-10",
               className

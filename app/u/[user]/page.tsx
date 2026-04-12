@@ -73,7 +73,7 @@ export default async function ProfilePage({ params }: Props) {
                 href={`https://bsky.app/profile/${profile?.handle ?? cleanHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 mt-2 text-xs hover:opacity-80 transition-opacity text-violet-400"
+                className="inline-flex items-center gap-1 mt-2 text-xs hover:opacity-80 transition-opacity text-blue-400"
               >
                 <Globe size={11} />
                 Blueskyで見る

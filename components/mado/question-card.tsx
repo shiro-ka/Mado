@@ -17,8 +17,8 @@ export function QuestionCard({ question, preview }: QuestionCardProps) {
     <Link href={href} className="group block">
       <div
         className={cn(
-          "rounded-xl p-4 transition-all duration-200 group-hover:border-violet-700/40 bg-surface",
-          question.isRead ? "border border-border" : "border border-violet-700/35"
+          "rounded-xl p-4 transition-all duration-200 group-hover:border-blue-700/40 bg-surface",
+          question.isRead ? "border border-border" : "border border-blue-700/35"
         )}
       >
         <div className="flex items-start gap-3">

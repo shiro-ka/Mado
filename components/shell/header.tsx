@@ -13,7 +13,7 @@ export async function Header() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/mado-logo.svg" alt="Mado" className="w-8 h-8" />
           <span className="font-bold text-lg text-primary">Mado</span>
-          <span className="text-xs px-1.5 py-0.5 rounded-full font-medium bg-accent-light text-violet-400 border border-violet-600/30">
+          <span className="text-xs px-1.5 py-0.5 rounded-full font-medium bg-accent-light text-blue-400 border border-blue-600/30">
             beta
           </span>
         </Link>

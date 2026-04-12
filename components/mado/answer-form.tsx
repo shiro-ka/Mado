@@ -94,7 +94,7 @@ export function AnswerForm({ koeUri, onSuccess }: AnswerFormProps) {
             checked={crosspost}
             onChange={(e) => setCrosspost(e.target.checked)}
             disabled={formState === "submitting"}
-            className="w-4 h-4 accent-violet-500 cursor-pointer"
+            className="w-4 h-4 accent-blue-500 cursor-pointer"
           />
           <span className="text-xs text-muted">Bskyにもポスト</span>
         </label>

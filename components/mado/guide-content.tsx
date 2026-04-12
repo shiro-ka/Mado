@@ -17,7 +17,7 @@ export function GuideContent() {
           {
             step: "1",
             icon: UserCheck,
-            color: "text-violet-400",
+            color: "text-blue-400",
             title: "Blueskyでログイン",
             body: "右上の「ログイン」からBlueskyアカウントで認証します。OAuthを使うためパスワードは不要です。",
           },
@@ -66,7 +66,7 @@ export function GuideContent() {
           {
             step: "1",
             icon: UserCheck,
-            color: "text-violet-400",
+            color: "text-blue-400",
             title: "Blueskyでログイン",
             body: "質問を送るにもログインが必要です。これによりスパムを防ぎ、半匿名性を担保します。",
           },
