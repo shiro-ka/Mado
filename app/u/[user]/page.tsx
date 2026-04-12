@@ -48,13 +48,7 @@ export default async function ProfilePage({ params }: Props) {
       <main className="flex-1 px-4 py-10">
         <div className="mx-auto max-w-2xl">
           {/* Profile header */}
-          <div
-            className="rounded-2xl p-6 mb-6 flex items-start gap-4"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border)",
-            }}
-          >
+          <div className="rounded-2xl p-6 mb-6 flex items-start gap-4 bg-surface border border-border">
             {profile?.avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -63,39 +57,25 @@ export default async function ProfilePage({ params }: Props) {
                 className="w-16 h-16 rounded-full object-cover shrink-0"
               />
             ) : (
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center shrink-0 font-bold text-2xl"
-                style={{ background: "var(--accent)", color: "white" }}
-              >
+              <div className="w-16 h-16 rounded-full flex items-center justify-center shrink-0 font-bold text-2xl bg-accent text-white">
                 {(profile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h1
-                className="text-xl font-bold"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <h1 className="text-xl font-bold text-primary">
                 {profile?.displayName ?? `@${profile?.handle ?? cleanHandle}`}
               </h1>
-              <p className="text-sm mt-0.5" style={{ color: "var(--text-muted)" }}>
-                @{profile?.handle ?? cleanHandle}
-              </p>
+              <p className="text-sm mt-0.5 text-muted">@{profile?.handle ?? cleanHandle}</p>
               {profile?.description && (
-                <p
-                  className="text-sm mt-2 leading-relaxed"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  {profile.description}
-                </p>
+                <p className="text-sm mt-2 leading-relaxed text-muted">{profile.description}</p>
               )}
               <a
                 href={`https://bsky.app/profile/${profile?.handle ?? cleanHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 mt-2 text-xs hover:opacity-80 transition-opacity"
-                style={{ color: "#a78bfa" }}
+                className="inline-flex items-center gap-1 mt-2 text-xs hover:opacity-80 transition-opacity text-violet-400"
               >
-                <Globe style={{ width: 11, height: 11 }} />
+                <Globe size={11} />
                 Blueskyで見る
               </a>
             </div>
@@ -103,25 +83,15 @@ export default async function ProfilePage({ params }: Props) {
 
           {/* Box list */}
           <div className="mb-3 flex items-center gap-2">
-            <MessageCircle
-              style={{ width: 16, height: 16, color: "var(--text-subtle)" }}
-            />
-            <h2 className="text-sm font-semibold" style={{ color: "var(--text-muted)" }}>
+            <MessageCircle size={16} className="text-subtle" />
+            <h2 className="text-sm font-semibold text-muted">
               質問箱 ({openBoxes.length}件)
             </h2>
           </div>
 
           {openBoxes.length === 0 ? (
-            <div
-              className="rounded-2xl p-10 text-center"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px dashed var(--border-strong)",
-              }}
-            >
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                現在受付中の質問箱はありません
-              </p>
+            <div className="rounded-2xl p-10 text-center bg-surface border border-dashed border-border-strong">
+              <p className="text-sm text-muted">現在受付中の質問箱はありません</p>
             </div>
           ) : (
             <div className="flex flex-col gap-3">

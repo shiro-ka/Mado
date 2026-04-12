@@ -63,170 +63,108 @@ export default async function SendQuestionPage({ params }: Props) {
                 className="w-10 h-10 rounded-full object-cover shrink-0"
               />
             ) : (
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold"
-                style={{ background: "var(--accent)", color: "white" }}
-              >
+              <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold bg-accent text-white">
                 {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
               </div>
             )}
             <div className="min-w-0">
-              <p className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
+              <p className="font-semibold text-sm text-primary">
                 {ownerProfile?.displayName ?? `@${ownerProfile?.handle ?? cleanHandle}`}
               </p>
               <a
                 href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs hover:opacity-80 transition-opacity"
-                style={{ color: "#a78bfa" }}
+                className="inline-flex items-center gap-1 text-xs hover:opacity-80 transition-opacity text-violet-400"
               >
-                <Globe style={{ width: 10, height: 10 }} />
+                <Globe size={10} />
                 @{ownerProfile?.handle ?? cleanHandle}
               </a>
             </div>
           </div>
 
           {/* Box info */}
-          <div
-            className="rounded-2xl p-6 mb-5"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border)",
-            }}
-          >
+          <div className="rounded-2xl p-6 mb-5 bg-surface border border-border">
             <div className="flex items-start gap-3 mb-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h1
-                    className="text-lg font-bold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {box.title}
-                  </h1>
+                  <h1 className="text-lg font-bold text-primary">{box.title}</h1>
                   <Badge variant={box.isOpen ? "success" : "muted"} dot size="sm">
                     {box.isOpen ? "受付中" : "受付停止"}
                   </Badge>
                 </div>
                 {box.description && (
-                  <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                    {box.description}
-                  </p>
+                  <p className="text-sm leading-relaxed text-muted">{box.description}</p>
                 )}
               </div>
             </div>
 
             {/* Encryption badge */}
             <div className="flex items-center gap-1.5">
-              <Lock style={{ width: 11, height: 11, color: "var(--text-subtle)" }} />
-              <span className="text-xs" style={{ color: "var(--text-subtle)" }}>
-                ECIES暗号化で保護されています
-              </span>
+              <Lock size={11} className="text-subtle" />
+              <span className="text-xs text-subtle">ECIES暗号化で保護されています</span>
             </div>
           </div>
 
           {/* Semi-anonymous disclosure */}
-          <div
-            className="rounded-xl p-4 mb-5 flex items-start gap-3"
-            style={{
-              background: "rgba(251, 191, 36, 0.07)",
-              border: "1px solid rgba(251, 191, 36, 0.25)",
-            }}
-          >
-            <Shield
-              className="shrink-0 mt-0.5"
-              style={{ width: 15, height: 15, color: "#fbbf24" }}
-            />
-            <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              <span className="font-semibold" style={{ color: "#fbbf24" }}>
-                半匿名のご注意：
-              </span>{" "}
+          <div className="rounded-xl p-4 mb-5 flex items-start gap-3 bg-amber-400/7 border border-amber-400/25">
+            <Shield size={15} className="shrink-0 mt-0.5 text-amber-400" />
+            <p className="text-xs leading-relaxed text-muted">
+              <span className="font-semibold text-amber-400">半匿名のご注意：</span>{" "}
               このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
-              <strong style={{ color: "var(--text-primary)" }}>ボックスのオーナーにのみ</strong>
+              <strong className="text-primary">ボックスのオーナーにのみ</strong>
               開示されます。第三者には公開されません。
             </p>
           </div>
 
-          {/* Owner not registered in Mado */}
+          {/* Owner not registered */}
           {!ownerRegistered && (
-            <div
-              className="rounded-xl p-6 text-center"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <p className="font-semibold text-sm mb-1" style={{ color: "var(--text-primary)" }}>
+            <div className="rounded-xl p-6 text-center bg-surface border border-border">
+              <p className="font-semibold text-sm mb-1 text-primary">
                 このユーザーはMadoに登録されていません
               </p>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+              <p className="text-xs text-muted">
                 質問を送るには、オーナーがMadoにログインしている必要があります。
               </p>
             </div>
           )}
 
-          {/* Box closed state */}
+          {/* Box closed */}
           {ownerRegistered && !box.isOpen && (
-            <div
-              className="rounded-xl p-6 text-center"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <p className="font-semibold text-sm mb-1" style={{ color: "var(--text-primary)" }}>
+            <div className="rounded-xl p-6 text-center bg-surface border border-border">
+              <p className="font-semibold text-sm mb-1 text-primary">
                 現在この質問箱は受付停止中です
               </p>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+              <p className="text-xs text-muted">
                 オーナーが受付を再開するまでお待ちください。
               </p>
             </div>
           )}
 
-          {/* Auth state: not logged in */}
+          {/* Not logged in */}
           {ownerRegistered && box.isOpen && !session && (
-            <div
-              className="rounded-2xl p-6 text-center flex flex-col items-center gap-4"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                style={{ background: "var(--accent-light)" }}
-              >
-                <LogIn style={{ width: 20, height: 20, color: "#a78bfa" }} />
+            <div className="rounded-2xl p-6 text-center flex flex-col items-center gap-4 bg-surface border border-border">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-accent-light">
+                <LogIn size={20} className="text-violet-400" />
               </div>
               <div>
-                <p className="font-semibold text-sm mb-1" style={{ color: "var(--text-primary)" }}>
+                <p className="font-semibold text-sm mb-1 text-primary">
                   質問するにはログインが必要です
                 </p>
-                <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                <p className="text-xs leading-relaxed text-muted">
                   Blueskyアカウントでログインして質問を送りましょう。
                   送り主はオーナーのみに開示されます。
                 </p>
               </div>
-              <Link
-                href={`/auth/login?next=/u/@${cleanHandle}/${slug}`}
-                className="w-full"
-              >
-                <Button size="lg" className="w-full">
-                  ログインして質問する
-                </Button>
+              <Link href={`/auth/login?next=/u/@${cleanHandle}/${slug}`} className="w-full">
+                <Button size="lg" className="w-full">ログインして質問する</Button>
               </Link>
             </div>
           )}
 
-          {/* Auth state: logged in */}
+          {/* Logged in */}
           {ownerRegistered && box.isOpen && session && (
-            <div
-              className="rounded-2xl p-6"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border)",
-              }}
-            >
+            <div className="rounded-2xl p-6 bg-surface border border-border">
               <SendQuestionForm
                 boxOwnerDid={box.ownerDid}
                 boxRkey={box.rkey}
@@ -239,8 +177,7 @@ export default async function SendQuestionPage({ params }: Props) {
           <div className="mt-5 text-center">
             <Link
               href={`/u/@${cleanHandle}`}
-              className="text-xs hover:opacity-80 transition-opacity"
-              style={{ color: "var(--text-subtle)" }}
+              className="text-xs hover:opacity-80 transition-opacity text-subtle"
             >
               ← @{cleanHandle} のプロフィールに戻る
             </Link>

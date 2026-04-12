@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "postinstall": "node -e \"require('fs').writeFileSync('node_modules/tsconfig/isomorphic.json', JSON.stringify({compilerOptions:{target:'ES2020',module:'commonjs',lib:['ES2020'],strict:true,esModuleInterop:true,skipLibCheck:true,forceConsistentCasingInFileNames:true,declaration:true,declarationMap:true,sourceMap:true}},null,2))\""
   },
   "dependencies": {
     "@atproto/api": "^0.13.26",
@@ -25,6 +26,7 @@
     "react-dom": "^19.0.0",
     "serwist": "^9.5.7",
     "tailwind-merge": "^3.2.0",
+    "tsconfig": "^7.0.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

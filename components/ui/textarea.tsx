@@ -40,32 +40,23 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       onChange?.(e);
     };
 
-    const isNearLimit =
-      maxLength && charCount > maxLength * 0.8;
+    const isNearLimit = maxLength && charCount > maxLength * 0.8;
     const isOverLimit = maxLength && charCount > maxLength;
 
     return (
       <div className="flex flex-col gap-1.5 w-full">
         <div className="flex items-center justify-between">
           {label && (
-            <label
-              htmlFor={inputId}
-              className="text-sm font-medium"
-              style={{ color: "var(--text-muted)" }}
-            >
+            <label htmlFor={inputId} className="text-sm font-medium text-muted">
               {label}
             </label>
           )}
           {(showCount || maxLength) && (
             <span
-              className="text-xs tabular-nums"
-              style={{
-                color: isOverLimit
-                  ? "var(--error)"
-                  : isNearLimit
-                  ? "var(--warning)"
-                  : "var(--text-subtle)",
-              }}
+              className={cn(
+                "text-xs tabular-nums",
+                isOverLimit ? "text-error" : isNearLimit ? "text-warning" : "text-subtle"
+              )}
             >
               {charCount}
               {maxLength ? `/${maxLength}` : ""}
@@ -82,28 +73,16 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             "w-full rounded-lg px-4 py-3 text-sm transition-all duration-200 resize-y",
             "focus:outline-none focus:ring-2 min-h-[120px]",
             "placeholder:opacity-50",
+            "bg-elevated text-primary",
             error
-              ? "ring-1 ring-red-500/50 focus:ring-red-500/60"
-              : "focus:ring-violet-500/40",
+              ? "border border-red-600/40 ring-1 ring-red-500/50 focus:ring-red-500/60"
+              : "border border-border focus:ring-violet-500/40",
             className
           )}
-          style={{
-            background: "var(--bg-elevated)",
-            color: "var(--text-primary)",
-            border: `1px solid ${error ? "rgba(239,68,68,0.4)" : "var(--border)"}`,
-          }}
           {...props}
         />
-        {error && (
-          <p className="text-xs" style={{ color: "var(--error)" }}>
-            {error}
-          </p>
-        )}
-        {helper && !error && (
-          <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
-            {helper}
-          </p>
-        )}
+        {error && <p className="text-xs text-error">{error}</p>}
+        {helper && !error && <p className="text-xs text-subtle">{helper}</p>}
       </div>
     );
   }

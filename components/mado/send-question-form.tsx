@@ -39,11 +39,7 @@ export function SendQuestionForm({
       const res = await fetch("/api/questions/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          body: body.trim(),
-          boxOwnerDid,
-          boxRkey,
-        }),
+        body: JSON.stringify({ body: body.trim(), boxOwnerDid, boxRkey }),
       });
 
       if (!res.ok) {
@@ -62,36 +58,13 @@ export function SendQuestionForm({
 
   if (formState === "success") {
     return (
-      <div
-        className="rounded-xl p-6 flex flex-col items-center gap-3 text-center"
-        style={{
-          background: "rgba(52, 211, 153, 0.08)",
-          border: "1px solid rgba(52, 211, 153, 0.25)",
-        }}
-      >
-        <CheckCircle2
-          style={{ width: 40, height: 40, color: "#34d399" }}
-        />
+      <div className="rounded-xl p-6 flex flex-col items-center gap-3 text-center bg-emerald-400/8 border border-emerald-400/25">
+        <CheckCircle2 size={40} className="text-emerald-400" />
         <div>
-          <p
-            className="font-semibold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            質問を送信しました！
-          </p>
-          <p
-            className="text-sm mt-1"
-            style={{ color: "var(--text-muted)" }}
-          >
-            相手に届くまでしばらくお待ちください。
-          </p>
+          <p className="font-semibold text-primary">質問を送信しました！</p>
+          <p className="text-sm mt-1 text-muted">相手に届くまでしばらくお待ちください。</p>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setFormState("idle")}
-          className="mt-1"
-        >
+        <Button variant="ghost" size="sm" onClick={() => setFormState("idle")} className="mt-1">
           別の質問を送る
         </Button>
       </div>
@@ -101,18 +74,9 @@ export function SendQuestionForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {/* Sender disclosure */}
-      <div
-        className="rounded-lg p-3 flex items-start gap-2.5 text-sm"
-        style={{
-          background: "var(--accent-light)",
-          border: "1px solid rgba(124, 58, 237, 0.25)",
-        }}
-      >
-        <AlertCircle
-          className="mt-0.5 shrink-0"
-          style={{ width: 15, height: 15, color: "#a78bfa" }}
-        />
-        <p style={{ color: "#c4b5fd" }}>
+      <div className="rounded-lg p-3 flex items-start gap-2.5 text-sm bg-accent-light border border-violet-600/25">
+        <AlertCircle size={15} className="mt-0.5 shrink-0 text-violet-400" />
+        <p className="text-violet-300">
           この質問は{" "}
           <span className="font-semibold">@{senderHandle}</span> として相手に届きます。
           送り主はボックスのオーナーのみに開示されます。
@@ -136,15 +100,8 @@ export function SendQuestionForm({
       />
 
       {formState === "error" && (
-        <div
-          className="rounded-lg p-3 flex items-center gap-2 text-sm"
-          style={{
-            background: "rgba(248, 113, 113, 0.08)",
-            border: "1px solid rgba(248, 113, 113, 0.25)",
-            color: "var(--error)",
-          }}
-        >
-          <AlertCircle style={{ width: 15, height: 15 }} />
+        <div className="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+          <AlertCircle size={15} />
           {errorMsg}
         </div>
       )}
@@ -155,7 +112,7 @@ export function SendQuestionForm({
         size="lg"
         loading={formState === "submitting"}
         disabled={!isValid}
-        rightIcon={<Send style={{ width: 16, height: 16 }} />}
+        rightIcon={<Send size={16} />}
         className="w-full"
       >
         質問を送る

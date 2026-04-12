@@ -28,7 +28,6 @@ export function Dialog({
   children,
   maxWidth = "md",
 }: DialogProps) {
-  // Close on Escape key
   React.useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -37,7 +36,6 @@ export function Dialog({
     return () => document.removeEventListener("keydown", handleKey);
   }, [open, onClose]);
 
-  // Prevent body scroll when open
   React.useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -53,45 +51,30 @@ export function Dialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      {/* Panel */}
       <div
         className={cn(
-          "relative w-full rounded-2xl shadow-2xl",
+          "relative w-full rounded-2xl shadow-2xl bg-elevated border border-border-strong",
           maxWidthClasses[maxWidth]
         )}
-        style={{
-          background: "var(--bg-elevated)",
-          border: "1px solid var(--border-strong)",
-        }}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "dialog-title" : undefined}
         aria-describedby={description ? "dialog-description" : undefined}
       >
-        {/* Header */}
         {(title || description) && (
           <div className="flex items-start justify-between p-6 pb-0">
             <div className="flex flex-col gap-1">
               {title && (
-                <h2
-                  id="dialog-title"
-                  className="text-lg font-semibold"
-                  style={{ color: "var(--text-primary)" }}
-                >
+                <h2 id="dialog-title" className="text-lg font-semibold text-primary">
                   {title}
                 </h2>
               )}
               {description && (
-                <p
-                  id="dialog-description"
-                  className="text-sm"
-                  style={{ color: "var(--text-muted)" }}
-                >
+                <p id="dialog-description" className="text-sm text-muted">
                   {description}
                 </p>
               )}
@@ -103,11 +86,10 @@ export function Dialog({
               className="ml-4 shrink-0"
               aria-label="閉じる"
             >
-              <X style={{ width: 16, height: 16 }} />
+              <X size={16} />
             </Button>
           </div>
         )}
-        {/* Content */}
         <div className="p-6">{children}</div>
       </div>
     </div>

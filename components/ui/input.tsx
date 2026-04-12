@@ -19,20 +19,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium"
-            style={{ color: "var(--text-muted)" }}
-          >
+          <label htmlFor={inputId} className="text-sm font-medium text-muted">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftAddon && (
-            <div
-              className="absolute left-3 flex items-center pointer-events-none"
-              style={{ color: "var(--text-subtle)" }}
-            >
+            <div className="absolute left-3 flex items-center pointer-events-none text-subtle">
               {leftAddon}
             </div>
           )}
@@ -43,39 +36,24 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               "w-full rounded-lg px-4 py-3 text-sm transition-all duration-200",
               "focus:outline-none focus:ring-2",
               "placeholder:opacity-50",
+              "bg-elevated text-primary",
               error
-                ? "ring-1 ring-red-500/50 focus:ring-red-500/60"
-                : "focus:ring-violet-500/40",
+                ? "border border-red-600/40 ring-1 ring-red-500/50 focus:ring-red-500/60"
+                : "border border-border focus:ring-violet-500/40",
               leftAddon && "pl-10",
               rightAddon && "pr-10",
               className
             )}
-            style={{
-              background: "var(--bg-elevated)",
-              color: "var(--text-primary)",
-              border: `1px solid ${error ? "rgba(239,68,68,0.4)" : "var(--border)"}`,
-            }}
             {...props}
           />
           {rightAddon && (
-            <div
-              className="absolute right-3 flex items-center"
-              style={{ color: "var(--text-subtle)" }}
-            >
+            <div className="absolute right-3 flex items-center text-subtle">
               {rightAddon}
             </div>
           )}
         </div>
-        {error && (
-          <p className="text-xs" style={{ color: "var(--error)" }}>
-            {error}
-          </p>
-        )}
-        {helper && !error && (
-          <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
-            {helper}
-          </p>
-        )}
+        {error && <p className="text-xs text-error">{error}</p>}
+        {helper && !error && <p className="text-xs text-subtle">{helper}</p>}
       </div>
     );
   }

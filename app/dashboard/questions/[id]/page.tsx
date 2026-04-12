@@ -32,21 +32,16 @@ export default async function QuestionDetailPage({ params }: Props) {
     notFound();
   }
 
-  // body is plaintext (spec v3); decrypt only encryptedFrom to reveal sender's DID
   const decryptedBody = question.body;
   let senderDid: string | null = null;
   let decryptError = false;
 
   try {
     const redis = getRedis();
-    // Mark this question as read
     await redis.sadd(Keys.read(session.did), rkey);
 
-    // keyPair is keyed by boxRkey, which we can extract from the boxUri
     const boxRkey = question.boxUri.split("/").pop() ?? "";
-    const privateKeyHex = await redis.get<string>(
-      Keys.keyPair(session.did, boxRkey)
-    );
+    const privateKeyHex = await redis.get<string>(Keys.keyPair(session.did, boxRkey));
 
     if (privateKeyHex) {
       senderDid = decryptDid(privateKeyHex, question.encryptedFrom);
@@ -55,7 +50,6 @@ export default async function QuestionDetailPage({ params }: Props) {
     decryptError = true;
   }
 
-  // Fetch sender's profile if we have their DID
   const senderProfile = senderDid ? await getProfile(senderDid) : null;
 
   return (
@@ -63,61 +57,39 @@ export default async function QuestionDetailPage({ params }: Props) {
       {/* Back */}
       <div className="mb-8">
         <Link href="/dashboard/questions">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft style={{ width: 15, height: 15 }} />}>
+          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft size={15} />}>
             受信トレイに戻る
           </Button>
         </Link>
       </div>
 
       {/* Question card */}
-      <div
-        className="rounded-2xl p-6 mb-5"
-        style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border)",
-        }}
-      >
+      <div className="rounded-2xl p-6 mb-5 bg-surface border border-border">
         {/* Status */}
         <div className="flex items-center justify-between mb-4">
           <Badge variant={question.isRead ? "muted" : "default"} dot>
             {question.isRead ? "既読" : "未読"}
           </Badge>
-          <span className="text-xs" style={{ color: "var(--text-subtle)" }}>
-            {formatDateFull(question.createdAt)}
-          </span>
+          <span className="text-xs text-subtle">{formatDateFull(question.createdAt)}</span>
         </div>
 
-        {/* Question body (plaintext per spec v3) */}
+        {/* Question body */}
         <div className="mb-5">
-          <p
-            className="text-base leading-relaxed whitespace-pre-wrap"
-            style={{ color: "var(--text-primary)" }}
-          >
+          <p className="text-base leading-relaxed whitespace-pre-wrap text-primary">
             {decryptedBody}
           </p>
         </div>
 
         {/* Sender DID decryption status */}
         {decryptError && (
-          <div
-            className="mb-4 rounded-lg p-3 flex items-center gap-2"
-            style={{
-              background: "rgba(248, 113, 113, 0.08)",
-              border: "1px solid rgba(248, 113, 113, 0.2)",
-            }}
-          >
-            <Lock style={{ width: 14, height: 14, color: "var(--error)" }} />
-            <p className="text-sm" style={{ color: "var(--error)" }}>
-              送信者の特定に失敗しました。秘密鍵が見つかりません。
-            </p>
+          <div className="mb-4 rounded-lg p-3 flex items-center gap-2 bg-red-400/8 border border-red-400/20">
+            <Lock size={14} className="text-error" />
+            <p className="text-sm text-error">送信者の特定に失敗しました。秘密鍵が見つかりません。</p>
           </div>
         )}
 
         {/* Sender info */}
-        <div
-          className="pt-4 flex items-center gap-3"
-          style={{ borderTop: "1px solid var(--border)" }}
-        >
+        <div className="pt-4 flex items-center gap-3 border-t border-border">
           {senderProfile?.avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -126,31 +98,22 @@ export default async function QuestionDetailPage({ params }: Props) {
               className="w-9 h-9 rounded-full object-cover shrink-0"
             />
           ) : (
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: "var(--bg-elevated)" }}
-            >
-              <User style={{ width: 16, height: 16, color: "var(--text-subtle)" }} />
+            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-elevated">
+              <User size={16} className="text-subtle" />
             </div>
           )}
           <div className="flex-1 min-w-0">
             {senderProfile ? (
               <>
-                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+                <p className="text-sm font-medium text-primary">
                   {senderProfile.displayName ?? senderProfile.handle}
                 </p>
-                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                  @{senderProfile.handle}
-                </p>
+                <p className="text-xs text-muted">@{senderProfile.handle}</p>
               </>
             ) : senderDid ? (
-              <p className="text-xs font-mono" style={{ color: "var(--text-subtle)" }}>
-                {senderDid}
-              </p>
+              <p className="text-xs font-mono text-subtle">{senderDid}</p>
             ) : (
-              <p className="text-sm" style={{ color: "var(--text-subtle)" }}>
-                送信者情報なし
-              </p>
+              <p className="text-sm text-subtle">送信者情報なし</p>
             )}
           </div>
           {senderProfile && (
@@ -160,7 +123,7 @@ export default async function QuestionDetailPage({ params }: Props) {
               rel="noopener noreferrer"
             >
               <Button variant="ghost" size="sm">
-                <ExternalLink style={{ width: 13, height: 13 }} />
+                <ExternalLink size={13} />
               </Button>
             </a>
           )}
@@ -170,36 +133,17 @@ export default async function QuestionDetailPage({ params }: Props) {
       {/* Existing answers */}
       {answers.length > 0 && (
         <div className="mb-5 flex flex-col gap-3">
-          <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-            回答済み（{answers.length}件）
-          </h2>
+          <h2 className="text-sm font-semibold text-primary">回答済み（{answers.length}件）</h2>
           {answers.map((answer) => (
-            <div
-              key={answer.rkey}
-              className="rounded-2xl p-5"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border)",
-              }}
-            >
+            <div key={answer.rkey} className="rounded-2xl p-5 bg-surface border border-border">
               <div className="flex items-center gap-2 mb-3">
-                <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-                  style={{ background: "var(--accent-light)" }}
-                >
-                  <MessageCircle style={{ width: 12, height: 12, color: "var(--accent)" }} />
+                <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-accent-light">
+                  <MessageCircle size={12} className="text-accent" />
                 </div>
-                <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>
-                  あなたの回答
-                </span>
-                <span className="text-xs ml-auto" style={{ color: "var(--text-subtle)" }}>
-                  {formatDateFull(answer.createdAt)}
-                </span>
+                <span className="text-xs font-medium text-muted">あなたの回答</span>
+                <span className="text-xs ml-auto text-subtle">{formatDateFull(answer.createdAt)}</span>
               </div>
-              <p
-                className="text-sm leading-relaxed whitespace-pre-wrap"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <p className="text-sm leading-relaxed whitespace-pre-wrap text-primary">
                 {answer.body}
               </p>
             </div>
@@ -208,29 +152,13 @@ export default async function QuestionDetailPage({ params }: Props) {
       )}
 
       {/* Answer form */}
-      <div
-        className="rounded-2xl p-6 mb-5"
-        style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border)",
-        }}
-      >
-        <h2 className="text-sm font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
-          回答を書く
-        </h2>
-        <AnswerForm
-          koeUri={koeUri}
-        />
+      <div className="rounded-2xl p-6 mb-5 bg-surface border border-border">
+        <h2 className="text-sm font-semibold mb-4 text-primary">回答を書く</h2>
+        <AnswerForm koeUri={koeUri} />
       </div>
 
       {/* Danger zone */}
-      <div
-        className="rounded-2xl p-5 flex flex-col sm:flex-row gap-3"
-        style={{
-          background: "rgba(248, 113, 113, 0.05)",
-          border: "1px solid rgba(248, 113, 113, 0.15)",
-        }}
-      >
+      <div className="rounded-2xl p-5 flex flex-col sm:flex-row gap-3 bg-red-400/5 border border-red-400/15">
         <DeleteQuestionButton rkey={rkey} />
         {senderDid && <BlockButton senderDid={senderDid} />}
       </div>
