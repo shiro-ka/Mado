@@ -14,13 +14,11 @@ export function BlockButton({ senderDid }: BlockButtonProps) {
   const [state, setState] = React.useState<State>("idle");
 
   const handleClick = async () => {
-    // First click (or retry after error): ask for confirmation
     if (state === "idle" || state === "error") {
       setState("confirm");
       return;
     }
 
-    // Second click: execute block
     if (state === "confirm") {
       setState("submitting");
       try {
@@ -61,11 +59,8 @@ export function BlockButton({ senderDid }: BlockButtonProps) {
   if (state === "done" || state === "unblocking") {
     return (
       <div className="flex items-center gap-2 flex-1 sm:flex-none">
-        <div
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm"
-          style={{ color: "var(--text-muted)" }}
-        >
-          <CheckCircle2 style={{ width: 14, height: 14 }} />
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted">
+          <CheckCircle2 size={14} />
           ブロックしました
         </div>
         <Button
@@ -73,7 +68,7 @@ export function BlockButton({ senderDid }: BlockButtonProps) {
           size="sm"
           loading={state === "unblocking"}
           onClick={handleUnblock}
-          style={{ color: "var(--text-subtle)", fontSize: "0.75rem" }}
+          className="text-xs text-subtle"
         >
           解除
         </Button>
@@ -85,7 +80,7 @@ export function BlockButton({ senderDid }: BlockButtonProps) {
     <Button
       variant={state === "confirm" ? "destructive" : "outline"}
       size="sm"
-      leftIcon={<Ban style={{ width: 14, height: 14 }} />}
+      leftIcon={<Ban size={14} />}
       className="flex-1 sm:flex-none"
       loading={state === "submitting"}
       onClick={handleClick}

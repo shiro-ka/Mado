@@ -4,6 +4,7 @@ import * as React from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, AlertCircle, Loader2, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -102,10 +103,7 @@ export default function EditBoxPage() {
   if (formState === "loading") {
     return (
       <div className="px-6 py-8 max-w-2xl mx-auto flex items-center justify-center min-h-64">
-        <Loader2
-          className="animate-spin"
-          style={{ width: 28, height: 28, color: "var(--text-subtle)" }}
-        />
+        <Loader2 size={28} className="animate-spin text-subtle" />
       </div>
     );
   }
@@ -115,25 +113,15 @@ export default function EditBoxPage() {
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <Link href="/dashboard/boxes">
-          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft style={{ width: 15, height: 15 }} />}>
-            戻る
-          </Button>
+          <Button variant="ghost" size="sm" leftIcon={<ArrowLeft size={15} />}>戻る</Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-            質問箱を編集
-          </h1>
+          <h1 className="text-2xl font-bold text-primary">質問箱を編集</h1>
         </div>
       </div>
 
       {/* Form */}
-      <div
-        className="rounded-2xl p-8"
-        style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border)",
-        }}
-      >
+      <div className="rounded-2xl p-8 bg-surface border border-border">
         <form onSubmit={handleSave} className="flex flex-col gap-6">
           <Input
             label="タイトル（必須）"
@@ -159,23 +147,18 @@ export default function EditBoxPage() {
           {/* Toggle: isOpen */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>
-                質問の受付
-              </p>
-              <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>
-                オフにすると新しい質問を受け付けません
-              </p>
+              <p className="text-sm font-medium text-muted">質問の受付</p>
+              <p className="text-xs mt-0.5 text-subtle">オフにすると新しい質問を受け付けません</p>
             </div>
             <button
               type="button"
               role="switch"
               aria-checked={isOpen}
               onClick={() => setIsOpen((v) => !v)}
-              className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer"
-              style={{
-                background: isOpen ? "var(--accent)" : "var(--bg-elevated)",
-                border: "1px solid var(--border)",
-              }}
+              className={cn(
+                "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer border border-border",
+                isOpen ? "bg-accent" : "bg-elevated"
+              )}
               disabled={formState === "submitting" || formState === "deleting"}
             >
               <span
@@ -186,15 +169,8 @@ export default function EditBoxPage() {
           </div>
 
           {error && (
-            <div
-              className="rounded-lg p-3 flex items-center gap-2 text-sm"
-              style={{
-                background: "rgba(248, 113, 113, 0.08)",
-                border: "1px solid rgba(248, 113, 113, 0.25)",
-                color: "var(--error)",
-              }}
-            >
-              <AlertCircle style={{ width: 15, height: 15 }} />
+            <div className="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+              <AlertCircle size={15} />
               {error}
             </div>
           )}
@@ -205,7 +181,7 @@ export default function EditBoxPage() {
               variant="destructive"
               size="sm"
               loading={formState === "deleting"}
-              leftIcon={<Trash2 style={{ width: 14, height: 14 }} />}
+              leftIcon={<Trash2 size={14} />}
               onClick={handleDelete}
             >
               削除
@@ -221,7 +197,7 @@ export default function EditBoxPage() {
                 type="submit"
                 loading={formState === "submitting"}
                 disabled={!title.trim()}
-                leftIcon={<Save style={{ width: 16, height: 16 }} />}
+                leftIcon={<Save size={16} />}
               >
                 保存する
               </Button>

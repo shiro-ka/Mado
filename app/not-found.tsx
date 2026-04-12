@@ -9,22 +9,11 @@ export default function NotFound() {
       <Header />
       <main className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="text-center max-w-sm">
-          <p
-            className="text-7xl font-bold mb-4"
-            style={{ color: "var(--accent)" }}
-          >
-            404
-          </p>
-          <h1
-            className="text-xl font-semibold mb-2"
-            style={{ color: "var(--text-primary)" }}
-          >
+          <p className="text-7xl font-bold mb-4 text-accent">404</p>
+          <h1 className="text-xl font-semibold mb-2 text-primary">
             ページが見つかりません
           </h1>
-          <p
-            className="text-sm mb-8 leading-relaxed"
-            style={{ color: "var(--text-muted)" }}
-          >
+          <p className="text-sm mb-8 leading-relaxed text-muted">
             お探しのページは存在しないか、削除された可能性があります。
           </p>
           <Link href="/">

@@ -53,21 +53,11 @@ export function AnswerForm({ koeUri, onSuccess }: AnswerFormProps) {
 
   if (formState === "success") {
     return (
-      <div
-        className="rounded-xl p-6 flex flex-col items-center gap-3 text-center"
-        style={{
-          background: "rgba(52, 211, 153, 0.08)",
-          border: "1px solid rgba(52, 211, 153, 0.25)",
-        }}
-      >
-        <CheckCircle2 style={{ width: 36, height: 36, color: "#34d399" }} />
+      <div className="rounded-xl p-6 flex flex-col items-center gap-3 text-center bg-emerald-400/8 border border-emerald-400/25">
+        <CheckCircle2 size={36} className="text-emerald-400" />
         <div>
-          <p className="font-semibold" style={{ color: "var(--text-primary)" }}>
-            回答を投稿しました
-          </p>
-          <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-            PDSに保存されました。
-          </p>
+          <p className="font-semibold text-primary">回答を投稿しました</p>
+          <p className="text-sm mt-1 text-muted">PDSに保存されました。</p>
         </div>
       </div>
     );
@@ -91,15 +81,8 @@ export function AnswerForm({ koeUri, onSuccess }: AnswerFormProps) {
       />
 
       {formState === "error" && (
-        <div
-          className="rounded-lg p-3 flex items-center gap-2 text-sm"
-          style={{
-            background: "rgba(248, 113, 113, 0.08)",
-            border: "1px solid rgba(248, 113, 113, 0.25)",
-            color: "var(--error)",
-          }}
-        >
-          <AlertCircle style={{ width: 15, height: 15 }} />
+        <div className="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+          <AlertCircle size={15} />
           {errorMsg}
         </div>
       )}
@@ -113,15 +96,13 @@ export function AnswerForm({ koeUri, onSuccess }: AnswerFormProps) {
             disabled={formState === "submitting"}
             className="w-4 h-4 accent-violet-500 cursor-pointer"
           />
-          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-            Bskyにもポスト
-          </span>
+          <span className="text-xs text-muted">Bskyにもポスト</span>
         </label>
         <Button
           type="submit"
           loading={formState === "submitting"}
           disabled={!isValid}
-          rightIcon={<Send style={{ width: 15, height: 15 }} />}
+          rightIcon={<Send size={15} />}
         >
           回答を投稿
         </Button>

@@ -21,15 +21,13 @@ export function InfoNav({ onNavigate }: InfoNavProps) {
     <div>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
-        style={{ color: "var(--text-muted)" }}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-muted"
       >
-        <Info className="shrink-0" style={{ width: 17, height: 17 }} />
+        <Info size={17} className="shrink-0" />
         <span className="flex-1 text-left">Madoについて</span>
         <ChevronDown
+          size={14}
           style={{
-            width: 14,
-            height: 14,
             transition: "transform 0.2s",
             transform: open ? "rotate(180deg)" : "rotate(0deg)",
           }}
@@ -42,10 +40,9 @@ export function InfoNav({ onNavigate }: InfoNavProps) {
               key={item.href}
               href={item.href}
               onClick={onNavigate}
-              className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200"
-              style={{ color: "var(--text-subtle)" }}
+              className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 text-subtle"
             >
-              <item.icon className="shrink-0" style={{ width: 15, height: 15 }} />
+              <item.icon size={15} className="shrink-0" />
               {item.label}
             </Link>
           ))}

@@ -41,7 +41,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" className={zenMaruGothic.variable}>
-      <body className="bg-slate-950">
+      <body className="bg-background text-primary">
         {children}
       </body>
     </html>
