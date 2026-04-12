@@ -21,47 +21,28 @@ export default async function BoxesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-            質問箱
-          </h1>
-          <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-            {boxes.length}件の質問箱
-          </p>
+          <h1 className="text-2xl font-bold text-primary">質問箱</h1>
+          <p className="text-sm mt-1 text-muted">{boxes.length}件の質問箱</p>
         </div>
         <Link href="/dashboard/boxes/new">
-          <Button leftIcon={<Plus style={{ width: 16, height: 16 }} />}>
-            新しく作成
-          </Button>
+          <Button leftIcon={<Plus size={16} />}>新しく作成</Button>
         </Link>
       </div>
 
       {/* Empty state */}
       {boxes.length === 0 && (
-        <div
-          className="rounded-2xl p-12 flex flex-col items-center gap-4 text-center"
-          style={{
-            background: "var(--bg-surface)",
-            border: "1px dashed var(--border-strong)",
-          }}
-        >
-          <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center"
-            style={{ background: "var(--accent-light)" }}
-          >
-            <Plus style={{ width: 24, height: 24, color: "#a78bfa" }} />
+        <div className="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-accent-light">
+            <Plus size={24} className="text-violet-400" />
           </div>
           <div>
-            <h3 className="font-semibold text-base mb-1" style={{ color: "var(--text-primary)" }}>
-              質問箱を作成しましょう
-            </h3>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+            <h3 className="font-semibold text-base mb-1 text-primary">質問箱を作成しましょう</h3>
+            <p className="text-sm text-muted">
               URLをシェアして、Blueskyのフォロワーから質問を受け付けましょう。
             </p>
           </div>
           <Link href="/dashboard/boxes/new">
-            <Button leftIcon={<Plus style={{ width: 16, height: 16 }} />}>
-              最初の質問箱を作成
-            </Button>
+            <Button leftIcon={<Plus size={16} />}>最初の質問箱を作成</Button>
           </Link>
         </div>
       )}
@@ -72,47 +53,27 @@ export default async function BoxesPage() {
           const publicUrl = `${appUrl}${boxUrl(ownerHandle, box.slug)}`;
 
           return (
-            <div
-              key={box.rkey}
-              className="rounded-xl p-5"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border)",
-              }}
-            >
+            <div key={box.rkey} className="rounded-xl p-5 bg-surface border border-border">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <h3
-                      className="font-semibold text-base"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      {box.title}
-                    </h3>
+                    <h3 className="font-semibold text-base text-primary">{box.title}</h3>
                     <Badge variant={box.isOpen ? "success" : "muted"} dot size="sm">
                       {box.isOpen ? "受付中" : "停止中"}
                     </Badge>
                   </div>
 
                   {box.description && (
-                    <p
-                      className="text-sm mb-2 line-clamp-2"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      {box.description}
-                    </p>
+                    <p className="text-sm mb-2 line-clamp-2 text-muted">{box.description}</p>
                   )}
 
                   <div className="flex items-center gap-1.5">
-                    <Link2
-                      style={{ width: 12, height: 12, color: "var(--text-subtle)" }}
-                    />
+                    <Link2 size={12} className="text-subtle" />
                     <a
                       href={publicUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs hover:opacity-80 transition-opacity truncate"
-                      style={{ color: "#a78bfa" }}
+                      className="text-xs hover:opacity-80 transition-opacity truncate text-violet-400"
                     >
                       {publicUrl}
                     </a>
@@ -123,11 +84,10 @@ export default async function BoxesPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <Link href={`/dashboard/boxes/${box.rkey}`}>
                     <button
-                      className="p-2 rounded-lg transition-colors duration-200 cursor-pointer"
-                      style={{ color: "var(--text-muted)" }}
+                      className="p-2 rounded-lg transition-colors duration-200 cursor-pointer text-muted"
                       title="編集"
                     >
-                      <Edit3 style={{ width: 15, height: 15 }} />
+                      <Edit3 size={15} />
                     </button>
                   </Link>
                 </div>

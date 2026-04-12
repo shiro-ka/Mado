@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp, Send, MessageCircle, Clock } from "lucide-react";
 import type { SentRef, Answer } from "@/types";
 import { formatDateFull } from "@/lib/utils";
@@ -70,28 +71,27 @@ export function SentList({ items }: Props) {
   return (
     <div>
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 p-1 rounded-xl" style={{ background: "var(--bg-elevated)" }}>
+      <div className="flex gap-1 mb-5 p-1 rounded-xl bg-elevated">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200"
-            style={{
-              background: tab === t.id ? "var(--bg-surface)" : "transparent",
-              color: tab === t.id ? "var(--text-primary)" : "var(--text-subtle)",
-              boxShadow: tab === t.id ? "0 1px 3px rgba(0,0,0,0.2)" : "none",
-            }}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200",
+              tab === t.id
+                ? "bg-surface text-primary shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
+                : "bg-transparent text-subtle"
+            )}
           >
             {t.label}
             {t.count !== undefined && t.count > 0 && (
               <span
-                className="text-xs px-1.5 py-0.5 rounded-full"
-                style={{
-                  background: t.id === "unread" && tab !== "unread"
-                    ? "var(--accent)"
-                    : "var(--bg-elevated)",
-                  color: t.id === "unread" && tab !== "unread" ? "white" : "var(--text-subtle)",
-                }}
+                className={cn(
+                  "text-xs px-1.5 py-0.5 rounded-full",
+                  t.id === "unread" && tab !== "unread"
+                    ? "bg-accent text-white"
+                    : "bg-elevated text-subtle"
+                )}
               >
                 {t.count}
               </span>
@@ -103,17 +103,14 @@ export function SentList({ items }: Props) {
       {/* List */}
       {filtered.length === 0 ? (
         <div className="text-center py-16 flex flex-col items-center gap-3">
-          <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center"
-            style={{ background: "var(--bg-elevated)" }}
-          >
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-elevated">
             {tab === "unread" ? (
-              <MessageCircle style={{ width: 22, height: 22, color: "var(--text-subtle)" }} />
+              <MessageCircle size={22} className="text-subtle" />
             ) : (
-              <Send style={{ width: 22, height: 22, color: "var(--text-subtle)" }} />
+              <Send size={22} className="text-subtle" />
             )}
           </div>
-          <p className="text-sm" style={{ color: "var(--text-subtle)" }}>
+          <p className="text-sm text-subtle">
             {tab === "unread" ? "未読の返信はありません" : tab === "read" ? "既読の返信はありません" : "まだ質問を送っていません"}
           </p>
         </div>
@@ -128,11 +125,10 @@ export function SentList({ items }: Props) {
             return (
               <div
                 key={key}
-                className="rounded-2xl overflow-hidden"
-                style={{
-                  background: "var(--bg-surface)",
-                  border: `1px solid ${hasAnswer && !isRead ? "rgba(124,58,237,0.4)" : "var(--border)"}`,
-                }}
+                className={cn(
+                  "rounded-2xl overflow-hidden bg-surface",
+                  hasAnswer && !isRead ? "border border-violet-600/40" : "border border-border"
+                )}
               >
                 {/* Header */}
                 <button
@@ -141,42 +137,34 @@ export function SentList({ items }: Props) {
                 >
                   {/* Meta row */}
                   <div className="flex items-center gap-2">
-                    <Clock style={{ width: 12, height: 12, color: "var(--text-subtle)" }} />
-                    <span className="text-xs" style={{ color: "var(--text-subtle)" }}>
-                      {formatDateFull(item.ref.sentAt)}
-                    </span>
+                    <Clock size={12} className="text-subtle" />
+                    <span className="text-xs text-subtle">{formatDateFull(item.ref.sentAt)}</span>
                     <div className="flex-1" />
                     {hasAnswer && (
                       <span
-                        className="text-xs px-2 py-0.5 rounded-full font-medium"
-                        style={{
-                          background: isRead
-                            ? "var(--bg-elevated)"
-                            : "rgba(124,58,237,0.15)",
-                          color: isRead ? "var(--text-subtle)" : "#a78bfa",
-                          border: isRead ? "1px solid var(--border)" : "1px solid rgba(124,58,237,0.3)",
-                        }}
+                        className={cn(
+                          "text-xs px-2 py-0.5 rounded-full font-medium",
+                          isRead
+                            ? "bg-elevated text-subtle border border-border"
+                            : "bg-violet-600/15 text-violet-400 border border-violet-600/30"
+                        )}
                       >
                         {isRead ? "返信済み" : "返信あり"}
                       </span>
                     )}
                     {isExpanded ? (
-                      <ChevronUp style={{ width: 15, height: 15, color: "var(--text-subtle)" }} />
+                      <ChevronUp size={15} className="text-subtle" />
                     ) : (
-                      <ChevronDown style={{ width: 15, height: 15, color: "var(--text-subtle)" }} />
+                      <ChevronDown size={15} className="text-subtle" />
                     )}
                   </div>
 
                   {/* Question body */}
                   <p
-                    className="text-sm leading-relaxed whitespace-pre-wrap"
-                    style={{
-                      color: "var(--text-primary)",
-                      display: isExpanded ? undefined : "-webkit-box",
-                      WebkitLineClamp: isExpanded ? undefined : 2,
-                      WebkitBoxOrient: isExpanded ? undefined : "vertical",
-                      overflow: isExpanded ? undefined : "hidden",
-                    }}
+                    className={cn(
+                      "text-sm leading-relaxed whitespace-pre-wrap text-primary",
+                      !isExpanded && "line-clamp-2"
+                    )}
                   >
                     {item.ref.body}
                   </p>
@@ -184,34 +172,19 @@ export function SentList({ items }: Props) {
 
                 {/* Answers */}
                 {isExpanded && hasAnswer && (
-                  <div
-                    className="px-5 pb-5 flex flex-col gap-3"
-                    style={{ borderTop: "1px solid var(--border)" }}
-                  >
-                    <p className="text-xs font-medium pt-4" style={{ color: "var(--text-subtle)" }}>
+                  <div className="px-5 pb-5 flex flex-col gap-3 border-t border-border">
+                    <p className="text-xs font-medium pt-4 text-subtle">
                       返信（{item.answers.length}件）
                     </p>
                     {item.answers.map((answer) => (
-                      <div
-                        key={answer.rkey}
-                        className="rounded-xl p-4"
-                        style={{ background: "var(--bg-elevated)" }}
-                      >
+                      <div key={answer.rkey} className="rounded-xl p-4 bg-elevated">
                         <div className="flex items-center gap-2 mb-2">
-                          <div
-                            className="w-5 h-5 rounded-full flex items-center justify-center"
-                            style={{ background: "var(--accent-light)" }}
-                          >
-                            <MessageCircle style={{ width: 10, height: 10, color: "var(--accent)" }} />
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-accent-light">
+                            <MessageCircle size={10} className="text-accent" />
                           </div>
-                          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-                            {formatDateFull(answer.createdAt)}
-                          </span>
+                          <span className="text-xs text-muted">{formatDateFull(answer.createdAt)}</span>
                         </div>
-                        <p
-                          className="text-sm leading-relaxed whitespace-pre-wrap"
-                          style={{ color: "var(--text-primary)" }}
-                        >
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap text-primary">
                           {answer.body}
                         </p>
                       </div>
@@ -220,10 +193,8 @@ export function SentList({ items }: Props) {
                 )}
 
                 {isExpanded && !hasAnswer && (
-                  <div className="px-5 pb-5 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
-                    <p className="text-sm" style={{ color: "var(--text-subtle)" }}>
-                      まだ返信がありません
-                    </p>
+                  <div className="px-5 pb-5 pt-4 border-t border-border">
+                    <p className="text-sm text-subtle">まだ返信がありません</p>
                   </div>
                 )}
               </div>

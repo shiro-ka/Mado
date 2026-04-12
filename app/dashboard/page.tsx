@@ -5,6 +5,7 @@ import { listBoxes, listQuestions } from "@/lib/atproto";
 import { getRedis, Keys } from "@/lib/redis";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const session = await requireSession();
@@ -17,7 +18,6 @@ export default async function DashboardPage() {
     getSessionTtl(),
   ]);
 
-  // Warn when fewer than 7 days remain in the mado session
   const SESSION_WARN_SECONDS = 7 * 24 * 60 * 60;
   const sessionExpiringSoon = sessionTtl !== null && sessionTtl < SESSION_WARN_SECONDS;
   const sessionDaysLeft = sessionTtl !== null ? Math.ceil(sessionTtl / (24 * 60 * 60)) : null;
@@ -31,32 +31,20 @@ export default async function DashboardPage() {
     <div className="px-6 py-8 max-w-4xl mx-auto">
       {/* Welcome */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>
+        <h1 className="text-2xl font-bold mb-1 text-primary">
           おかえりなさい、{session.displayName ?? `@${session.handle}`}
         </h1>
-        <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-          今日も窓から声が届いていますよ
-        </p>
+        <p className="text-sm text-muted">今日も窓から声が届いていますよ</p>
       </div>
 
       {/* Session expiry warning */}
       {sessionExpiringSoon && (
-        <div
-          className="mb-6 rounded-xl px-4 py-3 flex items-center gap-3"
-          style={{
-            background: "rgba(251, 191, 36, 0.08)",
-            border: "1px solid rgba(251, 191, 36, 0.3)",
-          }}
-        >
-          <AlertTriangle style={{ width: 16, height: 16, color: "#fbbf24", flexShrink: 0 }} />
-          <p className="text-sm flex-1" style={{ color: "#fbbf24" }}>
+        <div className="mb-6 rounded-xl px-4 py-3 flex items-center gap-3 bg-amber-400/8 border border-amber-400/30">
+          <AlertTriangle size={16} className="text-amber-400 shrink-0" />
+          <p className="text-sm flex-1 text-amber-400">
             セッションがあと{sessionDaysLeft}日で期限切れになります。
           </p>
-          <Link
-            href="/auth/login"
-            className="text-xs font-medium underline"
-            style={{ color: "#fbbf24" }}
-          >
+          <Link href="/auth/login" className="text-xs font-medium underline text-amber-400">
             再ログイン
           </Link>
         </div>
@@ -69,44 +57,28 @@ export default async function DashboardPage() {
             label: "質問箱",
             value: boxes.length,
             sub: `${openBoxCount}件 受付中`,
-            color: "#a78bfa",
-            bg: "rgba(124, 58, 237, 0.1)",
+            color: "text-violet-400",
+            bg: "bg-violet-600/10",
           },
           {
             label: "未読の質問",
             value: unreadCount,
             sub: `全 ${questions.length}件`,
-            color: "#34d399",
-            bg: "rgba(52, 211, 153, 0.1)",
+            color: "text-emerald-400",
+            bg: "bg-emerald-400/10",
           },
           {
             label: "総受信数",
             value: questions.length,
             sub: "累計",
-            color: "#60a5fa",
-            bg: "rgba(96, 165, 250, 0.1)",
+            color: "text-blue-400",
+            bg: "bg-blue-400/10",
           },
         ].map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl p-5"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border)",
-            }}
-          >
-            <p className="text-xs font-medium mb-2" style={{ color: "var(--text-muted)" }}>
-              {stat.label}
-            </p>
-            <p
-              className="text-3xl font-bold tabular-nums"
-              style={{ color: stat.color }}
-            >
-              {stat.value}
-            </p>
-            <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
-              {stat.sub}
-            </p>
+          <div key={stat.label} className="rounded-xl p-5 bg-surface border border-border">
+            <p className="text-xs font-medium mb-2 text-muted">{stat.label}</p>
+            <p className={cn("text-3xl font-bold tabular-nums", stat.color)}>{stat.value}</p>
+            <p className="text-xs mt-1 text-subtle">{stat.sub}</p>
           </div>
         ))}
       </div>
@@ -117,15 +89,11 @@ export default async function DashboardPage() {
         <Card variant="default">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <MessageSquare
-                style={{ width: 16, height: 16, color: "#a78bfa" }}
-              />
-              <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-                質問箱
-              </h2>
+              <MessageSquare size={16} className="text-violet-400" />
+              <h2 className="text-sm font-semibold text-primary">質問箱</h2>
             </div>
             <Link href="/dashboard/boxes">
-              <Button variant="ghost" size="sm" rightIcon={<ChevronRight style={{ width: 13, height: 13 }} />}>
+              <Button variant="ghost" size="sm" rightIcon={<ChevronRight size={13} />}>
                 すべて見る
               </Button>
             </Link>
@@ -133,13 +101,9 @@ export default async function DashboardPage() {
 
           {boxes.length === 0 ? (
             <div className="text-center py-6">
-              <p className="text-sm mb-3" style={{ color: "var(--text-muted)" }}>
-                まだ質問箱がありません
-              </p>
+              <p className="text-sm mb-3 text-muted">まだ質問箱がありません</p>
               <Link href="/dashboard/boxes/new">
-                <Button size="sm" leftIcon={<Plus style={{ width: 14, height: 14 }} />}>
-                  作成する
-                </Button>
+                <Button size="sm" leftIcon={<Plus size={14} />}>作成する</Button>
               </Link>
             </div>
           ) : (
@@ -150,18 +114,8 @@ export default async function DashboardPage() {
                   href={`/dashboard/boxes/${box.rkey}`}
                   className="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-violet-950/20"
                 >
-                  <span
-                    className="text-sm truncate"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {box.title}
-                  </span>
-                  <span
-                    className="text-xs ml-2 shrink-0"
-                    style={{
-                      color: box.isOpen ? "var(--success)" : "var(--text-subtle)",
-                    }}
-                  >
+                  <span className="text-sm truncate text-primary">{box.title}</span>
+                  <span className={cn("text-xs ml-2 shrink-0", box.isOpen ? "text-success" : "text-subtle")}>
                     {box.isOpen ? "受付中" : "停止中"}
                   </span>
                 </Link>
@@ -174,21 +128,16 @@ export default async function DashboardPage() {
         <Card variant="default">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Inbox style={{ width: 16, height: 16, color: "#34d399" }} />
-              <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-                受信トレイ
-              </h2>
+              <Inbox size={16} className="text-emerald-400" />
+              <h2 className="text-sm font-semibold text-primary">受信トレイ</h2>
               {unreadCount > 0 && (
-                <span
-                  className="text-xs px-1.5 py-0.5 rounded-full font-bold"
-                  style={{ background: "var(--accent)", color: "white" }}
-                >
+                <span className="text-xs px-1.5 py-0.5 rounded-full font-bold bg-accent text-white">
                   {unreadCount}
                 </span>
               )}
             </div>
             <Link href="/dashboard/questions">
-              <Button variant="ghost" size="sm" rightIcon={<ChevronRight style={{ width: 13, height: 13 }} />}>
+              <Button variant="ghost" size="sm" rightIcon={<ChevronRight size={13} />}>
                 すべて見る
               </Button>
             </Link>
@@ -196,12 +145,8 @@ export default async function DashboardPage() {
 
           {questions.length === 0 ? (
             <div className="text-center py-6">
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                まだ質問が届いていません
-              </p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
-                質問箱のURLをシェアしましょう
-              </p>
+              <p className="text-sm text-muted">まだ質問が届いていません</p>
+              <p className="text-xs mt-1 text-subtle">質問箱のURLをシェアしましょう</p>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
@@ -212,21 +157,10 @@ export default async function DashboardPage() {
                   className="flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-violet-950/20"
                 >
                   {!q.isRead && (
-                    <span
-                      className="w-1.5 h-1.5 rounded-full shrink-0"
-                      style={{ background: "var(--accent)" }}
-                    />
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-accent" />
                   )}
-                  <span
-                    className="text-sm truncate"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {q.body}
-                  </span>
-                  <span
-                    className="text-xs ml-auto shrink-0 tabular-nums"
-                    style={{ color: "var(--text-subtle)" }}
-                  >
+                  <span className="text-sm truncate text-muted">{q.body}</span>
+                  <span className="text-xs ml-auto shrink-0 tabular-nums text-subtle">
                     {new Date(q.createdAt).toLocaleDateString("ja-JP")}
                   </span>
                 </Link>

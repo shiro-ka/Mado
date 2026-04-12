@@ -41,50 +41,33 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      className="min-h-dvh flex flex-col items-center justify-center px-4 py-16"
-      style={{ background: "var(--bg)" }}
-    >
+    <div className="min-h-dvh flex flex-col items-center justify-center px-4 py-16 bg-background">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="flex flex-col items-center gap-3 mb-8">
           <Link href="/" className="flex items-center gap-2">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ background: "var(--accent)" }}
-            >
-              <MessageCircle className="text-white" style={{ width: 20, height: 20 }} />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-accent">
+              <MessageCircle size={20} className="text-white" />
             </div>
-            <span className="font-bold text-xl" style={{ color: "var(--text-primary)" }}>
-              Mado
-            </span>
+            <span className="font-bold text-xl text-primary">Mado</span>
           </Link>
-          <h1
-            className="text-2xl font-bold text-center"
-            style={{ color: "var(--text-primary)" }}
-          >
+          <h1 className="text-2xl font-bold text-center text-primary">
             Blueskyアカウントでログイン
           </h1>
-          <p className="text-sm text-center" style={{ color: "var(--text-muted)" }}>
+          <p className="text-sm text-center text-muted">
             あなたのハンドルを入力して認証します
           </p>
         </div>
 
         {/* Card */}
-        <div
-          className="rounded-2xl p-8"
-          style={{
-            background: "var(--bg-surface)",
-            border: "1px solid var(--border)",
-          }}
-        >
+        <div className="rounded-2xl p-8 bg-surface border border-border">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <Input
               label="Blueskyハンドル"
               placeholder="yourname.bsky.social"
               value={handle}
               onChange={(e) => setHandle(e.target.value)}
-              leftAddon={<AtSign style={{ width: 16, height: 16 }} />}
+              leftAddon={<AtSign size={16} />}
               helper="例：alice.bsky.social または alice.com"
               disabled={loading}
               autoFocus
@@ -93,15 +76,8 @@ export default function LoginPage() {
             />
 
             {error && (
-              <div
-                className="rounded-lg p-3 flex items-center gap-2 text-sm"
-                style={{
-                  background: "rgba(248, 113, 113, 0.08)",
-                  border: "1px solid rgba(248, 113, 113, 0.25)",
-                  color: "var(--error)",
-                }}
-              >
-                <AlertCircle style={{ width: 15, height: 15 }} />
+              <div className="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+                <AlertCircle size={15} />
                 {error}
               </div>
             )}
@@ -117,15 +93,9 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div
-            className="mt-5 pt-5 flex items-start gap-2.5"
-            style={{ borderTop: "1px solid var(--border)" }}
-          >
-            <Shield
-              className="shrink-0 mt-0.5"
-              style={{ width: 14, height: 14, color: "var(--text-subtle)" }}
-            />
-            <p className="text-xs leading-relaxed" style={{ color: "var(--text-subtle)" }}>
+          <div className="mt-5 pt-5 flex items-start gap-2.5 border-t border-border">
+            <Shield size={14} className="shrink-0 mt-0.5 text-subtle" />
+            <p className="text-xs leading-relaxed text-subtle">
               認証にはATProtocol OAuth 2.0を使用します。
               パスワードはMadoに送信されません。
               認証後、あなたのDIDとハンドルが質問に紐付けられます。
@@ -133,7 +103,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-center text-xs mt-6" style={{ color: "var(--text-subtle)" }}>
+        <p className="text-center text-xs mt-6 text-subtle">
           <Link href="/" className="hover:opacity-80 transition-opacity">
             ← トップページに戻る
           </Link>

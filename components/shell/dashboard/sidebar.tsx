@@ -21,20 +21,16 @@ interface SidebarProps {
   onNavigate?: () => void;
 }
 
+{/* *** ダッシュボードのサイドバー *** */}
 export function Sidebar({ session, onNavigate }: SidebarProps) {
   return (
     <>
       {/* ロゴ */}
-      <div
-        className="h-16 px-5 flex items-center gap-2 shrink-0"
-        style={{ borderBottom: "1px solid var(--border)" }}
-      >
+      <div className="h-16 px-5 flex items-center gap-2 shrink-0 border-b border-border">
         <Link href="/dashboard" className="flex items-center gap-2" onClick={onNavigate}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/mado-logo.svg" alt="Mado" className="w-8 h-8" />
-          <span className="font-bold text-base" style={{ color: "var(--text-primary)" }}>
-            Mado
-          </span>
+          <span className="font-bold text-base text-primary">Mado</span>
         </Link>
       </div>
 
@@ -46,10 +42,9 @@ export function Sidebar({ session, onNavigate }: SidebarProps) {
               key={item.href}
               href={item.href}
               onClick={onNavigate}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
-              style={{ color: "var(--text-muted)" }}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-muted"
             >
-              <item.icon className="shrink-0" style={{ width: 17, height: 17 }} />
+              <item.icon size={17} className="shrink-0" />
               {item.label}
             </Link>
           ))}

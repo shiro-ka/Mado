@@ -25,27 +25,18 @@ export function DashboardShell({ children, session }: Props) {
       </aside>
 
       {/* モバイル: トップバー */}
-      <div
-        className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 flex items-center px-4 gap-3"
-        style={{
-          background: "var(--bg-surface)",
-          borderBottom: "1px solid var(--border)",
-        }}
-      >
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 flex items-center px-4 gap-3 bg-surface border-b border-border">
         <button
           onClick={() => setOpen(true)}
-          className="p-2 rounded-lg"
-          style={{ color: "var(--text-muted)" }}
+          className="p-2 rounded-lg text-muted"
           aria-label="メニューを開く"
         >
-          <Menu style={{ width: 20, height: 20 }} />
+          <Menu size={20} />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/mado-logo.svg" alt="Mado" className="w-7 h-7" />
-          <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>
-            Mado
-          </span>
+          <span className="font-bold text-sm text-primary">Mado</span>
         </Link>
       </div>
 
@@ -55,22 +46,17 @@ export function DashboardShell({ children, session }: Props) {
           className="md:hidden fixed inset-0 z-50 flex"
           onClick={() => setOpen(false)}
         >
-          <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.5)" }} />
+          <div className="absolute inset-0 bg-black/50" />
           <aside
-            className="relative w-72 flex flex-col h-full"
-            style={{
-              background: "var(--bg-surface)",
-              borderRight: "1px solid var(--border)",
-            }}
+            className="relative w-72 flex flex-col h-full bg-surface border-r border-border"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg"
-              style={{ color: "var(--text-muted)" }}
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-muted"
               aria-label="メニューを閉じる"
             >
-              <X style={{ width: 18, height: 18 }} />
+              <X size={18} />
             </button>
             <Sidebar session={session} onNavigate={() => setOpen(false)} />
           </aside>

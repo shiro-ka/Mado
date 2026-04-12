@@ -8,24 +8,11 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   padding?: "none" | "sm" | "md" | "lg";
 }
 
-const variantStyles: Record<CardVariant, React.CSSProperties> = {
-  default: {
-    background: "var(--bg-surface)",
-    border: "1px solid var(--border)",
-  },
-  elevated: {
-    background: "var(--bg-elevated)",
-    border: "1px solid var(--border)",
-    boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
-  },
-  bordered: {
-    background: "var(--bg-surface)",
-    border: "1px solid var(--border-strong)",
-  },
-  ghost: {
-    background: "transparent",
-    border: "none",
-  },
+const variantClasses: Record<CardVariant, string> = {
+  default: "bg-surface border border-border",
+  elevated: "bg-elevated border border-border shadow-[0_4px_24px_rgba(0,0,0,0.2)]",
+  bordered: "bg-surface border border-border-strong",
+  ghost: "bg-transparent border-0",
 };
 
 const paddingClasses: Record<NonNullable<CardProps["padding"]>, string> = {
@@ -39,14 +26,12 @@ export function Card({
   className,
   variant = "default",
   padding = "md",
-  style,
   children,
   ...props
 }: CardProps) {
   return (
     <div
-      className={cn("rounded-xl", paddingClasses[padding], className)}
-      style={{ ...variantStyles[variant], ...style }}
+      className={cn("rounded-xl", variantClasses[variant], paddingClasses[padding], className)}
       {...props}
     >
       {children}
@@ -73,8 +58,7 @@ export function CardTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn("text-base font-semibold", className)}
-      style={{ color: "var(--text-primary)" }}
+      className={cn("text-base font-semibold text-primary", className)}
       {...props}
     >
       {children}
@@ -89,8 +73,7 @@ export function CardDescription({
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
     <p
-      className={cn("text-sm", className)}
-      style={{ color: "var(--text-muted)" }}
+      className={cn("text-sm text-muted", className)}
       {...props}
     >
       {children}
