@@ -10,3 +10,9 @@ tsconfig.tsbuildinfo
 .env
 .env.local
 .env.*.local
+
+# Cloudflare spike / SvelteKit
+.dev.vars
+.open-next/
+.wrangler/
+.svelte-kit/

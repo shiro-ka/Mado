@@ -1,0 +1,11 @@
+# Copy to .dev.vars and fill in for `wrangler dev`.
+# .dev.vars is gitignored.
+
+NEXT_PUBLIC_APP_URL=http://localhost:8787
+OAUTH_PRIVATE_KEYS=[]
+CRON_SECRET=dev-secret
+
+# Use a CANARY Upstash instance during spike verification.
+# DO NOT point at the production Upstash.
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=

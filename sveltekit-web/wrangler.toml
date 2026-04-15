@@ -1,0 +1,8 @@
+name = "mado-sveltekit"
+compatibility_date = "2025-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+pages_build_output_dir = ".svelte-kit/cloudflare"
+
+# KV + D1 bindings are configured in Cloudflare dashboard for Pages projects,
+# or locally via .dev.vars and wrangler.jsonc bindings. Placeholder for now.
