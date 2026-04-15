@@ -1,0 +1,6 @@
+name = "mado-spike-smoke"
+main = "spike/worker.ts"
+compatibility_date = "2025-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Local .dev.vars provides OAUTH_PRIVATE_KEYS and NEXT_PUBLIC_APP_URL.
