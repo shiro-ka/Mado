@@ -4,5 +4,23 @@ compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = ".svelte-kit/cloudflare"
 
-# KV + D1 bindings are configured in Cloudflare dashboard for Pages projects,
-# or locally via .dev.vars and wrangler.jsonc bindings. Placeholder for now.
+[[kv_namespaces]]
+binding = "OAUTH_STATE"
+id = "245187d80c4e42fdacd2e17b4cc51486"
+
+[[kv_namespaces]]
+binding = "OAUTH_SESSION"
+id = "94ad081eaad14043b94effea000c6ca9"
+
+[[kv_namespaces]]
+binding = "MADO_SESSION"
+id = "78246f681d304c87800b15fedb04d719"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "62ad51eb191b4bb6949a279ccaf92343"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mado"
+database_id = "12daab01-6d09-4dce-afb7-3bff183e381c"

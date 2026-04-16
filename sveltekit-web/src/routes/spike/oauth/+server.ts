@@ -33,10 +33,10 @@ export const GET: RequestHandler = async ({ url, platform }) => {
       responseMode: "query",
       runtimeImplementation: {
         createKey: (algs) => JoseKey.generate(algs),
-        getRandomValues: (n: number) => crypto.getRandomValues(new Uint8Array(n)),
+        getRandomValues: (n: number) => crypto.getRandomValues(new Uint8Array(n)) as Uint8Array,
         digest: async (bytes, algorithm) => {
           const name = algorithm.name.toUpperCase().replace(/^SHA/, "SHA-");
-          return new Uint8Array(await crypto.subtle.digest(name, bytes));
+          return new Uint8Array(await crypto.subtle.digest(name, bytes as unknown as ArrayBuffer));
         },
       },
       clientMetadata: {
