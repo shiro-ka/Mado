@@ -4,7 +4,7 @@ import { JoseKey } from "@atproto/jwk-jose";
 
 export const GET: RequestHandler = async ({ url, platform }) => {
   const handle = url.searchParams.get("handle") ?? "jay.bsky.team";
-  const appUrl = platform?.env?.NEXT_PUBLIC_APP_URL ?? "https://mado.blue";
+  const appUrl = platform?.env?.APP_URL ?? "https://mado.blue";
   const rawKeys = platform?.env?.OAUTH_PRIVATE_KEYS ?? "[]";
 
   const report: Record<string, unknown> = {};

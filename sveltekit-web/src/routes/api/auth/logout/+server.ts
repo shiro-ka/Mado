@@ -5,7 +5,7 @@ import { revokeOAuthSession } from "$lib/oauth.server.js";
 
 export const POST: RequestHandler = async ({ cookies, platform }) => {
   const env = platform!.env;
-  const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://mado.blue";
+  const appUrl = env.APP_URL ?? "https://mado.blue";
   const store = new CloudflareStore(env);
 
   try {

@@ -36,7 +36,7 @@ export async function createSession(
 
   await store.setSession(sessionId, session, SESSION_TTL);
 
-  const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://mado.blue";
+  const appUrl = env.APP_URL ?? "https://mado.blue";
   const isSecure = appUrl.startsWith("https://");
 
   cookies.set(SESSION_COOKIE, sessionId, {
