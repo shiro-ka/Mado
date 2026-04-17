@@ -6,7 +6,7 @@ import { getProfile } from "$lib/atproto.js";
 
 export const GET: RequestHandler = async ({ url, cookies, platform }) => {
   const env = platform!.env;
-  const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://mado.blue";
+  const appUrl = env.APP_URL ?? "https://mado.blue";
 
   const error = url.searchParams.get("error");
   const errorDescription = url.searchParams.get("error_description");

@@ -8,7 +8,7 @@ declare global {
         RATE_LIMIT: KVNamespace;
         DB: D1Database;
         OAUTH_PRIVATE_KEYS: string;
-        NEXT_PUBLIC_APP_URL: string;
+        APP_URL: string;
         CRON_SECRET: string;
       };
       cf: CfProperties;

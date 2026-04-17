@@ -27,7 +27,7 @@ export async function createOAuthClient(
   env: App.Platform["env"],
   store: CloudflareStore
 ): Promise<OAuthClient> {
-  const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://mado.blue";
+  const appUrl = env.APP_URL ?? "https://mado.blue";
   const rawKeys = env.OAUTH_PRIVATE_KEYS ?? "[]";
   const keyset = await Promise.all(
     (JSON.parse(rawKeys) as Record<string, unknown>[]).map((k) => JoseKey.fromJWK(k))
