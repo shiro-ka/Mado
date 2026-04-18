@@ -5,7 +5,7 @@ import { getSession } from "$lib/auth.server.js";
 import { resolveHandle, findBoxBySlug, getProfile } from "$lib/atproto.js";
 
 export const load: PageServerLoad = async ({ params, cookies, platform }) => {
-  const cleanHandle = decodeURIComponent(params.user).replace(/^@/, "");
+  const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 
   const did = await resolveHandle(cleanHandle);
   if (!did) throw error(404, "質問箱が見つかりません");

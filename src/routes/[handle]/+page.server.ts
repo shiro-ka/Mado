@@ -3,7 +3,7 @@ import type { PageServerLoad } from "./$types";
 import { resolveHandle, getProfile, listBoxes } from "$lib/atproto.js";
 
 export const load: PageServerLoad = async ({ params }) => {
-  const cleanHandle = decodeURIComponent(params.user).replace(/^@/, "");
+  const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 
   const did = await resolveHandle(cleanHandle);
   if (!did) throw error(404, "ユーザーが見つかりません");

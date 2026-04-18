@@ -108,7 +108,7 @@
               送り主はオーナーのみに開示されます。
             </p>
           </div>
-          <a href={`/auth/login?next=/u/@${data.cleanHandle}/${data.box.slug}`} class="w-full">
+          <a href={`/auth/login?next=/@${data.cleanHandle}/${data.box.slug}`} class="w-full">
             <Button size="lg" class="w-full">ログインして質問する</Button>
           </a>
         </div>
@@ -127,7 +127,7 @@
       <!-- Back link -->
       <div class="mt-5 text-center">
         <a
-          href={`/u/@${data.cleanHandle}`}
+          href={`/@${data.cleanHandle}`}
           class="text-xs hover:opacity-80 transition-opacity text-subtle"
         >
           ← @{data.cleanHandle} のプロフィールに戻る
