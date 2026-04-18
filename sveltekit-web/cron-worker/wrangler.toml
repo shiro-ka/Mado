@@ -1,0 +1,6 @@
+name = "mado-cron"
+main = "src/index.ts"
+compatibility_date = "2025-10-01"
+
+[triggers]
+crons = ["0 18 * * *"]
