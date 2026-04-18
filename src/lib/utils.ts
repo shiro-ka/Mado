@@ -44,10 +44,10 @@ export function normalizeHandle(handle: string): string {
 
 export function boxUrl(handle: string, slug: string): string {
   const normalized = normalizeHandle(handle);
-  return `/u/@${normalized}/${slug}`;
+  return `/@${normalized}/${slug}`;
 }
 
 export function profileUrl(handle: string): string {
   const normalized = normalizeHandle(handle);
-  return `/u/@${normalized}`;
+  return `/@${normalized}`;
 }
