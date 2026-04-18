@@ -15,6 +15,39 @@ const workerFetch: typeof fetch = (input, init) =>
     ? fetch(input, { ...init, redirect: "manual" })
     : fetch(input, init);
 
+// Mirrors NodeOAuthClient's toDpopKeyStore: serialize dpopKey as JWK on write,
+// reconstruct JoseKey on read. Without this, JSON round-trip through KV drops
+// the class getter `algorithms` and .includes() crashes in the callback.
+function wrapDpopStore<T>(store: {
+  get: (k: string) => Promise<unknown>;
+  set: (k: string, v: unknown) => Promise<void>;
+  del: (k: string) => Promise<void>;
+}) {
+  return {
+    async get(key: string): Promise<T | undefined> {
+      const raw = (await store.get(key)) as (Record<string, unknown> & { dpopJwk?: Record<string, unknown> }) | undefined;
+      if (!raw) return undefined;
+      const { dpopJwk, ...rest } = raw;
+      if (!dpopJwk) return raw as T;
+      const dpopKey = await JoseKey.fromJWK(dpopJwk);
+      return { ...rest, dpopKey } as T;
+    },
+    async set(key: string, value: T & { dpopKey?: { privateJwk?: Record<string, unknown> } }): Promise<void> {
+      const { dpopKey, ...rest } = value as Record<string, unknown> & { dpopKey?: { privateJwk?: Record<string, unknown> } };
+      if (dpopKey) {
+        const dpopJwk = dpopKey.privateJwk;
+        if (!dpopJwk) throw new Error("Private DPoP JWK is missing.");
+        await store.set(key, { ...rest, dpopJwk });
+      } else {
+        await store.set(key, value);
+      }
+    },
+    async del(key: string): Promise<void> {
+      await store.del(key);
+    },
+  };
+}
+
 /**
  * Create an OAuthClient per request (Workers are stateless; creation is cheap).
  *
@@ -65,16 +98,16 @@ export async function createOAuthClient(
     // Allow HTTP for local dev (wrangler pages dev); https is enforced in prod
     allowHttp: appUrl.startsWith("http://"),
     keyset,
-    stateStore: {
-      async get(key) { return store.getOAuthState(key); },
-      async set(key, val) { return store.setOAuthState(key, val); },
-      async del(key) { return store.delOAuthState(key); },
-    },
-    sessionStore: {
-      async get(key) { return store.getOAuthSession(key); },
-      async set(key, val) { return store.setOAuthSession(key, val); },
-      async del(key) { return store.delOAuthSession(key); },
-    },
+    stateStore: wrapDpopStore({
+      get: (k) => store.getOAuthState(k),
+      set: (k, v) => store.setOAuthState(k, v),
+      del: (k) => store.delOAuthState(k),
+    }),
+    sessionStore: wrapDpopStore({
+      get: (k) => store.getOAuthSession(k),
+      set: (k, v) => store.setOAuthSession(k, v),
+      del: (k) => store.delOAuthSession(k),
+    }),
   });
 }
 
