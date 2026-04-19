@@ -22,6 +22,14 @@
 
   const unreadCount = $derived(questions.filter((q) => !q.isRead).length);
   const openBoxCount = $derived(boxes.filter((b) => b.isOpen).length);
+  const boxSlugMap = $derived(new Map(boxes.map((b) => [b.rkey, b.slug])));
+
+  function questionHref(q: Question & { isRead: boolean }): string {
+    const boxRkey = q.boxUri.split("/").pop() ?? "";
+    const slug = boxSlugMap.get(boxRkey);
+    if (!slug) return "/receive";
+    return `/@${session.handle}/${slug}/${q.rkey}`;
+  }
 </script>
 
 <div class="px-6 py-8 max-w-4xl mx-auto">
@@ -68,7 +76,7 @@
           <MessageSquare size={16} class="text-blue-400" />
           <h2 class="text-sm font-semibold text-primary">質問箱</h2>
         </div>
-        <a href="/dashboard/boxes">
+        <a href={`/@${session.handle}`}>
           <Button variant="ghost" size="sm">
             すべて見る
             {#snippet rightIcon()}<ChevronRight size={13} />{/snippet}
@@ -79,7 +87,7 @@
       {#if boxes.length === 0}
         <div class="text-center py-6">
           <p class="text-sm mb-3 text-muted">まだ質問箱がありません</p>
-          <a href="/dashboard/boxes/new">
+          <a href={`/@${session.handle}/new`}>
             <Button size="sm">
               {#snippet leftIcon()}<Plus size={14} />{/snippet}
               作成する
@@ -90,7 +98,7 @@
         <div class="flex flex-col gap-2">
           {#each boxes.slice(0, 3) as box}
             <a
-              href={`/dashboard/boxes/${box.rkey}`}
+              href={`/@${session.handle}/${box.slug}`}
               class="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-blue-950/20"
             >
               <span class="text-sm truncate text-primary">{box.title}</span>
@@ -115,7 +123,7 @@
             </span>
           {/if}
         </div>
-        <a href="/dashboard/questions">
+        <a href="/receive">
           <Button variant="ghost" size="sm">
             すべて見る
             {#snippet rightIcon()}<ChevronRight size={13} />{/snippet}
@@ -132,7 +140,7 @@
         <div class="flex flex-col gap-2">
           {#each questions.slice(0, 4) as q}
             <a
-              href={`/dashboard/questions/${q.rkey}`}
+              href={questionHref(q)}
               class="flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-blue-950/20"
             >
               {#if !q.isRead}

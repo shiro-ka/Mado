@@ -7,11 +7,12 @@
   interface Props {
     question: Question;
     preview?: string;
+    href?: string;
   }
 
-  let { question, preview }: Props = $props();
+  let { question, preview, href: hrefProp }: Props = $props();
 
-  const href = $derived(`/dashboard/questions/${question.rkey}`);
+  const href = $derived(hrefProp ?? `/receive`);
 </script>
 
 <a {href} class="group block">
