@@ -25,7 +25,7 @@
         if (!res.ok) {
           state = "error";
         } else {
-          await goto("/dashboard/questions");
+          await goto("/receive");
           await invalidateAll();
         }
       } catch {

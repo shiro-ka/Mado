@@ -10,9 +10,9 @@
   let open = $state(false);
 
   const items = [
-    { href: "/dashboard/about", icon: Info, label: "Madoについて" },
-    { href: "/dashboard/guide", icon: BookOpen, label: "使い方" },
-    { href: "/dashboard/semi-anon", icon: Eye, label: "半匿名の仕組み" },
+    { href: "/about", icon: Info, label: "Madoについて" },
+    { href: "/guide", icon: BookOpen, label: "使い方" },
+    { href: "/semi-anon", icon: Eye, label: "半匿名の仕組み" },
   ];
 </script>
 
