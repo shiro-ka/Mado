@@ -13,6 +13,16 @@
 
 <svelte:head>
   <title>声 | @{data.cleanHandle} | Mado</title>
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Mado" />
+  <meta property="og:title" content="匿名の質問" />
+  <meta property="og:description" content={data.question.body.slice(0, 200)} />
+  <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
+  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
 </svelte:head>
 
 <div class="px-6 py-8 max-w-2xl mx-auto">
@@ -109,7 +119,11 @@
   {#if data.isOwner}
     <div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
       <h2 class="text-sm font-semibold mb-4 text-primary">回答を書く</h2>
-      <AnswerForm koeUri={data.koeUri} />
+      <AnswerForm
+        koeUri={data.koeUri}
+        questionBody={data.question.body}
+        pageUrl={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`}
+      />
     </div>
 
     <div class="rounded-2xl p-5 flex flex-col sm:flex-row gap-3 bg-red-400/5 border border-red-400/15">

@@ -334,10 +334,31 @@ export async function createBskyPost(params: {
   sessionFetch: SessionFetch;
   ownerDid: string;
   text: string;
+  pageUrl?: string;
+  questionBody?: string;
 }): Promise<{ uri: string; cid: string } | null> {
-  const { sessionFetch, ownerDid, text } = params;
+  const { sessionFetch, ownerDid, text, pageUrl, questionBody } = params;
   const LIMIT = 280;
   const truncated = text.length > LIMIT ? text.slice(0, LIMIT - 1) + "…" : text;
+
+  const record: Record<string, unknown> = {
+    $type: "app.bsky.feed.post",
+    text: truncated,
+    createdAt: new Date().toISOString(),
+    langs: ["ja"],
+  };
+
+  if (pageUrl) {
+    record.embed = {
+      $type: "app.bsky.embed.external",
+      external: {
+        uri: pageUrl,
+        title: "匿名の質問",
+        description: questionBody ? questionBody.slice(0, 300) : "",
+      },
+    };
+  }
+
   try {
     return await xrpc<{ uri: string; cid: string }>({
       sessionFetch,
@@ -346,12 +367,7 @@ export async function createBskyPost(params: {
       body: {
         repo: ownerDid,
         collection: "app.bsky.feed.post",
-        record: {
-          $type: "app.bsky.feed.post",
-          text: truncated,
-          createdAt: new Date().toISOString(),
-          langs: ["ja"],
-        },
+        record,
       },
     });
   } catch {
