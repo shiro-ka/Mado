@@ -10,6 +10,8 @@ const createAnswerSchema = z.object({
   koeUri: z.string().min(1), // AT-URI: at://ownerDid/blue.mado.koe/rkey
   body: z.string().min(1).max(1000),
   crosspost: z.boolean().optional().default(false),
+  pageUrl: z.string().url().optional(),
+  questionBody: z.string().optional(),
 });
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
@@ -33,7 +35,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const { koeUri, body, crosspost } = parsed.data;
+    const { koeUri, body, crosspost, pageUrl, questionBody } = parsed.data;
 
     // Security: verify koeUri belongs to the logged-in user's repo
     const expectedPrefix = `at://${session.did}/${NSID.KOE}/`;
@@ -70,7 +72,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     }
 
     if (crosspost) {
-      await createBskyPost({ sessionFetch, ownerDid: session.did, text: body });
+      await createBskyPost({ sessionFetch, ownerDid: session.did, text: body, pageUrl, questionBody });
     }
 
     return json({ success: true, uri: result.uri });
