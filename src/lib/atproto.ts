@@ -330,6 +330,27 @@ export async function writeAnswer(params: {
   }
 }
 
+async function uploadThumb(
+  sessionFetch: SessionFetch,
+  imageUrl: string
+): Promise<unknown | null> {
+  try {
+    const imgRes = await fetch(imageUrl);
+    if (!imgRes.ok) return null;
+    const data = await imgRes.arrayBuffer();
+    const uploadRes = await sessionFetch("/xrpc/com.atproto.repo.uploadBlob", {
+      method: "POST",
+      headers: { "Content-Type": "image/png" },
+      body: data,
+    });
+    if (!uploadRes.ok) return null;
+    const json = (await uploadRes.json()) as { blob: unknown };
+    return json.blob;
+  } catch {
+    return null;
+  }
+}
+
 export async function createBskyPost(params: {
   sessionFetch: SessionFetch;
   ownerDid: string;
@@ -349,12 +370,15 @@ export async function createBskyPost(params: {
   };
 
   if (pageUrl) {
+    const ogImageUrl = pageUrl.replace("/@", "/og/@");
+    const thumb = await uploadThumb(sessionFetch, ogImageUrl);
     record.embed = {
       $type: "app.bsky.embed.external",
       external: {
         uri: pageUrl,
         title: "匿名の質問",
         description: questionBody ? questionBody.slice(0, 300) : "",
+        ...(thumb ? { thumb } : {}),
       },
     };
   }
