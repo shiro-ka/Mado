@@ -4,7 +4,7 @@ import { CloudflareStore } from "$lib/store.js";
 import { resolveHandle, findBoxBySlug, getKoeRecord, listAnswers, getProfile } from "$lib/atproto.js";
 import { decryptDid } from "$lib/crypto.js";
 
-export const load: PageServerLoad = async ({ parent, params, platform }) => {
+export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
   const { session } = await parent();
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 
@@ -44,15 +44,18 @@ export const load: PageServerLoad = async ({ parent, params, platform }) => {
 
   const senderProfile = senderDid ? await getProfile(senderDid) : null;
 
+  const { encryptedFrom: _, ...questionPublic } = question;
+
   return {
     cleanHandle,
     box,
     isOwner,
-    question: { ...question, isRead: isOwner },
+    question: { ...questionPublic, isRead: isOwner },
     answers,
     koeUri,
     senderDid,
     senderProfile,
     decryptError,
+    origin: url.origin,
   };
 };

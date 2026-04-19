@@ -5,10 +5,12 @@
 
   interface Props {
     koeUri: string;
+    questionBody?: string;
+    pageUrl?: string;
     onSuccess?: (answerUri: string) => void;
   }
 
-  let { koeUri, onSuccess }: Props = $props();
+  let { koeUri, questionBody, pageUrl, onSuccess }: Props = $props();
 
   type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -32,7 +34,7 @@
       const res = await fetch("/api/answers/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ koeUri, body: body.trim(), crosspost }),
+        body: JSON.stringify({ koeUri, body: body.trim(), crosspost, pageUrl, questionBody }),
       });
 
       if (!res.ok) {
