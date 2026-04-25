@@ -4,6 +4,16 @@ import tailwindcss from "@tailwindcss/vite";
 import { SvelteKitPWA } from "@vite-pwa/sveltekit";
 
 export default defineConfig({
+  ssr: {
+    external: [
+      "@cf-wasm/og",
+      "@cf-wasm/og/workerd",
+      "@cf-wasm/og/html-to-react",
+      "@cf-wasm/resvg",
+      "@cf-wasm/satori",
+      "@cf-wasm/internals",
+    ],
+  },
   plugins: [
     tailwindcss(),
     sveltekit(),
