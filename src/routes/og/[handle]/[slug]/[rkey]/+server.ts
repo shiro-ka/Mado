@@ -46,10 +46,10 @@ export const GET: RequestHandler = async ({ params, platform }) => {
   const allText = display + handleLine + BRAND;
 
   const element = htmlToReact(`
-    <div style="display:flex;flex-direction:column;width:100%;height:100%;background:linear-gradient(135deg,#060c18 0%,#0b1726 100%);color:#deeeff;font-family:NotoJP;padding:80px;">
-      <div style="display:flex;font-size:24px;color:#7aaac8;margin-bottom:32px;">${escapeHtml(handleLine)}</div>
-      <div style="display:flex;flex:1;font-size:44px;line-height:1.5;font-weight:700;align-items:center;">${escapeHtml(display)}</div>
-      <div style="display:flex;font-size:22px;color:#7aaac8;margin-top:32px;">${BRAND}</div>
+    <div style="display:flex;flex-direction:column;justify-content:space-between;width:100%;height:100%;background:linear-gradient(135deg,#060c18 0%,#0b1726 100%);color:#deeeff;font-family:NotoJP;padding:80px;">
+      <div style="display:flex;font-size:24px;color:#7aaac8;">${escapeHtml(handleLine)}</div>
+      <div style="display:flex;font-size:44px;line-height:1.5;font-weight:700;flex-wrap:wrap;">${escapeHtml(display)}</div>
+      <div style="display:flex;font-size:22px;color:#7aaac8;">${BRAND}</div>
     </div>
   `);
 
