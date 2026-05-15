@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import type { AppSession } from "$lib/store.js";
 
   interface Props {
@@ -14,8 +14,8 @@
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2 group">
       <img src="/mado-logo.svg" alt="Mado" class="w-8 h-8" />
-      <span class="font-bold text-lg text-primary">Mado</span>
-      <span class="text-xs px-1.5 py-0.5 rounded-full font-medium bg-accent-light text-blue-400 border border-blue-600/30">
+      <span class="font-bold text-lg text-foreground">Mado</span>
+      <span class="text-xs px-1.5 py-0.5 rounded-full font-medium bg-primary-light text-blue-400 border border-blue-600/30">
         beta
       </span>
     </a>

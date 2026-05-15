@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Send, AlertCircle, CheckCircle2 } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
 
   interface Props {
@@ -56,8 +56,8 @@
   <div class="rounded-xl p-6 flex flex-col items-center gap-3 text-center bg-emerald-400/8 border border-emerald-400/25">
     <CheckCircle2 size={36} class="text-emerald-400" />
     <div>
-      <p class="font-semibold text-primary">回答を投稿しました</p>
-      <p class="text-sm mt-1 text-muted">PDSに保存されました。</p>
+      <p class="font-semibold text-foreground">回答を投稿しました</p>
+      <p class="text-sm mt-1 text-muted-foreground">PDSに保存されました。</p>
     </div>
   </div>
 {:else}
@@ -87,7 +87,7 @@
           disabled={formState === "submitting"}
           class="w-4 h-4 accent-blue-500 cursor-pointer"
         />
-        <span class="text-xs text-muted">Bskyにもポスト</span>
+        <span class="text-xs text-muted-foreground">Bskyにもポスト</span>
       </label>
       <Button
         type="submit"

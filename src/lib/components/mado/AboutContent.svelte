@@ -23,27 +23,27 @@
 <div class="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-10">
   <div>
     <div class="flex items-center gap-3 mb-4">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-accent">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
         <MessageCircle size={20} class="text-white" />
       </div>
-      <h1 class="text-2xl font-bold text-primary">Madoについて</h1>
+      <h1 class="text-2xl font-bold text-foreground">Madoについて</h1>
     </div>
-    <p class="text-base leading-relaxed text-muted">
-      Mado（窓）は、Blueskyアカウントを使った<strong class="text-primary">半匿名の質問箱サービス</strong>です。
+    <p class="text-base leading-relaxed text-muted-foreground">
+      Mado（窓）は、Blueskyアカウントを使った<strong class="text-foreground">半匿名の質問箱サービス</strong>です。
       質問を送るにはBlueskyへのログインが必要なため完全匿名ではありませんが、
       送り主の情報は暗号化されてボックスオーナーにのみ届きます。
     </p>
   </div>
   <div class="flex flex-col gap-4">
-    <h2 class="text-lg font-semibold text-primary">3つの特徴</h2>
+    <h2 class="text-lg font-semibold text-foreground">3つの特徴</h2>
     {#each features as feat}
       <div class="rounded-xl p-5 flex gap-4 bg-surface border border-border">
         <div class={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${feat.bg}`}>
           <feat.icon size={18} class={feat.color} />
         </div>
         <div>
-          <p class="font-semibold text-sm mb-1 text-primary">{feat.title}</p>
-          <p class="text-sm leading-relaxed text-muted">{feat.body}</p>
+          <p class="font-semibold text-sm mb-1 text-foreground">{feat.title}</p>
+          <p class="text-sm leading-relaxed text-muted-foreground">{feat.body}</p>
         </div>
       </div>
     {/each}

@@ -34,8 +34,8 @@
 <div class="px-6 py-8 max-w-3xl mx-auto">
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-primary">受信トレイ</h1>
-      <p class="text-sm mt-1 text-muted">届いた質問を確認しましょう</p>
+      <h1 class="text-2xl font-bold text-foreground">受信トレイ</h1>
+      <p class="text-sm mt-1 text-muted-foreground">届いた質問を確認しましょう</p>
     </div>
     <a href="/receive" class="p-2 rounded-lg transition-colors duration-200 cursor-pointer text-subtle" title="更新">
       <RefreshCw size={16} />
@@ -48,7 +48,7 @@
         href={`/receive?tab=${t.key}`}
         class={cn(
           "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2",
-          tab === t.key ? "bg-accent text-white" : "bg-transparent text-muted"
+          tab === t.key ? "bg-primary text-white" : "bg-transparent text-muted-foreground"
         )}
       >
         {t.label}
@@ -69,10 +69,10 @@
     <div class="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
       <Inbox size={36} class="text-subtle opacity-50" />
       <div>
-        <p class="font-semibold text-base text-primary">
+        <p class="font-semibold text-base text-foreground">
           {tab === "unread" ? "未読の質問はありません" : "質問がありません"}
         </p>
-        <p class="text-sm mt-1 text-muted">
+        <p class="text-sm mt-1 text-muted-foreground">
           {tab === "all" ? "質問箱のURLをシェアして質問を募りましょう" : "すべての質問を確認しました！"}
         </p>
       </div>

@@ -24,14 +24,14 @@
   <div class="md:hidden fixed top-0 left-0 right-0 z-40 h-14 flex items-center px-4 gap-3 bg-surface border-b border-border">
     <button
       onclick={() => (drawerOpen = true)}
-      class="p-2 rounded-lg text-muted cursor-pointer"
+      class="p-2 rounded-lg text-muted-foreground cursor-pointer"
       aria-label="メニューを開く"
     >
       <Menu size={20} />
     </button>
     <a href="/dashboard" class="flex items-center gap-2">
       <img src="/mado-logo.svg" alt="Mado" class="w-7 h-7" />
-      <span class="font-bold text-sm text-primary">Mado</span>
+      <span class="font-bold text-sm text-foreground">Mado</span>
     </a>
   </div>
 
@@ -52,7 +52,7 @@
       <aside class="relative z-10 w-72 flex flex-col h-full bg-surface border-r border-border">
         <button
           onclick={() => (drawerOpen = false)}
-          class="absolute top-4 right-4 p-1.5 rounded-lg text-muted cursor-pointer"
+          class="absolute top-4 right-4 p-1.5 rounded-lg text-muted-foreground cursor-pointer"
           aria-label="メニューを閉じる"
         >
           <X size={18} />

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Ban, CheckCircle2 } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
 
   interface Props {
     senderDid: string;
@@ -49,7 +49,7 @@
 
 {#if state === "done" || state === "unblocking"}
   <div class="flex items-center gap-2 flex-1 sm:flex-none">
-    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted">
+    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted-foreground">
       <CheckCircle2 size={14} />
       ブロックしました
     </div>

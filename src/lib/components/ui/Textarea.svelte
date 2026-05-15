@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLTextareaAttributes } from "svelte/elements";
+  import { Textarea as ShadcnTextarea } from "$lib/components/ui/textarea";
   import { cn } from "$lib/utils.js";
 
   interface Props extends Omit<HTMLTextareaAttributes, "class"> {
@@ -31,7 +32,7 @@
 <div class="flex flex-col gap-1.5 w-full">
   <div class="flex items-center justify-between">
     {#if label}
-      <label for={inputId} class="text-sm font-medium text-muted">{label}</label>
+      <label for={inputId} class="text-sm font-medium text-muted-foreground">{label}</label>
     {:else}
       <span></span>
     {/if}
@@ -46,22 +47,18 @@
       </span>
     {/if}
   </div>
-  <textarea
+  <ShadcnTextarea
     id={inputId}
     bind:value
     maxlength={maxlength}
     class={cn(
-      "w-full rounded-lg px-4 py-3 text-sm transition-all duration-200 resize-y",
-      "focus:outline-none focus:ring-2 min-h-[120px]",
-      "placeholder:opacity-50",
-      "bg-elevated text-primary",
-      error
-        ? "border border-red-600/40 ring-1 ring-red-500/50 focus:ring-red-500/60"
-        : "border border-border focus:ring-blue-500/40",
+      "px-4 py-3 min-h-[120px] resize-y",
+      error && "border-destructive/60 focus-visible:ring-destructive/40",
       className
     )}
+    aria-invalid={error ? true : undefined}
     {...restProps}
-  ></textarea>
+  />
   {#if error}
     <p class="text-xs text-error">{error}</p>
   {:else if helper}

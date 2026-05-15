@@ -77,7 +77,7 @@
         class={cn(
           "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer",
           tab === t.id
-            ? "bg-surface text-primary shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
+            ? "bg-surface text-foreground shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
             : "bg-transparent text-subtle"
         )}
       >
@@ -87,7 +87,7 @@
             {items.length}
           </span>
         {:else if t.id === "unread" && unreadCount > 0}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full", tab !== "unread" ? "bg-accent text-white" : "bg-elevated text-subtle")}>
+          <span class={cn("text-xs px-1.5 py-0.5 rounded-full", tab !== "unread" ? "bg-primary text-white" : "bg-elevated text-subtle")}>
             {unreadCount}
           </span>
         {/if}
@@ -153,7 +153,7 @@
             </div>
 
             <!-- Question body -->
-            <p class={cn("text-sm leading-relaxed whitespace-pre-wrap text-primary", !isExpanded && "line-clamp-2")}>
+            <p class={cn("text-sm leading-relaxed whitespace-pre-wrap text-foreground", !isExpanded && "line-clamp-2")}>
               {item.ref.body}
             </p>
           </button>
@@ -165,12 +165,12 @@
               {#each item.answers as answer}
                 <div class="rounded-xl p-4 bg-elevated">
                   <div class="flex items-center gap-2 mb-2">
-                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-accent-light">
-                      <MessageCircle size={10} class="text-accent" />
+                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-primary-light">
+                      <MessageCircle size={10} class="text-primary" />
                     </div>
-                    <span class="text-xs text-muted">{formatDateFull(answer.createdAt)}</span>
+                    <span class="text-xs text-muted-foreground">{formatDateFull(answer.createdAt)}</span>
                   </div>
-                  <p class="text-sm leading-relaxed whitespace-pre-wrap text-primary">{answer.body}</p>
+                  <p class="text-sm leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
                 </div>
               {/each}
             </div>

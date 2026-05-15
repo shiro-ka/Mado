@@ -1,6 +1,6 @@
 <script lang="ts">
   import { MessageSquare, Inbox, ChevronRight, Plus, AlertTriangle } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import { cn } from "$lib/utils.js";
   import type { AppSession } from "$lib/store.js";
   import type { QuestionBox, Question } from "$lib/../types/index.js";
@@ -35,10 +35,10 @@
 <div class="px-6 py-8 max-w-4xl mx-auto">
   <!-- Welcome -->
   <div class="mb-8">
-    <h1 class="text-2xl font-bold mb-1 text-primary">
+    <h1 class="text-2xl font-bold mb-1 text-foreground">
       おかえりなさい、{session.displayName ?? `@${session.handle}`}
     </h1>
-    <p class="text-sm text-muted">今日も窓から声が届いていますよ</p>
+    <p class="text-sm text-muted-foreground">今日も窓から声が届いていますよ</p>
   </div>
 
   <!-- Session expiry warning -->
@@ -60,7 +60,7 @@
       { label: "総受信数", value: questions.length, sub: "累計", color: "text-blue-400" },
     ] as stat}
       <div class="rounded-xl p-5 bg-surface border border-border">
-        <p class="text-xs font-medium mb-2 text-muted">{stat.label}</p>
+        <p class="text-xs font-medium mb-2 text-muted-foreground">{stat.label}</p>
         <p class={cn("text-3xl font-bold tabular-nums", stat.color)}>{stat.value}</p>
         <p class="text-xs mt-1 text-subtle">{stat.sub}</p>
       </div>
@@ -74,7 +74,7 @@
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-2">
           <MessageSquare size={16} class="text-blue-400" />
-          <h2 class="text-sm font-semibold text-primary">質問箱</h2>
+          <h2 class="text-sm font-semibold text-foreground">質問箱</h2>
         </div>
         <a href={`/@${session.handle}`}>
           <Button variant="ghost" size="sm">
@@ -86,7 +86,7 @@
 
       {#if boxes.length === 0}
         <div class="text-center py-6">
-          <p class="text-sm mb-3 text-muted">まだ質問箱がありません</p>
+          <p class="text-sm mb-3 text-muted-foreground">まだ質問箱がありません</p>
           <a href={`/@${session.handle}/new`}>
             <Button size="sm">
               {#snippet leftIcon()}<Plus size={14} />{/snippet}
@@ -101,7 +101,7 @@
               href={`/@${session.handle}/${box.slug}`}
               class="flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-blue-950/20"
             >
-              <span class="text-sm truncate text-primary">{box.title}</span>
+              <span class="text-sm truncate text-foreground">{box.title}</span>
               <span class={cn("text-xs ml-2 shrink-0", box.isOpen ? "text-success" : "text-subtle")}>
                 {box.isOpen ? "受付中" : "停止中"}
               </span>
@@ -116,9 +116,9 @@
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-2">
           <Inbox size={16} class="text-emerald-400" />
-          <h2 class="text-sm font-semibold text-primary">受信トレイ</h2>
+          <h2 class="text-sm font-semibold text-foreground">受信トレイ</h2>
           {#if unreadCount > 0}
-            <span class="text-xs px-1.5 py-0.5 rounded-full font-bold bg-accent text-white">
+            <span class="text-xs px-1.5 py-0.5 rounded-full font-bold bg-primary text-white">
               {unreadCount}
             </span>
           {/if}
@@ -133,7 +133,7 @@
 
       {#if questions.length === 0}
         <div class="text-center py-6">
-          <p class="text-sm text-muted">まだ質問が届いていません</p>
+          <p class="text-sm text-muted-foreground">まだ質問が届いていません</p>
           <p class="text-xs mt-1 text-subtle">質問箱のURLをシェアしましょう</p>
         </div>
       {:else}
@@ -144,9 +144,9 @@
               class="flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-blue-950/20"
             >
               {#if !q.isRead}
-                <span class="w-1.5 h-1.5 rounded-full shrink-0 bg-accent"></span>
+                <span class="w-1.5 h-1.5 rounded-full shrink-0 bg-primary"></span>
               {/if}
-              <span class="text-sm truncate text-muted">{q.body}</span>
+              <span class="text-sm truncate text-muted-foreground">{q.body}</span>
               <span class="text-xs ml-auto shrink-0 tabular-nums text-subtle">
                 {new Date(q.createdAt).toLocaleDateString("ja-JP")}
               </span>

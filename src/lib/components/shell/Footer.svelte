@@ -8,22 +8,22 @@
       <!-- Brand -->
       <div class="flex flex-col gap-3">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-accent">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary">
             <MessageCircle size={16} class="text-white" />
           </div>
-          <span class="font-bold text-lg text-primary">Mado</span>
+          <span class="font-bold text-lg text-foreground">Mado</span>
         </div>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-muted-foreground">
           ATProtocol基盤の半匿名質問箱。<br />窓越しに、想いを届けよう。
         </p>
       </div>
 
       <!-- Links -->
       <div class="flex flex-col gap-3">
-        <h4 class="text-sm font-semibold text-primary">リンク</h4>
+        <h4 class="text-sm font-semibold text-foreground">リンク</h4>
         <div class="flex flex-col gap-2">
           {#each [{ href: "/", label: "ホーム" }, { href: "/auth/login", label: "ログイン" }, { href: "/dashboard", label: "ダッシュボード" }] as link}
-            <a href={link.href} class="text-sm transition-colors duration-200 hover:opacity-80 text-muted">
+            <a href={link.href} class="text-sm transition-colors duration-200 hover:opacity-80 text-muted-foreground">
               {link.label}
             </a>
           {/each}
@@ -32,10 +32,10 @@
 
       <!-- Legal / Info -->
       <div class="flex flex-col gap-3">
-        <h4 class="text-sm font-semibold text-primary">情報</h4>
+        <h4 class="text-sm font-semibold text-foreground">情報</h4>
         <div class="flex flex-col gap-2">
           {#each [{ href: "/privacy", label: "プライバシーポリシー" }, { href: "/terms", label: "利用規約" }] as link}
-            <a href={link.href} class="text-sm transition-colors duration-200 hover:opacity-80 text-muted">
+            <a href={link.href} class="text-sm transition-colors duration-200 hover:opacity-80 text-muted-foreground">
               {link.label}
             </a>
           {/each}
@@ -43,7 +43,7 @@
             href="https://atproto.com"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 text-sm transition-colors duration-200 hover:opacity-80 text-muted"
+            class="inline-flex items-center gap-1.5 text-sm transition-colors duration-200 hover:opacity-80 text-muted-foreground"
           >
             <Globe size={12} />
             ATProtocol

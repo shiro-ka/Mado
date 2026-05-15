@@ -1,58 +1,113 @@
 @import "tailwindcss";
 
+/* shadcn-svelte: bits-ui data-state variants */
+@custom-variant data-open {
+  &:where([data-state="open"]),
+  &:where([data-open]:not([data-open="false"])) { @slot; }
+}
+@custom-variant data-closed {
+  &:where([data-state="closed"]),
+  &:where([data-closed]:not([data-closed="false"])) { @slot; }
+}
+@custom-variant data-checked {
+  &:where([data-state="checked"]),
+  &:where([data-checked]:not([data-checked="false"])) { @slot; }
+}
+@custom-variant data-unchecked {
+  &:where([data-state="unchecked"]),
+  &:where([data-unchecked]:not([data-unchecked="false"])) { @slot; }
+}
+@custom-variant data-disabled {
+  &:where([data-disabled="true"]),
+  &:where([data-disabled]:not([data-disabled="false"])) { @slot; }
+}
+
 @theme inline {
-  --color-background: var(--bg);
-  --color-surface: var(--bg-surface);
-  --color-elevated: var(--bg-elevated);
-  --color-primary: var(--text-primary);
-  --color-muted: var(--text-muted);
-  --color-subtle: var(--text-subtle);
-  --color-border: var(--border);
+  /* shadcn color tokens (Tailwind utilities: bg-background, text-foreground, etc.) */
+  --color-background:           var(--background);
+  --color-foreground:           var(--foreground);
+  --color-card:                 var(--card);
+  --color-card-foreground:      var(--card-foreground);
+  --color-popover:              var(--popover);
+  --color-popover-foreground:   var(--popover-foreground);
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-secondary:            var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:                var(--muted);
+  --color-muted-foreground:     var(--muted-foreground);
+  --color-accent:               var(--accent);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-destructive:          var(--destructive);
+  --color-border:               var(--border);
+  --color-input:                var(--input);
+  --color-ring:                 var(--ring);
+
+  /* project-specific extras (bg-surface, bg-elevated, text-subtle, …) */
+  --color-surface:       var(--bg-surface);
+  --color-elevated:      var(--bg-elevated);
+  --color-subtle:        var(--text-subtle);
   --color-border-strong: var(--border-strong);
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-light: var(--accent-light);
-  --color-ring: var(--ring);
-  --color-error: var(--error);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
+  --color-accent-light:  var(--accent-light);
+  --color-success:       var(--success);
+  --color-warning:       var(--warning);
+  --color-error:         var(--error);
 }
 
+/* Dark (default) */
 :root {
-  --bg: #090e1a;
-  --bg-surface: #101828;
-  --bg-elevated: #182136;
+  --bg:           #090e1a;
+  --bg-surface:   #101828;
+  --bg-elevated:  #182136;
   --text-primary: #deeeff;
-  --text-muted: #7aaac8;
-  --text-subtle: #486882;
-  --border: rgba(59, 130, 246, 0.2);
+  --text-muted:   #7aaac8;
+  --text-subtle:  #486882;
   --border-strong: rgba(59, 130, 246, 0.4);
-  --accent: #0085ff;
-  --accent-hover: #006dd4;
-  --accent-light: rgba(0, 133, 255, 0.15);
-  --ring: rgba(0, 133, 255, 0.5);
-  --error: #f87171;
-  --success: #34d399;
-  --warning: #fbbf24;
+  --accent-light:  rgba(0, 133, 255, 0.15);
+  --error:         #f87171;
+  --success:       #34d399;
+  --warning:       #fbbf24;
+
+  /* shadcn semantic vars — dark */
+  --background:           var(--bg);
+  --foreground:           var(--text-primary);
+  --card:                 var(--bg-surface);
+  --card-foreground:      var(--text-primary);
+  --popover:              var(--bg-elevated);
+  --popover-foreground:   var(--text-primary);
+  --primary:              #0085ff;
+  --primary-foreground:   #ffffff;
+  --secondary:            var(--bg-elevated);
+  --secondary-foreground: var(--text-primary);
+  --muted:                var(--bg-surface);
+  --muted-foreground:     var(--text-muted);
+  --accent:               var(--bg-elevated);
+  --accent-foreground:    var(--text-primary);
+  --destructive:          var(--error);
+  --border:               rgba(59, 130, 246, 0.2);
+  --input:                rgba(59, 130, 246, 0.2);
+  --ring:                 rgba(0, 133, 255, 0.5);
+  --radius:               0.625rem;
 }
 
+/* Light */
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f0f6ff;
-    --bg-surface: #e3eeff;
-    --bg-elevated: #d5e5ff;
+    --bg:           #f0f6ff;
+    --bg-surface:   #e3eeff;
+    --bg-elevated:  #d5e5ff;
     --text-primary: #0a1929;
-    --text-muted: #3d6080;
-    --text-subtle: #7aaac8;
-    --border: rgba(37, 99, 235, 0.2);
+    --text-muted:   #3d6080;
+    --text-subtle:  #7aaac8;
     --border-strong: rgba(37, 99, 235, 0.4);
-    --accent: #0085ff;
-    --accent-hover: #006dd4;
-    --accent-light: rgba(0, 133, 255, 0.1);
-    --ring: rgba(0, 133, 255, 0.4);
-    --error: #dc2626;
-    --success: #059669;
-    --warning: #d97706;
+    --accent-light:  rgba(0, 133, 255, 0.1);
+    --error:         #dc2626;
+    --success:       #059669;
+    --warning:       #d97706;
+
+    --border: rgba(37, 99, 235, 0.2);
+    --input:  rgba(37, 99, 235, 0.2);
+    --ring:   rgba(0, 133, 255, 0.4);
   }
 }
 
