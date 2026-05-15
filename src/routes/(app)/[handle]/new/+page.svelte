@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto, invalidateAll } from "$app/navigation";
   import { ArrowLeft, Plus, AlertCircle } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
@@ -62,7 +62,7 @@
         戻る
       </Button>
     </a>
-    <h1 class="text-2xl font-bold text-primary">質問箱を作成</h1>
+    <h1 class="text-2xl font-bold text-foreground">質問箱を作成</h1>
   </div>
 
   <div class="rounded-2xl p-8 bg-surface border border-border">
@@ -90,7 +90,7 @@
 
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-muted">質問の受付</p>
+          <p class="text-sm font-medium text-muted-foreground">質問の受付</p>
           <p class="text-xs mt-0.5 text-subtle">オフにすると新しい質問を受け付けません</p>
         </div>
         <Toggle bind:checked={isOpen} label="質問の受付" disabled={formState === "submitting"} />

@@ -12,12 +12,12 @@
 
 <div class="px-6 py-8 max-w-2xl mx-auto">
   <div class="flex items-center gap-3 mb-8">
-    <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-accent-light">
-      <Send size={17} class="text-accent" />
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-primary-light">
+      <Send size={17} class="text-primary" />
     </div>
     <div>
-      <h1 class="text-xl font-bold text-primary">送信トレイ</h1>
-      <p class="text-xs text-muted">あなたが送った質問と返信</p>
+      <h1 class="text-xl font-bold text-foreground">送信トレイ</h1>
+      <p class="text-xs text-muted-foreground">あなたが送った質問と返信</p>
     </div>
   </div>
 

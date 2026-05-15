@@ -11,7 +11,7 @@
     Send,
     Inbox,
   } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
 
   const features = [
     {
@@ -65,17 +65,17 @@
 <!-- Hero -->
 <section class="relative overflow-hidden px-4 pt-24 pb-20 md:pt-32 md:pb-28">
   <div class="relative mx-auto max-w-3xl text-center">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-accent-light border border-blue-600/30 text-blue-300">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-primary-light border border-blue-600/30 text-blue-300">
       <Sparkles size={14} />
       ATProtocol基盤
     </div>
 
-    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-primary">
+    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground">
       窓越しに、<br />
       <span class="text-blue-400">想いを届けよう</span>
     </h1>
 
-    <p class="text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed text-muted">
+    <p class="text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed text-muted-foreground">
       Madoは、Blueskyアカウントを使った半匿名の質問箱です。
       送り主はボックスオーナーだけに届き、暗号化によって守られます。
     </p>
@@ -101,11 +101,11 @@
       <Shield size={20} class="shrink-0 mt-0.5 text-amber-400" />
       <div>
         <p class="font-semibold text-sm mb-1 text-amber-400">半匿名性についてのご説明</p>
-        <p class="text-sm leading-relaxed text-muted">
-          このサービスは<strong class="text-primary">完全匿名ではありません</strong>。
+        <p class="text-sm leading-relaxed text-muted-foreground">
+          このサービスは<strong class="text-foreground">完全匿名ではありません</strong>。
           質問を送信するにはBlueskyアカウントでのログインが必要です。
           あなたのDIDとハンドルは質問に暗号化された形で含まれ、
-          <strong class="text-primary">ボックスのオーナーのみ</strong>が復号して確認できます。
+          <strong class="text-foreground">ボックスのオーナーのみ</strong>が復号して確認できます。
           第三者には開示されません。
         </p>
       </div>
@@ -117,8 +117,8 @@
 <section id="features" class="px-4 py-16">
   <div class="mx-auto max-w-5xl">
     <div class="text-center mb-12">
-      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-primary">Madoの特徴</h2>
-      <p class="text-sm md:text-base text-muted">安全で信頼できる質問箱を実現する3つの柱</p>
+      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">Madoの特徴</h2>
+      <p class="text-sm md:text-base text-muted-foreground">安全で信頼できる質問箱を実現する3つの柱</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -127,8 +127,8 @@
           <div class={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${feat.bgClass}`}>
             <feat.icon size={20} class={feat.iconClass} />
           </div>
-          <h3 class="font-semibold text-base mb-2 text-primary">{feat.title}</h3>
-          <p class="text-sm leading-relaxed text-muted">{feat.description}</p>
+          <h3 class="font-semibold text-base mb-2 text-foreground">{feat.title}</h3>
+          <p class="text-sm leading-relaxed text-muted-foreground">{feat.description}</p>
         </div>
       {/each}
     </div>
@@ -139,8 +139,8 @@
 <section id="how-it-works" class="px-4 py-16">
   <div class="mx-auto max-w-5xl rounded-2xl p-8 md:p-12 bg-surface border border-border">
     <div class="text-center mb-10">
-      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-primary">使い方</h2>
-      <p class="text-sm md:text-base text-muted">3ステップで始められます</p>
+      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">使い方</h2>
+      <p class="text-sm md:text-base text-muted-foreground">3ステップで始められます</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -150,13 +150,13 @@
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-elevated">
               <step.icon size={24} class={step.iconClass} />
             </div>
-            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-accent text-white">
+            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-primary text-white">
               {step.step.slice(-1)}
             </div>
           </div>
           <div>
-            <h3 class="font-semibold text-base mb-1.5 text-primary">{step.title}</h3>
-            <p class="text-sm leading-relaxed text-muted">{step.description}</p>
+            <h3 class="font-semibold text-base mb-1.5 text-foreground">{step.title}</h3>
+            <p class="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
           </div>
         </div>
       {/each}
@@ -174,8 +174,8 @@
       ></div>
       <div class="relative">
         <Send size={36} class="mx-auto mb-4 opacity-80 text-blue-400" />
-        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-primary">今すぐ始めよう</h2>
-        <p class="mb-6 text-base text-muted">
+        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">今すぐ始めよう</h2>
+        <p class="mb-6 text-base text-muted-foreground">
           Blueskyアカウントがあれば、無料で質問箱を開設できます。
         </p>
         <a href="/auth/login">

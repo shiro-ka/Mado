@@ -1,6 +1,6 @@
 <script lang="ts">
   import { MessageCircle, AtSign, AlertCircle, Shield } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
 
   let handle = $state("");
@@ -46,13 +46,13 @@
     <!-- Header -->
     <div class="flex flex-col items-center gap-3 mb-8">
       <a href="/" class="flex items-center gap-2">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-accent">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
           <MessageCircle size={20} class="text-white" />
         </div>
-        <span class="font-bold text-xl text-primary">Mado</span>
+        <span class="font-bold text-xl text-foreground">Mado</span>
       </a>
-      <h1 class="text-2xl font-bold text-center text-primary">Blueskyアカウントでログイン</h1>
-      <p class="text-sm text-center text-muted">あなたのハンドルを入力して認証します</p>
+      <h1 class="text-2xl font-bold text-center text-foreground">Blueskyアカウントでログイン</h1>
+      <p class="text-sm text-center text-muted-foreground">あなたのハンドルを入力して認証します</p>
     </div>
 
     <!-- Card -->

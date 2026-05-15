@@ -18,15 +18,15 @@
         class="w-9 h-9 rounded-full object-cover shrink-0"
       />
     {:else}
-      <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 font-bold text-sm bg-accent text-white">
+      <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 font-bold text-sm bg-primary text-white">
         {session.handle[0]?.toUpperCase() ?? "?"}
       </div>
     {/if}
     <div class="min-w-0">
-      <p class="text-sm font-medium truncate text-primary">
+      <p class="text-sm font-medium truncate text-foreground">
         {session.displayName ?? session.handle}
       </p>
-      <p class="text-xs truncate text-muted">@{session.handle}</p>
+      <p class="text-xs truncate text-muted-foreground">@{session.handle}</p>
     </div>
   </div>
   <form action="/api/auth/logout" method="POST">

@@ -16,25 +16,25 @@
 
 <div class="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-10">
   <div>
-    <h1 class="text-2xl font-bold mb-3 text-primary">使い方</h1>
-    <p class="text-base leading-relaxed text-muted">Madoは「質問箱を開設するオーナー」と「質問を送る訪問者」の2つの役割があります。</p>
+    <h1 class="text-2xl font-bold mb-3 text-foreground">使い方</h1>
+    <p class="text-base leading-relaxed text-muted-foreground">Madoは「質問箱を開設するオーナー」と「質問を送る訪問者」の2つの役割があります。</p>
   </div>
   {#each [{ title: "質問箱を開設する", steps: ownerSteps }, { title: "質問を送る", steps: senderSteps }] as section}
     <section class="flex flex-col gap-4">
-      <h2 class="text-base font-semibold text-primary">{section.title}</h2>
+      <h2 class="text-base font-semibold text-foreground">{section.title}</h2>
       {#each section.steps as item}
         <div class="rounded-xl p-5 flex gap-4 bg-surface border border-border">
           <div class="relative shrink-0">
             <div class="w-9 h-9 rounded-lg flex items-center justify-center mt-0.5 bg-elevated">
               <item.icon size={17} class={item.color} />
             </div>
-            <div class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center font-bold bg-accent text-white" style="font-size:10px">
+            <div class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center font-bold bg-primary text-white" style="font-size:10px">
               {item.step}
             </div>
           </div>
           <div>
-            <p class="font-semibold text-sm mb-1 text-primary">{item.title}</p>
-            <p class="text-sm leading-relaxed text-muted">{item.body}</p>
+            <p class="font-semibold text-sm mb-1 text-foreground">{item.title}</p>
+            <p class="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
           </div>
         </div>
       {/each}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { MessageCircle, Lock, CheckCircle2 } from "lucide-svelte";
-  import Badge from "$lib/components/ui/Badge.svelte";
+  import { Badge } from "$lib/components/ui/badge";
   import { cn, formatDate, truncate } from "$lib/utils.js";
   import type { Question } from "$lib/../types/index.js";
 
@@ -28,7 +28,7 @@
         {#if question.isRead}
           <CheckCircle2 size={16} class="text-subtle" />
         {:else}
-          <div class="w-2 h-2 rounded-full mt-1.5 bg-accent"></div>
+          <div class="w-2 h-2 rounded-full mt-1.5 bg-primary"></div>
         {/if}
       </div>
 
@@ -43,7 +43,7 @@
 
         <div class="flex items-start gap-2">
           {#if preview}
-            <p class="text-sm line-clamp-2 text-primary">{truncate(preview, 120)}</p>
+            <p class="text-sm line-clamp-2 text-foreground">{truncate(preview, 120)}</p>
           {:else}
             <div class="flex items-center gap-1.5">
               <Lock size={12} class="text-subtle" />
@@ -55,7 +55,7 @@
         {#if question.senderHandle}
           <div class="flex items-center gap-1.5 mt-2">
             <MessageCircle size={12} class="text-subtle" />
-            <span class="text-xs text-muted">@{question.senderHandle}</span>
+            <span class="text-xs text-muted-foreground">@{question.senderHandle}</span>
           </div>
         {/if}
       </div>

@@ -2,8 +2,8 @@
   import { untrack } from "svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import { Shield, LogIn, Lock, Globe, Save, AlertCircle, Trash2, ArrowLeft } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
-  import Badge from "$lib/components/ui/Badge.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import { Badge } from "$lib/components/ui/badge";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
@@ -83,7 +83,7 @@
             プロフィールに戻る
           </Button>
         </a>
-        <h1 class="text-xl font-bold text-primary">窓の設定</h1>
+        <h1 class="text-xl font-bold text-foreground">窓の設定</h1>
       </div>
 
       <div class="rounded-2xl p-8 mb-5 bg-surface border border-border">
@@ -107,7 +107,7 @@
           />
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-muted">質問の受付</p>
+              <p class="text-sm font-medium text-muted-foreground">質問の受付</p>
               <p class="text-xs mt-0.5 text-subtle">オフにすると新しい質問を受け付けません</p>
             </div>
             <Toggle bind:checked={isOpen} label="質問の受付" disabled={isBusy} />
@@ -147,8 +147,8 @@
       <div class="rounded-xl p-4 flex items-center gap-3 bg-surface border border-border">
         <Lock size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
-          <p class="text-xs text-muted mb-0.5">公開URL</p>
-          <p class="text-sm font-mono text-primary truncate">mado.blue/@{data.cleanHandle}/{data.box.slug}</p>
+          <p class="text-xs text-muted-foreground mb-0.5">公開URL</p>
+          <p class="text-sm font-mono text-foreground truncate">mado.blue/@{data.cleanHandle}/{data.box.slug}</p>
         </div>
       </div>
 
@@ -163,12 +163,12 @@
             class="w-10 h-10 rounded-full object-cover shrink-0"
           />
         {:else}
-          <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold bg-accent text-white">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold bg-primary text-white">
             {(data.ownerProfile?.handle ?? data.cleanHandle)[0]?.toUpperCase() ?? "?"}
           </div>
         {/if}
         <div class="min-w-0">
-          <p class="font-semibold text-sm text-primary">{ownerDisplayName}</p>
+          <p class="font-semibold text-sm text-foreground">{ownerDisplayName}</p>
           <a
             href={`https://bsky.app/profile/${data.ownerProfile?.handle ?? data.cleanHandle}`}
             target="_blank"
@@ -186,13 +186,13 @@
         <div class="flex items-start gap-3 mb-3">
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-1">
-              <h1 class="text-lg font-bold text-primary">{data.box.title}</h1>
+              <h1 class="text-lg font-bold text-foreground">{data.box.title}</h1>
               <Badge variant={data.box.isOpen ? "success" : "muted"} dot size="sm">
                 {data.box.isOpen ? "受付中" : "受付停止"}
               </Badge>
             </div>
             {#if data.box.description}
-              <p class="text-sm leading-relaxed text-muted">{data.box.description}</p>
+              <p class="text-sm leading-relaxed text-muted-foreground">{data.box.description}</p>
             {/if}
           </div>
         </div>
@@ -205,10 +205,10 @@
       <!-- Semi-anonymous disclosure -->
       <div class="rounded-xl p-4 mb-5 flex items-start gap-3 bg-amber-400/7 border border-amber-400/25">
         <Shield size={15} class="shrink-0 mt-0.5 text-amber-400" />
-        <p class="text-xs leading-relaxed text-muted">
+        <p class="text-xs leading-relaxed text-muted-foreground">
           <span class="font-semibold text-amber-400">半匿名のご注意：</span>{" "}
           このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
-          <strong class="text-primary">ボックスのオーナーにのみ</strong>
+          <strong class="text-foreground">ボックスのオーナーにのみ</strong>
           開示されます。第三者には公開されません。
         </p>
       </div>
@@ -216,26 +216,26 @@
       <!-- Owner not registered -->
       {#if !data.ownerRegistered}
         <div class="rounded-xl p-6 text-center bg-surface border border-border">
-          <p class="font-semibold text-sm mb-1 text-primary">このユーザーはMadoに登録されていません</p>
-          <p class="text-xs text-muted">質問を送るには、オーナーがMadoにログインしている必要があります。</p>
+          <p class="font-semibold text-sm mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
+          <p class="text-xs text-muted-foreground">質問を送るには、オーナーがMadoにログインしている必要があります。</p>
         </div>
 
       <!-- Box closed -->
       {:else if !data.box.isOpen}
         <div class="rounded-xl p-6 text-center bg-surface border border-border">
-          <p class="font-semibold text-sm mb-1 text-primary">現在この質問箱は受付停止中です</p>
-          <p class="text-xs text-muted">オーナーが受付を再開するまでお待ちください。</p>
+          <p class="font-semibold text-sm mb-1 text-foreground">現在この質問箱は受付停止中です</p>
+          <p class="text-xs text-muted-foreground">オーナーが受付を再開するまでお待ちください。</p>
         </div>
 
       <!-- Not logged in -->
       {:else if !data.session}
         <div class="rounded-2xl p-6 text-center flex flex-col items-center gap-4 bg-surface border border-border">
-          <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-accent-light">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-primary-light">
             <LogIn size={20} class="text-blue-400" />
           </div>
           <div>
-            <p class="font-semibold text-sm mb-1 text-primary">質問するにはログインが必要です</p>
-            <p class="text-xs leading-relaxed text-muted">
+            <p class="font-semibold text-sm mb-1 text-foreground">質問するにはログインが必要です</p>
+            <p class="text-xs leading-relaxed text-muted-foreground">
               Blueskyアカウントでログインして質問を送りましょう。
               送り主はオーナーのみに開示されます。
             </p>

@@ -23,7 +23,7 @@
 <div class="h-16 px-5 flex items-center gap-2 shrink-0 border-b border-border">
   <a href="/dashboard" class="flex items-center gap-2" onclick={onNavigate}>
     <img src="/mado-logo.svg" alt="Mado" class="w-8 h-8" />
-    <span class="font-bold text-base text-primary">Mado</span>
+    <span class="font-bold text-base text-foreground">Mado</span>
   </a>
 </div>
 
@@ -34,7 +34,7 @@
       <a
         href={item.href}
         onclick={onNavigate}
-        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-muted"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-muted-foreground"
       >
         <item.icon size={17} class="shrink-0" />
         {item.label}

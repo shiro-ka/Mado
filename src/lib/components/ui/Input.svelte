@@ -29,7 +29,7 @@
 
 <div class="flex flex-col gap-1.5 w-full">
   {#if label}
-    <label for={inputId} class="text-sm font-medium text-muted">{label}</label>
+    <label for={inputId} class="text-sm font-medium text-muted-foreground">{label}</label>
   {/if}
   <div class="relative flex items-center">
     {#if leftAddon}
@@ -41,17 +41,13 @@
       id={inputId}
       bind:value
       class={cn(
-        "w-full rounded-lg px-4 py-3 text-sm transition-all duration-200",
-        "focus:outline-none focus:ring-2",
-        "placeholder:opacity-50",
-        "bg-elevated text-primary",
-        error
-          ? "border border-red-600/40 ring-1 ring-red-500/50 focus:ring-red-500/60"
-          : "border border-border focus:ring-blue-500/40",
+        "border-input focus-visible:border-ring focus-visible:ring-ring/50 rounded-lg border bg-transparent px-4 py-3 text-sm transition-colors focus-visible:ring-3 placeholder:text-muted-foreground w-full min-w-0 outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        error && "border-destructive/60 focus-visible:ring-destructive/40",
         leftAddon && "pl-10",
         rightAddon && "pr-10",
         className
       )}
+      aria-invalid={error ? true : undefined}
       {...restProps}
     />
     {#if rightAddon}

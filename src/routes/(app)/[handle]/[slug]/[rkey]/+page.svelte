@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
-  import Badge from "$lib/components/ui/Badge.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import { Badge } from "$lib/components/ui/badge";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import BlockButton from "$lib/components/mado/BlockButton.svelte";
   import DeleteQuestionButton from "$lib/components/mado/DeleteQuestionButton.svelte";
@@ -46,7 +46,7 @@
     </div>
 
     <div class="mb-5">
-      <p class="text-base leading-relaxed whitespace-pre-wrap text-primary">{data.question.body}</p>
+      <p class="text-base leading-relaxed whitespace-pre-wrap text-foreground">{data.question.body}</p>
     </div>
 
     {#if data.isOwner}
@@ -73,10 +73,10 @@
         {/if}
         <div class="flex-1 min-w-0">
           {#if data.senderProfile}
-            <p class="text-sm font-medium text-primary">
+            <p class="text-sm font-medium text-foreground">
               {data.senderProfile.displayName ?? data.senderProfile.handle}
             </p>
-            <p class="text-xs text-muted">@{data.senderProfile.handle}</p>
+            <p class="text-xs text-muted-foreground">@{data.senderProfile.handle}</p>
           {:else if data.senderDid}
             <p class="text-xs font-mono text-subtle">{data.senderDid}</p>
           {:else}
@@ -99,17 +99,17 @@
   <!-- Existing answers -->
   {#if data.answers.length > 0}
     <div class="mb-5 flex flex-col gap-3">
-      <h2 class="text-sm font-semibold text-primary">回答済み（{data.answers.length}件）</h2>
+      <h2 class="text-sm font-semibold text-foreground">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
         <div class="rounded-2xl p-5 bg-surface border border-border">
           <div class="flex items-center gap-2 mb-3">
-            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-accent-light">
-              <MessageCircle size={12} class="text-accent" />
+            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-primary-light">
+              <MessageCircle size={12} class="text-primary" />
             </div>
-            <span class="text-xs font-medium text-muted">回答</span>
+            <span class="text-xs font-medium text-muted-foreground">回答</span>
             <span class="text-xs ml-auto text-subtle">{formatDateFull(answer.createdAt)}</span>
           </div>
-          <p class="text-sm leading-relaxed whitespace-pre-wrap text-primary">{answer.body}</p>
+          <p class="text-sm leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
         </div>
       {/each}
     </div>
@@ -118,7 +118,7 @@
   <!-- Owner-only: answer form + danger zone -->
   {#if data.isOwner}
     <div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
-      <h2 class="text-sm font-semibold mb-4 text-primary">回答を書く</h2>
+      <h2 class="text-sm font-semibold mb-4 text-foreground">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}
