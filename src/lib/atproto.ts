@@ -28,6 +28,31 @@ function appViewAgent(): AtpAgent {
 }
 
 /**
+ * List every record in a collection, following cursors past the 100/page limit.
+ * Stops at `hardCap` records as a safety bound against runaway repos.
+ */
+async function listAllRecords(
+  agent: AtpAgent,
+  repo: string,
+  collection: string,
+  hardCap = 1000
+): Promise<Array<{ uri: string; cid: string; value: unknown }>> {
+  const out: Array<{ uri: string; cid: string; value: unknown }> = [];
+  let cursor: string | undefined;
+  do {
+    const res = await agent.com.atproto.repo.listRecords({
+      repo,
+      collection,
+      limit: 100,
+      cursor,
+    });
+    out.push(...res.data.records);
+    cursor = res.data.cursor;
+  } while (cursor && out.length < hardCap);
+  return out;
+}
+
+/**
  * Make an authenticated XRPC call via OAuthSession.fetchHandler.
  */
 async function xrpc<T = unknown>(params: {
@@ -120,12 +145,8 @@ export async function getBoxRecord(
 export async function listBoxes(did: string): Promise<QuestionBox[]> {
   const agent = publicAgent();
   try {
-    const res = await agent.com.atproto.repo.listRecords({
-      repo: did,
-      collection: NSID.BOX,
-      limit: 100,
-    });
-    return res.data.records.map((r) => {
+    const records = await listAllRecords(agent, did, NSID.BOX);
+    return records.map((r) => {
       const record = r.value as BlueMadoBox;
       const rkey = r.uri.split("/").pop() ?? "";
       return {
@@ -184,12 +205,8 @@ export async function getKoeRecord(
 export async function listQuestions(did: string): Promise<Question[]> {
   const agent = publicAgent();
   try {
-    const res = await agent.com.atproto.repo.listRecords({
-      repo: did,
-      collection: NSID.KOE,
-      limit: 100,
-    });
-    return res.data.records.map((r) => {
+    const records = await listAllRecords(agent, did, NSID.KOE);
+    return records.map((r) => {
       const record = r.value as BlueMadoKoe;
       const rkey = r.uri.split("/").pop() ?? "";
       return {
@@ -213,13 +230,9 @@ export async function getAnswersByOwner(
 ): Promise<Map<string, Answer[]>> {
   const agent = publicAgent();
   try {
-    const res = await agent.com.atproto.repo.listRecords({
-      repo: ownerDid,
-      collection: NSID.ANSWER,
-      limit: 100,
-    });
+    const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
     const map = new Map<string, Answer[]>();
-    for (const r of res.data.records) {
+    for (const r of records) {
       const record = r.value as BlueMadoAnswer;
       const rkey = r.uri.split("/").pop() ?? "";
       const answer: Answer = {
@@ -246,12 +259,8 @@ export async function listAnswers(
 ): Promise<Answer[]> {
   const agent = publicAgent();
   try {
-    const res = await agent.com.atproto.repo.listRecords({
-      repo: ownerDid,
-      collection: NSID.ANSWER,
-      limit: 100,
-    });
-    return res.data.records
+    const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
+    return records
       .filter((r) => (r.value as BlueMadoAnswer).koe === koeUri)
       .map((r) => {
         const record = r.value as BlueMadoAnswer;
