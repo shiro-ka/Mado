@@ -10,17 +10,11 @@ export const load: PageServerLoad = async ({ parent, platform }) => {
   const env = platform!.env;
   const store = new CloudflareStore(env);
 
-  const sentRefs = await store.listSent(session.did, 200);
-  const readMembers = await (async () => {
-    const reads: string[] = [];
-    for (const ref of sentRefs) {
-      const token = `${ref.ownerDid}:${ref.koeRkey}`;
-      const isRead = await store.isSentRead(session.did, token);
-      if (isRead) reads.push(token);
-    }
-    return reads;
-  })();
-  const readSet = new Set(readMembers);
+  const [sentRefs, readTokens] = await Promise.all([
+    store.listSent(session.did, 200),
+    store.listSentReads(session.did),
+  ]);
+  const readSet = new Set(readTokens);
 
   const uniqueOwners = [...new Set(sentRefs.map((r) => r.ownerDid))];
   const answerMapEntries = await Promise.all(

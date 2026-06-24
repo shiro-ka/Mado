@@ -60,7 +60,6 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
     });
   } catch (err) {
     console.error("[/api/auth/callback]", err);
-    console.error("[/api/auth/callback]", err);
     return new Response(null, {
       status: 302,
       headers: { Location: `${appUrl}/auth/login?error=oauth_failed` },

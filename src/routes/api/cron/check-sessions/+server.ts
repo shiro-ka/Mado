@@ -13,11 +13,13 @@ import { restoreOAuthSession } from "$lib/oauth.server.js";
 export const GET: RequestHandler = async ({ request, platform }) => {
   const env = platform!.env;
   const secret = env.CRON_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) {
-      return json({ error: "Unauthorized" }, { status: 401 });
-    }
+  // Fail closed: without a configured secret the endpoint stays locked.
+  if (!secret) {
+    return json({ error: "Cron not configured" }, { status: 503 });
+  }
+  const auth = request.headers.get("authorization");
+  if (auth !== `Bearer ${secret}`) {
+    return json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const store = new CloudflareStore(env);

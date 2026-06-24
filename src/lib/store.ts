@@ -247,6 +247,16 @@ export class CloudflareStore {
     return row !== null;
   }
 
+  /** All read-tokens for a sender, in one query (avoids per-item lookups). */
+  async listSentReads(senderDid: string): Promise<string[]> {
+    const { results } = await this.env.DB.prepare(
+      "SELECT token FROM sent_reads WHERE sender_did = ?"
+    )
+      .bind(senderDid)
+      .all<{ token: string }>();
+    return results.map((r: { token: string }) => r.token);
+  }
+
   // ── Rate limiting (KV, non-atomic — eventual consistency is acceptable) ──
 
   async incrRate(key: string, ttlSeconds: number): Promise<number> {
