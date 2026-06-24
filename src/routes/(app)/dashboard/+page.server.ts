@@ -21,5 +21,5 @@ export const load: PageServerLoad = async ({ parent, cookies, platform }) => {
   const readSet = new Set(readRkeys);
   const questions = questionsRaw.map((q) => ({ ...q, isRead: readSet.has(q.rkey) }));
 
-  return { boxes, questions, sessionTtl };
+  return { session, boxes, questions, sessionTtl };
 };
