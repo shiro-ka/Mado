@@ -17,6 +17,10 @@ const sendSchema = z.object({
 const RATE_BOX_TTL = 60;    // 1 minute
 const RATE_GLOBAL_TTL = 300; // 5 minutes
 
+// Block when the spam score reaches this. Higher = more lenient (fewer false
+// positives, but lets more throwaway accounts through). Tune to taste.
+const SPAM_SCORE_THRESHOLD = 6;
+
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
   try {
     const env = platform!.env;
@@ -89,18 +93,34 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // Spam detection: new account + few followers + few posts
+    // Spam heuristic — scored purely from the profile already fetched above,
+    // so it adds no extra requests (no cost on the free tier). Each weak signal
+    // adds points; we only block accounts that trip several at once, so a
+    // hesitant-but-real new user (who has set an avatar/name) still gets through.
     const senderProfile = await getProfile(session.did);
     if (senderProfile) {
-      const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-      const accountCreatedAt = senderProfile.createdAt
+      const day = 24 * 60 * 60 * 1000;
+      const createdAt = senderProfile.createdAt
         ? new Date(senderProfile.createdAt).getTime()
         : null;
-      const isNewAccount = accountCreatedAt !== null && accountCreatedAt > thirtyDaysAgo;
-      const hasFewFollowers = (senderProfile.followersCount ?? 0) < 3;
-      const hasFewPosts = (senderProfile.postsCount ?? 0) < 5;
+      const ageDays = createdAt !== null ? (Date.now() - createdAt) / day : Infinity;
+      const followers = senderProfile.followersCount ?? 0;
+      const follows = senderProfile.followsCount ?? 0;
+      const posts = senderProfile.postsCount ?? 0;
 
-      if (isNewAccount && hasFewFollowers && hasFewPosts) {
+      let score = 0;
+      if (ageDays < 7) score += 2;        // brand-new account
+      else if (ageDays < 30) score += 1;  // still young
+      if (followers === 0) score += 2;
+      else if (followers < 3) score += 1;
+      if (posts === 0) score += 2;
+      else if (posts < 5) score += 1;
+      if (!senderProfile.avatar) score += 1;       // default egg icon
+      if (!senderProfile.displayName) score += 1;  // never set a name
+      // follow-spam pattern: follows many, almost nobody follows back
+      if (follows > 50 && follows > followers * 10) score += 1;
+
+      if (score >= SPAM_SCORE_THRESHOLD) {
         return json(
           { error: "Spam detected", message: "アカウントの状態により送信できません" },
           { status: 403 }

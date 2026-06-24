@@ -257,13 +257,23 @@ export class CloudflareStore {
     return results.map((r: { token: string }) => r.token);
   }
 
-  // ── Rate limiting (KV, non-atomic — eventual consistency is acceptable) ──
+  // ── Rate limiting (KV, fixed window via time-bucketed keys) ─────────────
+  //
+  // The key is suffixed with a window bucket (floor(now / window)) so the
+  // window resets hard at bucket boundaries instead of sliding forward on
+  // every call. Still read-modify-write — KV has no atomic increment, so
+  // concurrent bursts can slightly overcount; that's acceptable for spam
+  // throttling. Use Durable Objects or the native Rate Limiting binding if
+  // strict guarantees are ever needed.
 
-  async incrRate(key: string, ttlSeconds: number): Promise<number> {
-    const existing = await this.env.RATE_LIMIT.get<{ count: number }>(key, "json");
+  async incrRate(key: string, windowSeconds: number): Promise<number> {
+    const bucket = Math.floor(Date.now() / 1000 / windowSeconds);
+    const bucketKey = `${key}:${bucket}`;
+    const existing = await this.env.RATE_LIMIT.get<{ count: number }>(bucketKey, "json");
     const count = (existing?.count ?? 0) + 1;
-    await this.env.RATE_LIMIT.put(key, JSON.stringify({ count }), {
-      expirationTtl: ttlSeconds,
+    await this.env.RATE_LIMIT.put(bucketKey, JSON.stringify({ count }), {
+      // KV requires expirationTtl >= 60; both rate windows already satisfy this.
+      expirationTtl: Math.max(60, windowSeconds),
     });
     return count;
   }
