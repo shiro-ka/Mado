@@ -71,11 +71,21 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
+    // The answer is already saved; a failed crosspost shouldn't fail the
+    // request — report it via a flag so the UI can warn non-fatally.
+    let crossposted = false;
     if (crosspost) {
-      await createBskyPost({ sessionFetch, ownerDid: session.did, text: body, pageUrl, questionBody });
+      const post = await createBskyPost({
+        sessionFetch,
+        ownerDid: session.did,
+        text: body,
+        pageUrl,
+        questionBody,
+      });
+      crossposted = post !== null;
     }
 
-    return json({ success: true, uri: result.uri });
+    return json({ success: true, uri: result.uri, crossposted });
   } catch (err) {
     console.error("[/api/answers/create]", err);
     return json(

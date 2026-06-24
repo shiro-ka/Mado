@@ -20,6 +20,7 @@
   let crosspost = $state(false);
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
+  let crosspostFailed = $state(false);
 
   const isValid = $derived(body.trim().length > 0 && body.length <= MAX_CHARS);
 
@@ -42,7 +43,8 @@
         throw new Error(data.message ?? "回答の投稿に失敗しました");
       }
 
-      const data = await res.json() as { uri: string };
+      const data = await res.json() as { uri: string; crossposted?: boolean };
+      crosspostFailed = crosspost && data.crossposted === false;
       formState = "success";
       onSuccess?.(data.uri);
     } catch (err) {
@@ -58,6 +60,12 @@
     <div>
       <p class="font-semibold text-foreground">回答を投稿しました</p>
       <p class="text-sm mt-1 text-muted-foreground">PDSに保存されました。</p>
+      {#if crosspostFailed}
+        <p class="text-sm mt-2 flex items-center justify-center gap-1.5 text-amber-400">
+          <AlertCircle size={14} />
+          Blueskyへの転載は失敗しました
+        </p>
+      {/if}
     </div>
   </div>
 {:else}
