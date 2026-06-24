@@ -1,0 +1,36 @@
+{
+  "lexicon": 1,
+  "id": "blue.mado.koe",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A question (\"koe\" / 声) sent to a Mado box. Written to the box OWNER's repo, so the sender's repo holds no trace. The body is public; the sender's identity is encrypted and readable only by the owner.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["encryptedFrom", "body", "box", "createdAt"],
+        "properties": {
+          "encryptedFrom": {
+            "type": "string",
+            "description": "Base64-encoded ECIES ciphertext of the sender's DID, encrypted with the box's publicKeyHex. A fresh ephemeral key per encryption makes ciphertexts unlinkable. Decryptable only by the box owner."
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 3000,
+            "maxGraphemes": 500,
+            "description": "Plaintext question text. Public on the PDS (\"semi-anonymous\": content is open, sender is not)."
+          },
+          "box": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the blue.mado.box this question targets."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
