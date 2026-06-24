@@ -26,7 +26,7 @@ function truncate(s: string, max: number): string {
 export const GET: RequestHandler = async ({ params, platform }) => {
   const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
   const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
-  if (platform?.context) cache.setExecutionContext(platform.context);
+  if (platform?.ctx) cache.setExecutionContext(platform.ctx);
 
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 

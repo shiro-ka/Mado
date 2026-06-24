@@ -5,7 +5,7 @@ import { updateSessionProfile } from "$lib/auth.server.js";
 
 export const load: LayoutServerLoad = async ({ parent, cookies, platform }) => {
   const { session } = await parent();
-  if (!session || !platform) return {};
+  if (!session || !platform) return { session: session ?? null };
 
   // Backfill missing profile fields
   if (!session.avatar || !session.displayName || session.handle.startsWith("did:")) {
@@ -28,5 +28,5 @@ export const load: LayoutServerLoad = async ({ parent, cookies, platform }) => {
     }
   }
 
-  return {};
+  return { session };
 };

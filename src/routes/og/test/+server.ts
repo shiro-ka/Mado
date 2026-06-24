@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 export const GET: RequestHandler = async ({ platform, url }) => {
   const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
   const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
-  if (platform?.context) cache.setExecutionContext(platform.context);
+  if (platform?.ctx) cache.setExecutionContext(platform.ctx);
 
   const text = url.searchParams.get("q") ?? "こんにちは、窓へようこそ。匿名の質問が届きました。";
 
