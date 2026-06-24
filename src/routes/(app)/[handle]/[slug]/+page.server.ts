@@ -3,7 +3,7 @@ import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { resolveHandle, findBoxBySlug, getProfile } from "$lib/atproto.js";
 
-export const load: PageServerLoad = async ({ parent, params, platform }) => {
+export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
   const { session } = await parent();
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 
@@ -29,5 +29,6 @@ export const load: PageServerLoad = async ({ parent, params, platform }) => {
     ownerProfile,
     ownerRegistered,
     isOwner,
+    origin: url.origin,
   };
 };
