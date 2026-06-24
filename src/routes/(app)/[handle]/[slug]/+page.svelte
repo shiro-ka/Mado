@@ -70,6 +70,16 @@
 
 <svelte:head>
   <title>{data.box.title} — @{data.cleanHandle} の質問箱 | Mado</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Mado" />
+  <meta property="og:title" content={`${data.box.title} — @${data.cleanHandle} の質問箱`} />
+  <meta property="og:description" content={data.box.description || "Madoで半匿名の声を送ろう"} />
+  <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}`} />
+  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
 </svelte:head>
 
 <div class="px-4 py-10">
