@@ -23,6 +23,19 @@ function publicAgent(): AtpAgent {
   return new AtpAgent({ service: DEFAULT_PDS });
 }
 
+/**
+ * Agent pointed at the repo owner's actual PDS.
+ *
+ * `com.atproto.repo.*` reads only work against the PDS that hosts the repo,
+ * so we resolve the DID's PDS endpoint via plc.directory rather than assuming
+ * bsky.social. Falls back to bsky.social if resolution fails. `repo` must be a
+ * DID (callers resolve handles first).
+ */
+async function repoAgent(repoDid: string): Promise<AtpAgent> {
+  const pds = await getPdsUrl(repoDid);
+  return new AtpAgent({ service: pds ?? DEFAULT_PDS });
+}
+
 function appViewAgent(): AtpAgent {
   return new AtpAgent({ service: APPVIEW_URL });
 }
@@ -117,7 +130,7 @@ export async function getBoxRecord(
   did: string,
   rkey: string
 ): Promise<QuestionBox | null> {
-  const agent = publicAgent();
+  const agent = await repoAgent(did);
   try {
     const res = await agent.com.atproto.repo.getRecord({
       repo: did,
@@ -143,7 +156,7 @@ export async function getBoxRecord(
 }
 
 export async function listBoxes(did: string): Promise<QuestionBox[]> {
-  const agent = publicAgent();
+  const agent = await repoAgent(did);
   try {
     const records = await listAllRecords(agent, did, NSID.BOX);
     return records.map((r) => {
@@ -179,7 +192,7 @@ export async function getKoeRecord(
   did: string,
   rkey: string
 ): Promise<Question | null> {
-  const agent = publicAgent();
+  const agent = await repoAgent(did);
   try {
     const res = await agent.com.atproto.repo.getRecord({
       repo: did,
@@ -203,7 +216,7 @@ export async function getKoeRecord(
 }
 
 export async function listQuestions(did: string): Promise<Question[]> {
-  const agent = publicAgent();
+  const agent = await repoAgent(did);
   try {
     const records = await listAllRecords(agent, did, NSID.KOE);
     return records.map((r) => {
@@ -228,7 +241,7 @@ export async function listQuestions(did: string): Promise<Question[]> {
 export async function getAnswersByOwner(
   ownerDid: string
 ): Promise<Map<string, Answer[]>> {
-  const agent = publicAgent();
+  const agent = await repoAgent(ownerDid);
   try {
     const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
     const map = new Map<string, Answer[]>();
@@ -257,7 +270,7 @@ export async function listAnswers(
   ownerDid: string,
   koeUri: string
 ): Promise<Answer[]> {
-  const agent = publicAgent();
+  const agent = await repoAgent(ownerDid);
   try {
     const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
     return records
