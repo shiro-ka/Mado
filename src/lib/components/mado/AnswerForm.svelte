@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { Send, AlertCircle, CheckCircle2 } from "lucide-svelte";
+  import { Send, AlertCircle, CheckCircle2, ExternalLink } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
+  import { bskyPostUrl } from "$lib/utils.js";
 
   interface Props {
     koeUri: string;
@@ -21,6 +22,16 @@
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
   let crosspostFailed = $state(false);
+  let crosspostLink = $state<string | null>(null);
+
+  function reset() {
+    body = "";
+    crosspost = false;
+    crosspostFailed = false;
+    crosspostLink = null;
+    errorMsg = "";
+    formState = "idle";
+  }
 
   const isValid = $derived(body.trim().length > 0 && body.length <= MAX_CHARS);
 
@@ -43,8 +54,13 @@
         throw new Error(data.message ?? "回答の投稿に失敗しました");
       }
 
-      const data = await res.json() as { uri: string; crossposted?: boolean };
+      const data = await res.json() as {
+        uri: string;
+        crossposted?: boolean;
+        crosspostUri?: string | null;
+      };
       crosspostFailed = crosspost && data.crossposted === false;
+      crosspostLink = data.crosspostUri ? bskyPostUrl(data.crosspostUri) : null;
       formState = "success";
       onSuccess?.(data.uri);
     } catch (err) {
@@ -65,8 +81,21 @@
           <AlertCircle size={14} />
           Blueskyへの転載は失敗しました
         </p>
+      {:else if crosspostLink}
+        <a
+          href={crosspostLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm mt-2 inline-flex items-center justify-center gap-1.5 text-blue-400 hover:opacity-80 transition-opacity"
+        >
+          <ExternalLink size={14} />
+          Blueskyの投稿を見る
+        </a>
       {/if}
     </div>
+    <Button variant="ghost" size="sm" onclick={reset} class="mt-1">
+      続けて回答する
+    </Button>
   </div>
 {:else}
   <form onsubmit={handleSubmit} class="flex flex-col gap-4">

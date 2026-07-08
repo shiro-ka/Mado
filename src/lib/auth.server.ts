@@ -15,7 +15,19 @@ export async function getSession(
 ): Promise<AppSession | undefined> {
   const sessionId = cookies.get(SESSION_COOKIE);
   if (!sessionId) return undefined;
-  return store.getSession(sessionId);
+  const session = await store.getSession(sessionId);
+  if (!session) return undefined;
+  // The app session (30-day cookie) is decoupled from the atproto OAuth session
+  // (keyed by DID, deleted on logout / revocation / cron cleanup). If the OAuth
+  // session is gone the user can't actually do anything — every atproto call
+  // would 401 — so treat them as logged out and clear the stale app session
+  // instead of rendering a half-logged-in UI.
+  if (!(await store.hasOAuthSession(session.did))) {
+    await store.delSession(sessionId);
+    cookies.delete(SESSION_COOKIE, { path: "/" });
+    return undefined;
+  }
+  return session;
 }
 
 /**

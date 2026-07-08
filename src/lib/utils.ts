@@ -57,3 +57,13 @@ export function profileUrl(handle: string): string {
   const normalized = normalizeHandle(handle);
   return `/@${normalized}`;
 }
+
+/**
+ * Convert an app.bsky.feed.post AT-URI (at://did/app.bsky.feed.post/rkey) into a
+ * clickable bsky.app permalink. Returns null if the URI isn't a post URI.
+ */
+export function bskyPostUrl(atUri: string): string | null {
+  const m = atUri.match(/^at:\/\/([^/]+)\/app\.bsky\.feed\.post\/([^/]+)$/);
+  if (!m) return null;
+  return `https://bsky.app/profile/${m[1]}/post/${m[2]}`;
+}

@@ -27,6 +27,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
 
   let senderDid: string | null = null;
   let decryptError = false;
+  let senderBlocked = false;
 
   if (isOwner) {
     const env = platform!.env;
@@ -39,6 +40,9 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
       }
     } catch {
       decryptError = true;
+    }
+    if (senderDid) {
+      senderBlocked = await store.isBlocked(ownerDid, senderDid);
     }
   }
 
@@ -55,6 +59,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     koeUri,
     senderDid,
     senderProfile,
+    senderBlocked,
     decryptError,
     origin: url.origin,
   };
