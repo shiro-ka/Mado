@@ -277,4 +277,41 @@ export class CloudflareStore {
     });
     return count;
   }
+
+  // ── Idempotency claim (KV) ──────────────────────────────────────────────
+  //
+  // Best-effort single-use claim. Returns true if this call claimed the key,
+  // false if it was already claimed within the TTL window. KV has no atomic
+  // set-if-absent, so two *simultaneous* claims can both win (eventual
+  // consistency); this reliably stops sequential double-submits (double-click,
+  // retry) but is not a strict mutex. A Durable Object is required for strict
+  // guarantees.
+
+  async claimOnce(key: string, ttlSeconds: number): Promise<boolean> {
+    const existing = await this.env.RATE_LIMIT.get(key);
+    if (existing !== null) return false;
+    await this.env.RATE_LIMIT.put(key, "1", {
+      expirationTtl: Math.max(60, ttlSeconds),
+    });
+    return true;
+  }
+
+  // ── Best-effort lock (KV) — serializes OAuth token refresh per DID ───────
+  //
+  // Same eventual-consistency caveat as claimOnce: this narrows the
+  // concurrent-refresh window but is not a hard mutex.
+
+  async getLock(key: string): Promise<string | null> {
+    return this.env.RATE_LIMIT.get(key);
+  }
+
+  async setLock(key: string, token: string, ttlSeconds: number): Promise<void> {
+    await this.env.RATE_LIMIT.put(key, token, {
+      expirationTtl: Math.max(60, ttlSeconds),
+    });
+  }
+
+  async delLock(key: string): Promise<void> {
+    await this.env.RATE_LIMIT.delete(key);
+  }
 }
