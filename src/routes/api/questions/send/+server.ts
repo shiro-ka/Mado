@@ -17,6 +17,14 @@ const sendSchema = z.object({
 const RATE_BOX_TTL = 60;    // 1 minute
 const RATE_GLOBAL_TTL = 300; // 5 minutes
 
+async function sha256Hex(input: string): Promise<string> {
+  const data = new TextEncoder().encode(input);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(digest)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 // Block when the spam score reaches this. Higher = more lenient (fewer false
 // positives, but lets more throwaway accounts through). Tune to taste.
 const SPAM_SCORE_THRESHOLD = 6;
@@ -63,6 +71,24 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       return json(
         { error: "Blocked", message: "この質問箱への送信が制限されています" },
         { status: 403 }
+      );
+    }
+
+    // Idempotency guard: block identical re-submissions (double-click, retry,
+    // or a concurrent request that slips past the non-atomic rate counter) from
+    // writing a duplicate koe. Keyed on sender+box+body so distinct questions
+    // are unaffected. Runs before the rate counters so a duplicate consumes no
+    // quota. Best-effort (KV isn't a strict mutex) but stops the common case.
+    const bodyHash = await sha256Hex(`${boxOwnerDid}:${boxRkey}:${body}`);
+    const dedupeKey = `dedupe:send:${session.did}:${bodyHash}`;
+    const fresh = await store.claimOnce(dedupeKey, RATE_BOX_TTL);
+    if (!fresh) {
+      return json(
+        {
+          error: "Duplicate",
+          message: "同じ質問を送信したばかりです。しばらく待ってから再送してください。",
+        },
+        { status: 429 }
       );
     }
 

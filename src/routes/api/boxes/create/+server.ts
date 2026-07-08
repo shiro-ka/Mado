@@ -6,7 +6,7 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { generateKeyPair } from "$lib/crypto.js";
-import { createBoxRecord } from "$lib/atproto.js";
+import { createBoxRecord, deleteRecord, NSID } from "$lib/atproto.js";
 
 const createBoxSchema = z.object({
   title: z.string().min(1).max(100),
@@ -68,7 +68,31 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    await store.setKeyPair(session.did, result.rkey, privateKey);
+    try {
+      await store.setKeyPair(session.did, result.rkey, privateKey);
+    } catch (keyErr) {
+      // The box record already exists on the PDS, but we failed to persist its
+      // private key. Without the key the owner could never decrypt any sender
+      // DID for this box, so roll the record back rather than leave an
+      // undecryptable orphan (and let the user retry cleanly).
+      console.error(
+        "[/api/boxes/create] key persist failed — rolling back box record",
+        keyErr
+      );
+      await deleteRecord({
+        sessionFetch,
+        did: session.did,
+        collection: NSID.BOX,
+        rkey: result.rkey,
+      });
+      return json(
+        {
+          error: "Write failed",
+          message: "質問箱の作成に失敗しました。もう一度お試しください。",
+        },
+        { status: 500 }
+      );
+    }
 
     return json({ success: true, rkey: result.rkey, uri: result.uri, slug });
   } catch (err) {

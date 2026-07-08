@@ -24,6 +24,23 @@
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
 
+  // SvelteKit reuses this component instance across same-route navigations
+  // (e.g. /@me/boxA → /@me/boxB), so $state would keep showing boxA's values —
+  // and a save would overwrite boxB with them. Re-seed the form whenever the
+  // box identity changes. Keyed on rkey so it does NOT clobber in-progress
+  // edits on invalidateAll() (same box), only on an actual box switch.
+  let seededRkey = $state(untrack(() => data.box.rkey));
+  $effect(() => {
+    if (data.box.rkey !== seededRkey) {
+      seededRkey = data.box.rkey;
+      title = data.box.title;
+      description = data.box.description ?? "";
+      isOpen = data.box.isOpen;
+      formState = "idle";
+      errorMsg = "";
+    }
+  });
+
   async function handleSave(e: SubmitEvent) {
     e.preventDefault();
     if (!title.trim() || formState === "submitting") return;
