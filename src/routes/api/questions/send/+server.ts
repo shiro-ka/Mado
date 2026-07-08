@@ -92,14 +92,14 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // Rate limiting: per-box (1/min) and global (5/5min)
+    // Rate limiting is split so a *rejected* send never burns the global quota
+    // (which would self-lock the user across all boxes). The per-box limit
+    // (1/min) is checked first; the global limit (5/5min) is only consumed once
+    // the send has cleared the per-box and spam checks, just before the write.
     const boxRateKey = `rate:box:${session.did}:${boxRkey}`;
     const globalRateKey = `rate:global:${session.did}`;
-    const [boxCount, globalCount] = await Promise.all([
-      store.incrRate(boxRateKey, RATE_BOX_TTL),
-      store.incrRate(globalRateKey, RATE_GLOBAL_TTL),
-    ]);
 
+    const boxCount = await store.incrRate(boxRateKey, RATE_BOX_TTL);
     if (boxCount > 1) {
       return json(
         {
@@ -109,19 +109,9 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
         { status: 429 }
       );
     }
-    if (globalCount > 5) {
-      return json(
-        {
-          error: "Rate limited",
-          message: "送信が多すぎます。しばらく待ってから再試行してください",
-        },
-        { status: 429 }
-      );
-    }
 
-    // Spam heuristic — scored purely from the profile already fetched above,
-    // so it adds no extra requests (no cost on the free tier). Each weak signal
-    // adds points; we only block accounts that trip several at once, so a
+    // Spam heuristic — one profile fetch, scored from weak signals. Each adds
+    // points; we only block accounts that trip several at once, so a
     // hesitant-but-real new user (who has set an avatar/name) still gets through.
     const senderProfile = await getProfile(session.did);
     if (senderProfile) {
@@ -152,6 +142,18 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
           { status: 403 }
         );
       }
+    }
+
+    // Cleared per-box + spam — now consume the global quota (5/5min).
+    const globalCount = await store.incrRate(globalRateKey, RATE_GLOBAL_TTL);
+    if (globalCount > 5) {
+      return json(
+        {
+          error: "Rate limited",
+          message: "送信が多すぎます。しばらく待ってから再試行してください",
+        },
+        { status: 429 }
+      );
     }
 
     const encryptedFrom = encryptDid(box.publicKeyHex, session.did);

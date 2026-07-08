@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle } from "lucide-svelte";
+  import { invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/button/button.svelte";
   import { Badge } from "$lib/components/ui/badge";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
@@ -123,13 +124,14 @@
         koeUri={data.koeUri}
         questionBody={data.question.body}
         pageUrl={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`}
+        onSuccess={() => invalidateAll()}
       />
     </div>
 
     <div class="rounded-2xl p-5 flex flex-col sm:flex-row gap-3 bg-red-400/5 border border-red-400/15">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
-        <BlockButton senderDid={data.senderDid} />
+        <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />
       {/if}
     </div>
   {/if}
