@@ -3,8 +3,9 @@ import type { RequestHandler } from "./$types";
 import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
+import { didSchema } from "$lib/validation.js";
 
-const schema = z.object({ senderDid: z.string().min(1) });
+const schema = z.object({ senderDid: didSchema });
 
 export const DELETE: RequestHandler = async ({ request, cookies, platform }) => {
   try {

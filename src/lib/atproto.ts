@@ -43,12 +43,17 @@ function appViewAgent(): AtpAgent {
 /**
  * List every record in a collection, following cursors past the 100/page limit.
  * Stops at `hardCap` records as a safety bound against runaway repos.
+ *
+ * NOTE: when the cap is hit we now log a warning instead of silently dropping
+ * the tail (which previously made older questions/answers just disappear).
+ * The real fix for hot repos is to index answers/questions in D1 and query by
+ * reference instead of full-scanning the PDS — tracked as a follow-up.
  */
 async function listAllRecords(
   agent: AtpAgent,
   repo: string,
   collection: string,
-  hardCap = 1000
+  hardCap = 3000
 ): Promise<Array<{ uri: string; cid: string; value: unknown }>> {
   const out: Array<{ uri: string; cid: string; value: unknown }> = [];
   let cursor: string | undefined;
@@ -62,6 +67,11 @@ async function listAllRecords(
     out.push(...res.data.records);
     cursor = res.data.cursor;
   } while (cursor && out.length < hardCap);
+  if (cursor) {
+    console.warn(
+      `[listAllRecords] hardCap ${hardCap} reached for ${collection} in ${repo} — older records not loaded`
+    );
+  }
   return out;
 }
 
