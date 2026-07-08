@@ -3,6 +3,7 @@ import { CloudflareStore } from "$lib/store.js";
 import { createOAuthClient } from "$lib/oauth.server.js";
 import { createSession } from "$lib/auth.server.js";
 import { getProfile } from "$lib/atproto.js";
+import { customAlphabet } from "nanoid";
 
 export const GET: RequestHandler = async ({ url, cookies, platform }) => {
   const env = platform!.env;
@@ -24,7 +25,13 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
 
   try {
     const store = new CloudflareStore(env);
-    const client = await createOAuthClient(env, store);
+    // Mint the device key *before* the token exchange so the OAuth session is
+    // persisted under this device's namespace (`${deviceKey}:${did}`).
+    const deviceKey = customAlphabet(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+      32
+    )();
+    const client = await createOAuthClient(env, store, deviceKey);
     const { session } = await client.callback(url.searchParams);
     const did = session.did;
 
@@ -49,10 +56,12 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
       handle: handle ?? did,
       displayName: profile?.displayName,
       avatar: profile?.avatar,
+      deviceKey,
     };
 
     await createSession(cookies, env, store, appSession);
     await store.addUser(did);
+    await store.addDeviceSession(deviceKey, did);
 
     return new Response(null, {
       status: 302,

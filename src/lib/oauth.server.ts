@@ -58,7 +58,8 @@ function wrapDpopStore<T>(store: {
  */
 export async function createOAuthClient(
   env: App.Platform["env"],
-  store: CloudflareStore
+  store: CloudflareStore,
+  deviceKey?: string
 ): Promise<OAuthClient> {
   const appUrl = env.APP_URL ?? "https://mado.blue";
   const rawKeys = env.OAUTH_PRIVATE_KEYS ?? "[]";
@@ -87,7 +88,7 @@ export async function createOAuthClient(
       // logging the user out. Best-effort KV lock (see store.getLock); a
       // Durable Object would be needed for a strict cross-isolate mutex.
       requestLock: async <T>(name: string, fn: () => T | PromiseLike<T>): Promise<T> => {
-        const lockKey = `oauthlock:${name}`;
+        const lockKey = deviceKey ? `oauthlock:${deviceKey}:${name}` : `oauthlock:${name}`;
         const token = crypto.randomUUID();
         const deadline = Date.now() + 5000;
         while (Date.now() < deadline) {
@@ -132,10 +133,14 @@ export async function createOAuthClient(
       set: (k, v) => store.setOAuthState(k, v),
       del: (k) => store.delOAuthState(k),
     }),
+    // atproto keys the session store by `sub` (DID). Namespace it with the
+    // per-device key so each device holds an independent token set; without a
+    // deviceKey (metadata/login endpoints that never touch the session store)
+    // fall back to the bare DID.
     sessionStore: wrapDpopStore({
-      get: (k) => store.getOAuthSession(k),
-      set: (k, v) => store.setOAuthSession(k, v),
-      del: (k) => store.delOAuthSession(k),
+      get: (k) => store.getOAuthSession(deviceKey ? `${deviceKey}:${k}` : k),
+      set: (k, v) => store.setOAuthSession(deviceKey ? `${deviceKey}:${k}` : k, v),
+      del: (k) => store.delOAuthSession(deviceKey ? `${deviceKey}:${k}` : k),
     }),
   });
 }
@@ -148,15 +153,42 @@ export async function createOAuthClient(
 export async function restoreOAuthSession(
   env: App.Platform["env"],
   store: CloudflareStore,
-  did: string
+  did: string,
+  deviceKey: string | undefined
 ): Promise<SessionFetch | null> {
+  if (!deviceKey) return null;
   try {
-    const client = await createOAuthClient(env, store);
+    const client = await createOAuthClient(env, store, deviceKey);
     const session = await client.restore(did);
     return session.fetchHandler.bind(session) as SessionFetch;
   } catch {
     return null;
   }
+}
+
+/**
+ * Restore *any* live OAuth session for a DID, across all of that user's devices.
+ * Used for server-side writes to a box owner's repo (questions/send): the sender
+ * is on their own device, but the write goes out under the owner's credentials
+ * and any of the owner's logged-in devices will do. Tries devices newest-first
+ * and returns the first that restores.
+ */
+export async function restoreAnyOAuthSession(
+  env: App.Platform["env"],
+  store: CloudflareStore,
+  did: string
+): Promise<SessionFetch | null> {
+  const deviceKeys = await store.listDeviceKeysForDid(did);
+  for (const deviceKey of deviceKeys) {
+    try {
+      const client = await createOAuthClient(env, store, deviceKey);
+      const session = await client.restore(did);
+      return session.fetchHandler.bind(session) as SessionFetch;
+    } catch {
+      // Try the next device.
+    }
+  }
+  return null;
 }
 
 export type OAuthSessionCheck =
@@ -175,12 +207,14 @@ export type OAuthSessionCheck =
 export async function checkOAuthSession(
   env: App.Platform["env"],
   store: CloudflareStore,
-  did: string
+  did: string,
+  deviceKey: string
 ): Promise<OAuthSessionCheck> {
   // No stored session at all → definitively gone.
-  if (!(await store.hasOAuthSession(did))) return { status: "revoked" };
+  if (!(await store.hasOAuthSession(store.oauthSessionKey(deviceKey, did))))
+    return { status: "revoked" };
   try {
-    const client = await createOAuthClient(env, store);
+    const client = await createOAuthClient(env, store, deviceKey);
     await client.restore(did);
     return { status: "valid" };
   } catch (err) {
@@ -225,10 +259,11 @@ function collectErrorText(err: unknown, depth = 0): string {
 export async function revokeOAuthSession(
   env: App.Platform["env"],
   store: CloudflareStore,
-  did: string
+  did: string,
+  deviceKey: string
 ): Promise<void> {
   try {
-    const client = await createOAuthClient(env, store);
+    const client = await createOAuthClient(env, store, deviceKey);
     await client.revoke(did);
   } catch (err) {
     console.warn("[oauth] revoke failed:", err);

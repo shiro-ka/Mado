@@ -11,6 +11,12 @@ export interface AppSession {
   handle: string;
   displayName?: string;
   avatar?: string;
+  // Per-login device key. Also namespaces this device's atproto OAuth session in
+  // KV (`${deviceKey}:${did}`) so each device holds an independent token set and
+  // a logout on one device doesn't take down the others. Optional for backward
+  // compatibility with sessions minted before per-device login shipped;
+  // getSession treats a missing deviceKey as logged out (forces clean re-login).
+  deviceKey?: string;
 }
 
 interface SessionMeta {
@@ -112,6 +118,69 @@ export class CloudflareStore {
       did: string;
     }>();
     return results.map((r: { did: string }) => r.did);
+  }
+
+  // ── Per-device OAuth session registry (D1) ──────────────────────────────
+
+  /** OAuth-session KV key for a specific device. */
+  oauthSessionKey(deviceKey: string, did: string): string {
+    return `${deviceKey}:${did}`;
+  }
+
+  async addDeviceSession(deviceKey: string, did: string): Promise<void> {
+    const now = Math.floor(Date.now() / 1000);
+    await this.env.DB.prepare(
+      "INSERT OR REPLACE INTO device_sessions (device_key, did, created_at, last_seen) VALUES (?, ?, ?, ?)"
+    )
+      .bind(deviceKey, did, now, now)
+      .run();
+  }
+
+  async removeDeviceSession(deviceKey: string): Promise<void> {
+    await this.env.DB.prepare("DELETE FROM device_sessions WHERE device_key = ?")
+      .bind(deviceKey)
+      .run();
+  }
+
+  /** All device sessions (device_key + did) — used by the cron sweep. */
+  async listDeviceSessions(): Promise<{ deviceKey: string; did: string }[]> {
+    const { results } = await this.env.DB.prepare(
+      "SELECT device_key, did FROM device_sessions"
+    ).all<{ device_key: string; did: string }>();
+    return results.map((r: { device_key: string; did: string }) => ({
+      deviceKey: r.device_key,
+      did: r.did,
+    }));
+  }
+
+  /** Device keys for a DID (newest-seen first) — find any live device of a box owner. */
+  async listDeviceKeysForDid(did: string): Promise<string[]> {
+    const { results } = await this.env.DB.prepare(
+      "SELECT device_key FROM device_sessions WHERE did = ? ORDER BY last_seen DESC"
+    )
+      .bind(did)
+      .all<{ device_key: string }>();
+    return results.map((r: { device_key: string }) => r.device_key);
+  }
+
+  /** Whether a DID has at least one registered device session. */
+  async ownerHasAnyDevice(did: string): Promise<boolean> {
+    const row = await this.env.DB.prepare(
+      "SELECT 1 FROM device_sessions WHERE did = ? LIMIT 1"
+    )
+      .bind(did)
+      .first();
+    return row !== null;
+  }
+
+  /** Count remaining device sessions for a DID (post-cleanup user pruning). */
+  async countDeviceSessions(did: string): Promise<number> {
+    const row = await this.env.DB.prepare(
+      "SELECT COUNT(*) AS n FROM device_sessions WHERE did = ?"
+    )
+      .bind(did)
+      .first<{ n: number }>();
+    return row?.n ?? 0;
   }
 
   // ── ECIES keypairs (D1) ─────────────────────────────────────────────────
