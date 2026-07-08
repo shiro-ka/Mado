@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>オフライン | Mado</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: #0a0a0f;
+        color: #e5e7eb;
+        font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      }
+      .card { max-width: 22rem; text-align: center; }
+      img { width: 56px; height: 56px; opacity: 0.9; }
+      h1 { font-size: 1.25rem; margin: 1.25rem 0 0.5rem; color: #fff; }
+      p { font-size: 0.875rem; line-height: 1.7; color: #9ca3af; margin: 0 0 1.5rem; }
+      button {
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #fff;
+        background: #7c3aed;
+        border: 0;
+        border-radius: 0.75rem;
+        padding: 0.65rem 1.25rem;
+        cursor: pointer;
+      }
+      button:hover { opacity: 0.9; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img src="/mado-logo.svg" alt="Mado" />
+      <h1>オフラインです</h1>
+      <p>
+        インターネットに接続できませんでした。<br />
+        接続を確認して、もう一度お試しください。
+      </p>
+      <button onclick="location.reload()">再読み込み</button>
+    </div>
+  </body>
+</html>

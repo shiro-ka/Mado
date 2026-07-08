@@ -24,7 +24,11 @@
     ...restProps
   }: Props = $props();
 
-  const inputId = $derived(id ?? (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined));
+  // Unique, hydration-stable fallback id. Deriving from the label text (as
+  // before) produced duplicate ids when two fields shared a label, breaking
+  // label/for association and focus.
+  const uid = $props.id();
+  const inputId = $derived(id ?? (label ? `${uid}-input` : undefined));
 </script>
 
 <div class="flex flex-col gap-1.5 w-full">

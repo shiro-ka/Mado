@@ -1,10 +1,22 @@
 <script lang="ts">
   import { Inbox, RefreshCw } from "lucide-svelte";
+  import { invalidateAll } from "$app/navigation";
   import { cn } from "$lib/utils.js";
   import QuestionCard from "$lib/components/mado/QuestionCard.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
+
+  let refreshing = $state(false);
+  async function refresh() {
+    if (refreshing) return;
+    refreshing = true;
+    try {
+      await invalidateAll();
+    } finally {
+      refreshing = false;
+    }
+  }
 
   type FilterTab = "all" | "unread" | "read";
 
@@ -37,9 +49,15 @@
       <h1 class="text-2xl font-bold text-foreground">受信トレイ</h1>
       <p class="text-sm mt-1 text-muted-foreground">届いた質問を確認しましょう</p>
     </div>
-    <a href="/receive" class="p-2 rounded-lg transition-colors duration-200 cursor-pointer text-subtle" title="更新">
-      <RefreshCw size={16} />
-    </a>
+    <button
+      onclick={refresh}
+      disabled={refreshing}
+      class="p-2 rounded-lg transition-colors duration-200 cursor-pointer text-subtle hover:text-foreground disabled:opacity-50"
+      title="更新"
+      aria-label="更新"
+    >
+      <RefreshCw size={16} class={cn(refreshing && "animate-spin")} />
+    </button>
   </div>
 
   <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">

@@ -45,7 +45,24 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ["client/**/*.{js,css,ico,png,svg,webp,woff,woff2}"],
+        globPatterns: [
+          "client/**/*.{js,css,ico,png,svg,webp,woff,woff2}",
+          "client/offline.html",
+        ],
+        // SSR-friendly offline handling: navigations always hit the network
+        // (NetworkOnly, so online behavior is unchanged), and only fall back to
+        // the precached offline page when the network is unreachable. We do NOT
+        // use navigateFallback, which would wrongly serve a cached shell for
+        // every navigation in an SSR app.
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "NetworkOnly",
+            options: {
+              precacheFallback: { fallbackURL: "/offline.html" },
+            },
+          },
+        ],
       },
     }),
   ],

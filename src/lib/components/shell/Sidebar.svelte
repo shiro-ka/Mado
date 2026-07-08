@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import { LayoutDashboard, Inbox, Send, User } from "lucide-svelte";
+  import { cn } from "$lib/utils.js";
   import InfoNav from "./InfoNav.svelte";
   import UserCard from "./UserCard.svelte";
   import type { AppSession } from "$lib/store.js";
@@ -17,6 +19,8 @@
     { href: "/receive", icon: Inbox, label: "受信トレイ" },
     { href: "/sent", icon: Send, label: "送信トレイ" },
   ]);
+
+  const currentPath = $derived(page.url.pathname);
 </script>
 
 <!-- Logo -->
@@ -31,10 +35,17 @@
 <nav class="flex-1 py-4 px-3 overflow-y-auto">
   <div class="flex flex-col gap-0.5">
     {#each navItems as item}
+      {@const active = currentPath === item.href}
       <a
         href={item.href}
         onclick={onNavigate}
-        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-muted-foreground"
+        aria-current={active ? "page" : undefined}
+        class={cn(
+          "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
+          active
+            ? "bg-primary-light text-blue-400"
+            : "text-muted-foreground hover:bg-elevated hover:text-foreground"
+        )}
       >
         <item.icon size={17} class="shrink-0" />
         {item.label}

@@ -12,6 +12,47 @@
   let { session, children }: Props = $props();
 
   let drawerOpen = $state(false);
+  let menuButton = $state<HTMLButtonElement>();
+  let closeButton = $state<HTMLButtonElement>();
+  let drawerEl = $state<HTMLElement>();
+
+  // Accessibility for the mobile drawer: lock body scroll, move focus in on
+  // open and restore it on close, close on Escape, and trap Tab within it.
+  $effect(() => {
+    if (!drawerOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButton?.focus();
+
+    function onKeydown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        drawerOpen = false;
+        return;
+      }
+      if (e.key === "Tab" && drawerEl) {
+        const focusables = drawerEl.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+    window.addEventListener("keydown", onKeydown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeydown);
+      document.body.style.overflow = prevOverflow;
+      menuButton?.focus();
+    };
+  });
 </script>
 
 <div class="flex min-h-dvh">
@@ -23,6 +64,7 @@
   <!-- Mobile topbar -->
   <div class="md:hidden fixed top-0 left-0 right-0 z-40 h-14 flex items-center px-4 gap-3 bg-surface border-b border-border">
     <button
+      bind:this={menuButton}
       onclick={() => (drawerOpen = true)}
       class="p-2 rounded-lg text-muted-foreground cursor-pointer"
       aria-label="メニューを開く"
@@ -49,8 +91,9 @@
         aria-label="メニューを閉じる"
         tabindex="-1"
       ></button>
-      <aside class="relative z-10 w-72 flex flex-col h-full bg-surface border-r border-border">
+      <aside bind:this={drawerEl} class="relative z-10 w-72 flex flex-col h-full bg-surface border-r border-border">
         <button
+          bind:this={closeButton}
           onclick={() => (drawerOpen = false)}
           class="absolute top-4 right-4 p-1.5 rounded-lg text-muted-foreground cursor-pointer"
           aria-label="メニューを閉じる"

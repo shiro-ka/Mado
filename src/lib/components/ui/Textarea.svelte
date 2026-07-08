@@ -23,7 +23,10 @@
     ...restProps
   }: Props = $props();
 
-  const inputId = $derived(id ?? (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined));
+  // Unique, hydration-stable fallback id (avoids duplicate ids when two fields
+  // share a label — that breaks label/for association and focus).
+  const uid = $props.id();
+  const inputId = $derived(id ?? (label ? `${uid}-textarea` : undefined));
   const charCount = $derived(typeof value === "string" ? value.length : 0);
   const isNearLimit = $derived(maxlength ? charCount > (maxlength as number) * 0.8 : false);
   const isOverLimit = $derived(maxlength ? charCount > (maxlength as number) : false);

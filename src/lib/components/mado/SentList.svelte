@@ -43,11 +43,20 @@
     const key = `${ownerDid}:${koeRkey}`;
     if (readSet.has(key)) return;
     readSet = new Set([...readSet, key]);
-    await fetch("/api/sent/read", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ownerDid, koeRkey }),
-    }).catch(() => {});
+    try {
+      const res = await fetch("/api/sent/read", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ownerDid, koeRkey }),
+      });
+      if (!res.ok) throw new Error();
+    } catch {
+      // Revert the optimistic mark so the UI doesn't claim "read" when the
+      // server never recorded it.
+      const next = new Set(readSet);
+      next.delete(key);
+      readSet = next;
+    }
   }
 
   function toggle(key: string, ownerDid: string, koeRkey: string, hasAnswer: boolean) {
