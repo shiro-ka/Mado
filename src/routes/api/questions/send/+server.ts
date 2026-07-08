@@ -7,11 +7,12 @@ import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { encryptDid } from "$lib/crypto.js";
 import { writeQuestion, getBoxRecord, getProfile } from "$lib/atproto.js";
+import { didSchema, rkeySchema } from "$lib/validation.js";
 
 const sendSchema = z.object({
   body: z.string().min(1).max(500),
-  boxOwnerDid: z.string().min(1),
-  boxRkey: z.string().min(1),
+  boxOwnerDid: didSchema,
+  boxRkey: rkeySchema,
 });
 
 const RATE_BOX_TTL = 60;    // 1 minute

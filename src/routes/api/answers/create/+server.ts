@@ -5,13 +5,14 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { writeAnswer, createBskyPost, NSID } from "$lib/atproto.js";
+import { atUriSchema } from "$lib/validation.js";
 
 const createAnswerSchema = z.object({
-  koeUri: z.string().min(1), // AT-URI: at://ownerDid/blue.mado.koe/rkey
+  koeUri: atUriSchema, // AT-URI: at://ownerDid/blue.mado.koe/rkey
   body: z.string().min(1).max(1000),
   crosspost: z.boolean().optional().default(false),
   pageUrl: z.string().url().optional(),
-  questionBody: z.string().optional(),
+  questionBody: z.string().max(1000).optional(),
 });
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
@@ -43,6 +44,17 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       return json(
         { error: "Forbidden", message: "この質問に回答する権限がありません" },
         { status: 403 }
+      );
+    }
+
+    // SSRF guard: pageUrl is used to build the crosspost embed AND is fetched
+    // server-side to generate the OG thumbnail (createBskyPost → uploadThumb).
+    // Only allow our own origin so the app can't be turned into an open proxy.
+    const appUrl = env.APP_URL ?? "https://mado.blue";
+    if (pageUrl && !pageUrl.startsWith(`${appUrl}/`)) {
+      return json(
+        { error: "Invalid request", message: "不正なURLです" },
+        { status: 400 }
       );
     }
 

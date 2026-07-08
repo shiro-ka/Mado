@@ -1,0 +1,30 @@
+import { z } from "zod";
+
+/**
+ * Shared shape validators for atproto identifiers reaching D1/PDS writes.
+ *
+ * These are intentionally permissive on the identifier body but strict on the
+ * *shape* — the goal is to reject handles, empty strings, and path-injection
+ * attempts (e.g. a slashed value smuggled into an AT-URI), not to fully verify
+ * that a DID resolves.
+ */
+
+// did:plc:<base32> or did:web:<host> and similar method-specific ids.
+export const didSchema = z
+  .string()
+  .regex(/^did:(plc|web):[a-zA-Z0-9._%:-]+$/, "invalid DID");
+
+// A record key: no slashes / control chars (would break AT-URI construction).
+export const rkeySchema = z
+  .string()
+  .min(1)
+  .max(512)
+  .regex(/^[a-zA-Z0-9._~:-]+$/, "invalid record key");
+
+// at://<did>/<collection>/<rkey>
+export const atUriSchema = z
+  .string()
+  .regex(
+    /^at:\/\/did:[a-z]+:[a-zA-Z0-9._%:-]+\/[a-zA-Z0-9.]+\/[a-zA-Z0-9._~:-]+$/,
+    "invalid AT-URI"
+  );

@@ -3,10 +3,11 @@ import type { RequestHandler } from "./$types";
 import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
+import { didSchema, rkeySchema } from "$lib/validation.js";
 
 const schema = z.object({
-  ownerDid: z.string().min(1),
-  koeRkey: z.string().min(1),
+  ownerDid: didSchema,
+  koeRkey: rkeySchema,
 });
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {

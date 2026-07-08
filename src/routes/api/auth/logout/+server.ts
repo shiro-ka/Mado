@@ -3,10 +3,19 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession, destroySession } from "$lib/auth.server.js";
 import { revokeOAuthSession } from "$lib/oauth.server.js";
 
-export const POST: RequestHandler = async ({ cookies, platform }) => {
+export const POST: RequestHandler = async ({ request, cookies, platform }) => {
   const env = platform!.env;
   const appUrl = env.APP_URL ?? "https://mado.blue";
   const store = new CloudflareStore(env);
+
+  // CSRF guard: this is a bodyless POST, so SvelteKit's form-content-type CSRF
+  // check doesn't cover it. A cross-site POST would carry a foreign Origin;
+  // reject anything that doesn't match our own origin before revoking (which
+  // would otherwise let an attacker force-logout the victim).
+  const origin = request.headers.get("origin");
+  if (origin && origin !== appUrl) {
+    return new Response(null, { status: 403 });
+  }
 
   try {
     const session = await getSession(cookies, store);
