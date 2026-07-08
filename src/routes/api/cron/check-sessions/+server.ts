@@ -43,20 +43,24 @@ export const GET: RequestHandler = async ({ request, platform }) => {
   }
 
   const store = new CloudflareStore(env);
-  const dids = await store.listUsers();
+  const devices = await store.listDeviceSessions();
 
   const results = await Promise.allSettled(
-    dids.map(async (did) => {
-      const check = await checkOAuthSession(env, store, did);
+    devices.map(async ({ deviceKey, did }) => {
+      const check = await checkOAuthSession(env, store, did, deviceKey);
       // Only delete on a *confirmed* revocation. Transient failures return
       // "error" and are left untouched so a flaky run can't wipe live sessions.
       if (check.status === "revoked") {
-        await store.delOAuthSession(did);
-        await store.removeUser(did);
+        await store.delOAuthSession(store.oauthSessionKey(deviceKey, did));
+        await store.removeDeviceSession(deviceKey);
+        // Prune the user from the registry once their last device is gone.
+        if ((await store.countDeviceSessions(did)) === 0) {
+          await store.removeUser(did);
+        }
         return "revoked" as const;
       }
       if (check.status === "error") {
-        console.warn(`[cron/check-sessions] transient error for ${did}:`, check.error);
+        console.warn(`[cron/check-sessions] transient error for ${deviceKey}/${did}:`, check.error);
         return "error" as const;
       }
       return "valid" as const;
@@ -77,7 +81,7 @@ export const GET: RequestHandler = async ({ request, platform }) => {
   }
 
   console.log(
-    `[cron/check-sessions] checked=${dids.length} valid=${valid} revoked=${revoked} errored=${errored}`
+    `[cron/check-sessions] checked=${devices.length} valid=${valid} revoked=${revoked} errored=${errored}`
   );
-  return json({ checked: dids.length, valid, revoked, errored });
+  return json({ checked: devices.length, valid, revoked, errored });
 };

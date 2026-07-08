@@ -58,7 +58,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const sessionFetch = await restoreOAuthSession(env, store, session.did);
+    const sessionFetch = await restoreOAuthSession(env, store, session.did, session.deviceKey);
     if (!sessionFetch) {
       return json(
         {

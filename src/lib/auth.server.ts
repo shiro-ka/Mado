@@ -22,7 +22,17 @@ export async function getSession(
   // session is gone the user can't actually do anything — every atproto call
   // would 401 — so treat them as logged out and clear the stale app session
   // instead of rendering a half-logged-in UI.
-  if (!(await store.hasOAuthSession(session.did))) {
+  // Legacy sessions minted before per-device login carry no deviceKey; their
+  // OAuth tokens lived under the bare DID key which is no longer read. Treat
+  // them as logged out so the user re-logs in cleanly under the new scheme.
+  if (!session.deviceKey) {
+    await store.delSession(sessionId);
+    cookies.delete(SESSION_COOKIE, { path: "/" });
+    return undefined;
+  }
+  if (
+    !(await store.hasOAuthSession(store.oauthSessionKey(session.deviceKey, session.did)))
+  ) {
     await store.delSession(sessionId);
     cookies.delete(SESSION_COOKIE, { path: "/" });
     return undefined;

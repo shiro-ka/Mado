@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import type { SentRef } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
-import { restoreOAuthSession } from "$lib/oauth.server.js";
+import { restoreAnyOAuthSession } from "$lib/oauth.server.js";
 import { encryptDid } from "$lib/crypto.js";
 import { writeQuestion, getBoxRecord, getProfile } from "$lib/atproto.js";
 import { didSchema, rkeySchema } from "$lib/validation.js";
@@ -159,7 +159,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     const encryptedFrom = encryptDid(box.publicKeyHex, session.did);
 
-    const ownerSessionFetch = await restoreOAuthSession(env, store, boxOwnerDid);
+    const ownerSessionFetch = await restoreAnyOAuthSession(env, store, boxOwnerDid);
     if (!ownerSessionFetch) {
       return json(
         { error: "Box unavailable", message: "この質問箱は現在利用できません" },

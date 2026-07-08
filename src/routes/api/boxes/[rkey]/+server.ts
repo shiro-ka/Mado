@@ -36,7 +36,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies, platform
     const session = await getSession(cookies, store);
     if (!session) return json({ error: "Unauthorized" }, { status: 401 });
 
-    const sessionFetch = await restoreOAuthSession(env, store, session.did);
+    const sessionFetch = await restoreOAuthSession(env, store, session.did, session.deviceKey);
     if (!sessionFetch) {
       return json(
         { error: "Session expired", message: "再ログインが必要です" },
@@ -85,7 +85,7 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
     const session = await getSession(cookies, store);
     if (!session) return json({ error: "Unauthorized" }, { status: 401 });
 
-    const sessionFetch = await restoreOAuthSession(env, store, session.did);
+    const sessionFetch = await restoreOAuthSession(env, store, session.did, session.deviceKey);
     if (!sessionFetch) {
       return json(
         { error: "Session expired", message: "再ログインが必要です" },

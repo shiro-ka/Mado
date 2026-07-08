@@ -19,8 +19,11 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
   try {
     const session = await getSession(cookies, store);
-    if (session?.did) {
-      await revokeOAuthSession(env, store, session.did);
+    if (session?.did && session.deviceKey) {
+      // Per-device logout: revoke and de-register only *this* device, leaving
+      // the user's other devices logged in.
+      await revokeOAuthSession(env, store, session.did, session.deviceKey);
+      await store.removeDeviceSession(session.deviceKey);
     }
     await destroySession(cookies, store);
   } catch (err) {

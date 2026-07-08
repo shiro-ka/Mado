@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   const [box, ownerProfile, ownerRegistered] = await Promise.all([
     findBoxBySlug(did, params.slug),
     getProfile(did),
-    store.hasOAuthSession(did),
+    store.ownerHasAnyDevice(did),
   ]);
 
   if (!box) throw error(404, "質問箱が見つかりません");
