@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageCircle, ChevronRight, Lock, Unlock } from "lucide-svelte";
+  import { MessageCircle, ChevronRight, Lock, Unlock, Pin } from "lucide-svelte";
   import { Badge } from "$lib/components/ui/badge";
   import { boxUrl } from "$lib/utils.js";
   import type { QuestionBox } from "$lib/../types/index.js";
@@ -8,9 +8,10 @@
     box: QuestionBox;
     ownerHandle: string;
     questionCount?: number;
+    isMain?: boolean;
   }
 
-  let { box, ownerHandle, questionCount }: Props = $props();
+  let { box, ownerHandle, questionCount, isMain = false }: Props = $props();
 
   const href = $derived(boxUrl(ownerHandle, box.slug));
 </script>
@@ -37,6 +38,12 @@
     </div>
 
     <div class="flex items-center gap-2 mt-3">
+      {#if isMain}
+        <Badge variant="default" size="sm">
+          <Pin size={11} class="mr-0.5" />
+          メイン
+        </Badge>
+      {/if}
       <Badge variant={box.isOpen ? "success" : "muted"} dot>
         {box.isOpen ? "受付中" : "受付停止"}
       </Badge>
