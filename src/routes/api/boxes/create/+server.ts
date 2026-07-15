@@ -6,12 +6,14 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { generateKeyPair } from "$lib/crypto.js";
-import { createBoxRecord, deleteRecord, NSID } from "$lib/atproto.js";
+import { createBoxRecord, deleteRecord, listBoxes, NSID } from "$lib/atproto.js";
+import { slugSchema } from "$lib/validation.js";
 
 const createBoxSchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string().max(300).optional(),
   isOpen: z.boolean().default(true),
+  slug: slugSchema.optional(),
 });
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
@@ -48,7 +50,20 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const slug = nanoid(8);
+    // User-chosen slug must be unique among this owner's boxes; if omitted, fall
+    // back to a random one (collision-free by construction).
+    let slug = parsed.data.slug;
+    if (slug) {
+      const existing = await listBoxes(session.did);
+      if (existing.some((b) => b.slug === slug)) {
+        return json(
+          { error: "Slug taken", message: "そのURLは既に使われています。別のURLにしてください。" },
+          { status: 409 }
+        );
+      }
+    } else {
+      slug = nanoid(8);
+    }
     const { publicKey, privateKey } = generateKeyPair();
 
     const result = await createBoxRecord({

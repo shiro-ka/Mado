@@ -13,9 +13,13 @@
 
   let title = $state("");
   let description = $state("");
+  let slug = $state("");
   let isOpen = $state(true);
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
+
+  // Live preview of the box's public URL. Empty slug → auto-generated on save.
+  const slugPreview = $derived(slug.trim().toLowerCase() || "（自動生成）");
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -31,6 +35,7 @@
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim() || undefined,
+          slug: slug.trim() || undefined,
           isOpen,
         }),
       });
@@ -87,6 +92,20 @@
         rows={4}
         disabled={formState === "submitting"}
       />
+
+      <div>
+        <Input
+          label="URL（任意）"
+          placeholder="ask"
+          bind:value={slug}
+          helper="英小文字・数字・ハイフンのみ。空欄なら自動生成されます。あとから変更もできます。"
+          maxlength={30}
+          disabled={formState === "submitting"}
+        />
+        <p class="mt-1.5 text-xs font-mono text-subtle break-all">
+          /@{data.cleanHandle}/<span class="text-blue-400">{slugPreview}</span>
+        </p>
+      </div>
 
       <div class="flex items-center justify-between">
         <div>

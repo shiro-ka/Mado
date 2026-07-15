@@ -20,6 +20,7 @@
   type FormState = "idle" | "submitting" | "error" | "deleting";
   let title = $state(untrack(() => data.box.title));
   let description = $state(untrack(() => data.box.description ?? ""));
+  let slug = $state(untrack(() => data.box.slug));
   let isOpen = $state(untrack(() => data.box.isOpen));
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
@@ -35,6 +36,7 @@
       seededRkey = data.box.rkey;
       title = data.box.title;
       description = data.box.description ?? "";
+      slug = data.box.slug;
       isOpen = data.box.isOpen;
       formState = "idle";
       errorMsg = "";
@@ -46,17 +48,29 @@
     if (!title.trim() || formState === "submitting") return;
     formState = "submitting";
     errorMsg = "";
+    const nextSlug = slug.trim().toLowerCase();
+    const slugChanged = nextSlug.length > 0 && nextSlug !== data.box.slug;
     try {
       const res = await fetch(`/api/boxes/${data.box.rkey}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim(), description: description.trim() || undefined, isOpen }),
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description.trim() || undefined,
+          slug: nextSlug || undefined,
+          isOpen,
+        }),
       });
       if (!res.ok) {
         const d = (await res.json()) as { message?: string };
         throw new Error(d.message ?? "更新に失敗しました");
       }
       formState = "idle";
+      // The slug is the URL, so a change moves this page — navigate to the new
+      // address before revalidating (the old /@handle/<oldslug> no longer resolves).
+      if (slugChanged) {
+        await goto(`/@${data.cleanHandle}/${nextSlug}`);
+      }
       await invalidateAll();
     } catch (err) {
       formState = "error";
@@ -147,6 +161,19 @@
             rows={4}
             disabled={isBusy}
           />
+          <div>
+            <Input
+              label="URL"
+              placeholder="ask"
+              bind:value={slug}
+              helper="英小文字・数字・ハイフンのみ。変更すると以前に共有したURLは開けなくなります。"
+              maxlength={30}
+              disabled={isBusy}
+            />
+            <p class="mt-1.5 text-xs font-mono text-subtle break-all">
+              /@{data.cleanHandle}/<span class="text-blue-400">{slug.trim().toLowerCase() || data.box.slug}</span>
+            </p>
+          </div>
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-muted-foreground">質問の受付</p>
