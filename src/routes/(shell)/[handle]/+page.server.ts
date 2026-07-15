@@ -12,10 +12,15 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
 
   const [profile, boxes] = await Promise.all([getProfile(did), listBoxes(did)]);
   const isOwner = session?.did === did;
+  const store = platform ? new CloudflareStore(platform.env) : null;
 
-  // Main box = oldest by createdAt (default; changeable later).
+  // Main box = the owner's override if it still points at a live box, else the
+  // oldest box by createdAt.
   const byAge = [...boxes].sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? ""));
-  const mainBoxRkey = byAge[0]?.rkey ?? null;
+  const oldestRkey = byAge[0]?.rkey ?? null;
+  const overrideRkey = store ? await store.getMainBoxRkey(did) : null;
+  const mainBoxRkey =
+    overrideRkey && boxes.some((b) => b.rkey === overrideRkey) ? overrideRkey : oldestRkey;
 
   if (isOwner) {
     // Owner: manage view — the full box list with the main box pinned on top.
@@ -46,7 +51,6 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   const featured = mainBox && mainBox.isOpen ? mainBox : openList[0] ?? null;
   const subBoxes = openList.filter((b) => b.rkey !== featured?.rkey);
 
-  const store = platform ? new CloudflareStore(platform.env) : null;
   const ownerRegistered = store ? await store.ownerHasAnyDevice(did) : false;
 
   return {
