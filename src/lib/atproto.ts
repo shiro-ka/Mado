@@ -362,6 +362,56 @@ export async function writeAnswer(params: {
   }
 }
 
+/**
+ * Whether the authenticated viewer follows `actorDid`. Reads viewer state from
+ * an authenticated getProfile (the PDS proxies the appview), so it must be
+ * called with the *viewer's* session, not the box owner's. Non-throwing —
+ * returns false on any failure.
+ */
+export async function getViewerFollowsActor(
+  sessionFetch: SessionFetch,
+  actorDid: string
+): Promise<boolean> {
+  try {
+    const data = await xrpc<{ viewer?: { following?: string } }>({
+      sessionFetch,
+      method: "GET",
+      lexicon: `app.bsky.actor.getProfile?actor=${encodeURIComponent(actorDid)}`,
+    });
+    return typeof data.viewer?.following === "string";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Write an app.bsky.graph.follow record to the viewer's repo, following
+ * `subjectDid`. Used by the notification opt-in flow so the owner follows the
+ * official account (required for the official DM to be delivered).
+ */
+export async function writeFollow(params: {
+  sessionFetch: SessionFetch;
+  did: string;
+  subjectDid: string;
+}): Promise<{ uri: string; cid: string } | null> {
+  const { sessionFetch, did, subjectDid } = params;
+  try {
+    const record = {
+      $type: "app.bsky.graph.follow",
+      subject: subjectDid,
+      createdAt: new Date().toISOString(),
+    };
+    return await xrpc<{ uri: string; cid: string }>({
+      sessionFetch,
+      method: "POST",
+      lexicon: "com.atproto.repo.createRecord",
+      body: { repo: did, collection: "app.bsky.graph.follow", record },
+    });
+  } catch {
+    return null;
+  }
+}
+
 async function uploadThumb(
   sessionFetch: SessionFetch,
   imageUrl: string

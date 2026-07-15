@@ -5,9 +5,15 @@
     checked?: boolean;
     disabled?: boolean;
     label?: string;
+    onCheckedChange?: (checked: boolean) => void;
   }
 
-  let { checked = $bindable(false), disabled = false, label }: Props = $props();
+  let {
+    checked = $bindable(false),
+    disabled = false,
+    label,
+    onCheckedChange,
+  }: Props = $props();
 </script>
 
 <button
@@ -15,7 +21,10 @@
   role="switch"
   aria-checked={checked}
   aria-label={label}
-  onclick={() => (checked = !checked)}
+  onclick={() => {
+    checked = !checked;
+    onCheckedChange?.(checked);
+  }}
   {disabled}
   class={cn(
     "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200",

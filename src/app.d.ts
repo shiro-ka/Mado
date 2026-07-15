@@ -18,6 +18,9 @@ declare global {
         MADO_OFFICIAL_IDENTIFIER?: string;
         MADO_OFFICIAL_APP_PASSWORD?: string;
         MADO_OFFICIAL_PDS?: string;
+        // Public handle of the official account (drives the opt-in UI / follow
+        // link). Resolved to a DID at runtime for follow detection & writes.
+        MADO_OFFICIAL_HANDLE?: string;
       };
       cf: CfProperties;
       ctx: ExecutionContext;

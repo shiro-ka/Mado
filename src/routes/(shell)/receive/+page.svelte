@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inbox, RefreshCw } from "lucide-svelte";
+  import { Inbox, RefreshCw, Bell, ChevronRight } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import { cn } from "$lib/utils.js";
   import QuestionCard from "$lib/components/mado/QuestionCard.svelte";
@@ -59,6 +59,15 @@
       <RefreshCw size={16} class={cn(refreshing && "animate-spin")} />
     </button>
   </div>
+
+  <a
+    href="/settings/notifications"
+    class="flex items-center gap-2.5 px-4 py-3 mb-6 rounded-xl bg-surface border border-border text-sm text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
+  >
+    <Bell size={16} class="shrink-0 text-blue-400" />
+    <span class="flex-1">新着をDMで受け取る設定</span>
+    <ChevronRight size={16} class="shrink-0 text-subtle" />
+  </a>
 
   <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
     {#each tabs as t}
