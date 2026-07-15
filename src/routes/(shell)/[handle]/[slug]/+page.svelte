@@ -8,6 +8,7 @@
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
   import BoxSendView from "$lib/components/mado/BoxSendView.svelte";
+  import { slugFormatError } from "$lib/validation.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -41,7 +42,7 @@
 
   async function handleSave(e: SubmitEvent) {
     e.preventDefault();
-    if (!title.trim() || formState === "submitting") return;
+    if (!title.trim() || slugErr || formState === "submitting") return;
     formState = "submitting";
     errorMsg = "";
     const nextSlug = slug.trim().toLowerCase();
@@ -93,6 +94,8 @@
   }
 
   const isBusy = $derived(formState === "submitting" || formState === "deleting");
+  // Instant client-side format check (same rules as the server's slugSchema).
+  const slugErr = $derived(slugFormatError(slug));
 
   // Shareable public URL of this box (the core "share to get questions" link).
   const publicUrl = $derived(`${data.origin}/@${data.cleanHandle}/${data.box.slug}`);
@@ -182,6 +185,7 @@
               label="URL"
               placeholder="ask"
               bind:value={slug}
+              error={slugErr ?? undefined}
               helper="英小文字・数字・ハイフンのみ。変更すると以前に共有したURLは開けなくなります。"
               maxlength={30}
               disabled={isBusy}
@@ -219,7 +223,7 @@
             <Button
               type="submit"
               loading={formState === "submitting"}
-              disabled={!title.trim()}
+              disabled={!title.trim() || !!slugErr}
             >
               {#snippet leftIcon()}<Save size={16} />{/snippet}
               保存する

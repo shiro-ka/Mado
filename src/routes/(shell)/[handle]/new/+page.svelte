@@ -5,6 +5,7 @@
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
+  import { slugFormatError } from "$lib/validation.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -20,10 +21,12 @@
 
   // Live preview of the box's public URL. Empty slug → auto-generated on save.
   const slugPreview = $derived(slug.trim().toLowerCase() || "（自動生成）");
+  // Instant client-side format check (same rules as the server's slugSchema).
+  const slugErr = $derived(slugFormatError(slug));
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    if (!title.trim() || formState === "submitting") return;
+    if (!title.trim() || slugErr || formState === "submitting") return;
 
     formState = "submitting";
     errorMsg = "";
@@ -98,6 +101,7 @@
           label="URL（任意）"
           placeholder="ask"
           bind:value={slug}
+          error={slugErr ?? undefined}
           helper="英小文字・数字・ハイフンのみ。空欄なら自動生成されます。あとから変更もできます。"
           maxlength={30}
           disabled={formState === "submitting"}
@@ -131,7 +135,7 @@
         <Button
           type="submit"
           loading={formState === "submitting"}
-          disabled={!title.trim()}
+          disabled={!title.trim() || !!slugErr}
         >
           {#snippet leftIcon()}<Plus size={16} />{/snippet}
           作成する
