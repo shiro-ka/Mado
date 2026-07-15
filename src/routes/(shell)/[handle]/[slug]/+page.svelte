@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from "svelte";
   import { goto, invalidateAll } from "$app/navigation";
-  import { Shield, LogIn, Lock, Globe, Save, AlertCircle, Trash2, ArrowLeft } from "lucide-svelte";
+  import { Shield, LogIn, Lock, Globe, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import { Badge } from "$lib/components/ui/badge";
   import Input from "$lib/components/ui/Input.svelte";
@@ -83,6 +83,21 @@
   }
 
   const isBusy = $derived(formState === "submitting" || formState === "deleting");
+
+  // Shareable public URL of this box (the core "share to get questions" link).
+  const publicUrl = $derived(`${data.origin}/@${data.cleanHandle}/${data.box.slug}`);
+  const publicUrlDisplay = $derived(publicUrl.replace(/^https?:\/\//, ""));
+  let copied = $state(false);
+  async function copyUrl() {
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      copied = true;
+      setTimeout(() => (copied = false), 2000);
+    } catch {
+      // Clipboard API unavailable (insecure context / permissions) — no-op;
+      // the URL is still visible for manual copy.
+    }
+  }
 </script>
 
 <svelte:head>
@@ -175,8 +190,22 @@
         <Lock size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
           <p class="text-xs text-muted-foreground mb-0.5">公開URL</p>
-          <p class="text-sm font-mono text-foreground truncate">mado.blue/@{data.cleanHandle}/{data.box.slug}</p>
+          <p class="text-sm font-mono text-foreground truncate">{publicUrlDisplay}</p>
         </div>
+        <button
+          type="button"
+          onclick={copyUrl}
+          aria-label="公開URLをコピー"
+          class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer border {copied ? 'bg-green-400/10 border-green-400/30 text-green-400' : 'bg-elevated border-border text-muted-foreground hover:text-foreground'}"
+        >
+          {#if copied}
+            <Check size={13} />
+            コピー済み
+          {:else}
+            <Copy size={13} />
+            コピー
+          {/if}
+        </button>
       </div>
 
     {:else}
