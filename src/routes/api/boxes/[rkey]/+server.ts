@@ -4,12 +4,14 @@ import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { getBoxRecord, updateBoxRecord, deleteRecord, NSID } from "$lib/atproto.js";
+import { getBoxRecord, updateBoxRecord, deleteRecord, listBoxes, NSID } from "$lib/atproto.js";
+import { slugSchema } from "$lib/validation.js";
 
 const updateSchema = z.object({
   title: z.string().min(1).max(100).optional(),
   description: z.string().max(300).optional(),
   isOpen: z.boolean().optional(),
+  slug: slugSchema.optional(),
 });
 
 export const GET: RequestHandler = async ({ params, cookies, platform }) => {
@@ -51,7 +53,21 @@ export const PATCH: RequestHandler = async ({ params, request, cookies, platform
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) return json({ error: "Invalid request" }, { status: 400 });
 
-    const { title, description, isOpen } = parsed.data;
+    const { title, description, isOpen, slug } = parsed.data;
+
+    // Changing the slug changes the box's public URL (old shared links break —
+    // the caller warns about that). Enforce per-owner uniqueness against the
+    // *other* boxes before committing.
+    if (slug && slug !== box.slug) {
+      const existing = await listBoxes(session.did);
+      if (existing.some((b) => b.rkey !== params.rkey && b.slug === slug)) {
+        return json(
+          { error: "Slug taken", message: "そのURLは既に使われています。別のURLにしてください。" },
+          { status: 409 }
+        );
+      }
+    }
+
     const success = await updateBoxRecord({
       sessionFetch,
       did: session.did,
@@ -60,7 +76,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies, platform
       description: description ?? box.description,
       isOpen: isOpen ?? box.isOpen,
       publicKeyHex: box.publicKeyHex,
-      slug: box.slug,
+      slug: slug ?? box.slug,
       createdAt: box.createdAt,
     });
 
