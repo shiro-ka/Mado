@@ -120,6 +120,30 @@ export class CloudflareStore {
     return results.map((r: { did: string }) => r.did);
   }
 
+  /** The owner's chosen "main box" rkey, or null to use the oldest-box default. */
+  async getMainBoxRkey(did: string): Promise<string | null> {
+    try {
+      const row = await this.env.DB.prepare(
+        "SELECT main_box_rkey FROM users WHERE did = ?"
+      )
+        .bind(did)
+        .first<{ main_box_rkey: string | null }>();
+      return row?.main_box_rkey ?? null;
+    } catch (err) {
+      // Most likely the 0003 migration hasn't been applied yet (no such column).
+      // Degrade gracefully to the oldest-box default rather than 500 on /@handle.
+      console.warn("[getMainBoxRkey] falling back to default (run migration 0003?)", err);
+      return null;
+    }
+  }
+
+  /** Set (or clear, with null) the owner's main-box override. */
+  async setMainBoxRkey(did: string, rkey: string | null): Promise<void> {
+    await this.env.DB.prepare("UPDATE users SET main_box_rkey = ? WHERE did = ?")
+      .bind(rkey, did)
+      .run();
+  }
+
   // ── Per-device OAuth session registry (D1) ──────────────────────────────
 
   /** OAuth-session KV key for a specific device. */

@@ -1,8 +1,9 @@
 <script lang="ts">
   import { untrack } from "svelte";
   import { goto, invalidateAll } from "$app/navigation";
-  import { Lock, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check } from "lucide-svelte";
+  import { Lock, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check, Pin } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
+  import { Badge } from "$lib/components/ui/badge";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
@@ -105,6 +106,26 @@
     } catch {
       // Clipboard API unavailable (insecure context / permissions) — no-op;
       // the URL is still visible for manual copy.
+    }
+  }
+
+  // Promote this box to the owner's main Mado.
+  let settingMain = $state(false);
+  async function handleSetMain() {
+    if (settingMain || data.isMain) return;
+    settingMain = true;
+    errorMsg = "";
+    try {
+      const res = await fetch(`/api/boxes/${data.box.rkey}/main`, { method: "POST" });
+      if (!res.ok) {
+        const d = (await res.json()) as { message?: string };
+        throw new Error(d.message ?? "設定に失敗しました");
+      }
+      await invalidateAll();
+    } catch (err) {
+      errorMsg = err instanceof Error ? err.message : "設定に失敗しました";
+    } finally {
+      settingMain = false;
     }
   }
 </script>
@@ -228,6 +249,29 @@
             コピー
           {/if}
         </button>
+      </div>
+
+      <!-- Main Mado -->
+      <div class="rounded-xl p-4 mt-5 flex items-center gap-3 bg-surface border border-border">
+        <Pin size={14} class="text-subtle shrink-0" />
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-foreground">メインMado</p>
+          <p class="text-xs text-muted-foreground mt-0.5">
+            {data.isMain
+              ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"
+              : "メインにすると /@ハンドル の先頭に表示されます"}
+          </p>
+        </div>
+        {#if data.isMain}
+          <Badge variant="default" size="sm">
+            <Pin size={11} class="mr-0.5" />
+            メイン
+          </Badge>
+        {:else}
+          <Button variant="secondary" size="sm" loading={settingMain} onclick={handleSetMain}>
+            メインにする
+          </Button>
+        {/if}
       </div>
 
     {:else}
