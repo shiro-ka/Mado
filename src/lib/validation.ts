@@ -48,3 +48,17 @@ export const slugSchema = z
     "英小文字・数字・ハイフンのみ使えます（先頭と末尾は英数字）"
   )
   .refine((s) => !RESERVED_SLUGS.has(s), "そのURLは予約済みのため使えません");
+
+/**
+ * Client-friendly format check that reuses slugSchema (same rules, no drift).
+ * Returns a Japanese error message, or null when the value is acceptable.
+ * Empty input is treated as OK — creation auto-generates a slug, and editing
+ * an empty field leaves the current slug unchanged. Uniqueness is NOT checked
+ * here (that needs the server); the API's 409 remains the backstop.
+ */
+export function slugFormatError(raw: string): string | null {
+  const v = raw.trim();
+  if (!v) return null;
+  const result = slugSchema.safeParse(v);
+  return result.success ? null : result.error.issues[0]?.message ?? "使えないURLです";
+}
