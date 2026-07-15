@@ -7,6 +7,7 @@ import { getSession } from "$lib/auth.server.js";
 import { restoreAnyOAuthSession } from "$lib/oauth.server.js";
 import { encryptDid } from "$lib/crypto.js";
 import { writeQuestion, getBoxRecord, getProfile } from "$lib/atproto.js";
+import { notifyNewKoe } from "$lib/notify.server.js";
 import { didSchema, rkeySchema } from "$lib/validation.js";
 
 const sendSchema = z.object({
@@ -190,6 +191,17 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       body,
     };
     await store.pushSent(session.did, sentRef, 200);
+
+    // Opt-in DM notification to the owner. Runs after the response and never
+    // affects the send outcome — the koe is already in the owner's /receive
+    // inbox regardless of whether the DM lands.
+    platform!.ctx.waitUntil(
+      notifyNewKoe(env, store, {
+        ownerDid: boxOwnerDid,
+        boxTitle: box.title,
+        body,
+      })
+    );
 
     return json({ success: true, uri: result.uri });
   } catch (err) {

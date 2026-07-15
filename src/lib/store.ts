@@ -350,6 +350,42 @@ export class CloudflareStore {
     return results.map((r: { token: string }) => r.token);
   }
 
+  // ── Notification prefs (D1) ─────────────────────────────────────────────
+  //
+  // Opt-in only: no row → disabled. The DM notification is a supplement to the
+  // /receive inbox, never the source of truth, so a missing table (migration
+  // 0004 not yet applied) degrades to "disabled" rather than 500-ing the send.
+
+  async getNotificationPrefs(did: string): Promise<{ dmEnabled: boolean }> {
+    try {
+      const row = await this.env.DB.prepare(
+        "SELECT dm_enabled FROM notification_prefs WHERE did = ?"
+      )
+        .bind(did)
+        .first<{ dm_enabled: number }>();
+      return { dmEnabled: (row?.dm_enabled ?? 0) === 1 };
+    } catch (err) {
+      console.warn(
+        "[getNotificationPrefs] falling back to disabled (run migration 0004?)",
+        err
+      );
+      return { dmEnabled: false };
+    }
+  }
+
+  async isDmNotifyEnabled(did: string): Promise<boolean> {
+    return (await this.getNotificationPrefs(did)).dmEnabled;
+  }
+
+  async setDmNotify(did: string, enabled: boolean): Promise<void> {
+    await this.env.DB.prepare(
+      `INSERT INTO notification_prefs (did, dm_enabled, updated_at) VALUES (?, ?, ?)
+       ON CONFLICT(did) DO UPDATE SET dm_enabled = excluded.dm_enabled, updated_at = excluded.updated_at`
+    )
+      .bind(did, enabled ? 1 : 0, Math.floor(Date.now() / 1000))
+      .run();
+  }
+
   // ── Rate limiting (KV, fixed window via time-bucketed keys) ─────────────
   //
   // The key is suffixed with a window bucket (floor(now / window)) so the
