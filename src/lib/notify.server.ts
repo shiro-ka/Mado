@@ -1,5 +1,6 @@
 import { AtpAgent, type AtpSessionData } from "@atproto/api";
 import type { CloudflareStore } from "./store.js";
+import { resolveHandle } from "./atproto.js";
 
 /**
  * Official-account DM notifications.
@@ -27,6 +28,22 @@ const OFFICIAL_SESSION_KEY = "official:chat-session";
 const DEFAULT_OFFICIAL_PDS = "https://bsky.social";
 
 type Env = App.Platform["env"];
+
+/**
+ * The official Mado account the opt-in flow points users at. Returns null when
+ * MADO_OFFICIAL_HANDLE isn't configured (notifications not set up) or the
+ * handle can't be resolved. `handle` drives the UI/profile link; `did` is used
+ * as the follow-record subject and for viewer-follow detection.
+ */
+export async function getOfficialAccount(
+  env: Env
+): Promise<{ handle: string; did: string } | null> {
+  const handle = env.MADO_OFFICIAL_HANDLE;
+  if (!handle) return null;
+  const did = await resolveHandle(handle);
+  if (!did) return null;
+  return { handle, did };
+}
 
 /**
  * Restore (or freshly log in) the official account's agent. Returns null when
