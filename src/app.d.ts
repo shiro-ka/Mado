@@ -12,6 +12,12 @@ declare global {
         OAUTH_PRIVATE_KEYS: string;
         APP_URL: string;
         CRON_SECRET: string;
+        // Official Mado account used for opt-in DM notifications. When unset,
+        // notifications are silently skipped. The app password must have DM
+        // access enabled. MADO_OFFICIAL_PDS defaults to https://bsky.social.
+        MADO_OFFICIAL_IDENTIFIER?: string;
+        MADO_OFFICIAL_APP_PASSWORD?: string;
+        MADO_OFFICIAL_PDS?: string;
       };
       cf: CfProperties;
       ctx: ExecutionContext;
