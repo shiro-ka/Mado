@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import { fade, fly } from "svelte/transition";
+  import { cubicOut } from "svelte/easing";
   import { Menu, X } from "lucide-svelte";
   import Sidebar from "./Sidebar.svelte";
   import type { AppSession } from "$lib/store.js";
@@ -57,7 +59,7 @@
 
 <div class="flex min-h-dvh">
   <!-- Desktop sidebar -->
-  <aside class="hidden md:flex w-64 shrink-0 flex-col sticky top-0 h-dvh bg-gray-950 border-r border-gray-800 overflow-y-auto">
+  <aside class="hidden md:flex w-64 shrink-0 flex-col sticky top-0 h-dvh bg-surface border-r border-border overflow-y-auto">
     <Sidebar {session} />
   </aside>
 
@@ -90,8 +92,13 @@
         onclick={() => (drawerOpen = false)}
         aria-label="メニューを閉じる"
         tabindex="-1"
+        transition:fade={{ duration: 200 }}
       ></button>
-      <aside bind:this={drawerEl} class="relative z-10 w-72 flex flex-col h-full bg-surface border-r border-border">
+      <aside
+        bind:this={drawerEl}
+        class="relative z-10 w-72 flex flex-col h-full bg-surface border-r border-border"
+        transition:fly={{ x: -288, duration: 250, easing: cubicOut }}
+      >
         <button
           bind:this={closeButton}
           onclick={() => (drawerOpen = false)}
