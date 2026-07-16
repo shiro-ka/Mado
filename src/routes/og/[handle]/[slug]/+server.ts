@@ -19,7 +19,7 @@ function render(
   const logo = logoImg(t.accent, 94);
   const prof = profile(t, data.name, "のMado", data.handle, data.avatarUri);
   return (
-    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;">` +
+    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;font-family:'ZenMaru';">` +
     // 窓枠
     `<div style="position:absolute;top:30px;left:30px;right:30px;bottom:30px;border:3px solid ${t.frameBorder};border-radius:20px;"></div>` +
     // 枠の内側: 左パネル + 右メイン
@@ -72,12 +72,11 @@ export const GET: RequestHandler = async ({ params, url, platform }) => {
 
   // 描画されるグリフを全部サブセット要求に含める（欠けると豆腐になる）
   const allText = displayTitle + name + "のMado" + "@" + handle + "Mado" + BRAND_DESC;
-  // Web と揃える: サイトの本文フォントは Zen Maru Gothic（app.html でロード）
-  const fonts = [
-    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 400, text: allText }),
-    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 500, text: allText }),
-    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 700, text: allText }),
-  ];
+  // Web と揃える: Zen Maru Gothic。混在サブセットは1ウェイト=1フォントにし、
+  // 描画側で font-family:'ZenMaru' を指定して weight を正しくマッチさせる。
+  const F = (weight: 400 | 500 | 700) =>
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight, text: allText });
+  const fonts = [F(400), F(500), F(700)];
 
   const res = await ImageResponse.async(element, { width: 1200, height: 630, format: "png", fonts });
   res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
