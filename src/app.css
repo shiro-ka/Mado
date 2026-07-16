@@ -54,19 +54,20 @@
   --color-error:         var(--error);
 }
 
-/* Dark (default) */
+/* Dark (default) — synced to OGP "dark" theme (src/lib/og.ts) */
 :root {
-  --bg:           #090e1a;
-  --bg-surface:   #101828;
-  --bg-elevated:  #182136;
-  --text-primary: #deeeff;
-  --text-muted:   #7aaac8;
-  --text-subtle:  #486882;
-  --border-strong: rgba(59, 130, 246, 0.4);
-  --accent-light:  rgba(0, 133, 255, 0.15);
+  --bg:           #0c1424;   /* OGP bg gradient end */
+  --bg-grad-top:  #152238;   /* OGP bg gradient start */
+  --bg-surface:   #172339;   /* card — OGP pane over navy */
+  --bg-elevated:  #203051;   /* popover / raised */
+  --text-primary: #eaf1fb;   /* OGP ink */
+  --text-muted:   #8fa6c4;   /* OGP sub */
+  --text-subtle:  #64789a;
+  --border-strong: rgba(59, 130, 246, 0.45);  /* OGP frameBorder */
+  --accent-light:  rgba(59, 130, 246, 0.14);
   --error:         #f87171;
   --success:       #34d399;
-  --warning:       #fbbf24;
+  --warning:       #f2a15c;   /* OGP dawn accent */
 
   /* shadcn semantic vars — dark */
   --background:           var(--bg);
@@ -75,7 +76,7 @@
   --card-foreground:      var(--text-primary);
   --popover:              var(--bg-elevated);
   --popover-foreground:   var(--text-primary);
-  --primary:              #0085ff;
+  --primary:              #3b82f6;   /* OGP accent */
   --primary-foreground:   #ffffff;
   --secondary:            var(--bg-elevated);
   --secondary-foreground: var(--text-primary);
@@ -84,30 +85,32 @@
   --accent:               var(--bg-elevated);
   --accent-foreground:    var(--text-primary);
   --destructive:          var(--error);
-  --border:               rgba(59, 130, 246, 0.2);
+  --border:               rgba(59, 130, 246, 0.2);   /* OGP chipBorder */
   --input:                rgba(59, 130, 246, 0.2);
-  --ring:                 rgba(0, 133, 255, 0.5);
+  --ring:                 rgba(59, 130, 246, 0.5);
   --radius:               0.625rem;
 }
 
-/* Light */
+/* Light — synced to OGP "light" theme */
 @media (prefers-color-scheme: light) {
   :root {
-    --bg:           #f0f6ff;
-    --bg-surface:   #e3eeff;
-    --bg-elevated:  #d5e5ff;
-    --text-primary: #0a1929;
-    --text-muted:   #3d6080;
-    --text-subtle:  #7aaac8;
-    --border-strong: rgba(37, 99, 235, 0.4);
-    --accent-light:  rgba(0, 133, 255, 0.1);
+    --bg:           #e6eefb;   /* OGP bg gradient end */
+    --bg-grad-top:  #f5f9ff;   /* OGP bg gradient start */
+    --bg-surface:   #f5f9ff;
+    --bg-elevated:  #ffffff;
+    --text-primary: #14233f;   /* OGP ink */
+    --text-muted:   #5b7096;   /* OGP sub */
+    --text-subtle:  #8093b0;
+    --border-strong: rgba(47, 111, 224, 0.45);
+    --accent-light:  rgba(47, 111, 224, 0.1);
     --error:         #dc2626;
     --success:       #059669;
     --warning:       #d97706;
 
-    --border: rgba(37, 99, 235, 0.2);
-    --input:  rgba(37, 99, 235, 0.2);
-    --ring:   rgba(0, 133, 255, 0.4);
+    --primary: #2f6fe0;   /* OGP light accent */
+    --border:  rgba(47, 111, 224, 0.2);
+    --input:   rgba(47, 111, 224, 0.2);
+    --ring:    rgba(47, 111, 224, 0.4);
   }
 }
 
@@ -118,6 +121,9 @@
 body {
   font-family: var(--font-zen-maru), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100dvh;
+  /* OGP-style navy gradient (linear-gradient(140deg,#152238→#0c1424)) */
+  background-image: linear-gradient(150deg, var(--bg-grad-top) 0%, var(--bg) 60%);
+  background-attachment: fixed;
 }
 
 ::selection {
