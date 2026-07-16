@@ -1,70 +1,93 @@
 import type { RequestHandler } from "./$types";
-import { resolveHandle, getKoeRecord } from "$lib/atproto";
+import { resolveHandle, getKoeRecord, findBoxBySlug, getProfile } from "$lib/atproto";
+import {
+  resolveTheme,
+  escapeHtml,
+  truncate,
+  fitVoice,
+  fetchImageDataUri,
+  logoImg,
+  wordmark,
+  profile,
+  BRAND_DESC,
+  type Theme,
+} from "$lib/og";
 
-const FALLBACK_TEXT = "匿名の質問が届きました";
-const BRAND = "半匿名質問箱 Mado (窓)";
+const FALLBACK_TEXT = "匿名の声が届きました";
 
-function escapeHtml(s: string): string {
-  return s.replace(
-    /[&<>"']/g,
-    (c) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[c]!
+/** 声OG = 案C（配置A）。窓タイトル左上 / ロゴ左下 / プロフィール右下 / 本文中央。 */
+function render(
+  t: Theme,
+  data: { body: string; boxTitle: string; name: string; handle: string; avatarUri: string | null }
+): string {
+  const titleChip = data.boxTitle
+    ? `<div style="position:absolute;top:58px;left:74px;z-index:1;display:flex;">` +
+      `<div style="display:flex;align-items:center;background:${t.chip};border:1.5px solid ${t.chipBorder};border-radius:12px;padding:9px 17px;">` +
+      `<span style="display:flex;font-size:27px;font-weight:600;color:${t.ink};">${escapeHtml(data.boxTitle)}</span>` +
+      `</div></div>`
+    : "";
+  const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
+  const prof = profile(t, data.name, "への声", data.handle, data.avatarUri);
+  return (
+    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;overflow:hidden;">` +
+    titleChip +
+    // 中央: 本文（主役）
+    `<div style="position:absolute;top:124px;left:74px;right:74px;bottom:120px;display:flex;align-items:center;justify-content:center;z-index:1;">` +
+    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.ink};max-width:1010px;">${escapeHtml(data.body)}</div>` +
+    `</div>` +
+    // 左下ブランド / 右下プロフィール
+    `<div style="position:absolute;left:74px;bottom:54px;z-index:1;display:flex;">${brand}</div>` +
+    `<div style="position:absolute;right:74px;bottom:54px;z-index:1;display:flex;">${prof}</div>` +
+    `</div>`
   );
 }
 
-function truncate(s: string, max: number): string {
-  if (s.length <= max) return s;
-  return s.slice(0, max - 1) + "…";
-}
-
-export const GET: RequestHandler = async ({ params, platform }) => {
+export const GET: RequestHandler = async ({ params, url, platform }) => {
   const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
   const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
   if (platform?.ctx) cache.setExecutionContext(platform.ctx);
 
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
+  const { t } = resolveTheme(url.searchParams);
 
   let body = FALLBACK_TEXT;
+  let boxTitle = "";
+  let name = cleanHandle;
+  let handle = cleanHandle;
+  let avatarUri: string | null = null;
+
   try {
     const did = await resolveHandle(cleanHandle);
     if (did) {
-      const koe = await getKoeRecord(did, params.rkey);
+      const [koe, box, prof] = await Promise.all([
+        getKoeRecord(did, params.rkey),
+        findBoxBySlug(did, params.slug),
+        getProfile(did),
+      ]);
       if (koe?.body) body = koe.body;
+      if (box?.title) boxTitle = box.title;
+      if (prof?.handle) handle = prof.handle;
+      name = prof?.displayName || prof?.handle || cleanHandle;
+      avatarUri = await fetchImageDataUri(prof?.avatar);
     }
   } catch {
-    // fall through to default
+    // fall through to defaults
   }
 
   const display = truncate(body, 100);
-  const handleLine = `@${cleanHandle} への質問`;
-  const allText = display + handleLine + BRAND;
+  const displayBoxTitle = truncate(boxTitle, 32);
+  const element = htmlToReact(
+    render(t, { body: display, boxTitle: displayBoxTitle, name, handle, avatarUri })
+  );
 
-  const element = htmlToReact(`
-    <div style="display:flex;flex-direction:column;justify-content:space-between;width:100%;height:100%;background:linear-gradient(135deg,#060c18 0%,#0b1726 100%);color:#deeeff;font-family:NotoJP;padding:80px;">
-      <div style="display:flex;font-size:24px;color:#7aaac8;">${escapeHtml(handleLine)}</div>
-      <div style="display:flex;font-size:44px;line-height:1.5;font-weight:700;flex-wrap:wrap;">${escapeHtml(display)}</div>
-      <div style="display:flex;font-size:22px;color:#7aaac8;">${BRAND}</div>
-    </div>
-  `);
+  const allText = display + displayBoxTitle + name + "への声" + "@" + handle + "Mado" + BRAND_DESC;
+  const fonts = [
+    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 400, text: allText }),
+    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 700, text: allText }),
+    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 800, text: allText }),
+  ];
 
-  const fontBold = new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 700, text: allText });
-  const fontReg = new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 400, text: allText });
-
-  const t0 = Date.now();
-  const res = await ImageResponse.async(element, {
-    width: 1200,
-    height: 630,
-    format: "png",
-    fonts: [fontBold, fontReg],
-  });
-  const elapsed = Date.now() - t0;
-  res.headers.set("X-Render-Time", `${elapsed}ms`);
+  const res = await ImageResponse.async(element, { width: 1200, height: 630, format: "png", fonts });
   res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
   return res;
 };
