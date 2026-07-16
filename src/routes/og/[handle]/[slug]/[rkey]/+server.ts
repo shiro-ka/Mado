@@ -23,7 +23,7 @@ function render(
   const titleChip = data.boxTitle
     ? `<div style="position:absolute;top:58px;left:74px;z-index:1;display:flex;">` +
       `<div style="display:flex;align-items:center;background:${t.chip};border:1.5px solid ${t.chipBorder};border-radius:12px;padding:9px 17px;">` +
-      `<span style="display:flex;font-size:27px;font-weight:600;color:${t.ink};">${escapeHtml(data.boxTitle)}</span>` +
+      `<span style="display:flex;font-size:27px;font-weight:500;color:${t.ink};">${escapeHtml(data.boxTitle)}</span>` +
       `</div></div>`
     : "";
   const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
@@ -81,10 +81,11 @@ export const GET: RequestHandler = async ({ params, url, platform }) => {
   );
 
   const allText = display + displayBoxTitle + name + "への声" + "@" + handle + "Mado" + BRAND_DESC;
+  // Web と揃える: サイトの本文フォントは Zen Maru Gothic（app.html でロード）
   const fonts = [
-    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 400, text: allText }),
-    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 700, text: allText }),
-    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 800, text: allText }),
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 400, text: allText }),
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 500, text: allText }),
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 700, text: allText }),
   ];
 
   const res = await ImageResponse.async(element, { width: 1200, height: 630, format: "png", fonts });

@@ -27,12 +27,12 @@ function render(
     `<div style="display:flex;flex-direction:column;justify-content:space-between;width:360px;background:${t.pane};padding:62px 48px;">` +
     `<div style="display:flex;">${logo}</div>` +
     `<div style="display:flex;flex-direction:column;gap:10px;">` +
-    `<span style="font-size:40px;font-weight:800;letter-spacing:-0.02em;color:${t.ink};">Mado</span>` +
+    `<span style="font-size:40px;font-weight:700;letter-spacing:-0.02em;color:${t.ink};">Mado</span>` +
     `<span style="font-size:23px;color:${t.sub};">${BRAND_DESC}</span>` +
     `</div>` +
     `</div>` +
     `<div style="display:flex;flex-direction:column;justify-content:center;flex:1;padding:70px 62px 120px;">` +
-    `<div style="display:flex;flex-wrap:wrap;font-size:60px;line-height:1.3;font-weight:800;letter-spacing:-0.01em;color:${t.ink};">${escapeHtml(data.title)}</div>` +
+    `<div style="display:flex;flex-wrap:wrap;font-size:60px;line-height:1.3;font-weight:700;letter-spacing:-0.01em;color:${t.ink};">${escapeHtml(data.title)}</div>` +
     `</div>` +
     `</div>` +
     // 右下プロフィール
@@ -72,10 +72,11 @@ export const GET: RequestHandler = async ({ params, url, platform }) => {
 
   // 描画されるグリフを全部サブセット要求に含める（欠けると豆腐になる）
   const allText = displayTitle + name + "のMado" + "@" + handle + "Mado" + BRAND_DESC;
+  // Web と揃える: サイトの本文フォントは Zen Maru Gothic（app.html でロード）
   const fonts = [
-    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 400, text: allText }),
-    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 700, text: allText }),
-    new GoogleFont("Noto Sans JP", { name: "NotoJP", weight: 800, text: allText }),
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 400, text: allText }),
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 500, text: allText }),
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 700, text: allText }),
   ];
 
   const res = await ImageResponse.async(element, { width: 1200, height: 630, format: "png", fonts });

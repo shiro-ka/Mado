@@ -98,8 +98,14 @@ export function fitVoice(s: string): number {
  */
 export async function fetchImageDataUri(url?: string): Promise<string | null> {
   if (!url) return null;
+  // Bluesky's CDN serves avatars as webp by default (satori can't decode webp).
+  // The `@jpeg` variant forces a jpeg re-encode, so normalize bsky avatar URLs.
+  let target = url;
+  if (target.includes("cdn.bsky.app/") && !/@[a-z]+$/.test(target)) {
+    target += "@jpeg";
+  }
   try {
-    const res = await fetch(url);
+    const res = await fetch(target);
     if (!res.ok) return null;
     const ct = res.headers.get("content-type") ?? "";
     if (!/^image\/(png|jpe?g)$/.test(ct)) return null;
@@ -131,7 +137,7 @@ export function logoImg(color: string, size: number): string {
 export function wordmark(t: Theme, size: number): string {
   return (
     `<div style="display:flex;align-items:baseline;">` +
-    `<span style="font-size:${size}px;font-weight:800;letter-spacing:-0.02em;color:${t.ink};">Mado</span>` +
+    `<span style="font-size:${size}px;font-weight:700;letter-spacing:-0.02em;color:${t.ink};">Mado</span>` +
     `<span style="font-size:${Math.round(size * 0.5)}px;color:${t.sub};margin-left:10px;">${BRAND_DESC}</span>` +
     `</div>`
   );
