@@ -29,7 +29,7 @@ function render(
   const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
   const prof = profile(t, data.name, "への声", data.handle, data.avatarUri);
   return (
-    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;overflow:hidden;">` +
+    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;overflow:hidden;font-family:'ZenMaru';">` +
     titleChip +
     // 中央: 本文（主役）
     `<div style="position:absolute;top:124px;left:74px;right:74px;bottom:120px;display:flex;align-items:center;justify-content:center;z-index:1;">` +
@@ -81,12 +81,10 @@ export const GET: RequestHandler = async ({ params, url, platform }) => {
   );
 
   const allText = display + displayBoxTitle + name + "への声" + "@" + handle + "Mado" + BRAND_DESC;
-  // Web と揃える: サイトの本文フォントは Zen Maru Gothic（app.html でロード）
-  const fonts = [
-    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 400, text: allText }),
-    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 500, text: allText }),
-    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight: 700, text: allText }),
-  ];
+  // Web と揃える: Zen Maru Gothic。1ウェイト=1フォント＋font-family:'ZenMaru'でweightマッチ。
+  const F = (weight: 400 | 500 | 700) =>
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight, text: allText });
+  const fonts = [F(400), F(500), F(700)];
 
   const res = await ImageResponse.async(element, { width: 1200, height: 630, format: "png", fonts });
   res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
