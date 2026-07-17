@@ -53,13 +53,16 @@
   <!-- Stats -->
   <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-8">
     {#each [
-      { label: "質問箱", value: boxes.length, color: "text-blue-400" },
-      { label: "未読の質問", value: unreadCount, color: "text-emerald-400" },
-      { label: "総返信数", value: replyCount, color: "text-blue-400" },
+      { label: "開いたMado", value: boxes.length, unit: "個", color: "text-blue-400" },
+      { label: "未読の声", value: unreadCount, unit: "件", color: "text-emerald-400" },
+      { label: "声の返信", value: replyCount, unit: "回", color: "text-blue-400" },
     ] as stat}
       <div class="rounded-xl p-3 sm:p-5 bg-surface border border-border">
         <p class="text-xs font-medium mb-1.5 sm:mb-2 text-muted-foreground">{stat.label}</p>
-        <p class={cn("text-2xl sm:text-3xl font-bold tabular-nums", stat.color)}>{stat.value}</p>
+        <p class="text-right">
+          <span class={cn("text-2xl sm:text-3xl font-bold tabular-nums", stat.color)}>{stat.value}</span>
+          <span class="text-xs sm:text-sm ml-0.5 text-subtle">{stat.unit}</span>
+        </p>
       </div>
     {/each}
   </div>
