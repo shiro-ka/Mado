@@ -21,9 +21,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: "auto",
       manifest: {
-        name: "Mado (窓) - 半匿名質問箱",
+        name: "Mado (窓) - 半匿名メッセージ",
         short_name: "Mado",
-        description: "ATProtocol基盤の半匿名質問箱。送り主はあなただけに届きます。",
+        description: "ATProtocol基盤の半匿名メッセージ。送り主はあなただけに届きます。",
         start_url: "/",
         display: "standalone",
         orientation: "portrait",
