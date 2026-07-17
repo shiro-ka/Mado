@@ -2,6 +2,7 @@
   import type { Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
+  import { afterNavigate } from "$app/navigation";
   import { Menu, X } from "lucide-svelte";
   import Sidebar from "./Sidebar.svelte";
   import type { AppSession } from "$lib/store.js";
@@ -17,13 +18,20 @@
   let menuButton = $state<HTMLButtonElement>();
   let closeButton = $state<HTMLButtonElement>();
   let drawerEl = $state<HTMLElement>();
+  let mainEl = $state<HTMLElement>();
 
-  // Accessibility for the mobile drawer: lock body scroll, move focus in on
+  // The shell is a fixed-height app frame: `main` scrolls internally rather than
+  // the document. SvelteKit's scroll handling targets the window, so reset the
+  // real scroll container to the top on navigation.
+  afterNavigate(() => mainEl?.scrollTo({ top: 0 }));
+
+  // Accessibility for the mobile drawer: lock scroll of the content pane (the
+  // shell's real scroll container is `main`, not the document), move focus in on
   // open and restore it on close, close on Escape, and trap Tab within it.
   $effect(() => {
     if (!drawerOpen) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const prevOverflow = mainEl?.style.overflow ?? "";
+    if (mainEl) mainEl.style.overflow = "hidden";
     closeButton?.focus();
 
     function onKeydown(e: KeyboardEvent) {
@@ -51,13 +59,13 @@
 
     return () => {
       window.removeEventListener("keydown", onKeydown);
-      document.body.style.overflow = prevOverflow;
+      if (mainEl) mainEl.style.overflow = prevOverflow;
       menuButton?.focus();
     };
   });
 </script>
 
-<div class="flex min-h-dvh">
+<div class="flex h-dvh overflow-hidden">
   <!-- Desktop sidebar -->
   <aside class="hidden md:flex w-64 shrink-0 flex-col sticky top-0 h-dvh bg-surface border-r border-border overflow-y-auto">
     <Sidebar {session} />
@@ -113,7 +121,7 @@
   {/if}
 
   <!-- Main content -->
-  <main class="flex-1 overflow-y-auto md:mt-0 mt-14">
+  <main bind:this={mainEl} class="flex-1 overflow-y-auto md:mt-0 mt-14">
     {#if children}
       {@render children()}
     {/if}
