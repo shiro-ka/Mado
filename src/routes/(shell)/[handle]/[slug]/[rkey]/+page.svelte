@@ -17,7 +17,8 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mado" />
   <meta property="og:title" content="匿名の質問" />
-  <meta property="og:description" content={data.question.body.slice(0, 200)} />
+  <!-- No og:description: the OG image already renders the question body in full,
+       so a text caption would just duplicate it. Image-only card reads cleaner. -->
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
   <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
   <meta property="og:image:width" content="1200" />
