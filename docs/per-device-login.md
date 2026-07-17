@@ -1,7 +1,10 @@
 # 設計メモ: 端末ごとの独立ログイン（メインPC班向けハンドオフ）
 
-> ステータス: **未実装 / 要実装**。リモート作業のセッションでは実機テストが取れず、
-> 認証コアに深く触るため main 直 push を避けて設計だけ残す。担当はメインPC班。
+> ステータス: **✅ 実装済み（commit `cc7af16` 「端末ごとの独立ログインを実装」）**。
+> 以下は設計時のメモ。実装の実態は `src/lib/oauth.server.ts`（`createOAuthClient` の
+> `deviceKey` 名前空間化 / `restoreAnyOAuthSession`）・`api/auth/callback`（`addDeviceSession`）・
+> `api/auth/logout`（端末別 revoke）・`api/cron/check-sessions`（device_sessions 走査）を参照。
+> migration `0002_device_sessions` は本番適用済み。**実機テスト（2端末ログイン）は未消化**。
 
 ## いま何が問題か
 
@@ -60,15 +63,15 @@ atproto クライアントは `sub`（DID）でストアを引くので、**ス�
 
 ## 影響範囲チェックリスト
 
-- [ ] `src/lib/oauth.server.ts`: `createOAuthClient` / `restoreOAuthSession` / `checkOAuthSession` /
+- [x] `src/lib/oauth.server.ts`: `createOAuthClient` / `restoreOAuthSession` / `checkOAuthSession` /
       `revokeOAuthSession` に deviceKey を追加。`restoreAnyOAuthSession(did)`（オーナー書き込み用）を追加。
-- [ ] `src/lib/auth.server.ts`: `getSession` の OAuthセッション存在チェックを deviceKey 付きに。
-- [ ] `src/routes/api/auth/callback`: ログイン時に device_sessions へ登録、deviceKey で OAuth セッション保存。
-- [ ] `src/routes/api/auth/logout`: **その端末だけ** revoke + del（全端末を消さない）。
-- [ ] `api/boxes/create`, `api/answers/create`: 呼び出し側 deviceKey（送信者=自分の端末）。
-- [ ] `api/questions/send`: オーナー側は `restoreAnyOAuthSession(ownerDid)`。
-- [ ] `api/cron/check-sessions`: device_sessions ベースの走査に変更。
-- [ ] 「全端末からログアウト」UIオプションを別途用意すると親切（did 単位で全 deviceKey を revoke）。
+- [x] `src/lib/auth.server.ts`: `getSession` の OAuthセッション存在チェックを deviceKey 付きに（レガシーセッションのフォールバックあり）。
+- [x] `src/routes/api/auth/callback`: ログイン時に device_sessions へ登録、deviceKey で OAuth セッション保存。
+- [x] `src/routes/api/auth/logout`: **その端末だけ** revoke + del（全端末を消さない）。
+- [x] `api/boxes/create`, `api/answers/create`: 呼び出し側 deviceKey（送信者=自分の端末）。
+- [x] `api/questions/send`: オーナー側は `restoreAnyOAuthSession(ownerDid)`。
+- [x] `api/cron/check-sessions`: device_sessions ベースの走査に変更。
+- [ ] 「全端末からログアウト」UIオプション（did 単位で全 deviceKey を revoke）。→ **任意・未着手**（残りはこれだけ）。
 
 ## テスト観点（実機必須）
 
