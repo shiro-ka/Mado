@@ -7,7 +7,12 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   const { session } = await parent();
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 
-  const did = await resolveHandle(cleanHandle);
+  // Viewing your own page (the sidebar "マイページ" link) is the common case —
+  // the session already holds the DID, so skip the network handle resolution.
+  const did =
+    session && session.handle.toLowerCase() === cleanHandle.toLowerCase()
+      ? session.did
+      : await resolveHandle(cleanHandle);
   if (!did) throw error(404, "ユーザーが見つかりません");
 
   const [profile, boxes] = await Promise.all([getProfile(did), listBoxes(did)]);

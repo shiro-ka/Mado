@@ -111,11 +111,21 @@ export async function getProfile(handleOrDid: string) {
   }
 }
 
+// handle→DID cache. Every page under /[handle]/* resolves the handle over the
+// network before it can read anything. Shorter TTL than the PDS cache because a
+// handle can be reassigned to a different DID (rename), and we don't want to
+// route to a stale identity for long.
+const handleDidCache = new Map<string, { did: string; exp: number }>();
+const HANDLE_CACHE_TTL_MS = 10 * 60 * 1000; // 10min
+
 export async function resolveHandle(handle: string): Promise<string | null> {
   if (handle.startsWith("did:")) return handle;
+  const cached = handleDidCache.get(handle);
+  if (cached && cached.exp > Date.now()) return cached.did;
   const agent = publicAgent();
   try {
     const res = await agent.resolveHandle({ handle });
+    handleDidCache.set(handle, { did: res.data.did, exp: Date.now() + HANDLE_CACHE_TTL_MS });
     return res.data.did;
   } catch {
     return null;
