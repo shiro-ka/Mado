@@ -36,7 +36,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const { koeUri, body, crosspost, pageUrl, questionBody } = parsed.data;
+    const { koeUri, body, crosspost, pageUrl } = parsed.data;
 
     // Security: verify koeUri belongs to the logged-in user's repo
     const expectedPrefix = `at://${session.did}/${NSID.KOE}/`;
@@ -93,7 +93,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
         ownerDid: session.did,
         text: body,
         pageUrl,
-        questionBody,
+        ownerName: session.displayName || session.handle,
       });
       crossposted = post !== null;
       crosspostUri = post?.uri ?? null;

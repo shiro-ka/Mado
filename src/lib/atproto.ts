@@ -460,9 +460,9 @@ export async function createBskyPost(params: {
   ownerDid: string;
   text: string;
   pageUrl?: string;
-  questionBody?: string;
+  ownerName?: string;
 }): Promise<{ uri: string; cid: string } | null> {
-  const { sessionFetch, ownerDid, text, pageUrl, questionBody } = params;
+  const { sessionFetch, ownerDid, text, pageUrl, ownerName } = params;
   const LIMIT = 280;
   const truncated = text.length > LIMIT ? text.slice(0, LIMIT - 1) + "…" : text;
 
@@ -480,8 +480,11 @@ export async function createBskyPost(params: {
       $type: "app.bsky.embed.external",
       external: {
         uri: pageUrl,
-        title: "匿名の声",
-        description: questionBody ? questionBody.slice(0, 300) : "",
+        // Match the koe page's og:title. The OG image (thumb) already renders
+        // the question body, so the description is left empty to avoid a
+        // duplicate caption under the card.
+        title: ownerName ? `${ownerName} への声 - Mado 半匿名メッセージ` : "Mado 半匿名メッセージ",
+        description: "",
         ...(thumb ? { thumb } : {}),
       },
     };
