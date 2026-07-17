@@ -115,7 +115,7 @@
         {/if}
       </div>
       <p class="text-sm text-subtle">
-        {tab === "unread" ? "未読の返信はありません" : tab === "read" ? "既読の返信はありません" : "まだ質問を送っていません"}
+        {tab === "unread" ? "未読の返信はありません" : tab === "read" ? "既読の返信はありません" : "まだ声を送っていません"}
       </p>
     </div>
   {:else}

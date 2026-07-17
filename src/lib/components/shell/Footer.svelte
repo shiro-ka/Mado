@@ -10,7 +10,7 @@
       <div class="flex flex-col gap-3">
         <Brand size="lg" />
         <p class="text-sm text-muted-foreground">
-          ATProtocol基盤の半匿名質問箱。<br />窓越しに、想いを届けよう。
+          ATProtocol基盤の半匿名メッセージ。<br />窓越しに、想いを届けよう。
         </p>
       </div>
 

@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ params, cookies, platform }) => {
     if (!session) return json({ error: "Unauthorized" }, { status: 401 });
 
     const box = await getBoxRecord(session.did, params.rkey);
-    if (!box) return json({ error: "Not found", message: "質問箱が見つかりません" }, { status: 404 });
+    if (!box) return json({ error: "Not found", message: "窓が見つかりません" }, { status: 404 });
 
     await store.setMainBoxRkey(session.did, params.rkey);
     return json({ success: true });

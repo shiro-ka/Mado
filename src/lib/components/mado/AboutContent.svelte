@@ -5,17 +5,17 @@
     {
       icon: Eye, color: "text-blue-400", bg: "bg-blue-600/12",
       title: "半匿名性",
-      body: "送り主はボックスオーナーにのみ開示されます。第三者が質問と送信者の紐付けを知る手段はありません。",
+      body: "送り主は窓のオーナーにのみ開示されます。第三者が声と送信者の紐付けを知る手段はありません。",
     },
     {
       icon: Lock, color: "text-emerald-400", bg: "bg-emerald-400/10",
       title: "暗号化保護",
-      body: "送り主のDIDはECIES（楕円曲線統合暗号化スキーム）でボックスの公開鍵により暗号化されます。秘密鍵を持つオーナーだけが復号できます。",
+      body: "送り主のDIDはECIES（楕円曲線統合暗号化スキーム）で窓の公開鍵により暗号化されます。秘密鍵を持つオーナーだけが復号できます。",
     },
     {
       icon: Globe, color: "text-blue-400", bg: "bg-blue-400/10",
       title: "ATProtocol基盤",
-      body: "質問・回答データはあなたのBluesky PDS（Personal Data Server）に保存されます。Mado独自のデータベースには頼らず、オープンな分散型プロトコルで動作します。",
+      body: "声・回答データはあなたのBluesky PDS（Personal Data Server）に保存されます。Mado独自のデータベースには頼らず、オープンな分散型プロトコルで動作します。",
     },
   ];
 </script>
@@ -29,9 +29,9 @@
       <h1 class="text-2xl font-bold text-foreground">Madoについて</h1>
     </div>
     <p class="text-base leading-relaxed text-muted-foreground">
-      Mado（窓）は、Blueskyアカウントを使った<strong class="text-foreground">半匿名の質問箱サービス</strong>です。
-      質問を送るにはBlueskyへのログインが必要なため完全匿名ではありませんが、
-      送り主の情報は暗号化されてボックスオーナーにのみ届きます。
+      Mado（窓）は、Blueskyアカウントを使った<strong class="text-foreground">半匿名の窓サービス</strong>です。
+      声を送るにはBlueskyへのログインが必要なため完全匿名ではありませんが、
+      送り主の情報は暗号化されて窓のオーナーにのみ届きます。
     </p>
   </div>
   <div class="flex flex-col gap-4">

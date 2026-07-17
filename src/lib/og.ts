@@ -8,12 +8,12 @@
  *
  * Design decisions (see memory: mado-ogp-redesign):
  *  - 窓OG = フレーム×パネル, 声OG = ミニマル(配置A)
- *  - ブランド表記は「Mado」/「半匿名のメッセージボックス」、オーナー行は「◯◯ のMado / への声」
+ *  - ブランド表記は「Mado」/「半匿名メッセージ」、オーナー行は「◯◯ のMado / への声」
  *  - アバターは角丸四角、取得失敗/webp時は頭文字フォールバック
  *  - テーマは dark/light/dawn（?theme= で切替、既定 dark）
  */
 
-export const BRAND_DESC = "半匿名のメッセージボックス";
+export const BRAND_DESC = "半匿名メッセージ";
 
 export type Theme = {
   bg: string;
@@ -133,7 +133,7 @@ export function logoImg(color: string, size: number): string {
   return `<img src="${uri}" width="${size}" height="${size}" style="width:${size}px;height:${size}px;" />`;
 }
 
-/** ブランドロックアップ（インライン）: Mado ＋ 半匿名のメッセージボックス。 */
+/** ブランドロックアップ（インライン）: Mado ＋ 半匿名メッセージ。 */
 export function wordmark(t: Theme, size: number): string {
   return (
     `<div style="display:flex;align-items:baseline;">` +

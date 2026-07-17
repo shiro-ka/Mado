@@ -47,7 +47,7 @@
   <div class="flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-foreground">受信トレイ</h1>
-      <p class="text-sm mt-1 text-muted-foreground">届いた質問を確認しましょう</p>
+      <p class="text-sm mt-1 text-muted-foreground">届いた声を確認しましょう</p>
     </div>
     <button
       onclick={refresh}
@@ -97,10 +97,10 @@
       <Inbox size={36} class="text-subtle opacity-50" />
       <div>
         <p class="font-semibold text-base text-foreground">
-          {tab === "unread" ? "未読の質問はありません" : "質問がありません"}
+          {tab === "unread" ? "未読の声はありません" : "声がありません"}
         </p>
         <p class="text-sm mt-1 text-muted-foreground">
-          {tab === "all" ? "質問箱のURLをシェアして質問を募りましょう" : "すべての質問を確認しました！"}
+          {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
         </p>
       </div>
     </div>
