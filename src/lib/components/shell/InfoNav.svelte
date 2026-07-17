@@ -44,7 +44,7 @@
           aria-current={active ? "page" : undefined}
           class={cn(
             "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200",
-            active ? "bg-primary-light text-blue-400" : "text-subtle hover:bg-elevated hover:text-foreground"
+            active ? "bg-accent-light text-primary" : "text-subtle hover:bg-elevated hover:text-foreground"
           )}
         >
           <item.icon size={15} class="shrink-0" />

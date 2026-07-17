@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Globe, MessageCircle } from "lucide-svelte";
+  import { Globe } from "lucide-svelte";
+  import Brand from "./Brand.svelte";
 </script>
 
 <footer class="w-full mt-auto border-t border-border bg-surface">
@@ -7,12 +8,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Brand -->
       <div class="flex flex-col gap-3">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary">
-            <MessageCircle size={16} class="text-white" />
-          </div>
-          <span class="font-bold text-lg text-foreground">Mado</span>
-        </div>
+        <Brand size="lg" />
         <p class="text-sm text-muted-foreground">
           ATProtocol基盤の半匿名質問箱。<br />窓越しに、想いを届けよう。
         </p>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Menu, X } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
+  import Brand from "./Brand.svelte";
   import type { AppSession } from "$lib/store.js";
 
   interface Props {
@@ -18,15 +19,11 @@
   ];
 </script>
 
-<header class="sticky top-0 z-40 w-full bg-gray-950 border-b border-gray-800">
+<header class="sticky top-0 z-40 w-full bg-surface border-b border-border">
   <div class="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between gap-4">
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 group">
-      <img src="/mado-logo.svg" alt="Mado" class="w-8 h-8" />
-      <span class="font-bold text-lg text-foreground">Mado</span>
-      <span class="text-xs px-1.5 py-0.5 rounded-full font-medium bg-primary-light text-blue-400 border border-blue-600/30">
-        beta
-      </span>
+    <a href="/" class="group">
+      <Brand size="lg" beta />
     </a>
 
     <!-- Nav links (desktop) -->
@@ -62,7 +59,7 @@
 
   <!-- Mobile nav panel -->
   {#if menuOpen}
-    <nav class="md:hidden border-t border-gray-800 px-4 py-2 flex flex-col">
+    <nav class="md:hidden border-t border-border px-4 py-2 flex flex-col">
       {#each navLinks as link}
         <a
           href={link.href}

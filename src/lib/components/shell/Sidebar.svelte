@@ -4,6 +4,7 @@
   import { cn } from "$lib/utils.js";
   import InfoNav from "./InfoNav.svelte";
   import UserCard from "./UserCard.svelte";
+  import Brand from "./Brand.svelte";
   import type { AppSession } from "$lib/store.js";
 
   interface Props {
@@ -25,9 +26,8 @@
 
 <!-- Logo -->
 <div class="h-16 px-5 flex items-center gap-2 shrink-0 border-b border-border">
-  <a href="/dashboard" class="flex items-center gap-2" onclick={onNavigate}>
-    <img src="/mado-logo.svg" alt="Mado" class="w-8 h-8" />
-    <span class="font-bold text-base text-foreground">Mado</span>
+  <a href="/dashboard" onclick={onNavigate}>
+    <Brand size="md" />
   </a>
 </div>
 
@@ -43,7 +43,7 @@
         class={cn(
           "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
           active
-            ? "bg-primary-light text-blue-400"
+            ? "bg-accent-light text-primary"
             : "text-muted-foreground hover:bg-elevated hover:text-foreground"
         )}
       >
