@@ -53,7 +53,7 @@
   <!-- Stats -->
   <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-8">
     {#each [
-      { label: "開いたMado", value: boxes.length, unit: "個", color: "text-blue-400" },
+      { label: "開いた窓", value: boxes.length, unit: "個", color: "text-blue-400" },
       { label: "未読の声", value: unreadCount, unit: "件", color: "text-emerald-400" },
       { label: "声の返信", value: replyCount, unit: "回", color: "text-blue-400" },
     ] as stat}
