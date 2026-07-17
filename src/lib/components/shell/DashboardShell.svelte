@@ -5,6 +5,7 @@
   import { afterNavigate } from "$app/navigation";
   import { Menu, X } from "lucide-svelte";
   import Sidebar from "./Sidebar.svelte";
+  import Brand from "./Brand.svelte";
   import type { AppSession } from "$lib/store.js";
 
   interface Props {
@@ -81,9 +82,8 @@
     >
       <Menu size={20} />
     </button>
-    <a href="/dashboard" class="flex items-center gap-2">
-      <img src="/mado-logo.svg" alt="Mado" class="w-7 h-7" />
-      <span class="font-bold text-sm text-foreground">Mado</span>
+    <a href="/dashboard">
+      <Brand size="sm" />
     </a>
   </div>
 
