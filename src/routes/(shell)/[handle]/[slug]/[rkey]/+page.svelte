@@ -40,8 +40,8 @@
   <!-- Question card -->
   <div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
     <div class="flex items-center justify-between mb-4">
-      <Badge variant={data.question.isRead ? "muted" : "default"} dot>
-        {data.question.isRead ? "既読" : "未読"}
+      <Badge variant={data.answers.length > 0 ? "muted" : "default"} dot>
+        {data.answers.length > 0 ? "回答済み" : "未返信"}
       </Badge>
       <span class="text-xs text-subtle">{formatDateFull(data.question.createdAt)}</span>
     </div>
