@@ -7,8 +7,8 @@ opt-in の公式DM通知機能。**コード・UIは実装済み・main にマ�
 - ✅ 機能・UI 実装済み（`/settings/notifications`、`/receive` 導線、送信時ファンアウト）
 - ✅ `npm run check`（型）・`npm run build`（本番ビルド）通過
 - ✅ ローカルでDM着弾を検証済み（`scripts/verify-dm.mjs` で `@mado.blue` → 実アカウントに疎通OK）
-- ⬜ 本番D1マイグレーション未適用
-- ⬜ 本番Secret未投入
+- ✅ 本番D1マイグレーション0004適用済み（2026-07-17, `notification_prefs` 作成確認済み）
+- ✅ 本番Secret投入済み（2026-07-17, IDENTIFIER/HANDLE/APP_PASSWORD。PDSはbsky.socialなので未設定=デフォルト）
 
 ## やること
 
