@@ -13,6 +13,9 @@
 
   let { data }: { data: PageData } = $props();
 
+  // Share/OG label: prefer the owner's display name, fall back to the handle.
+  const ownerName = $derived(data.ownerProfile?.displayName || data.cleanHandle);
+
   // Owner settings form state
   type FormState = "idle" | "submitting" | "error" | "deleting";
   let title = $state(untrack(() => data.box.title));
@@ -134,10 +137,10 @@
 </script>
 
 <svelte:head>
-  <title>{data.box.title} — @{data.cleanHandle} の質問箱 | Mado</title>
+  <title>{data.box.title} - {ownerName} のMado | Mado</title>
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content={`${data.box.title} — @${data.cleanHandle} の質問箱`} />
+  <meta property="og:title" content={`${data.box.title} - ${ownerName} のMado`} />
   <meta property="og:description" content={data.box.description || "Madoで半匿名の声を送ろう"} />
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}`} />
   <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
