@@ -8,12 +8,13 @@
   interface Props {
     session: AppSession;
     boxes: QuestionBox[];
-    questions: (Question & { isRead: boolean })[];
+    questions: (Question & { unreplied: boolean })[];
     sessionTtl: number | null;
     replyCount: number;
+    unrepliedCount: number;
   }
 
-  let { session, boxes, questions, sessionTtl, replyCount }: Props = $props();
+  let { session, boxes, questions, sessionTtl, replyCount, unrepliedCount }: Props = $props();
 
   const SESSION_WARN_SECONDS = 7 * 24 * 60 * 60;
   const sessionExpiringSoon = $derived(sessionTtl !== null && sessionTtl < SESSION_WARN_SECONDS);
@@ -21,10 +22,9 @@
     sessionTtl !== null ? Math.ceil(sessionTtl / (24 * 60 * 60)) : null
   );
 
-  const unreadCount = $derived(questions.filter((q) => !q.isRead).length);
   const boxSlugMap = $derived(new Map(boxes.map((b) => [b.rkey, b.slug])));
 
-  function questionHref(q: Question & { isRead: boolean }): string {
+  function questionHref(q: Question): string {
     const boxRkey = q.boxUri.split("/").pop() ?? "";
     const slug = boxSlugMap.get(boxRkey);
     if (!slug) return "/receive";
@@ -54,7 +54,7 @@
   <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-8">
     {#each [
       { label: "開いた窓", value: boxes.length, unit: "個", color: "text-blue-400" },
-      { label: "未読の声", value: unreadCount, unit: "件", color: "text-emerald-400" },
+      { label: "未返信の声", value: unrepliedCount, unit: "件", color: "text-emerald-400" },
       { label: "声の返信", value: replyCount, unit: "回", color: "text-blue-400" },
     ] as stat}
       <div class="rounded-xl p-3 sm:p-5 bg-surface border border-border">
@@ -117,9 +117,9 @@
         <div class="flex items-center gap-2">
           <Inbox size={16} class="text-emerald-400" />
           <h2 class="text-sm font-semibold text-foreground">受信トレイ</h2>
-          {#if unreadCount > 0}
+          {#if unrepliedCount > 0}
             <span class="text-xs px-1.5 py-0.5 rounded-full font-bold bg-primary text-white">
-              {unreadCount}
+              {unrepliedCount}
             </span>
           {/if}
         </div>
@@ -143,8 +143,8 @@
               href={questionHref(q)}
               class="flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-blue-950/20"
             >
-              {#if !q.isRead}
-                <span class="w-1.5 h-1.5 rounded-full shrink-0 bg-primary"></span>
+              {#if q.unreplied}
+                <span class="w-1.5 h-1.5 rounded-full shrink-0 bg-primary" title="未返信"></span>
               {/if}
               <span class="text-sm truncate text-muted-foreground">{q.body}</span>
               <span class="text-xs ml-auto shrink-0 tabular-nums text-subtle">

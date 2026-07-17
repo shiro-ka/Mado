@@ -2,7 +2,9 @@
   import { Inbox, RefreshCw, Bell, ChevronRight } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import { cn } from "$lib/utils.js";
-  import QuestionCard from "$lib/components/mado/QuestionCard.svelte";
+  import QuestionCard, { type InboxQuestion } from "$lib/components/mado/QuestionCard.svelte";
+  import BottomSheet from "$lib/components/ui/BottomSheet.svelte";
+  import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -18,25 +20,74 @@
     }
   }
 
-  type FilterTab = "all" | "unread" | "read";
+  type FilterTab = "unreplied" | "answered" | "all";
+  const tab = $derived(
+    (["unreplied", "answered", "all"].includes(data.tab) ? data.tab : "unreplied") as FilterTab
+  );
 
-  const tab = $derived(data.tab as FilterTab);
+  const questions = $derived(data.allQuestions as InboxQuestion[]);
 
   const filtered = $derived(
-    data.allQuestions.filter((q) => {
-      if (tab === "unread") return !q.isRead;
-      if (tab === "read") return q.isRead;
+    questions.filter((q) => {
+      if (tab === "unreplied") return !q.answered && !q.dismissed;
+      if (tab === "answered") return q.answered;
       return true;
     })
   );
 
-  const unreadCount = $derived(data.allQuestions.filter((q) => !q.isRead).length);
+  const unrepliedCount = $derived(questions.filter((q) => !q.answered && !q.dismissed).length);
+  const answeredCount = $derived(questions.filter((q) => q.answered).length);
 
-  const tabs: { key: FilterTab; label: string }[] = [
-    { key: "all", label: "すべて" },
-    { key: "unread", label: "未読" },
-    { key: "read", label: "既読" },
-  ];
+  const tabs = $derived([
+    { key: "unreplied" as const, label: "未返信", count: unrepliedCount },
+    { key: "answered" as const, label: "回答済み", count: answeredCount },
+    { key: "all" as const, label: "すべて", count: questions.length },
+  ]);
+
+  // Reply opens inline on desktop, in a bottom sheet on mobile.
+  let isMobile = $state(false);
+  $effect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => (isMobile = mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  });
+
+  let activeRkey = $state<string | null>(null);
+  const activeQuestion = $derived(questions.find((q) => q.rkey === activeRkey) ?? null);
+
+  function toggleReply(rkey: string) {
+    activeRkey = activeRkey === rkey ? null : rkey;
+  }
+
+  let dismissingRkey = $state<string | null>(null);
+  async function toggleDismiss(q: InboxQuestion) {
+    if (dismissingRkey) return;
+    dismissingRkey = q.rkey;
+    try {
+      await fetch(`/api/questions/${q.rkey}/dismiss`, {
+        method: q.dismissed ? "DELETE" : "POST",
+      });
+      if (activeRkey === q.rkey) activeRkey = null;
+      await invalidateAll();
+    } finally {
+      dismissingRkey = null;
+    }
+  }
+
+  async function onAnswered() {
+    activeRkey = null;
+    await invalidateAll();
+  }
+
+  const emptyText = $derived(
+    tab === "unreplied"
+      ? { title: "未返信の声はありません", sub: "届いた声にはすべて対応済みです 🎉" }
+      : tab === "answered"
+        ? { title: "回答した声はまだありません", sub: "未返信タブから回答してみましょう" }
+        : { title: "声がまだ届いていません", sub: "質問箱のURLをシェアして声を募りましょう" }
+  );
 </script>
 
 <svelte:head>
@@ -47,7 +98,7 @@
   <div class="flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-foreground">受信トレイ</h1>
-      <p class="text-sm mt-1 text-muted-foreground">届いた質問を確認しましょう</p>
+      <p class="text-sm mt-1 text-muted-foreground">届いた声にその場で返信できます</p>
     </div>
     <button
       onclick={refresh}
@@ -79,15 +130,14 @@
         )}
       >
         {t.label}
-        {#if t.key === "all"}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
-            {data.allQuestions.length}
-          </span>
-        {:else if t.key === "unread"}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
-            {unreadCount}
-          </span>
-        {/if}
+        <span
+          class={cn(
+            "text-xs px-1.5 py-0.5 rounded-full tabular-nums",
+            tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle"
+          )}
+        >
+          {t.count}
+        </span>
       </a>
     {/each}
   </div>
@@ -96,19 +146,44 @@
     <div class="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
       <Inbox size={36} class="text-subtle opacity-50" />
       <div>
-        <p class="font-semibold text-base text-foreground">
-          {tab === "unread" ? "未読の質問はありません" : "質問がありません"}
-        </p>
-        <p class="text-sm mt-1 text-muted-foreground">
-          {tab === "all" ? "質問箱のURLをシェアして質問を募りましょう" : "すべての質問を確認しました！"}
-        </p>
+        <p class="font-semibold text-base text-foreground">{emptyText.title}</p>
+        <p class="text-sm mt-1 text-muted-foreground">{emptyText.sub}</p>
       </div>
     </div>
   {:else}
     <div class="flex flex-col gap-3">
-      {#each filtered as question}
-        <QuestionCard {question} preview={question.body} href={question.href} />
+      {#each filtered as question (question.rkey)}
+        <QuestionCard
+          {question}
+          {isMobile}
+          expanded={activeRkey === question.rkey}
+          busy={dismissingRkey === question.rkey}
+          onReply={() => toggleReply(question.rkey)}
+          onDismiss={() => toggleDismiss(question)}
+          {onAnswered}
+        />
       {/each}
     </div>
   {/if}
 </div>
+
+<!-- Mobile reply composer -->
+<BottomSheet
+  open={isMobile && !!activeQuestion}
+  title="回答する"
+  onClose={() => (activeRkey = null)}
+>
+  {#if activeQuestion}
+    {#if activeQuestion.body}
+      <p class="text-sm text-foreground whitespace-pre-wrap mb-4 pb-4 border-b border-border">
+        {activeQuestion.body}
+      </p>
+    {/if}
+    <AnswerForm
+      koeUri={activeQuestion.koeUri}
+      questionBody={activeQuestion.body}
+      pageUrl={activeQuestion.pageUrl}
+      onSuccess={onAnswered}
+    />
+  {/if}
+</BottomSheet>

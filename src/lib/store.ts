@@ -288,6 +288,35 @@ export class CloudflareStore {
     return results.map((r: { rkey: string }) => r.rkey);
   }
 
+  // ── Dismissed / スルー state (D1) ────────────────────────────────────────
+  // A dismissed koe drops off the 未返信 list but is never deleted; it stays
+  // visible under the すべて tab. See migrations/0005_dismissed.sql.
+
+  async markDismissed(ownerDid: string, rkey: string): Promise<void> {
+    await this.env.DB.prepare(
+      "INSERT OR IGNORE INTO dismissed (owner_did, rkey, dismissed_at) VALUES (?, ?, ?)"
+    )
+      .bind(ownerDid, rkey, Math.floor(Date.now() / 1000))
+      .run();
+  }
+
+  async unmarkDismissed(ownerDid: string, rkey: string): Promise<void> {
+    await this.env.DB.prepare(
+      "DELETE FROM dismissed WHERE owner_did = ? AND rkey = ?"
+    )
+      .bind(ownerDid, rkey)
+      .run();
+  }
+
+  async listDismissed(ownerDid: string): Promise<string[]> {
+    const { results } = await this.env.DB.prepare(
+      "SELECT rkey FROM dismissed WHERE owner_did = ?"
+    )
+      .bind(ownerDid)
+      .all<{ rkey: string }>();
+    return results.map((r: { rkey: string }) => r.rkey);
+  }
+
   // ── Sent history (D1, newest first, capped at `cap` entries) ────────────
 
   async pushSent(senderDid: string, entry: SentRef, cap: number): Promise<void> {

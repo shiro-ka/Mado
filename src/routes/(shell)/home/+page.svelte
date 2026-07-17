@@ -15,4 +15,5 @@
   questions={data.questions}
   sessionTtl={data.sessionTtl}
   replyCount={data.replyCount}
+  unrepliedCount={data.unrepliedCount}
 />
