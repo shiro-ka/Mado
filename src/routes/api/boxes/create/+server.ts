@@ -78,7 +78,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     if (!result) {
       return json(
-        { error: "Write failed", message: "質問箱の作成に失敗しました" },
+        { error: "Write failed", message: "窓の作成に失敗しました" },
         { status: 500 }
       );
     }
@@ -103,7 +103,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       return json(
         {
           error: "Write failed",
-          message: "質問箱の作成に失敗しました。もう一度お試しください。",
+          message: "窓の作成に失敗しました。もう一度お試しください。",
         },
         { status: 500 }
       );

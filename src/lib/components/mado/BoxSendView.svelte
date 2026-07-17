@@ -81,7 +81,7 @@
   <p class="text-xs leading-relaxed text-muted-foreground">
     <span class="font-semibold text-amber-400">半匿名のご注意：</span>{" "}
     このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
-    <strong class="text-foreground">ボックスのオーナーにのみ</strong>
+    <strong class="text-foreground">窓のオーナーにのみ</strong>
     開示されます。第三者には公開されません。
   </p>
 </div>
@@ -90,12 +90,12 @@
   <!-- Owner not registered -->
   <div class="rounded-xl p-6 text-center bg-surface border border-border">
     <p class="font-semibold text-sm mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
-    <p class="text-xs text-muted-foreground">質問を送るには、オーナーがMadoにログインしている必要があります。</p>
+    <p class="text-xs text-muted-foreground">声を送るには、オーナーがMadoにログインしている必要があります。</p>
   </div>
 {:else if !box.isOpen}
   <!-- Box closed -->
   <div class="rounded-xl p-6 text-center bg-surface border border-border">
-    <p class="font-semibold text-sm mb-1 text-foreground">現在この質問箱は受付停止中です</p>
+    <p class="font-semibold text-sm mb-1 text-foreground">現在この窓は受付停止中です</p>
     <p class="text-xs text-muted-foreground">オーナーが受付を再開するまでお待ちください。</p>
   </div>
 {:else if !session}
@@ -105,14 +105,14 @@
       <LogIn size={20} class="text-blue-400" />
     </div>
     <div>
-      <p class="font-semibold text-sm mb-1 text-foreground">質問するにはログインが必要です</p>
+      <p class="font-semibold text-sm mb-1 text-foreground">声を送るにはログインが必要です</p>
       <p class="text-xs leading-relaxed text-muted-foreground">
-        Blueskyアカウントでログインして質問を送りましょう。
+        Blueskyアカウントでログインして声を送りましょう。
         送り主はオーナーのみに開示されます。
       </p>
     </div>
     <a href={`/auth/login?next=/@${cleanHandle}/${box.slug}`} class="w-full">
-      <Button size="lg" class="w-full">ログインして質問する</Button>
+      <Button size="lg" class="w-full">ログインして声を送る</Button>
     </a>
   </div>
 {:else}

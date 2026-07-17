@@ -59,7 +59,7 @@
 </script>
 
 <svelte:head>
-  <title>質問箱を作成 | Mado</title>
+  <title>窓を作る | Mado</title>
 </svelte:head>
 
 <div class="px-6 py-8 max-w-2xl mx-auto">
@@ -70,16 +70,16 @@
         戻る
       </Button>
     </a>
-    <h1 class="text-2xl font-bold text-foreground">質問箱を作成</h1>
+    <h1 class="text-2xl font-bold text-foreground">窓を作る</h1>
   </div>
 
   <div class="rounded-2xl p-8 bg-surface border border-border">
     <form onsubmit={handleSubmit} class="flex flex-col gap-6">
       <Input
         label="タイトル（必須）"
-        placeholder="なんでも質問してください！"
+        placeholder="なんでも声を届けてください！"
         bind:value={title}
-        helper="質問箱に表示されるタイトルです"
+        helper="窓に表示されるタイトルです"
         maxlength={100}
         required
         disabled={formState === "submitting"}
@@ -87,9 +87,9 @@
 
       <Textarea
         label="説明文"
-        placeholder="どんな質問でも歓迎です。匿名で送ってね。"
+        placeholder="どんな声でも歓迎です。匿名で送ってね。"
         bind:value={description}
-        helper="任意。質問箱のページに表示される説明文です。"
+        helper="任意。窓のページに表示される説明文です。"
         maxlength={300}
         showCount
         rows={4}
@@ -113,10 +113,10 @@
 
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-muted-foreground">質問の受付</p>
-          <p class="text-xs mt-0.5 text-subtle">オフにすると新しい質問を受け付けません</p>
+          <p class="text-sm font-medium text-muted-foreground">声の受付</p>
+          <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
         </div>
-        <Toggle bind:checked={isOpen} label="質問の受付" disabled={formState === "submitting"} />
+        <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
       </div>
 
       {#if errorMsg}

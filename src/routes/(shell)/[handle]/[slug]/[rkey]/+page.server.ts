@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   if (!ownerDid) throw error(404, "ユーザーが見つかりません");
 
   const box = await findBoxBySlug(ownerDid, params.slug);
-  if (!box) throw error(404, "質問箱が見つかりません");
+  if (!box) throw error(404, "窓が見つかりません");
 
   const koeUri = `at://${ownerDid}/blue.mado.koe/${params.rkey}`;
 

@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>{displayName} の質問箱 | Mado</title>
+  <title>{displayName} の窓 | Mado</title>
 </svelte:head>
 
 {#if data.isOwner}
@@ -57,7 +57,7 @@
         <div class="flex items-center gap-2">
           <MessageCircle size={16} class="text-subtle" />
           <h2 class="text-sm font-semibold text-muted-foreground">
-            質問箱 ({data.openBoxes.length}件)
+            窓 ({data.openBoxes.length}件)
           </h2>
         </div>
         <a href={`/@${data.cleanHandle}/new`}>
@@ -70,7 +70,7 @@
 
       {#if data.openBoxes.length === 0}
         <div class="rounded-2xl p-10 text-center bg-surface border border-dashed border-border-strong">
-          <p class="text-sm mb-3 text-muted-foreground">まだ質問箱がありません</p>
+          <p class="text-sm mb-3 text-muted-foreground">まだ窓がありません</p>
           <a href={`/@${data.cleanHandle}/new`}>
             <Button size="sm">
               {#snippet leftIcon()}<Plus size={14} />{/snippet}
@@ -119,7 +119,7 @@
         />
       {:else}
         <div class="rounded-2xl p-10 text-center bg-surface border border-dashed border-border-strong">
-          <p class="text-sm text-muted-foreground">現在受付中の質問箱はありません</p>
+          <p class="text-sm text-muted-foreground">現在受付中の窓はありません</p>
         </div>
       {/if}
 

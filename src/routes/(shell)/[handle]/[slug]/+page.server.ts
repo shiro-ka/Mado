@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 
   const did = await resolveHandle(cleanHandle);
-  if (!did) throw error(404, "質問箱が見つかりません");
+  if (!did) throw error(404, "窓が見つかりません");
 
   const env = platform!.env;
   const store = new CloudflareStore(env);
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     store.ownerHasAnyDevice(did),
   ]);
 
-  if (!box) throw error(404, "質問箱が見つかりません");
+  if (!box) throw error(404, "窓が見つかりません");
 
   // Whether this box is the owner's main Mado (override if live, else oldest).
   // Only needed for the owner's settings view.

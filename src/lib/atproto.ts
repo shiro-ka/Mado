@@ -480,7 +480,7 @@ export async function createBskyPost(params: {
       $type: "app.bsky.embed.external",
       external: {
         uri: pageUrl,
-        title: "匿名の質問",
+        title: "匿名の声",
         description: questionBody ? questionBody.slice(0, 300) : "",
         ...(thumb ? { thumb } : {}),
       },

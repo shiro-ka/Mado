@@ -57,13 +57,13 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     const box = await getBoxRecord(boxOwnerDid, boxRkey);
     if (!box) {
       return json(
-        { error: "Box not found", message: "質問箱が見つかりません" },
+        { error: "Box not found", message: "窓が見つかりません" },
         { status: 404 }
       );
     }
     if (!box.isOpen) {
       return json(
-        { error: "Box closed", message: "この質問箱は現在受け付けていません" },
+        { error: "Box closed", message: "この窓は現在受け付けていません" },
         { status: 403 }
       );
     }
@@ -71,7 +71,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     const isBlocked = await store.isBlocked(boxOwnerDid, session.did);
     if (isBlocked) {
       return json(
-        { error: "Blocked", message: "この質問箱への送信が制限されています" },
+        { error: "Blocked", message: "この窓への送信が制限されています" },
         { status: 403 }
       );
     }
@@ -88,7 +88,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       return json(
         {
           error: "Duplicate",
-          message: "同じ質問を送信したばかりです。しばらく待ってから再送してください。",
+          message: "同じ声を送信したばかりです。しばらく待ってから再送してください。",
         },
         { status: 429 }
       );
@@ -163,7 +163,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     const ownerSessionFetch = await restoreAnyOAuthSession(env, store, boxOwnerDid);
     if (!ownerSessionFetch) {
       return json(
-        { error: "Box unavailable", message: "この質問箱は現在利用できません" },
+        { error: "Box unavailable", message: "この窓は現在利用できません" },
         { status: 503 }
       );
     }
@@ -178,7 +178,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     if (!result) {
       return json(
-        { error: "Write failed", message: "質問の送信に失敗しました" },
+        { error: "Write failed", message: "声の送信に失敗しました" },
         { status: 500 }
       );
     }

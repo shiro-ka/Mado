@@ -49,7 +49,7 @@ export const GET: RequestHandler = async ({ params, url, platform }) => {
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
   const { t } = resolveTheme(url.searchParams);
 
-  let title = "質問箱";
+  let title = "窓";
   let name = cleanHandle;
   let handle = cleanHandle;
   let avatarUri: string | null = null;

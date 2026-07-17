@@ -79,7 +79,7 @@
   }
 
   async function handleDelete() {
-    if (!confirm("この質問箱を削除しますか？この操作は取り消せません。")) return;
+    if (!confirm("この窓を削除しますか？この操作は取り消せません。")) return;
     formState = "deleting";
     errorMsg = "";
     try {
@@ -168,7 +168,7 @@
         <form onsubmit={handleSave} class="flex flex-col gap-6">
           <Input
             label="タイトル（必須）"
-            placeholder="なんでも質問してください！"
+            placeholder="なんでも声を届けてください！"
             bind:value={title}
             maxlength={100}
             required
@@ -176,7 +176,7 @@
           />
           <Textarea
             label="説明文"
-            placeholder="どんな質問でも歓迎です。"
+            placeholder="どんな声でも歓迎です。"
             bind:value={description}
             maxlength={300}
             showCount
@@ -199,10 +199,10 @@
           </div>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-muted-foreground">質問の受付</p>
-              <p class="text-xs mt-0.5 text-subtle">オフにすると新しい質問を受け付けません</p>
+              <p class="text-sm font-medium text-muted-foreground">声の受付</p>
+              <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
             </div>
-            <Toggle bind:checked={isOpen} label="質問の受付" disabled={isBusy} />
+            <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
           </div>
 
           {#if errorMsg}

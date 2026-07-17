@@ -94,7 +94,7 @@
         <p class="text-xs leading-relaxed text-subtle">
           認証にはATProtocol OAuth 2.0を使用します。
           パスワードはMadoに送信されません。
-          認証後、あなたのDIDとハンドルが質問に紐付けられます。
+          認証後、あなたのDIDとハンドルが声に紐付けられます。
         </p>
       </div>
     </div>

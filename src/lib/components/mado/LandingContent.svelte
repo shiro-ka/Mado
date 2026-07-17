@@ -19,14 +19,14 @@
       iconClass: "text-blue-400",
       bgClass: "bg-blue-600/12",
       title: "半匿名性",
-      description: "送り主はボックスオーナーにのみ開示。質問内容と送信者情報は暗号化されて保存されるため、第三者には一切見えません。",
+      description: "送り主は窓のオーナーにのみ開示。声の内容と送信者情報は暗号化されて保存されるため、第三者には一切見えません。",
     },
     {
       icon: Lock,
       iconClass: "text-emerald-400",
       bgClass: "bg-emerald-400/10",
       title: "暗号化保護",
-      description: "ECIES (楕円曲線統合暗号化スキーム) を使用。ボックスオーナーの公開鍵で暗号化し、秘密鍵がなければ誰も読めません。",
+      description: "ECIES (楕円曲線統合暗号化スキーム) を使用。窓のオーナーの公開鍵で暗号化し、秘密鍵がなければ誰も読めません。",
     },
     {
       icon: Globe,
@@ -43,21 +43,21 @@
       icon: UserCheck,
       iconClass: "text-blue-400",
       title: "Blueskyでログイン",
-      description: "Blueskyアカウントで認証します。質問箱を開設するにはログインが必要です。",
+      description: "Blueskyアカウントで認証します。窓を開くにはログインが必要です。",
     },
     {
       step: "02",
       icon: MessageCircle,
       iconClass: "text-emerald-400",
-      title: "質問箱を作成",
-      description: "タイトルと説明文を設定して質問箱を公開。URLをシェアして質問を募集しましょう。",
+      title: "窓を作る",
+      description: "タイトルと説明文を設定して窓を公開。URLをシェアして声を募集しましょう。",
     },
     {
       step: "03",
       icon: Inbox,
       iconClass: "text-blue-400",
-      title: "質問を受け取る",
-      description: "ホームから届いた質問を確認・返答。送り主の情報も安全に確認できます。",
+      title: "声を受け取る",
+      description: "ホームから届いた声を確認・返答。送り主の情報も安全に確認できます。",
     },
   ];
 </script>
@@ -76,14 +76,14 @@
     </h1>
 
     <p class="text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed text-muted-foreground">
-      Madoは、Blueskyアカウントを使った半匿名の質問箱です。
-      送り主はボックスオーナーだけに届き、暗号化によって守られます。
+      Madoは、Blueskyアカウントを使った半匿名の窓です。
+      送り主は窓のオーナーだけに届き、暗号化によって守られます。
     </p>
 
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
       <a href="/auth/login">
         <Button size="lg">
-          質問箱を開設する
+          窓を開く
           {#snippet rightIcon()}<ChevronRight size={18} />{/snippet}
         </Button>
       </a>
@@ -103,9 +103,9 @@
         <p class="font-semibold text-sm mb-1 text-amber-400">半匿名性についてのご説明</p>
         <p class="text-sm leading-relaxed text-muted-foreground">
           このサービスは<strong class="text-foreground">完全匿名ではありません</strong>。
-          質問を送信するにはBlueskyアカウントでのログインが必要です。
-          あなたのDIDとハンドルは質問に暗号化された形で含まれ、
-          <strong class="text-foreground">ボックスのオーナーのみ</strong>が復号して確認できます。
+          声を送信するにはBlueskyアカウントでのログインが必要です。
+          あなたのDIDとハンドルは声に暗号化された形で含まれ、
+          <strong class="text-foreground">窓のオーナーのみ</strong>が復号して確認できます。
           第三者には開示されません。
         </p>
       </div>
@@ -118,7 +118,7 @@
   <div class="mx-auto max-w-5xl">
     <div class="text-center mb-12">
       <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">Madoの特徴</h2>
-      <p class="text-sm md:text-base text-muted-foreground">安全で信頼できる質問箱を実現する3つの柱</p>
+      <p class="text-sm md:text-base text-muted-foreground">安全で信頼できる窓を実現する3つの柱</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -176,11 +176,11 @@
         <Send size={36} class="mx-auto mb-4 opacity-80 text-blue-400" />
         <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">今すぐ始めよう</h2>
         <p class="mb-6 text-base text-muted-foreground">
-          Blueskyアカウントがあれば、無料で質問箱を開設できます。
+          Blueskyアカウントがあれば、無料で窓を開けます。
         </p>
         <a href="/auth/login">
           <Button size="lg">
-            質問箱を開設する
+            窓を開く
             {#snippet rightIcon()}<ChevronRight size={18} />{/snippet}
           </Button>
         </a>

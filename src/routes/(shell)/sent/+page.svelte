@@ -17,7 +17,7 @@
     </div>
     <div>
       <h1 class="text-xl font-bold text-foreground">送信トレイ</h1>
-      <p class="text-xs text-muted-foreground">あなたが送った質問と返信</p>
+      <p class="text-xs text-muted-foreground">あなたが送った声と返信</p>
     </div>
   </div>
 

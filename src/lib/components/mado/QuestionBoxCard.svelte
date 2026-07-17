@@ -53,7 +53,7 @@
         <span class="text-subtle"><Lock size={12} /></span>
       {/if}
       {#if questionCount !== undefined}
-        <span class="text-xs ml-auto text-subtle">質問 {questionCount}件</span>
+        <span class="text-xs ml-auto text-subtle">声 {questionCount}件</span>
       {/if}
     </div>
   </div>

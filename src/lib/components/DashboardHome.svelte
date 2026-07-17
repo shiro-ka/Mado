@@ -74,7 +74,7 @@
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-2">
           <MessageSquare size={16} class="text-blue-400" />
-          <h2 class="text-sm font-semibold text-foreground">質問箱</h2>
+          <h2 class="text-sm font-semibold text-foreground">窓</h2>
         </div>
         <a href={`/@${session.handle}`}>
           <Button variant="ghost" size="sm">
@@ -86,7 +86,7 @@
 
       {#if boxes.length === 0}
         <div class="text-center py-6">
-          <p class="text-sm mb-3 text-muted-foreground">まだ質問箱がありません</p>
+          <p class="text-sm mb-3 text-muted-foreground">まだ窓がありません</p>
           <a href={`/@${session.handle}/new`}>
             <Button size="sm">
               {#snippet leftIcon()}<Plus size={14} />{/snippet}
@@ -133,8 +133,8 @@
 
       {#if questions.length === 0}
         <div class="text-center py-6">
-          <p class="text-sm text-muted-foreground">まだ質問が届いていません</p>
-          <p class="text-xs mt-1 text-subtle">質問箱のURLをシェアしましょう</p>
+          <p class="text-sm text-muted-foreground">まだ声が届いていません</p>
+          <p class="text-xs mt-1 text-subtle">窓のURLをシェアしましょう</p>
         </div>
       {:else}
         <div class="flex flex-col gap-2">
