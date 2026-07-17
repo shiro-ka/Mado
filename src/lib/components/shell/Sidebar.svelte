@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { LayoutDashboard, Inbox, Send, User } from "lucide-svelte";
+  import { Home, Inbox, Send, User } from "lucide-svelte";
   import { cn } from "$lib/utils.js";
   import InfoNav from "./InfoNav.svelte";
   import UserCard from "./UserCard.svelte";
@@ -15,7 +15,7 @@
   let { session, onNavigate }: Props = $props();
 
   const navItems = $derived([
-    { href: "/dashboard", icon: LayoutDashboard, label: "ホーム" },
+    { href: "/home", icon: Home, label: "ホーム" },
     { href: `/@${session.handle}`, icon: User, label: "マイページ" },
     { href: "/receive", icon: Inbox, label: "受信トレイ" },
     { href: "/sent", icon: Send, label: "送信トレイ" },
@@ -26,7 +26,7 @@
 
 <!-- Logo -->
 <div class="h-16 px-5 flex items-center gap-2 shrink-0 border-b border-border">
-  <a href="/dashboard" onclick={onNavigate}>
+  <a href="/home" onclick={onNavigate}>
     <Brand size="md" />
   </a>
 </div>

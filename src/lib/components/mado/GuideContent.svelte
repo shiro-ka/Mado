@@ -3,7 +3,7 @@
 
   const ownerSteps = [
     { step: "1", icon: UserCheck, color: "text-blue-400", title: "Blueskyでログイン", body: "右上の「ログイン」からBlueskyアカウントで認証します。OAuthを使うためパスワードは不要です。" },
-    { step: "2", icon: MessageCircle, color: "text-emerald-400", title: "質問箱を作成", body: "ダッシュボード → 質問箱 → 新しく作成。タイトルと説明を入力して公開します。URLをSNSでシェアして質問を募集しましょう。" },
+    { step: "2", icon: MessageCircle, color: "text-emerald-400", title: "質問箱を作成", body: "ホーム → 質問箱 → 新しく作成。タイトルと説明を入力して公開します。URLをSNSでシェアして質問を募集しましょう。" },
     { step: "3", icon: Inbox, color: "text-blue-400", title: "質問を受け取る・回答する", body: "受信トレイに届いた質問を確認できます。送り主のハンドルも表示されます。回答はBluesky上にそのまま投稿することもできます。" },
   ];
 

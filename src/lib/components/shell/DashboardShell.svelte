@@ -82,7 +82,7 @@
     >
       <Menu size={20} />
     </button>
-    <a href="/dashboard">
+    <a href="/home">
       <Brand size="sm" />
     </a>
   </div>
