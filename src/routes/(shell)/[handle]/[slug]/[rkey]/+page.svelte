@@ -16,7 +16,7 @@
   <title>声 | @{data.cleanHandle} | Mado</title>
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content="匿名の質問" />
+  <meta property="og:title" content={`${data.ownerName} への声 - Mado 半匿名メッセージ`} />
   <!-- No og:description: the OG image already renders the question body in full,
        so a text caption would just duplicate it. Image-only card reads cleaner. -->
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
