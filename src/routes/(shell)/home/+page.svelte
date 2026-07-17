@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-  <title>ダッシュボード | Mado</title>
+  <title>ホーム | Mado</title>
 </svelte:head>
 
 <DashboardHome

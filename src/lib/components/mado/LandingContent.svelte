@@ -57,7 +57,7 @@
       icon: Inbox,
       iconClass: "text-blue-400",
       title: "質問を受け取る",
-      description: "ダッシュボードから届いた質問を確認・返答。送り主の情報も安全に確認できます。",
+      description: "ホームから届いた質問を確認・返答。送り主の情報も安全に確認できます。",
     },
   ];
 </script>

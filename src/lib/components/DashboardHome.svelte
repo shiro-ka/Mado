@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageSquare, Inbox, ChevronRight, Plus, AlertTriangle } from "lucide-svelte";
+  import { Home, MessageSquare, Inbox, ChevronRight, Plus, AlertTriangle } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import { cn } from "$lib/utils.js";
   import type { AppSession } from "$lib/store.js";
@@ -33,12 +33,10 @@
 </script>
 
 <div class="px-6 py-8 max-w-4xl mx-auto">
-  <!-- Welcome -->
-  <div class="mb-8">
-    <h1 class="text-2xl font-bold mb-1 text-foreground">
-      おかえりなさい、{session.displayName ?? `@${session.handle}`}
-    </h1>
-    <p class="text-sm text-muted-foreground">今日も窓から声が届いていますよ</p>
+  <!-- Page heading -->
+  <div class="flex items-center gap-2.5 mb-8">
+    <Home size={22} class="text-primary shrink-0" />
+    <h1 class="text-2xl font-bold text-foreground">ホーム</h1>
   </div>
 
   <!-- Session expiry warning -->

@@ -38,8 +38,8 @@
     <!-- Auth CTA + mobile menu toggle -->
     <div class="flex items-center gap-2">
       {#if session}
-        <a href="/dashboard">
-          <Button variant="default" size="sm">ダッシュボード</Button>
+        <a href="/home">
+          <Button variant="default" size="sm">ホーム</Button>
         </a>
       {:else}
         <a href="/auth/login">

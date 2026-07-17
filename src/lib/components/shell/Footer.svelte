@@ -18,7 +18,7 @@
       <div class="flex flex-col gap-3">
         <h4 class="text-sm font-semibold text-foreground">リンク</h4>
         <div class="flex flex-col gap-2">
-          {#each [{ href: "/", label: "ホーム" }, { href: "/auth/login", label: "ログイン" }, { href: "/dashboard", label: "ダッシュボード" }] as link}
+          {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/home", label: "ホーム" }] as link}
             <a href={link.href} class="text-sm transition-colors duration-200 hover:opacity-80 text-muted-foreground">
               {link.label}
             </a>
