@@ -16,12 +16,15 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
 
   const koeUri = `at://${ownerDid}/blue.mado.koe/${params.rkey}`;
 
-  const [question, answers] = await Promise.all([
+  const [question, answers, ownerProfile] = await Promise.all([
     getKoeRecord(ownerDid, params.rkey),
     listAnswers(ownerDid, koeUri),
+    getProfile(ownerDid), // for the OG/share title (owner display name)
   ]);
 
   if (!question) throw error(404, "声が見つかりません");
+
+  const ownerName = ownerProfile?.displayName || cleanHandle;
 
   const isOwner = session?.did === ownerDid;
 
@@ -52,6 +55,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
 
   return {
     cleanHandle,
+    ownerName,
     box,
     isOwner,
     question: { ...questionPublic, isRead: isOwner },
