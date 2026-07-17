@@ -22,7 +22,6 @@
   );
 
   const unreadCount = $derived(questions.filter((q) => !q.isRead).length);
-  const openBoxCount = $derived(boxes.filter((b) => b.isOpen).length);
   const boxSlugMap = $derived(new Map(boxes.map((b) => [b.rkey, b.slug])));
 
   function questionHref(q: Question & { isRead: boolean }): string {
@@ -54,14 +53,13 @@
   <!-- Stats -->
   <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-8">
     {#each [
-      { label: "質問箱", value: boxes.length, sub: `${openBoxCount}件 受付中`, color: "text-blue-400" },
-      { label: "未読の質問", value: unreadCount, sub: `全 ${questions.length}件`, color: "text-emerald-400" },
-      { label: "総返信数", value: replyCount, sub: "累計", color: "text-blue-400" },
+      { label: "質問箱", value: boxes.length, color: "text-blue-400" },
+      { label: "未読の質問", value: unreadCount, color: "text-emerald-400" },
+      { label: "総返信数", value: replyCount, color: "text-blue-400" },
     ] as stat}
       <div class="rounded-xl p-3 sm:p-5 bg-surface border border-border">
         <p class="text-xs font-medium mb-1.5 sm:mb-2 text-muted-foreground">{stat.label}</p>
         <p class={cn("text-2xl sm:text-3xl font-bold tabular-nums", stat.color)}>{stat.value}</p>
-        <p class="text-[11px] sm:text-xs mt-0.5 sm:mt-1 text-subtle">{stat.sub}</p>
       </div>
     {/each}
   </div>
