@@ -29,3 +29,6 @@ yarn-error.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# Local dev-only design harness (fixture-fed logged-in screens; never shipped)
+src/routes/_demo/
