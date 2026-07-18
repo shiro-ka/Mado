@@ -3,6 +3,7 @@
   import { invalidateAll } from "$app/navigation";
   import { cn } from "$lib/utils.js";
   import QuestionCard from "$lib/components/mado/QuestionCard.svelte";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -21,16 +22,6 @@
   type FilterTab = "all" | "unread" | "read";
 
   const tab = $derived(data.tab as FilterTab);
-
-  const filtered = $derived(
-    data.allQuestions.filter((q) => {
-      if (tab === "unread") return !q.isRead;
-      if (tab === "read") return q.isRead;
-      return true;
-    })
-  );
-
-  const unreadCount = $derived(data.allQuestions.filter((q) => !q.isRead).length);
 
   const tabs: { key: FilterTab; label: string }[] = [
     { key: "all", label: "すべて" },
@@ -69,46 +60,67 @@
     <ChevronRight size={16} class="shrink-0 text-subtle" />
   </a>
 
-  <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
-    {#each tabs as t}
-      <a
-        href={`/receive?tab=${t.key}`}
-        class={cn(
-          "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2",
-          tab === t.key ? "bg-primary text-white" : "bg-transparent text-muted-foreground"
-        )}
-      >
-        {t.label}
-        {#if t.key === "all"}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
-            {data.allQuestions.length}
-          </span>
-        {:else if t.key === "unread"}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
-            {unreadCount}
-          </span>
-        {/if}
-      </a>
-    {/each}
-  </div>
-
-  {#if filtered.length === 0}
-    <div class="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
-      <Inbox size={36} class="text-subtle opacity-50" />
-      <div>
-        <p class="font-semibold text-base text-foreground">
-          {tab === "unread" ? "未読の声はありません" : "声がありません"}
-        </p>
-        <p class="text-sm mt-1 text-muted-foreground">
-          {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
-        </p>
-      </div>
-    </div>
-  {:else}
-    <div class="flex flex-col gap-3">
-      {#each filtered as question}
-        <QuestionCard {question} preview={question.body} href={question.href} />
+  {#await data.inbox}
+    <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
+      {#each tabs as t}
+        <div class="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground">{t.label}</div>
       {/each}
     </div>
-  {/if}
+    <div class="flex flex-col gap-3">
+      {#each Array(4) as _}
+        <Skeleton class="h-20" />
+      {/each}
+    </div>
+  {:then inbox}
+    {@const allQuestions = inbox.allQuestions}
+    {@const unreadCount = allQuestions.filter((q) => !q.isRead).length}
+    {@const filtered = allQuestions.filter((q) => {
+      if (tab === "unread") return !q.isRead;
+      if (tab === "read") return q.isRead;
+      return true;
+    })}
+
+    <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
+      {#each tabs as t}
+        <a
+          href={`/receive?tab=${t.key}`}
+          class={cn(
+            "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2",
+            tab === t.key ? "bg-primary text-white" : "bg-transparent text-muted-foreground"
+          )}
+        >
+          {t.label}
+          {#if t.key === "all"}
+            <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
+              {allQuestions.length}
+            </span>
+          {:else if t.key === "unread"}
+            <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
+              {unreadCount}
+            </span>
+          {/if}
+        </a>
+      {/each}
+    </div>
+
+    {#if filtered.length === 0}
+      <div class="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
+        <Inbox size={36} class="text-subtle opacity-50" />
+        <div>
+          <p class="font-semibold text-base text-foreground">
+            {tab === "unread" ? "未読の声はありません" : "声がありません"}
+          </p>
+          <p class="text-sm mt-1 text-muted-foreground">
+            {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
+          </p>
+        </div>
+      </div>
+    {:else}
+      <div class="flex flex-col gap-3">
+        {#each filtered as question}
+          <QuestionCard {question} preview={question.body} href={question.href} />
+        {/each}
+      </div>
+    {/if}
+  {/await}
 </div>

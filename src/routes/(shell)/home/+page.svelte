@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { Home } from "lucide-svelte";
   import DashboardHome from "$lib/components/DashboardHome.svelte";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -9,10 +11,28 @@
   <title>ホーム | Mado</title>
 </svelte:head>
 
-<DashboardHome
-  session={data.session}
-  boxes={data.boxes}
-  questions={data.questions}
-  sessionTtl={data.sessionTtl}
-  replyCount={data.replyCount}
-/>
+{#await data.dashboard}
+  <div class="px-6 py-8 max-w-4xl mx-auto">
+    <div class="flex items-center gap-2.5 mb-8">
+      <Home size={22} class="text-primary shrink-0" />
+      <h1 class="text-2xl font-bold text-foreground">ホーム</h1>
+    </div>
+    <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-8">
+      {#each Array(3) as _}
+        <Skeleton class="h-[88px] sm:h-[104px]" />
+      {/each}
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <Skeleton class="h-52" />
+      <Skeleton class="h-52" />
+    </div>
+  </div>
+{:then d}
+  <DashboardHome
+    session={data.session}
+    boxes={d.boxes}
+    questions={d.questions}
+    sessionTtl={data.sessionTtl}
+    replyCount={d.replyCount}
+  />
+{/await}

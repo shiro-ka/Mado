@@ -6,7 +6,7 @@ import type { SentRef } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreAnyOAuthSession } from "$lib/oauth.server.js";
 import { encryptDid } from "$lib/crypto.js";
-import { writeQuestion, getBoxRecord, getProfile } from "$lib/atproto.js";
+import { writeQuestion, getBoxRecord, getProfile, invalidateRecords, NSID } from "$lib/atproto.js";
 import { notifyNewKoe } from "$lib/notify.server.js";
 import { didSchema, rkeySchema } from "$lib/validation.js";
 
@@ -182,6 +182,10 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
         { status: 500 }
       );
     }
+
+    // The koe now lives in the owner's repo — drop the cached scan so it shows
+    // up in their /receive inbox on the next read instead of after the TTL.
+    invalidateRecords(boxOwnerDid, NSID.KOE);
 
     const koeRkey = result.uri.split("/").pop() ?? "";
     const sentRef: SentRef = {

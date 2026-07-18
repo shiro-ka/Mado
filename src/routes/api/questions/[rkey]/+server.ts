@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { deleteRecord } from "$lib/atproto.js";
+import { deleteRecord, invalidateRecords, NSID } from "$lib/atproto.js";
 
 export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
   const env = platform!.env;
@@ -17,12 +17,13 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
   const ok = await deleteRecord({
     sessionFetch,
     did: session.did,
-    collection: "blue.mado.koe",
+    collection: NSID.KOE,
     rkey: params.rkey,
   });
 
   if (!ok) return json({ error: "failed to delete record" }, { status: 500 });
 
+  invalidateRecords(session.did, NSID.KOE);
   await store.unmarkRead(session.did, params.rkey);
   return json({ ok: true });
 };

@@ -48,6 +48,22 @@ function wrapDpopStore<T>(store: {
   };
 }
 
+// Parsing the JWK keyset (a JoseKey.fromJWK per key) is async crypto work that
+// previously ran on *every* authenticated request — every send / answer / follow
+// / box write rebuilds the client from scratch. The keys are static env config,
+// so parse once per isolate and reuse. Keyed by the raw JSON so a key rotation
+// (changed env) reparses instead of serving a stale set.
+let keysetCache: { raw: string; keyset: JoseKey[] } | null = null;
+
+async function getKeyset(rawKeys: string): Promise<JoseKey[]> {
+  if (keysetCache && keysetCache.raw === rawKeys) return keysetCache.keyset;
+  const keyset = await Promise.all(
+    (JSON.parse(rawKeys) as Record<string, unknown>[]).map((k) => JoseKey.fromJWK(k))
+  );
+  keysetCache = { raw: rawKeys, keyset };
+  return keyset;
+}
+
 /**
  * Create an OAuthClient per request (Workers are stateless; creation is cheap).
  *
@@ -63,9 +79,7 @@ export async function createOAuthClient(
 ): Promise<OAuthClient> {
   const appUrl = env.APP_URL ?? "https://mado.blue";
   const rawKeys = env.OAUTH_PRIVATE_KEYS ?? "[]";
-  const keyset = await Promise.all(
-    (JSON.parse(rawKeys) as Record<string, unknown>[]).map((k) => JoseKey.fromJWK(k))
-  );
+  const keyset = await getKeyset(rawKeys);
 
   return new OAuthClient({
     fetch: workerFetch,
