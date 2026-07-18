@@ -21,20 +21,19 @@ export const POST: RequestHandler = async ({ cookies, platform }) => {
     );
   }
 
-  const official = await getOfficialAccount(env);
+  // Independent lookups — resolving the official account (handle→DID) and
+  // restoring the caller's OAuth session don't depend on each other, so run
+  // them together instead of paying two sequential round-trips.
+  const [official, sessionFetch] = await Promise.all([
+    getOfficialAccount(env),
+    restoreOAuthSession(env, store, session.did, session.deviceKey),
+  ]);
   if (!official) {
     return json(
       { error: "Unavailable", message: "通知は現在利用できません" },
       { status: 503 }
     );
   }
-
-  const sessionFetch = await restoreOAuthSession(
-    env,
-    store,
-    session.did,
-    session.deviceKey
-  );
   if (!sessionFetch) {
     return json(
       { error: "Session expired", message: "再ログインしてください" },

@@ -11,20 +11,28 @@ export const load: PageServerLoad = async ({ parent, platform, url }) => {
   const store = new CloudflareStore(env);
   const tab = url.searchParams.get("tab") ?? "all";
 
-  const [questionsRaw, readRkeys, boxes] = await Promise.all([
-    listQuestions(session.did),
-    store.listRead(session.did),
-    listBoxes(session.did),
-  ]);
+  // The PDS scans (questions + boxes) are the slow part; return them as an
+  // un-awaited promise so SvelteKit streams the inbox and the page shell paints
+  // immediately instead of freezing on the previous page for 2-3s.
+  return {
+    tab,
+    inbox: (async () => {
+      const [questionsRaw, readRkeys, boxes] = await Promise.all([
+        listQuestions(session.did),
+        store.listRead(session.did),
+        listBoxes(session.did),
+      ]);
 
-  const readSet = new Set(readRkeys);
-  const boxSlugMap = new Map(boxes.map((b) => [b.rkey, b.slug]));
-  const allQuestions = questionsRaw.map((q) => {
-    const boxRkey = q.boxUri.split("/").pop() ?? "";
-    const slug = boxSlugMap.get(boxRkey);
-    const href = slug ? `/@${session.handle}/${slug}/${q.rkey}` : `/receive`;
-    return { ...q, isRead: readSet.has(q.rkey), href };
-  });
+      const readSet = new Set(readRkeys);
+      const boxSlugMap = new Map(boxes.map((b) => [b.rkey, b.slug]));
+      const allQuestions = questionsRaw.map((q) => {
+        const boxRkey = q.boxUri.split("/").pop() ?? "";
+        const slug = boxSlugMap.get(boxRkey);
+        const href = slug ? `/@${session.handle}/${slug}/${q.rkey}` : `/receive`;
+        return { ...q, isRead: readSet.has(q.rkey), href };
+      });
 
-  return { allQuestions, tab };
+      return { allQuestions };
+    })(),
+  };
 };

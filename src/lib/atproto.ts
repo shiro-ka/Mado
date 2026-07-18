@@ -40,9 +40,38 @@ function appViewAgent(): AtpAgent {
   return new AtpAgent({ service: APPVIEW_URL });
 }
 
+type RecordScan = Array<{ uri: string; cid: string; value: unknown }>;
+
+// Short-TTL in-isolate cache for the per-collection PDS scans. Every navigation
+// re-lists the same collections (home/receive/マイページ all full-scan BOX/KOE/
+// ANSWER), so within a browsing burst this collapses the repeated full-repo
+// round-trips — the dominant navigation latency — down to a single scan.
+// Deliberately short: a new incoming voice from someone else surfaces within the
+// TTL, and the owner's own mutations (send / answer / box CRUD) call
+// invalidateRecords() for instant reflection. Per-isolate only (no cross-isolate
+// coherence), which is fine for a best-effort read cache over an authoritative
+// PDS — the source of truth is always the repo, this just skips redundant reads.
+const recordScanCache = new Map<string, { records: RecordScan; exp: number }>();
+const RECORD_SCAN_TTL_MS = 30 * 1000;
+
+function recordScanKey(repo: string, collection: string): string {
+  return `${repo}:${collection}`;
+}
+
+/**
+ * Drop the cached scan of `collection` in `repo` so the next read re-fetches it
+ * from the PDS. Called by the write endpoints right after they mutate a repo, so
+ * the owner sees their own change immediately instead of waiting out the TTL.
+ */
+export function invalidateRecords(repo: string, collection: string): void {
+  recordScanCache.delete(recordScanKey(repo, collection));
+}
+
 /**
  * List every record in a collection, following cursors past the 100/page limit.
  * Stops at `hardCap` records as a safety bound against runaway repos.
+ *
+ * Results are memoized per-isolate for RECORD_SCAN_TTL_MS (see recordScanCache).
  *
  * NOTE: when the cap is hit we now log a warning instead of silently dropping
  * the tail (which previously made older questions/answers just disappear).
@@ -54,8 +83,12 @@ async function listAllRecords(
   repo: string,
   collection: string,
   hardCap = 3000
-): Promise<Array<{ uri: string; cid: string; value: unknown }>> {
-  const out: Array<{ uri: string; cid: string; value: unknown }> = [];
+): Promise<RecordScan> {
+  const cacheKey = recordScanKey(repo, collection);
+  const cached = recordScanCache.get(cacheKey);
+  if (cached && cached.exp > Date.now()) return cached.records;
+
+  const out: RecordScan = [];
   let cursor: string | undefined;
   do {
     const res = await agent.com.atproto.repo.listRecords({
@@ -72,6 +105,7 @@ async function listAllRecords(
       `[listAllRecords] hardCap ${hardCap} reached for ${collection} in ${repo} — older records not loaded`
     );
   }
+  recordScanCache.set(cacheKey, { records: out, exp: Date.now() + RECORD_SCAN_TTL_MS });
   return out;
 }
 

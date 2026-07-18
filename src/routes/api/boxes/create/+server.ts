@@ -6,7 +6,7 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { generateKeyPair } from "$lib/crypto.js";
-import { createBoxRecord, deleteRecord, listBoxes, NSID } from "$lib/atproto.js";
+import { createBoxRecord, deleteRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto.js";
 import { slugSchema } from "$lib/validation.js";
 
 const createBoxSchema = z.object({
@@ -108,6 +108,9 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
         { status: 500 }
       );
     }
+
+    // Drop the cached box scan so マイページ / home reflect the new box at once.
+    invalidateRecords(session.did, NSID.BOX);
 
     return json({ success: true, rkey: result.rkey, uri: result.uri, slug });
   } catch (err) {
