@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ parent, platform, url }) => {
 
   const env = platform!.env;
   const store = new CloudflareStore(env);
-  const tab = url.searchParams.get("tab") ?? "all";
+  const tab = url.searchParams.get("tab") ?? "unread";
 
   // The PDS scans (questions + boxes) are the slow part; return them as an
   // un-awaited promise so SvelteKit streams the inbox and the page shell paints
