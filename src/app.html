@@ -1,19 +1,22 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-suisou-theme="trench" data-suisou-accent="blue">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0c1424" />
+    <meta name="theme-color" content="#030a1d" />
     <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet" />
     <style>:root { --font-zen-maru: 'Zen Maru Gothic'; }</style>
+    <!-- Suisou（デザインシステム）。固定 URL の v1 チャンネル。
+         app.css より先に読む ―― 現場の規則が Suisou に勝てるように -->
+    <link rel="stylesheet" href="https://shiro-ka.github.io/Suisou/v1/suisou.css" />
     %sveltekit.head%
   </head>
-  <body data-sveltekit-preload-data="hover" class="bg-background text-foreground">
+  <body data-sveltekit-preload-data="hover" data-suisou-root class="bg-background text-foreground">
     <div style="display: contents">%sveltekit.body%</div>
   </body>
 </html>

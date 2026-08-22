@@ -54,41 +54,53 @@
   --color-error:         var(--error);
 }
 
-/* Dark (default) — synced to OGP "dark" theme (src/lib/og.ts) */
+/* Dark (default) — Suisou trench × blue（2026-08-22）。
+
+   ★Mado 自身の変数の「値」だけを Suisou のトークンに向ける。
+     @theme inline の対応表も、それを使う 2000 個のクラスも一切触らない ――
+     Mado は最初から意味で命名していた（--bg-surface / --text-muted）ので、
+     ブリッジはこの1箇所で済む。wixdex は生の色名（zinc-400）を使っていたので
+     24 色ぶんの対応表が要った。命名の筋の良さがそのまま移行コストの差になった。
+
+   ★trench は Mado の紺（H262）から作ったテーマ。だから対応は素直に揃う。
+     ライトモードは別途（shoal を当てる予定）。下の light ブロックは手つかず。 */
 :root {
-  --bg:           #0c1424;   /* OGP bg gradient end */
-  --bg-grad-top:  #152238;   /* OGP bg gradient start */
-  --bg-surface:   #172339;   /* card — OGP pane over navy */
-  --bg-elevated:  #203051;   /* popover / raised */
-  --text-primary: #eaf1fb;   /* OGP ink */
-  --text-muted:   #8fa6c4;   /* OGP sub */
-  --text-subtle:  #64789a;
-  --border-strong: rgba(59, 130, 246, 0.45);  /* OGP frameBorder */
-  --accent-light:  rgba(59, 130, 246, 0.14);
-  --error:         #f87171;
-  --success:       #34d399;
-  --warning:       #f2a15c;   /* OGP dawn accent */
+  --bg:           var(--suisou-bg);
+  --bg-grad-top:  var(--suisou-panel);    /* 勾配の明るい端。panel がその役 */
+  --bg-surface:   var(--suisou-panel);    /* card */
+  --bg-elevated:  var(--suisou-item);     /* raised */
+  --text-primary: var(--suisou-text-main);
+  --text-muted:   var(--suisou-text-sub);
+  --text-subtle:  var(--suisou-text-disabled);
+  --border-strong: var(--suisou-line-strong);
+  --accent-light:  var(--suisou-selected-surface);
+  --error:         var(--suisou-error);
+  --success:       var(--suisou-success);
+  --warning:       var(--suisou-warning);
 
   /* shadcn semantic vars — dark */
   --background:           var(--bg);
   --foreground:           var(--text-primary);
   --card:                 var(--bg-surface);
   --card-foreground:      var(--text-primary);
-  --popover:              var(--bg-elevated);
+  --popover:              var(--suisou-overlay);   /* 浮くものは overlay の段 */
   --popover-foreground:   var(--text-primary);
-  --primary:              #3b82f6;   /* OGP accent */
-  --primary-foreground:   #ffffff;
-  --secondary:            var(--bg-elevated);
+  --primary:              var(--suisou-accent);
+  /* ★塗りボタンの上の文字。白のままだと L74 の accent 上で 1.9:1 に落ちる。
+     濃紺（bg）なら 13:1。Suisou は塗らない主義なので、いずれ outline 化して
+     このトークンごと消える ―― それまでの橋 */
+  --primary-foreground:   var(--suisou-bg);
+  --secondary:            var(--suisou-item);
   --secondary-foreground: var(--text-primary);
   --muted:                var(--bg-surface);
   --muted-foreground:     var(--text-muted);
-  --accent:               var(--bg-elevated);
+  --accent:               var(--suisou-hover-surface);   /* shadcn の accent は hover の下地 */
   --accent-foreground:    var(--text-primary);
   --destructive:          var(--error);
-  --border:               rgba(59, 130, 246, 0.2);   /* OGP chipBorder */
-  --input:                rgba(59, 130, 246, 0.2);
-  --ring:                 rgba(59, 130, 246, 0.5);
-  --radius:               0.625rem;
+  --border:               var(--suisou-line-weak);
+  --input:                var(--suisou-line-strong);     /* 入力枠は機能の線 */
+  --ring:                 var(--suisou-focus-ring);
+  --radius:               var(--suisou-radius);
 }
 
 /* Light — synced to OGP "light" theme */
@@ -108,6 +120,7 @@
     --warning:       #d97706;
 
     --primary: #2f6fe0;   /* OGP light accent */
+    --primary-foreground: #ffffff;   /* dark 側が Suisou の bg に変わったので明示 */
     --border:  rgba(47, 111, 224, 0.2);
     --input:   rgba(47, 111, 224, 0.2);
     --ring:    rgba(47, 111, 224, 0.4);
