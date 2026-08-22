@@ -47,7 +47,7 @@
     <div class="flex flex-col items-center gap-3 mb-8">
       <a href="/" data-suisou-layout="row">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
-          <MessageCircle size={20} class="text-white" />
+          <MessageCircle size={20} class="text-background" />
         </div>
         <span class="font-bold text-xl text-foreground">Mado</span>
       </a>

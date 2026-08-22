@@ -28,7 +28,7 @@
             <div class="w-9 h-9 rounded-lg flex items-center justify-center mt-0.5 bg-elevated">
               <item.icon size={17} class={item.color} />
             </div>
-            <div class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center font-bold bg-primary text-white" style="font-size:10px">
+            <div class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center font-bold bg-primary text-background" style="font-size:10px">
               {item.step}
             </div>
           </div>

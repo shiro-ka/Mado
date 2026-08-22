@@ -24,7 +24,7 @@
   <div>
     <div class="flex items-center gap-3 mb-4">
       <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
-        <MessageCircle size={20} class="text-white" />
+        <MessageCircle size={20} class="text-background" />
       </div>
       <h1 class="text-2xl font-bold text-foreground">Madoについて</h1>
     </div>

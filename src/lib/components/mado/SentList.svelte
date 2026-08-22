@@ -163,7 +163,7 @@
               {#each item.answers as answer}
                 <div class="rounded-xl p-4 bg-elevated">
                   <div data-suisou-layout="row" class="mb-2">
-                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-primary-light">
+                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-accent-light">
                       <MessageCircle size={10} class="text-primary" />
                     </div>
                     <span class="text-xs text-muted-foreground">{formatDateFull(answer.createdAt)}</span>

@@ -65,7 +65,7 @@
 <!-- Hero -->
 <section class="relative overflow-hidden px-4 pt-24 pb-20 md:pt-32 md:pb-28">
   <div class="relative mx-auto max-w-3xl text-center">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-medium mb-6 bg-primary-light border border-blue-600/30 text-blue-300">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-medium mb-6 bg-accent-light border border-blue-600/30 text-blue-300">
       <Sparkles size={14} />
       ATProtocol基盤
     </div>
@@ -150,7 +150,7 @@
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-elevated">
               <step.icon size={24} class={step.iconClass} />
             </div>
-            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-primary text-white">
+            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-primary text-background">
               {step.step.slice(-1)}
             </div>
           </div>

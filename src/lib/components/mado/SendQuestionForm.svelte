@@ -65,7 +65,7 @@
 {:else}
   <form onsubmit={handleSubmit} class="flex flex-col gap-4">
     <!-- Sender disclosure -->
-    <div class="rounded-lg p-3 flex items-start gap-2.5 bg-primary-light border border-blue-600/25">
+    <div class="rounded-lg p-3 flex items-start gap-2.5 bg-accent-light border border-blue-600/25">
       <AlertCircle size={15} class="mt-0.5 shrink-0 text-blue-400" />
       <p class="text-blue-300">
         この声は <span class="font-semibold">@{senderHandle}</span> として相手に届きます。
