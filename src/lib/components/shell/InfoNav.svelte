@@ -2,7 +2,6 @@
   import { untrack } from "svelte";
   import { page } from "$app/state";
   import { ChevronDown, Info, BookOpen, Eye } from "lucide-svelte";
-  import { cn } from "$lib/utils.js";
 
   interface Props {
     onNavigate?: () => void;
@@ -25,27 +24,24 @@
   <button
     onclick={() => (open = !open)}
     aria-expanded={open}
-    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-muted-foreground hover:bg-elevated hover:text-foreground cursor-pointer"
+    data-suisou-button="block"
   >
     <Info size={17} class="shrink-0" />
-    <span class="flex-1 text-left">Madoについて</span>
+    <span data-suisou-layout="grow" class="text-left">Madoについて</span>
     <ChevronDown
       size={14}
       style="transition: transform 0.2s; transform: {open ? 'rotate(180deg)' : 'rotate(0deg)'}"
     />
   </button>
   {#if open}
-    <div class="mt-0.5 flex flex-col gap-0.5 pl-4">
+    <div data-suisou-layout="stack" class="sub">
       {#each items as item}
         {@const active = currentPath === item.href}
         <a
           href={item.href}
           onclick={onNavigate}
           aria-current={active ? "page" : undefined}
-          class={cn(
-            "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200",
-            active ? "bg-accent-light text-primary" : "text-subtle hover:bg-elevated hover:text-foreground"
-          )}
+          data-suisou-button="block"
         >
           <item.icon size={15} class="shrink-0" />
           {item.label}
@@ -54,3 +50,10 @@
     </div>
   {/if}
 </div>
+
+<style>
+  /* 入れ子のぶんだけ字下げ。字下げの幅は現場のもの */
+  .sub {
+    padding-inline-start: var(--suisou-space-3);
+  }
+</style>
