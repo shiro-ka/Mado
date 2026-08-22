@@ -61,7 +61,7 @@
   </a>
 
   {#await data.inbox}
-    <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
+    <div class="flex gap-1 p-1 rounded-lg mb-6 w-fit bg-surface">
       {#each tabs as t}
         <div class="px-4 py-2 rounded-lg font-medium text-muted-foreground">{t.label}</div>
       {/each}

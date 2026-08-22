@@ -71,7 +71,7 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-layout="stack" class="rounded-xl p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
+  <div data-suisou-layout="stack" class="rounded-lg p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
     <CheckCircle2 size={36} class="text-emerald-400" />
     <div>
       <p class="font-bold text-foreground">回答を投稿しました</p>

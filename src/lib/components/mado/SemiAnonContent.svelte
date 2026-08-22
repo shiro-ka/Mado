@@ -32,7 +32,7 @@
       ただしその情報は窓のオーナーだけが復号でき、第三者には一切開示されません。
     </p>
   </div>
-  <div class="rounded-xl p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
+  <div class="rounded-lg p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
     <Shield size={18} class="shrink-0 mt-0.5 text-amber-400" />
     <p class="leading-relaxed text-muted-foreground">
       声を送ると、あなたのBluesky DID（分散型識別子）がオーナーに届きます。
