@@ -15,6 +15,10 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # ★存在しない色クラスの検査。書いても黙って何も起きないので目では拾えない
+      #   （bg-primary-light が7箇所で空振りしていた）
+      - run: npm run lint:classes
+
       - run: npm run build
       # --branch で Pages のプレビュー環境に振り分ける。main は production。
       # ★出力の URL を Actions のサマリに出す。ブランチ別名（dev.mado.pages.dev）が
