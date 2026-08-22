@@ -1,38 +1,32 @@
 <script lang="ts" module>
-	import { cn, type WithElementRef } from "$lib/utils.js";
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
-	import { type VariantProps, tv } from "tailwind-variants";
+	import type { WithElementRef } from "$lib/utils.js";
 
-	export const buttonVariants = tv({
-		base: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-3 [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-		variants: {
-			variant: {
-				default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
-				outline: "border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground",
-				secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-				ghost: "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground",
-				destructive: "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
-				link: "text-primary underline-offset-4 hover:underline",
-			},
-			size: {
-				default: "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-				xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-				sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-				lg: "h-10 gap-2 px-4 text-base has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-				icon: "size-8",
-				"icon-xs": "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-				"icon-sm": "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-				"icon-lg": "size-9",
-			},
-		},
-		defaultVariants: {
-			variant: "default",
-			size: "default",
-		},
-	});
+	/* Suisou の Button に乗せ替えた（2026-08-22）。API は変えていないので
+	   15 ファイル 33 箇所の呼び出しは無修正で追従する（wixdex の BaseModal と同じ手）。
 
-	export type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
-	export type ButtonSize = VariantProps<typeof buttonVariants>["size"];
+	   variant の対応 ―― Suisou は塗らない（線形デザイン）ので:
+	     default     → outline   目的の一本。塗りの CTA はアクセント色の枠に
+	     secondary   → plain     罫だけで立つ
+	     outline     → plain
+	     ghost       → 基本形     幽霊。hover で下地
+	     destructive → danger
+	     link        → 基本形 + data-suisou-link の下線は持たない（ボタンは線を引かない）
+
+	   size は Suisou が1段しか持たないので**受けるが無視する**。
+	   高さの3段（h-6/h-7/h-8）は Tailwind の名残で、詰めの差は余白の段が吸う。
+	   まず1段で全画面を見て、本当に困る場所が3回出たら Suisou 側に相談する。 */
+	export type ButtonVariant = "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
+	export type ButtonSize = "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
+
+	const VARIANT_MAP: Record<ButtonVariant, string> = {
+		default: "outline",
+		outline: "plain",
+		secondary: "plain",
+		ghost: "",
+		destructive: "danger",
+		link: "",
+	};
 
 	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 		WithElementRef<HTMLAnchorAttributes> & {
@@ -45,8 +39,6 @@
 </script>
 
 <script lang="ts">
-	import { Loader2 } from "lucide-svelte";
-
 	let {
 		class: className,
 		variant = "default",
@@ -63,13 +55,16 @@
 	}: ButtonProps = $props();
 
 	const isDisabled = $derived(disabled || loading);
+	const suisou = $derived(
+		[VARIANT_MAP[variant], size.startsWith("icon") ? "icon" : ""].filter(Boolean).join(" "),
+	);
 </script>
 
 {#if href}
 	<a
 		bind:this={ref}
-		data-slot="button"
-		class={cn(buttonVariants({ variant, size }), className)}
+		data-suisou-button={suisou}
+		class={className}
 		href={isDisabled ? undefined : href}
 		aria-disabled={isDisabled}
 		role={isDisabled ? "link" : undefined}
@@ -77,7 +72,8 @@
 		{...restProps}
 	>
 		{#if loading}
-			<Loader2 class="animate-spin" />
+			<!-- 読み込み中は Suisou の Spinner。lucide の回転アイコンより意味が乗る -->
+			<span data-suisou-spinner role="status" aria-label="処理中"></span>
 		{:else if leftIcon}
 			{@render leftIcon()}
 		{/if}
@@ -89,14 +85,14 @@
 {:else}
 	<button
 		bind:this={ref}
-		data-slot="button"
-		class={cn(buttonVariants({ variant, size }), className)}
+		data-suisou-button={suisou}
+		class={className}
 		{type}
 		disabled={isDisabled}
 		{...restProps}
 	>
 		{#if loading}
-			<Loader2 class="animate-spin" />
+			<span data-suisou-spinner role="status" aria-label="処理中"></span>
 		{:else if leftIcon}
 			{@render leftIcon()}
 		{/if}

@@ -41,16 +41,13 @@
         {@render leftAddon()}
       </div>
     {/if}
+    <!-- 枠・下地・焦点の輪・invalid の赤枠は Suisou の field が持つ。
+         残っているのは addon ぶんの逃げ（padding）だけ -->
     <input
       id={inputId}
       bind:value
-      class={cn(
-        "border-input focus-visible:border-ring focus-visible:ring-ring/50 rounded-lg border bg-transparent px-4 py-3 text-sm transition-colors focus-visible:ring-3 placeholder:text-muted-foreground w-full min-w-0 outline-none disabled:cursor-not-allowed disabled:opacity-50",
-        error && "border-destructive/60 focus-visible:ring-destructive/40",
-        leftAddon && "pl-10",
-        rightAddon && "pr-10",
-        className
-      )}
+      data-suisou-field="block"
+      class={cn(leftAddon && "pl-10", rightAddon && "pr-10", className)}
       aria-invalid={error ? true : undefined}
       {...restProps}
     />
