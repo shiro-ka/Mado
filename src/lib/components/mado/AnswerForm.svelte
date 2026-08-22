@@ -71,7 +71,7 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-layout="stack" class="rounded-lg p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
+  <div data-suisou-layout="stack" data-suisou-banner="success" class="p-6 text-center">
     <CheckCircle2 size={36} class="text-emerald-400" />
     <div>
       <p data-suisou-text="w700" class="text-foreground">回答を投稿しました</p>
@@ -110,13 +110,13 @@
     />
 
     {#if formState === "error"}
-      <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
+      <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">
         <AlertCircle size={15} />
         {errorMsg}
       </div>
     {/if}
 
-    <div data-suisou-layout="row" class="justify-between flex-wrap">
+    <div data-suisou-layout="row between wrap">
       <label data-suisou-layout="row" class="cursor-pointer select-none">
         <input
           type="checkbox"

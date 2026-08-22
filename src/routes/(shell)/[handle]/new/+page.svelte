@@ -120,7 +120,7 @@
       </div>
 
       {#if errorMsg}
-        <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
+        <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">
           <AlertCircle size={15} />
           {errorMsg}
         </div>

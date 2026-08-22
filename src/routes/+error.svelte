@@ -14,7 +14,7 @@
 
 <div class="min-h-screen flex items-center justify-center px-6 py-16 bg-background">
   <div class="w-full max-w-md text-center flex flex-col items-center gap-6">
-    <div class="w-14 h-14 rounded-lg flex items-center justify-center bg-red-400/10 border border-red-400/20">
+    <div data-suisou-banner="error" class="w-14 h-14 flex items-center justify-center">
       <AlertCircle size={26} class="text-error" />
     </div>
     <div>

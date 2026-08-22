@@ -17,8 +17,8 @@
 </script>
 
 <a {href} class="group block">
-  <div data-suisou-surface="panel" class="p-5 transition-all duration-200 group-hover:scale-[1.01] hover:border-border-strong">
-    <div data-suisou-layout="row stretch" class="justify-between">
+  <div data-suisou-surface="panel" class="transition-all duration-200 group-hover:scale-[1.01] hover:border-border-strong">
+    <div data-suisou-layout="row stretch between">
       <div data-suisou-layout="row stretch" class="min-w-0">
         <div class="mt-0.5 w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 bg-accent-light">
           <MessageCircle size={16} class="text-blue-400" />
