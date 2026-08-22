@@ -41,7 +41,7 @@
     </div>
   {/if}
   <div class="min-w-0">
-    <p class="font-semibold text-sm text-foreground">{ownerDisplayName}</p>
+    <p class="font-semibold text-foreground">{ownerDisplayName}</p>
     <a
       href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
       target="_blank"
@@ -55,17 +55,17 @@
 </div>
 
 <!-- Box info -->
-<div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
+<div data-suisou-surface="panel" class="p-6 mb-5">
   <div class="flex items-start gap-3 mb-3">
     <div class="flex-1 min-w-0">
-      <div class="flex items-center gap-2 mb-1">
+      <div data-suisou-layout="row" class="mb-1">
         <h1 class="text-lg font-bold text-foreground">{box.title}</h1>
         <Badge variant={box.isOpen ? "success" : "muted"} dot size="sm">
           {box.isOpen ? "受付中" : "受付停止"}
         </Badge>
       </div>
       {#if box.description}
-        <p class="text-sm leading-relaxed text-muted-foreground">{box.description}</p>
+        <p class="leading-relaxed text-muted-foreground">{box.description}</p>
       {/if}
     </div>
   </div>
@@ -88,24 +88,24 @@
 
 {#if !ownerRegistered}
   <!-- Owner not registered -->
-  <div class="rounded-xl p-6 text-center bg-surface border border-border">
-    <p class="font-semibold text-sm mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
+  <div data-suisou-surface="panel" class="p-6 text-center">
+    <p class="font-semibold mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
     <p class="text-xs text-muted-foreground">声を送るには、オーナーがMadoにログインしている必要があります。</p>
   </div>
 {:else if !box.isOpen}
   <!-- Box closed -->
-  <div class="rounded-xl p-6 text-center bg-surface border border-border">
-    <p class="font-semibold text-sm mb-1 text-foreground">現在この窓は受付停止中です</p>
+  <div data-suisou-surface="panel" class="p-6 text-center">
+    <p class="font-semibold mb-1 text-foreground">現在この窓は受付停止中です</p>
     <p class="text-xs text-muted-foreground">オーナーが受付を再開するまでお待ちください。</p>
   </div>
 {:else if !session}
   <!-- Not logged in -->
-  <div class="rounded-2xl p-6 text-center flex flex-col items-center gap-4 bg-surface border border-border">
+  <div data-suisou-surface="panel" class="p-6 text-center flex flex-col items-center gap-4">
     <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-primary-light">
       <LogIn size={20} class="text-blue-400" />
     </div>
     <div>
-      <p class="font-semibold text-sm mb-1 text-foreground">声を送るにはログインが必要です</p>
+      <p class="font-semibold mb-1 text-foreground">声を送るにはログインが必要です</p>
       <p class="text-xs leading-relaxed text-muted-foreground">
         Blueskyアカウントでログインして声を送りましょう。
         送り主はオーナーのみに開示されます。
@@ -117,7 +117,7 @@
   </div>
 {:else}
   <!-- Logged in -->
-  <div class="rounded-2xl p-6 bg-surface border border-border">
+  <div data-suisou-surface="panel" class="p-6">
     <SendQuestionForm
       boxOwnerDid={box.ownerDid}
       boxRkey={box.rkey}

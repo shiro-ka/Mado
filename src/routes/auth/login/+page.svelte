@@ -45,18 +45,18 @@
   <div class="w-full max-w-md">
     <!-- Header -->
     <div class="flex flex-col items-center gap-3 mb-8">
-      <a href="/" class="flex items-center gap-2">
+      <a href="/" data-suisou-layout="row">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
           <MessageCircle size={20} class="text-white" />
         </div>
         <span class="font-bold text-xl text-foreground">Mado</span>
       </a>
       <h1 class="text-2xl font-bold text-center text-foreground">Blueskyアカウントでログイン</h1>
-      <p class="text-sm text-center text-muted-foreground">あなたのハンドルを入力して認証します</p>
+      <p class="text-center text-muted-foreground">あなたのハンドルを入力して認証します</p>
     </div>
 
     <!-- Card -->
-    <div class="rounded-2xl p-8 bg-surface border border-border">
+    <div data-suisou-surface="panel" class="p-8">
       <form onsubmit={handleSubmit} class="flex flex-col gap-5">
         <Input
           label="Blueskyハンドル"
@@ -72,7 +72,7 @@
         </Input>
 
         {#if error}
-          <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+          <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
             <AlertCircle size={15} />
             {error}
           </div>

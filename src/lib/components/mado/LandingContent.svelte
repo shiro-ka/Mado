@@ -65,7 +65,7 @@
 <!-- Hero -->
 <section class="relative overflow-hidden px-4 pt-24 pb-20 md:pt-32 md:pb-28">
   <div class="relative mx-auto max-w-3xl text-center">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-primary-light border border-blue-600/30 text-blue-300">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-medium mb-6 bg-primary-light border border-blue-600/30 text-blue-300">
       <Sparkles size={14} />
       ATProtocol基盤
     </div>
@@ -100,8 +100,8 @@
     <div class="rounded-2xl p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
       <Shield size={20} class="shrink-0 mt-0.5 text-amber-400" />
       <div>
-        <p class="font-semibold text-sm mb-1 text-amber-400">半匿名性についてのご説明</p>
-        <p class="text-sm leading-relaxed text-muted-foreground">
+        <p class="font-semibold mb-1 text-amber-400">半匿名性についてのご説明</p>
+        <p class="leading-relaxed text-muted-foreground">
           このサービスは<strong class="text-foreground">完全匿名ではありません</strong>。
           声を送信するにはBlueskyアカウントでのログインが必要です。
           あなたのDIDとハンドルは声に暗号化された形で含まれ、
@@ -123,12 +123,12 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       {#each features as feat}
-        <div class="rounded-xl p-6 bg-surface border border-border">
+        <div data-suisou-surface="panel" class="p-6">
           <div class={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${feat.bgClass}`}>
             <feat.icon size={20} class={feat.iconClass} />
           </div>
           <h3 class="font-semibold text-base mb-2 text-foreground">{feat.title}</h3>
-          <p class="text-sm leading-relaxed text-muted-foreground">{feat.description}</p>
+          <p class="leading-relaxed text-muted-foreground">{feat.description}</p>
         </div>
       {/each}
     </div>
@@ -137,7 +137,7 @@
 
 <!-- How it works -->
 <section id="how-it-works" class="px-4 py-16">
-  <div class="mx-auto max-w-5xl rounded-2xl p-8 md:p-12 bg-surface border border-border">
+  <div data-suisou-surface="panel" class="mx-auto max-w-5xl p-8 md:p-12">
     <div class="text-center mb-10">
       <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">使い方</h2>
       <p class="text-sm md:text-base text-muted-foreground">3ステップで始められます</p>
@@ -156,7 +156,7 @@
           </div>
           <div>
             <h3 class="font-semibold text-base mb-1.5 text-foreground">{step.title}</h3>
-            <p class="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
+            <p class="leading-relaxed text-muted-foreground">{step.description}</p>
           </div>
         </div>
       {/each}

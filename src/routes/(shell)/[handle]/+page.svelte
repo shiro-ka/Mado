@@ -21,9 +21,9 @@
       {#await data.detail}
         <Skeleton class="h-28 mb-6" />
         <div class="mb-3 flex items-center justify-between">
-          <div class="flex items-center gap-2">
+          <div data-suisou-layout="row">
             <MessageCircle size={16} class="text-subtle" />
-            <h2 class="text-sm font-semibold text-muted-foreground">窓</h2>
+            <h2 class="font-semibold text-muted-foreground">窓</h2>
           </div>
           <a href={`/@${data.cleanHandle}/new`}>
             <Button size="sm">
@@ -40,7 +40,7 @@
       {:then detail}
         {@const displayName = detail.profile?.displayName ?? `@${detail.profile?.handle ?? data.cleanHandle}`}
         <!-- Profile header -->
-        <div class="rounded-2xl p-6 mb-6 flex items-start gap-4 bg-surface border border-border">
+        <div data-suisou-surface="panel" class="p-6 mb-6 flex items-start gap-4">
           {#if detail.profile?.avatar}
             <img
               src={detail.profile.avatar}
@@ -54,9 +54,9 @@
           {/if}
           <div class="flex-1 min-w-0">
             <h1 class="text-xl font-bold text-foreground">{displayName}</h1>
-            <p class="text-sm mt-0.5 text-muted-foreground">@{detail.profile?.handle ?? data.cleanHandle}</p>
+            <p class="mt-0.5 text-muted-foreground">@{detail.profile?.handle ?? data.cleanHandle}</p>
             {#if detail.profile?.description}
-              <p class="text-sm mt-2 leading-relaxed text-muted-foreground">{detail.profile.description}</p>
+              <p class="mt-2 leading-relaxed text-muted-foreground">{detail.profile.description}</p>
             {/if}
             <a
               href={`https://bsky.app/profile/${detail.profile?.handle ?? data.cleanHandle}`}
@@ -72,9 +72,9 @@
 
         <!-- Box list header -->
         <div class="mb-3 flex items-center justify-between">
-          <div class="flex items-center gap-2">
+          <div data-suisou-layout="row">
             <MessageCircle size={16} class="text-subtle" />
-            <h2 class="text-sm font-semibold text-muted-foreground">
+            <h2 class="font-semibold text-muted-foreground">
               窓 ({detail.openBoxes.length}件)
             </h2>
           </div>
@@ -87,8 +87,8 @@
         </div>
 
         {#if detail.openBoxes.length === 0}
-          <div class="rounded-2xl p-10 text-center bg-surface border border-dashed border-border-strong">
-            <p class="text-sm mb-3 text-muted-foreground">まだ窓がありません</p>
+          <div data-suisou-surface="panel empty" class="p-10 text-center">
+            <p class="mb-3 text-muted-foreground">まだ窓がありません</p>
             <a href={`/@${data.cleanHandle}/new`}>
               <Button size="sm">
                 {#snippet leftIcon()}<Plus size={14} />{/snippet}
@@ -140,16 +140,16 @@
             session={data.session}
           />
         {:else}
-          <div class="rounded-2xl p-10 text-center bg-surface border border-dashed border-border-strong">
-            <p class="text-sm text-muted-foreground">現在受付中の窓はありません</p>
+          <div data-suisou-surface="panel empty" class="p-10 text-center">
+            <p class="text-muted-foreground">現在受付中の窓はありません</p>
           </div>
         {/if}
 
         {#if detail.subBoxes.length > 0}
           <div class="mt-8">
-            <div class="mb-3 flex items-center gap-2">
+            <div data-suisou-layout="row" class="mb-3">
               <MessageCircle size={16} class="text-subtle" />
-              <h2 class="text-sm font-semibold text-muted-foreground">
+              <h2 class="font-semibold text-muted-foreground">
                 その他のMado ({detail.subBoxes.length})
               </h2>
             </div>

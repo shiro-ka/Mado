@@ -35,7 +35,7 @@
 <div class="flex flex-col gap-1.5 w-full">
   <div class="flex items-center justify-between">
     {#if label}
-      <label for={inputId} class="text-sm font-medium text-muted-foreground">{label}</label>
+      <label for={inputId} class="font-medium text-muted-foreground">{label}</label>
     {:else}
       <span></span>
     {/if}

@@ -17,14 +17,14 @@
 </script>
 
 <a {href} class="group block">
-  <div class="rounded-xl p-5 transition-all duration-200 group-hover:scale-[1.01] bg-surface border border-border hover:border-border-strong">
+  <div data-suisou-surface="panel" class="p-5 transition-all duration-200 group-hover:scale-[1.01] hover:border-border-strong">
     <div class="flex items-start justify-between gap-3">
       <div class="flex items-start gap-3 min-w-0">
         <div class="mt-0.5 w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 bg-primary-light">
           <MessageCircle size={16} class="text-blue-400" />
         </div>
         <div class="min-w-0">
-          <h3 class="font-semibold text-sm leading-snug truncate text-foreground">{box.title}</h3>
+          <h3 class="font-semibold leading-snug truncate text-foreground">{box.title}</h3>
           {#if box.description}
             <p class="text-xs mt-1 line-clamp-2 text-muted-foreground">{box.description}</p>
           {/if}
@@ -37,7 +37,7 @@
       />
     </div>
 
-    <div class="flex items-center gap-2 mt-3">
+    <div data-suisou-layout="row" class="mt-3">
       {#if isMain}
         <Badge variant="default" size="sm">
           <Pin size={11} class="mr-0.5" />

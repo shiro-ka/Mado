@@ -114,7 +114,7 @@
           <Send size={22} class="text-subtle" />
         {/if}
       </div>
-      <p class="text-sm text-subtle">
+      <p class="text-subtle">
         {tab === "unread" ? "未読の返信はありません" : tab === "read" ? "既読の返信はありません" : "まだ声を送っていません"}
       </p>
     </div>
@@ -138,7 +138,7 @@
             class="w-full text-left p-5 flex flex-col gap-3 cursor-pointer"
           >
             <!-- Meta row -->
-            <div class="flex items-center gap-2">
+            <div data-suisou-layout="row">
               <Clock size={12} class="text-subtle" />
               <span class="text-xs text-subtle">{formatDateFull(item.ref.sentAt)}</span>
               <div class="flex-1"></div>
@@ -173,13 +173,13 @@
               <p class="text-xs font-medium pt-4 text-subtle">返信（{item.answers.length}件）</p>
               {#each item.answers as answer}
                 <div class="rounded-xl p-4 bg-elevated">
-                  <div class="flex items-center gap-2 mb-2">
+                  <div data-suisou-layout="row" class="mb-2">
                     <div class="w-5 h-5 rounded-full flex items-center justify-center bg-primary-light">
                       <MessageCircle size={10} class="text-primary" />
                     </div>
                     <span class="text-xs text-muted-foreground">{formatDateFull(answer.createdAt)}</span>
                   </div>
-                  <p class="text-sm leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
+                  <p class="leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
                 </div>
               {/each}
             </div>
@@ -187,7 +187,7 @@
 
           {#if isExpanded && !hasAnswer}
             <div class="px-5 pb-5 pt-4 border-t border-border">
-              <p class="text-sm text-subtle">まだ返信がありません</p>
+              <p class="text-subtle">まだ返信がありません</p>
             </div>
           {/if}
         </div>

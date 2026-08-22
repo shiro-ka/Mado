@@ -39,7 +39,7 @@
   </div>
 
   <!-- Question card -->
-  <div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
+  <div data-suisou-surface="panel" class="p-6 mb-5">
     <div class="flex items-center justify-between mb-4">
       <Badge variant={data.question.isRead ? "muted" : "default"} dot>
         {data.question.isRead ? "既読" : "未読"}
@@ -54,9 +54,9 @@
     {#if data.isOwner}
       <!-- Decrypt error -->
       {#if data.decryptError}
-        <div class="mb-4 rounded-lg p-3 flex items-center gap-2 bg-red-400/8 border border-red-400/20">
+        <div data-suisou-layout="row" class="mb-4 rounded-lg p-3 bg-red-400/8 border border-red-400/20">
           <Lock size={14} class="text-error" />
-          <p class="text-sm text-error">送信者の特定に失敗しました。秘密鍵が見つかりません。</p>
+          <p class="text-error">送信者の特定に失敗しました。秘密鍵が見つかりません。</p>
         </div>
       {/if}
 
@@ -75,14 +75,14 @@
         {/if}
         <div class="flex-1 min-w-0">
           {#if data.senderProfile}
-            <p class="text-sm font-medium text-foreground">
+            <p class="font-medium text-foreground">
               {data.senderProfile.displayName ?? data.senderProfile.handle}
             </p>
             <p class="text-xs text-muted-foreground">@{data.senderProfile.handle}</p>
           {:else if data.senderDid}
             <p class="text-xs font-mono text-subtle">{data.senderDid}</p>
           {:else}
-            <p class="text-sm text-subtle">送信者情報なし</p>
+            <p class="text-subtle">送信者情報なし</p>
           {/if}
         </div>
         {#if data.senderProfile}
@@ -101,17 +101,17 @@
   <!-- Existing answers -->
   {#if data.answers.length > 0}
     <div class="mb-5 flex flex-col gap-3">
-      <h2 class="text-sm font-semibold text-foreground">回答済み（{data.answers.length}件）</h2>
+      <h2 class="font-semibold text-foreground">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
-        <div class="rounded-2xl p-5 bg-surface border border-border">
-          <div class="flex items-center gap-2 mb-3">
+        <div data-suisou-surface="panel" class="p-5">
+          <div data-suisou-layout="row" class="mb-3">
             <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-primary-light">
               <MessageCircle size={12} class="text-primary" />
             </div>
             <span class="text-xs font-medium text-muted-foreground">回答</span>
             <span class="text-xs ml-auto text-subtle">{formatDateFull(answer.createdAt)}</span>
           </div>
-          <p class="text-sm leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
+          <p class="leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
         </div>
       {/each}
     </div>
@@ -119,8 +119,8 @@
 
   <!-- Owner-only: answer form + danger zone -->
   {#if data.isOwner}
-    <div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
-      <h2 class="text-sm font-semibold mb-4 text-foreground">回答を書く</h2>
+    <div data-suisou-surface="panel" class="p-6 mb-5">
+      <h2 class="font-semibold mb-4 text-foreground">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}

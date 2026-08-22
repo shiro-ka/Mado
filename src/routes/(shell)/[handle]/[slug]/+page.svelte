@@ -164,7 +164,7 @@
         <h1 class="text-xl font-bold text-foreground">窓の設定</h1>
       </div>
 
-      <div class="rounded-2xl p-8 mb-5 bg-surface border border-border">
+      <div data-suisou-surface="panel" class="p-8 mb-5">
         <form onsubmit={handleSave} class="flex flex-col gap-6">
           <Input
             label="タイトル（必須）"
@@ -199,14 +199,14 @@
           </div>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-muted-foreground">声の受付</p>
+              <p class="font-medium text-muted-foreground">声の受付</p>
               <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
             </div>
             <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
           </div>
 
           {#if errorMsg}
-            <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+            <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
               <AlertCircle size={15} />
               {errorMsg}
             </div>
@@ -236,11 +236,11 @@
       </div>
 
       <!-- Public URL -->
-      <div class="rounded-xl p-4 flex items-center gap-3 bg-surface border border-border">
+      <div data-suisou-surface="panel" class="flex items-center gap-3">
         <Lock size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
           <p class="text-xs text-muted-foreground mb-0.5">公開URL</p>
-          <p class="text-sm font-mono text-foreground truncate">{publicUrlDisplay}</p>
+          <p class="font-mono text-foreground truncate">{publicUrlDisplay}</p>
         </div>
         <button
           type="button"
@@ -259,10 +259,10 @@
       </div>
 
       <!-- Main Mado -->
-      <div class="rounded-xl p-4 mt-5 flex items-center gap-3 bg-surface border border-border">
+      <div data-suisou-surface="panel" class="mt-5 flex items-center gap-3">
         <Pin size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium text-foreground">メインMado</p>
+          <p class="font-medium text-foreground">メインMado</p>
           <p class="text-xs text-muted-foreground mt-0.5">
             {data.isMain
               ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"

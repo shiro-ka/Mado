@@ -38,7 +38,7 @@
   <div class="flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-foreground">受信トレイ</h1>
-      <p class="text-sm mt-1 text-muted-foreground">届いた声を確認しましょう</p>
+      <p class="mt-1 text-muted-foreground">届いた声を確認しましょう</p>
     </div>
     <button
       onclick={refresh}
@@ -53,7 +53,7 @@
 
   <a
     href="/settings/notifications"
-    class="flex items-center gap-2.5 px-4 py-3 mb-6 rounded-xl bg-surface border border-border text-sm text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
+    data-suisou-surface="panel" class="flex items-center gap-2.5 px-4 py-3 mb-6 text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
   >
     <Bell size={16} class="shrink-0 text-blue-400" />
     <span class="flex-1">新着をDMで受け取る設定</span>
@@ -63,7 +63,7 @@
   {#await data.inbox}
     <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
       {#each tabs as t}
-        <div class="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground">{t.label}</div>
+        <div class="px-4 py-2 rounded-lg font-medium text-muted-foreground">{t.label}</div>
       {/each}
     </div>
     <div class="flex flex-col gap-3">
@@ -104,13 +104,13 @@
     </div>
 
     {#if filtered.length === 0}
-      <div class="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
+      <div data-suisou-surface="panel empty" class="p-12 flex flex-col items-center gap-4 text-center">
         <Inbox size={36} class="text-subtle opacity-50" />
         <div>
           <p class="font-semibold text-base text-foreground">
             {tab === "unread" ? "未読の声はありません" : "声がありません"}
           </p>
-          <p class="text-sm mt-1 text-muted-foreground">
+          <p class="mt-1 text-muted-foreground">
             {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
           </p>
         </div>

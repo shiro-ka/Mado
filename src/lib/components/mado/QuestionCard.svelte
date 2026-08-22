@@ -34,7 +34,7 @@
 
       <!-- Content -->
       <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-2 mb-1">
+        <div data-suisou-layout="row" class="mb-1">
           {#if !question.isRead}
             <Badge variant="default" size="sm">未読</Badge>
           {/if}
@@ -43,11 +43,11 @@
 
         <div class="flex items-start gap-2">
           {#if preview}
-            <p class="text-sm line-clamp-2 text-foreground">{truncate(preview, 120)}</p>
+            <p class="line-clamp-2 text-foreground">{truncate(preview, 120)}</p>
           {:else}
             <div class="flex items-center gap-1.5">
               <Lock size={12} class="text-subtle" />
-              <span class="text-sm italic text-subtle">暗号化されたメッセージ</span>
+              <span class="italic text-subtle">暗号化されたメッセージ</span>
             </div>
           {/if}
         </div>
