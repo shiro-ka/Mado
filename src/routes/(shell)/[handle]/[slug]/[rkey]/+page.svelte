@@ -101,7 +101,7 @@
   <!-- Existing answers -->
   {#if data.answers.length > 0}
     <div data-suisou-layout="stack" class="mb-5">
-      <h2 class="font-semibold text-foreground">回答済み（{data.answers.length}件）</h2>
+      <h2 class="font-bold text-foreground">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
         <div data-suisou-surface="panel" class="p-5">
           <div data-suisou-layout="row" class="mb-3">
@@ -120,7 +120,7 @@
   <!-- Owner-only: answer form + danger zone -->
   {#if data.isOwner}
     <div data-suisou-surface="panel" class="p-6 mb-5">
-      <h2 class="font-semibold mb-4 text-foreground">回答を書く</h2>
+      <h2 class="font-bold mb-4 text-foreground">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}

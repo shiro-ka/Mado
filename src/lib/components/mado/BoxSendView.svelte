@@ -41,7 +41,7 @@
     </div>
   {/if}
   <div class="min-w-0">
-    <p class="font-semibold text-foreground">{ownerDisplayName}</p>
+    <p class="font-bold text-foreground">{ownerDisplayName}</p>
     <a
       href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
       target="_blank"
@@ -79,7 +79,7 @@
 <div data-suisou-layout="row stretch" class="rounded-xl p-4 mb-5 bg-amber-400/7 border border-amber-400/25">
   <Shield size={15} class="shrink-0 mt-0.5 text-amber-400" />
   <p class="text-xs leading-relaxed text-muted-foreground">
-    <span class="font-semibold text-amber-400">半匿名のご注意：</span>{" "}
+    <span class="font-bold text-amber-400">半匿名のご注意：</span>{" "}
     このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
     <strong class="text-foreground">窓のオーナーにのみ</strong>
     開示されます。第三者には公開されません。
@@ -89,13 +89,13 @@
 {#if !ownerRegistered}
   <!-- Owner not registered -->
   <div data-suisou-surface="panel" class="p-6 text-center">
-    <p class="font-semibold mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
+    <p class="font-bold mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
     <p class="text-xs text-muted-foreground">声を送るには、オーナーがMadoにログインしている必要があります。</p>
   </div>
 {:else if !box.isOpen}
   <!-- Box closed -->
   <div data-suisou-surface="panel" class="p-6 text-center">
-    <p class="font-semibold mb-1 text-foreground">現在この窓は受付停止中です</p>
+    <p class="font-bold mb-1 text-foreground">現在この窓は受付停止中です</p>
     <p class="text-xs text-muted-foreground">オーナーが受付を再開するまでお待ちください。</p>
   </div>
 {:else if !session}
@@ -105,7 +105,7 @@
       <LogIn size={20} class="text-blue-400" />
     </div>
     <div>
-      <p class="font-semibold mb-1 text-foreground">声を送るにはログインが必要です</p>
+      <p class="font-bold mb-1 text-foreground">声を送るにはログインが必要です</p>
       <p class="text-xs leading-relaxed text-muted-foreground">
         Blueskyアカウントでログインして声を送りましょう。
         送り主はオーナーのみに開示されます。

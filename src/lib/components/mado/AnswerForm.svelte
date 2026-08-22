@@ -74,7 +74,7 @@
   <div data-suisou-layout="stack" class="rounded-xl p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
     <CheckCircle2 size={36} class="text-emerald-400" />
     <div>
-      <p class="font-semibold text-foreground">回答を投稿しました</p>
+      <p class="font-bold text-foreground">回答を投稿しました</p>
       <p class="mt-1 text-muted-foreground">PDSに保存されました。</p>
       {#if crosspostFailed}
         <p class="mt-2 flex items-center justify-center gap-1.5 text-amber-400">

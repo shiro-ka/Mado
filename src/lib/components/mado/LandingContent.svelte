@@ -100,7 +100,7 @@
     <div class="rounded-2xl p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
       <Shield size={20} class="shrink-0 mt-0.5 text-amber-400" />
       <div>
-        <p class="font-semibold mb-1 text-amber-400">半匿名性についてのご説明</p>
+        <p class="font-bold mb-1 text-amber-400">半匿名性についてのご説明</p>
         <p class="leading-relaxed text-muted-foreground">
           このサービスは<strong class="text-foreground">完全匿名ではありません</strong>。
           声を送信するにはBlueskyアカウントでのログインが必要です。
@@ -127,7 +127,7 @@
           <div class={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${feat.bgClass}`}>
             <feat.icon size={20} class={feat.iconClass} />
           </div>
-          <h3 class="font-semibold text-base mb-2 text-foreground">{feat.title}</h3>
+          <h3 class="font-bold text-base mb-2 text-foreground">{feat.title}</h3>
           <p class="leading-relaxed text-muted-foreground">{feat.description}</p>
         </div>
       {/each}
@@ -155,7 +155,7 @@
             </div>
           </div>
           <div>
-            <h3 class="font-semibold text-base mb-1.5 text-foreground">{step.title}</h3>
+            <h3 class="font-bold text-base mb-1.5 text-foreground">{step.title}</h3>
             <p class="leading-relaxed text-muted-foreground">{step.description}</p>
           </div>
         </div>

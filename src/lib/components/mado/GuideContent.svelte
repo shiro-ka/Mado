@@ -21,7 +21,7 @@
   </div>
   {#each [{ title: "窓を開く", steps: ownerSteps }, { title: "声を送る", steps: senderSteps }] as section}
     <section class="flex flex-col gap-4">
-      <h2 class="text-base font-semibold text-foreground">{section.title}</h2>
+      <h2 class="text-base font-bold text-foreground">{section.title}</h2>
       {#each section.steps as item}
         <div data-suisou-surface="panel" class="p-5 flex gap-4">
           <div class="relative shrink-0">
@@ -33,7 +33,7 @@
             </div>
           </div>
           <div>
-            <p class="font-semibold mb-1 text-foreground">{item.title}</p>
+            <p class="font-bold mb-1 text-foreground">{item.title}</p>
             <p class="leading-relaxed text-muted-foreground">{item.body}</p>
           </div>
         </div>
