@@ -16,12 +16,8 @@
 </script>
 
 <a {href} class="group block">
-  <div
-    class={cn(
-      "rounded-xl p-4 transition-all duration-200 group-hover:border-blue-700/40 bg-surface",
-      question.isRead ? "border border-border" : "border border-blue-700/35"
-    )}
-  >
+  <!-- 未読は枠だけアクセント色に。面と余白と罫は Suisou の panel -->
+  <div data-suisou-surface="panel" class="card" class:unread={!question.isRead}>
     <div class="flex items-start gap-3">
       <!-- Unread indicator -->
       <div class="mt-1 shrink-0">
@@ -62,3 +58,13 @@
     </div>
   </div>
 </a>
+
+<style>
+  .card {
+    transition: border-color var(--suisou-motion-fast) var(--suisou-ease);
+  }
+  .unread,
+  :global(.group:hover) .card {
+    border-color: var(--suisou-accent);
+  }
+</style>

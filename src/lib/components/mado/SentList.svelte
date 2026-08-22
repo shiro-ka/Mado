@@ -79,24 +79,21 @@
 
 <div>
   <!-- Tabs -->
-  <div class="flex gap-1 mb-5 p-1 rounded-xl bg-elevated">
+  <div data-suisou-button-group="even" class="mb-5">
     {#each tabs as t}
       <button
+        type="button"
         onclick={() => (tab = t.id)}
-        class={cn(
-          "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer",
-          tab === t.id
-            ? "bg-surface text-foreground shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
-            : "bg-transparent text-subtle"
-        )}
+        data-suisou-button="neutral"
+        aria-pressed={tab === t.id}
       >
         {t.label}
         {#if t.id === "all" && items.length > 0}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full", "bg-elevated text-subtle")}>
+          <span data-suisou-tag>
             {items.length}
           </span>
         {:else if t.id === "unread" && unreadCount > 0}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full", tab !== "unread" ? "bg-primary text-white" : "bg-elevated text-subtle")}>
+          <span data-suisou-tag={tab !== "unread" ? "accent" : ""}>
             {unreadCount}
           </span>
         {/if}
@@ -127,10 +124,9 @@
         {@const isRead = readSet.has(key)}
 
         <div
-          class={cn(
-            "rounded-2xl overflow-hidden bg-surface",
-            hasAnswer && !isRead ? "border border-blue-600/40" : "border border-border"
-          )}
+          data-suisou-surface="panel bleed"
+          class="item"
+          class:unread={hasAnswer && !isRead}
         >
           <!-- Header -->
           <button
@@ -143,14 +139,7 @@
               <span class="text-xs text-subtle">{formatDateFull(item.ref.sentAt)}</span>
               <div class="flex-1"></div>
               {#if hasAnswer}
-                <span
-                  class={cn(
-                    "text-xs px-2 py-0.5 rounded-full font-medium",
-                    isRead
-                      ? "bg-elevated text-subtle border border-border"
-                      : "bg-blue-600/15 text-blue-400 border border-blue-600/30"
-                  )}
-                >
+                <span data-suisou-tag={isRead ? "" : "accent"}>
                   {isRead ? "返信済み" : "返信あり"}
                 </span>
               {/if}
@@ -162,7 +151,7 @@
             </div>
 
             <!-- Question body -->
-            <p class={cn("text-sm leading-relaxed whitespace-pre-wrap text-foreground", !isExpanded && "line-clamp-2")}>
+            <p class={cn("leading-relaxed whitespace-pre-wrap text-foreground", !isExpanded && "line-clamp-2")}>
               {item.ref.body}
             </p>
           </button>
@@ -195,3 +184,14 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .item {
+    overflow: hidden;
+    transition: border-color var(--suisou-motion-fast) var(--suisou-ease);
+  }
+  /* 未読（答えが来ていて未読）は枠だけアクセント色に */
+  .unread {
+    border-color: var(--suisou-accent);
+  }
+</style>
