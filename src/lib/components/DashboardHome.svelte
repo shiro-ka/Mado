@@ -118,7 +118,7 @@
           <Inbox size={16} class="text-emerald-400" />
           <h2 class="font-semibold text-foreground">受信トレイ</h2>
           {#if unreadCount > 0}
-            <span class="text-xs px-1.5 py-0.5 rounded-full font-bold bg-primary text-white">
+            <span class="text-xs px-1.5 py-0.5 rounded-full font-bold bg-primary text-background">
               {unreadCount}
             </span>
           {/if}

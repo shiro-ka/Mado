@@ -105,7 +105,7 @@
       {#each data.answers as answer}
         <div data-suisou-surface="panel" class="p-5">
           <div data-suisou-layout="row" class="mb-3">
-            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-primary-light">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-accent-light">
               <MessageCircle size={12} class="text-primary" />
             </div>
             <span class="text-xs font-medium text-muted-foreground">回答</span>

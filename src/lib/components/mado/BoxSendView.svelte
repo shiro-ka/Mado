@@ -36,7 +36,7 @@
       class="w-10 h-10 rounded-full object-cover shrink-0"
     />
   {:else}
-    <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold bg-primary text-white">
+    <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold bg-primary text-background">
       {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
     </div>
   {/if}
@@ -101,7 +101,7 @@
 {:else if !session}
   <!-- Not logged in -->
   <div data-suisou-surface="panel" class="p-6 text-center flex flex-col items-center gap-4">
-    <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-primary-light">
+    <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-accent-light">
       <LogIn size={20} class="text-blue-400" />
     </div>
     <div>

@@ -48,7 +48,7 @@
               class="w-16 h-16 rounded-full object-cover shrink-0"
             />
           {:else}
-            <div class="w-16 h-16 rounded-full flex items-center justify-center shrink-0 font-bold text-2xl bg-primary text-white">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center shrink-0 font-bold text-2xl bg-primary text-background">
               {(detail.profile?.handle ?? data.cleanHandle)[0]?.toUpperCase() ?? "?"}
             </div>
           {/if}
