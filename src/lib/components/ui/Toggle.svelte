@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { cn } from "$lib/utils.js";
-
   interface Props {
     checked?: boolean;
     disabled?: boolean;
@@ -16,25 +14,16 @@
   }: Props = $props();
 </script>
 
-<button
-  type="button"
+<!-- 手製スイッチをやめてネイティブ checkbox に（2026-08-22）。
+     Suisou はネイティブ部品を奪わない ―― accent-color が根にあるので
+     色は勝手にテーマへ追従する。wixdex の公開トグルと同じ判断。
+     role="switch" は checkbox に載せて意味を保つ -->
+<input
+  type="checkbox"
   role="switch"
-  aria-checked={checked}
+  class="h-4 w-4"
   aria-label={label}
-  onclick={() => {
-    checked = !checked;
-    onCheckedChange?.(checked);
-  }}
+  bind:checked
+  onchange={() => onCheckedChange?.(checked)}
   {disabled}
-  class={cn(
-    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200",
-    "cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/40 border border-border",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-    checked ? "bg-primary" : "bg-elevated"
-  )}
->
-  <span
-    class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200"
-    style="transform: {checked ? 'translateX(22px)' : 'translateX(2px)'}"
-  ></span>
-</button>
+/>
