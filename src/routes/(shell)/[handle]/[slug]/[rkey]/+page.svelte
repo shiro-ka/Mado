@@ -54,7 +54,7 @@
     {#if data.isOwner}
       <!-- Decrypt error -->
       {#if data.decryptError}
-        <div data-suisou-layout="row" class="mb-4 rounded-lg p-3 bg-red-400/8 border border-red-400/20">
+        <div data-suisou-layout="row" data-suisou-banner="error" class="mb-4">
           <Lock size={14} class="text-error" />
           <p class="text-error">送信者の特定に失敗しました。秘密鍵が見つかりません。</p>
         </div>
@@ -129,7 +129,7 @@
       />
     </div>
 
-    <div data-suisou-layout="stack" class="rounded-lg p-5 sm:flex-row bg-red-400/5 border border-red-400/15">
+    <div data-suisou-layout="stack" class="danger-zone sm:flex-row">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />
@@ -137,3 +137,13 @@
     </div>
   {/if}
 </div>
+
+<style>
+  /* 破壊的操作の置き場。下地と罫は Suisou の意味色（手書きの赤 α を置き換えた） */
+  .danger-zone {
+    padding: var(--suisou-space-3);
+    border-radius: var(--suisou-radius);
+    background: var(--suisou-error-surface);
+    border: 1px solid var(--suisou-error);
+  }
+</style>

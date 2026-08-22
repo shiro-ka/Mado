@@ -121,7 +121,7 @@
               <span class="text-subtle">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
             </p>
           </div>
-          <div data-suisou-layout="row" class="flex-wrap">
+          <div data-suisou-layout="row wrap">
             <Button size="sm" loading={following} onclick={follow}>
               {#snippet leftIcon()}<UserPlus size={15} />{/snippet}
               公式（@{data.official?.handle}）をフォロー

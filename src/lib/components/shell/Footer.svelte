@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div data-suisou-layout="stack" class="mt-8 pt-6 sm:flex-row justify-between rule">
+    <div data-suisou-layout="stack between" class="mt-8 pt-6 sm:flex-row rule">
       <p data-suisou-text="s12" class="text-subtle">
         &copy; {new Date().getFullYear()} Mado. All rights reserved.
       </p>

@@ -53,7 +53,9 @@
 
   <a
     href="/settings/notifications"
-    data-suisou-surface="panel" class="flex items-center gap-2.5 px-4 py-3 mb-6 text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
+    data-suisou-surface="panel tight"
+    data-suisou-layout="row"
+    class="mb-6 text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
   >
     <Bell size={16} class="shrink-0 text-blue-400" />
     <span class="flex-1">新着をDMで受け取る設定</span>

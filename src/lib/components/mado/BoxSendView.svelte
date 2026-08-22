@@ -76,7 +76,7 @@
 </div>
 
 <!-- Semi-anonymous disclosure -->
-<div data-suisou-layout="row stretch" class="rounded-lg p-4 mb-5 bg-amber-400/7 border border-amber-400/25">
+<div data-suisou-layout="row stretch" data-suisou-banner="warning" class="mb-5">
   <Shield size={15} class="shrink-0 mt-0.5 text-amber-400" />
   <p data-suisou-text="s12" class="leading-relaxed text-muted-foreground">
     <span data-suisou-text="w700" class="text-amber-400">半匿名のご注意：</span>{" "}

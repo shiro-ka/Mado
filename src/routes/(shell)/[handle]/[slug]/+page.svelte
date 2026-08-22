@@ -206,13 +206,13 @@
           </div>
 
           {#if errorMsg}
-            <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
+            <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">
               <AlertCircle size={15} />
               {errorMsg}
             </div>
           {/if}
 
-          <div data-suisou-layout="row" class="justify-between pt-2">
+          <div data-suisou-layout="row between" class="pt-2">
             <Button
               type="button"
               variant="destructive"
@@ -246,7 +246,7 @@
           type="button"
           onclick={copyUrl}
           aria-label="公開URLをコピー"
-          data-suisou-text="s12 w500" class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer border {copied ? 'bg-green-400/10 border-green-400/30 text-green-400' : 'bg-elevated border-border text-muted-foreground hover:text-foreground'}"
+          data-suisou-text="s12 w500" data-suisou-banner="success" class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 transition-colors cursor-pointer {copied ? 'bg-green-400/10 text-green-400' : 'bg-elevated border-border text-muted-foreground hover:text-foreground'}"
         >
           {#if copied}
             <Check size={13} />

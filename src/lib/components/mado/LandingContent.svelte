@@ -97,7 +97,7 @@
 <!-- Semi-anonymous disclosure -->
 <section class="px-4 pb-12">
   <div class="mx-auto max-w-3xl">
-    <div class="rounded-lg p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
+    <div data-suisou-banner="warning" class="flex gap-4">
       <Shield size={20} class="shrink-0 mt-0.5 text-amber-400" />
       <div>
         <p data-suisou-text="w700" class="mb-1 text-amber-400">半匿名性についてのご説明</p>
