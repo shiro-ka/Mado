@@ -23,7 +23,7 @@
         <div class="mb-3 flex items-center justify-between">
           <div data-suisou-layout="row">
             <MessageCircle size={16} class="text-subtle" />
-            <h2 class="font-semibold text-muted-foreground">窓</h2>
+            <h2 class="font-bold text-muted-foreground">窓</h2>
           </div>
           <a href={`/@${data.cleanHandle}/new`}>
             <Button size="sm">
@@ -74,7 +74,7 @@
         <div class="mb-3 flex items-center justify-between">
           <div data-suisou-layout="row">
             <MessageCircle size={16} class="text-subtle" />
-            <h2 class="font-semibold text-muted-foreground">
+            <h2 class="font-bold text-muted-foreground">
               窓 ({detail.openBoxes.length}件)
             </h2>
           </div>
@@ -149,7 +149,7 @@
           <div class="mt-8">
             <div data-suisou-layout="row" class="mb-3">
               <MessageCircle size={16} class="text-subtle" />
-              <h2 class="font-semibold text-muted-foreground">
+              <h2 class="font-bold text-muted-foreground">
                 その他のMado ({detail.subBoxes.length})
               </h2>
             </div>

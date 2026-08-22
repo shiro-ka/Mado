@@ -74,7 +74,7 @@
       <div class="flex items-center justify-between mb-4">
         <div data-suisou-layout="row">
           <MessageSquare size={16} class="text-blue-400" />
-          <h2 class="font-semibold text-foreground">窓</h2>
+          <h2 class="font-bold text-foreground">窓</h2>
         </div>
         <a href={`/@${session.handle}`}>
           <Button variant="ghost" size="sm">
@@ -116,7 +116,7 @@
       <div class="flex items-center justify-between mb-4">
         <div data-suisou-layout="row">
           <Inbox size={16} class="text-emerald-400" />
-          <h2 class="font-semibold text-foreground">受信トレイ</h2>
+          <h2 class="font-bold text-foreground">受信トレイ</h2>
           {#if unreadCount > 0}
             <span class="text-xs px-1.5 py-0.5 rounded-full font-bold bg-primary text-background">
               {unreadCount}

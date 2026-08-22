@@ -55,7 +55,7 @@
   <div data-suisou-layout="stack" class="rounded-xl p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
     <CheckCircle2 size={40} class="text-emerald-400" />
     <div>
-      <p class="font-semibold text-foreground">声を送信しました！</p>
+      <p class="font-bold text-foreground">声を送信しました！</p>
       <p class="mt-1 text-muted-foreground">相手に届くまでしばらくお待ちください。</p>
     </div>
     <Button variant="ghost" size="sm" onclick={() => (formState = "idle")} class="mt-1">
@@ -68,7 +68,7 @@
     <div class="rounded-lg p-3 flex items-start gap-2.5 bg-accent-light border border-blue-600/25">
       <AlertCircle size={15} class="mt-0.5 shrink-0 text-blue-400" />
       <p class="text-blue-300">
-        この声は <span class="font-semibold">@{senderHandle}</span> として相手に届きます。
+        この声は <span class="font-bold">@{senderHandle}</span> として相手に届きます。
         送り主は窓のオーナーのみに開示されます。
       </p>
     </div>

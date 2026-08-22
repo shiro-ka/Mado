@@ -106,7 +106,7 @@
       <div data-suisou-surface="panel empty" class="p-12 flex flex-col items-center gap-4 text-center">
         <Inbox size={36} class="text-subtle opacity-50" />
         <div>
-          <p class="font-semibold text-base text-foreground">
+          <p class="font-bold text-base text-foreground">
             {tab === "unread" ? "未読の声はありません" : "声がありません"}
           </p>
           <p class="mt-1 text-muted-foreground">

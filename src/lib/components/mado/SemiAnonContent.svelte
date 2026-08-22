@@ -41,14 +41,14 @@
     </p>
   </div>
   <section class="flex flex-col gap-4">
-    <h2 class="text-base font-semibold text-foreground">誰が何を見られるか</h2>
+    <h2 class="text-base font-bold text-foreground">誰が何を見られるか</h2>
     {#each visibility as row}
       <div data-suisou-surface="panel" class="p-5 flex gap-4">
         <div class={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${row.bg}`}>
           <row.icon size={17} class={row.color} />
         </div>
         <div>
-          <p class="font-semibold mb-1.5 text-foreground">{row.title}</p>
+          <p class="font-bold mb-1.5 text-foreground">{row.title}</p>
           <ul class="flex flex-col gap-1">
             {#each row.items as item}
               <li class="flex gap-2 text-muted-foreground">
@@ -62,7 +62,7 @@
     {/each}
   </section>
   <section data-suisou-layout="stack">
-    <h2 class="text-base font-semibold text-foreground">暗号化の仕組み</h2>
+    <h2 class="text-base font-bold text-foreground">暗号化の仕組み</h2>
     <div data-suisou-surface="panel" class="p-5 flex gap-4">
       <Lock size={18} class="shrink-0 mt-0.5 text-emerald-400" />
       <div data-suisou-layout="stack" class="leading-relaxed text-muted-foreground">

@@ -88,7 +88,7 @@
         <div data-suisou-layout="row stretch">
           <div class="mt-0.5 shrink-0 text-blue-400"><Bell size={20} /></div>
           <div>
-            <p class="font-semibold text-foreground">新着をDMで受け取る</p>
+            <p class="font-bold text-foreground">新着をDMで受け取る</p>
             <p class="mt-0.5 text-muted-foreground">
               mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
             </p>

@@ -24,7 +24,7 @@
           <MessageCircle size={16} class="text-blue-400" />
         </div>
         <div class="min-w-0">
-          <h3 class="font-semibold leading-snug truncate text-foreground">{box.title}</h3>
+          <h3 class="font-bold leading-snug truncate text-foreground">{box.title}</h3>
           {#if box.description}
             <p class="text-xs mt-1 line-clamp-2 text-muted-foreground">{box.description}</p>
           {/if}
