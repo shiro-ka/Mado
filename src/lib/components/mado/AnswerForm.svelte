@@ -75,9 +75,9 @@
     <CheckCircle2 size={36} class="text-emerald-400" />
     <div>
       <p class="font-semibold text-foreground">回答を投稿しました</p>
-      <p class="text-sm mt-1 text-muted-foreground">PDSに保存されました。</p>
+      <p class="mt-1 text-muted-foreground">PDSに保存されました。</p>
       {#if crosspostFailed}
-        <p class="text-sm mt-2 flex items-center justify-center gap-1.5 text-amber-400">
+        <p class="mt-2 flex items-center justify-center gap-1.5 text-amber-400">
           <AlertCircle size={14} />
           Blueskyへの転載は失敗しました
         </p>
@@ -86,7 +86,7 @@
           href={crosspostLink}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-sm mt-2 inline-flex items-center justify-center gap-1.5 text-blue-400 hover:opacity-80 transition-opacity"
+          class="mt-2 inline-flex items-center justify-center gap-1.5 text-blue-400 hover:opacity-80 transition-opacity"
         >
           <ExternalLink size={14} />
           Blueskyの投稿を見る
@@ -110,14 +110,14 @@
     />
 
     {#if formState === "error"}
-      <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+      <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
         <AlertCircle size={15} />
         {errorMsg}
       </div>
     {/if}
 
     <div class="flex items-center justify-between gap-3 flex-wrap">
-      <label class="flex items-center gap-2 cursor-pointer select-none">
+      <label data-suisou-layout="row" class="cursor-pointer select-none">
         <input
           type="checkbox"
           bind:checked={crosspost}

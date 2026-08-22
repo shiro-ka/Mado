@@ -19,7 +19,7 @@
     </div>
     <div>
       <p class="text-4xl font-bold text-foreground">{status}</p>
-      <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+      <p class="mt-3 leading-relaxed text-muted-foreground">
         {#if isNotFound}
           お探しのページは見つかりませんでした。<br />URLが間違っているか、削除された可能性があります。
         {:else}

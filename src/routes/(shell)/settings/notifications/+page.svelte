@@ -69,27 +69,27 @@
 <div class="px-6 py-8 max-w-2xl mx-auto">
   <div class="mb-6">
     <h1 class="text-2xl font-bold text-foreground">通知設定</h1>
-    <p class="text-sm mt-1 text-muted-foreground">
+    <p class="mt-1 text-muted-foreground">
       新しい声が届いたときのお知らせ方法を設定します
     </p>
   </div>
 
   {#if !data.configured}
-    <div class="rounded-2xl p-8 flex flex-col items-center gap-3 text-center bg-surface border border-dashed border-border-strong">
+    <div data-suisou-surface="panel empty" class="p-8 flex flex-col items-center gap-3 text-center">
       <Bell size={32} class="text-subtle opacity-50" />
-      <p class="text-sm text-muted-foreground">
+      <p class="text-muted-foreground">
         DM通知は現在準備中です。もうしばらくお待ちください。
       </p>
     </div>
   {:else}
-    <div class="rounded-2xl bg-surface border border-border overflow-hidden">
+    <div data-suisou-surface="panel" class="overflow-hidden">
       <!-- Toggle row -->
       <div class="flex items-center justify-between gap-4 p-5">
         <div class="flex items-start gap-3">
           <div class="mt-0.5 shrink-0 text-blue-400"><Bell size={20} /></div>
           <div>
             <p class="font-semibold text-foreground">新着をDMで受け取る</p>
-            <p class="text-sm mt-0.5 text-muted-foreground">
+            <p class="mt-0.5 text-muted-foreground">
               mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
             </p>
           </div>
@@ -114,7 +114,7 @@
       <!-- Status / gate -->
       {#if !followed}
         <div class="border-t border-border bg-elevated/40 p-5 flex flex-col gap-3">
-          <div class="flex items-start gap-2 text-sm text-muted-foreground">
+          <div class="flex items-start gap-2 text-muted-foreground">
             <AlertCircle size={16} class="mt-0.5 shrink-0 text-subtle" />
             <p>
               通知を受け取るには、先に公式アカウントのフォローが必要です。
@@ -130,7 +130,7 @@
               href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              class="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
             >
               bsky.appで開く <ExternalLink size={13} />
             </a>
@@ -143,13 +143,13 @@
           {/if}
         </div>
       {:else if enabled}
-        <div class="border-t border-border bg-elevated/40 px-5 py-4 flex items-center gap-2 text-sm text-muted-foreground">
+        <div data-suisou-layout="row" class="border-t border-border bg-elevated/40 px-5 py-4 text-muted-foreground">
           <Check size={16} class="shrink-0 text-green-400" />
           新着はmado公式からDMで届きます。
           <span class="text-subtle">（公式のフォローを外すと届かなくなります）</span>
         </div>
       {:else}
-        <div class="border-t border-border bg-elevated/40 px-5 py-4 flex items-center gap-2 text-sm text-muted-foreground">
+        <div data-suisou-layout="row" class="border-t border-border bg-elevated/40 px-5 py-4 text-muted-foreground">
           <Check size={16} class="shrink-0 text-green-400" />
           公式アカウントをフォロー中です。上のスイッチで通知をONにできます。
         </div>

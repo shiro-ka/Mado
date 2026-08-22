@@ -23,7 +23,7 @@
     <section class="flex flex-col gap-4">
       <h2 class="text-base font-semibold text-foreground">{section.title}</h2>
       {#each section.steps as item}
-        <div class="rounded-xl p-5 flex gap-4 bg-surface border border-border">
+        <div data-suisou-surface="panel" class="p-5 flex gap-4">
           <div class="relative shrink-0">
             <div class="w-9 h-9 rounded-lg flex items-center justify-center mt-0.5 bg-elevated">
               <item.icon size={17} class={item.color} />
@@ -33,8 +33,8 @@
             </div>
           </div>
           <div>
-            <p class="font-semibold text-sm mb-1 text-foreground">{item.title}</p>
-            <p class="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+            <p class="font-semibold mb-1 text-foreground">{item.title}</p>
+            <p class="leading-relaxed text-muted-foreground">{item.body}</p>
           </div>
         </div>
       {/each}

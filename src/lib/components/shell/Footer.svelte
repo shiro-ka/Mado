@@ -9,7 +9,7 @@
       <!-- Brand -->
       <div class="flex flex-col gap-3">
         <Brand size="lg" />
-        <p class="text-sm text-muted-foreground">
+        <p class="text-muted-foreground">
           ATProtocol基盤の半匿名メッセージ。<br />窓越しに、想いを届けよう。
         </p>
       </div>
@@ -17,7 +17,7 @@
       <!-- Links -->
       <div class="flex flex-col gap-3">
         <h4 data-suisou-text="s14 w700">リンク</h4>
-        <div class="flex flex-col gap-2">
+        <div data-suisou-layout="stack">
           {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/home", label: "ホーム" }] as link}
             <a href={link.href} data-suisou-link class="text-muted-foreground">
               {link.label}
@@ -29,7 +29,7 @@
       <!-- Legal / Info -->
       <div class="flex flex-col gap-3">
         <h4 data-suisou-text="s14 w700">情報</h4>
-        <div class="flex flex-col gap-2">
+        <div data-suisou-layout="stack">
           {#each [{ href: "/privacy", label: "プライバシーポリシー" }, { href: "/terms", label: "利用規約" }] as link}
             <a href={link.href} data-suisou-link class="text-muted-foreground">
               {link.label}

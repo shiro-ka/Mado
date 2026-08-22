@@ -33,7 +33,7 @@
 
 <div class="flex flex-col gap-1.5 w-full">
   {#if label}
-    <label for={inputId} class="text-sm font-medium text-muted-foreground">{label}</label>
+    <label for={inputId} class="font-medium text-muted-foreground">{label}</label>
   {/if}
   <div class="relative flex items-center">
     {#if leftAddon}

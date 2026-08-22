@@ -56,7 +56,7 @@
     <CheckCircle2 size={40} class="text-emerald-400" />
     <div>
       <p class="font-semibold text-foreground">声を送信しました！</p>
-      <p class="text-sm mt-1 text-muted-foreground">相手に届くまでしばらくお待ちください。</p>
+      <p class="mt-1 text-muted-foreground">相手に届くまでしばらくお待ちください。</p>
     </div>
     <Button variant="ghost" size="sm" onclick={() => (formState = "idle")} class="mt-1">
       別の声を送る
@@ -65,7 +65,7 @@
 {:else}
   <form onsubmit={handleSubmit} class="flex flex-col gap-4">
     <!-- Sender disclosure -->
-    <div class="rounded-lg p-3 flex items-start gap-2.5 text-sm bg-primary-light border border-blue-600/25">
+    <div class="rounded-lg p-3 flex items-start gap-2.5 bg-primary-light border border-blue-600/25">
       <AlertCircle size={15} class="mt-0.5 shrink-0 text-blue-400" />
       <p class="text-blue-300">
         この声は <span class="font-semibold">@{senderHandle}</span> として相手に届きます。
@@ -85,7 +85,7 @@
     />
 
     {#if formState === "error"}
-      <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+      <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
         <AlertCircle size={15} />
         {errorMsg}
       </div>

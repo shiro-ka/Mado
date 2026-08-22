@@ -73,7 +73,7 @@
     <h1 class="text-2xl font-bold text-foreground">窓を作る</h1>
   </div>
 
-  <div class="rounded-2xl p-8 bg-surface border border-border">
+  <div data-suisou-surface="panel" class="p-8">
     <form onsubmit={handleSubmit} class="flex flex-col gap-6">
       <Input
         label="タイトル（必須）"
@@ -113,14 +113,14 @@
 
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-muted-foreground">声の受付</p>
+          <p class="font-medium text-muted-foreground">声の受付</p>
           <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
         </div>
         <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
       </div>
 
       {#if errorMsg}
-        <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
+        <div data-suisou-layout="row" class="rounded-lg p-3 bg-red-400/8 border border-red-400/25 text-error">
           <AlertCircle size={15} />
           {errorMsg}
         </div>

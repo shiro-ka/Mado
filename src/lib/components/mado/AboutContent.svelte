@@ -37,13 +37,13 @@
   <div class="flex flex-col gap-4">
     <h2 class="text-lg font-semibold text-foreground">3つの特徴</h2>
     {#each features as feat}
-      <div class="rounded-xl p-5 flex gap-4 bg-surface border border-border">
+      <div data-suisou-surface="panel" class="p-5 flex gap-4">
         <div class={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${feat.bg}`}>
           <feat.icon size={18} class={feat.color} />
         </div>
         <div>
-          <p class="font-semibold text-sm mb-1 text-foreground">{feat.title}</p>
-          <p class="text-sm leading-relaxed text-muted-foreground">{feat.body}</p>
+          <p class="font-semibold mb-1 text-foreground">{feat.title}</p>
+          <p class="leading-relaxed text-muted-foreground">{feat.body}</p>
         </div>
       </div>
     {/each}

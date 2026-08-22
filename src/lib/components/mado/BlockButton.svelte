@@ -59,8 +59,8 @@
 </script>
 
 {#if state === "blocked" || state === "unblocking" || state === "unblock-error"}
-  <div class="flex items-center gap-2 flex-1 sm:flex-none">
-    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted-foreground">
+  <div data-suisou-layout="row" class="flex-1 sm:flex-none">
+    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground">
       <CheckCircle2 size={14} />
       ブロック中
     </div>
@@ -81,7 +81,7 @@
     {/if}
   </div>
 {:else}
-  <div class="flex items-center gap-2 flex-1 sm:flex-none">
+  <div data-suisou-layout="row" class="flex-1 sm:flex-none">
     <Button
       variant={state === "confirm" ? "destructive" : "outline"}
       size="sm"
