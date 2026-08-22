@@ -49,9 +49,9 @@
         <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary">
           <MessageCircle size={20} class="text-background" />
         </div>
-        <span class="font-bold text-xl text-foreground">Mado</span>
+        <span data-suisou-text="s20 w700" class="text-foreground">Mado</span>
       </a>
-      <h1 class="text-2xl font-bold text-center text-foreground">Blueskyアカウントでログイン</h1>
+      <h1 data-suisou-text="s24 w700" class="text-center text-foreground">Blueskyアカウントでログイン</h1>
       <p class="text-center text-muted-foreground">あなたのハンドルを入力して認証します</p>
     </div>
 
@@ -91,7 +91,7 @@
 
       <div class="mt-5 pt-5 flex items-start gap-2.5 border-t border-border">
         <Shield size={14} class="shrink-0 mt-0.5 text-subtle" />
-        <p class="text-xs leading-relaxed text-subtle">
+        <p data-suisou-text="s12" class="leading-relaxed text-subtle">
           認証にはATProtocol OAuth 2.0を使用します。
           パスワードはMadoに送信されません。
           認証後、あなたのDIDとハンドルが声に紐付けられます。
@@ -99,7 +99,7 @@
       </div>
     </div>
 
-    <p class="text-center text-xs mt-6 text-subtle">
+    <p data-suisou-text="s12" class="text-center mt-6 text-subtle">
       <a href="/" class="hover:opacity-80 transition-opacity">← トップページに戻る</a>
     </p>
   </div>

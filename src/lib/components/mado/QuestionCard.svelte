@@ -34,7 +34,7 @@
           {#if !question.isRead}
             <Badge variant="default" size="sm">未読</Badge>
           {/if}
-          <span class="text-xs ml-auto text-subtle">{formatDate(question.createdAt)}</span>
+          <span data-suisou-text="s12" class="ml-auto text-subtle">{formatDate(question.createdAt)}</span>
         </div>
 
         <div class="flex items-start gap-2">
@@ -51,7 +51,7 @@
         {#if question.senderHandle}
           <div class="flex items-center gap-1.5 mt-2">
             <MessageCircle size={12} class="text-subtle" />
-            <span class="text-xs text-muted-foreground">@{question.senderHandle}</span>
+            <span data-suisou-text="s12" class="text-muted-foreground">@{question.senderHandle}</span>
           </div>
         {/if}
       </div>

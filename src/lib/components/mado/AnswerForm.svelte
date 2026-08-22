@@ -74,7 +74,7 @@
   <div data-suisou-layout="stack" class="rounded-lg p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
     <CheckCircle2 size={36} class="text-emerald-400" />
     <div>
-      <p class="font-bold text-foreground">回答を投稿しました</p>
+      <p data-suisou-text="w700" class="text-foreground">回答を投稿しました</p>
       <p class="mt-1 text-muted-foreground">PDSに保存されました。</p>
       {#if crosspostFailed}
         <p class="mt-2 flex items-center justify-center gap-1.5 text-amber-400">
@@ -124,7 +124,7 @@
           disabled={formState === "submitting"}
           class="w-4 h-4 accent-blue-500 cursor-pointer"
         />
-        <span class="text-xs text-muted-foreground">Bskyにもポスト</span>
+        <span data-suisou-text="s12" class="text-muted-foreground">Bskyにもポスト</span>
       </label>
       <Button
         type="submit"

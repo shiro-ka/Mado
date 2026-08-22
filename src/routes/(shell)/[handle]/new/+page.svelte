@@ -70,7 +70,7 @@
         戻る
       </Button>
     </a>
-    <h1 class="text-2xl font-bold text-foreground">窓を作る</h1>
+    <h1 data-suisou-text="s24 w700" class="text-foreground">窓を作る</h1>
   </div>
 
   <div data-suisou-surface="panel" class="p-8">
@@ -106,15 +106,15 @@
           maxlength={30}
           disabled={formState === "submitting"}
         />
-        <p class="mt-1.5 text-xs font-mono text-subtle break-all">
+        <p data-suisou-text="s12" class="mt-1.5 font-mono text-subtle break-all">
           /@{data.cleanHandle}/<span class="text-blue-400">{slugPreview}</span>
         </p>
       </div>
 
       <div class="flex items-center justify-between">
         <div>
-          <p class="font-medium text-muted-foreground">声の受付</p>
-          <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
+          <p data-suisou-text="w500" class="text-muted-foreground">声の受付</p>
+          <p data-suisou-text="s12" class="mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
         </div>
         <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
       </div>

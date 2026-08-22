@@ -65,7 +65,7 @@
 <!-- Hero -->
 <section class="relative overflow-hidden px-4 pt-24 pb-20 md:pt-32 md:pb-28">
   <div class="relative mx-auto max-w-3xl text-center">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-medium mb-6 bg-accent-light border border-blue-600/30 text-blue-300">
+    <div data-suisou-text="w500" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 bg-accent-light border border-blue-600/30 text-blue-300">
       <Sparkles size={14} />
       ATProtocol基盤
     </div>
@@ -100,7 +100,7 @@
     <div class="rounded-lg p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
       <Shield size={20} class="shrink-0 mt-0.5 text-amber-400" />
       <div>
-        <p class="font-bold mb-1 text-amber-400">半匿名性についてのご説明</p>
+        <p data-suisou-text="w700" class="mb-1 text-amber-400">半匿名性についてのご説明</p>
         <p class="leading-relaxed text-muted-foreground">
           このサービスは<strong class="text-foreground">完全匿名ではありません</strong>。
           声を送信するにはBlueskyアカウントでのログインが必要です。
@@ -127,7 +127,7 @@
           <div class={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${feat.bgClass}`}>
             <feat.icon size={20} class={feat.iconClass} />
           </div>
-          <h3 class="font-bold text-base mb-2 text-foreground">{feat.title}</h3>
+          <h3 data-suisou-text="s16 w700" class="mb-2 text-foreground">{feat.title}</h3>
           <p class="leading-relaxed text-muted-foreground">{feat.description}</p>
         </div>
       {/each}
@@ -150,12 +150,12 @@
             <div class="w-14 h-14 rounded-lg flex items-center justify-center bg-elevated">
               <step.icon size={24} class={step.iconClass} />
             </div>
-            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-primary text-background">
+            <div data-suisou-text="s12 w700" class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center bg-primary text-background">
               {step.step.slice(-1)}
             </div>
           </div>
           <div>
-            <h3 class="font-bold text-base mb-1.5 text-foreground">{step.title}</h3>
+            <h3 data-suisou-text="s16 w700" class="mb-1.5 text-foreground">{step.title}</h3>
             <p class="leading-relaxed text-muted-foreground">{step.description}</p>
           </div>
         </div>
@@ -175,7 +175,7 @@
       <div class="relative">
         <Send size={36} class="mx-auto mb-4 opacity-80 text-blue-400" />
         <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">今すぐ始めよう</h2>
-        <p class="mb-6 text-base text-muted-foreground">
+        <p data-suisou-text="s16" class="mb-6 text-muted-foreground">
           Blueskyアカウントがあれば、無料で窓を開けます。
         </p>
         <a href="/auth/login">

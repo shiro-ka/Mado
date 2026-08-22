@@ -44,11 +44,11 @@
       <Badge variant={data.question.isRead ? "muted" : "default"} dot>
         {data.question.isRead ? "既読" : "未読"}
       </Badge>
-      <span class="text-xs text-subtle">{formatDateFull(data.question.createdAt)}</span>
+      <span data-suisou-text="s12" class="text-subtle">{formatDateFull(data.question.createdAt)}</span>
     </div>
 
     <div class="mb-5">
-      <p class="text-base leading-relaxed whitespace-pre-wrap text-foreground">{data.question.body}</p>
+      <p data-suisou-text="s16" class="leading-relaxed whitespace-pre-wrap text-foreground">{data.question.body}</p>
     </div>
 
     {#if data.isOwner}
@@ -75,12 +75,12 @@
         {/if}
         <div class="flex-1 min-w-0">
           {#if data.senderProfile}
-            <p class="font-medium text-foreground">
+            <p data-suisou-text="w500" class="text-foreground">
               {data.senderProfile.displayName ?? data.senderProfile.handle}
             </p>
-            <p class="text-xs text-muted-foreground">@{data.senderProfile.handle}</p>
+            <p data-suisou-text="s12" class="text-muted-foreground">@{data.senderProfile.handle}</p>
           {:else if data.senderDid}
-            <p class="text-xs font-mono text-subtle">{data.senderDid}</p>
+            <p data-suisou-text="s12" class="font-mono text-subtle">{data.senderDid}</p>
           {:else}
             <p class="text-subtle">送信者情報なし</p>
           {/if}
@@ -101,15 +101,15 @@
   <!-- Existing answers -->
   {#if data.answers.length > 0}
     <div data-suisou-layout="stack" class="mb-5">
-      <h2 class="font-bold text-foreground">回答済み（{data.answers.length}件）</h2>
+      <h2 data-suisou-text="w700" class="text-foreground">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
         <div data-suisou-surface="panel" class="p-5">
           <div data-suisou-layout="row" class="mb-3">
             <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-accent-light">
               <MessageCircle size={12} class="text-primary" />
             </div>
-            <span class="text-xs font-medium text-muted-foreground">回答</span>
-            <span class="text-xs ml-auto text-subtle">{formatDateFull(answer.createdAt)}</span>
+            <span data-suisou-text="s12 w500" class="text-muted-foreground">回答</span>
+            <span data-suisou-text="s12" class="ml-auto text-subtle">{formatDateFull(answer.createdAt)}</span>
           </div>
           <p class="leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
         </div>
@@ -120,7 +120,7 @@
   <!-- Owner-only: answer form + danger zone -->
   {#if data.isOwner}
     <div data-suisou-surface="panel" class="p-6 mb-5">
-      <h2 class="font-bold mb-4 text-foreground">回答を書く</h2>
+      <h2 data-suisou-text="w700" class="mb-4 text-foreground">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}

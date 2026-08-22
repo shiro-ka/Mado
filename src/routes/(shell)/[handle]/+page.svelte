@@ -23,7 +23,7 @@
         <div class="mb-3 flex items-center justify-between">
           <div data-suisou-layout="row">
             <MessageCircle size={16} class="text-subtle" />
-            <h2 class="font-bold text-muted-foreground">窓</h2>
+            <h2 data-suisou-text="w700" class="text-muted-foreground">窓</h2>
           </div>
           <a href={`/@${data.cleanHandle}/new`}>
             <Button size="sm">
@@ -48,12 +48,12 @@
               class="w-16 h-16 rounded-full object-cover shrink-0"
             />
           {:else}
-            <div class="w-16 h-16 rounded-full flex items-center justify-center shrink-0 font-bold text-2xl bg-primary text-background">
+            <div data-suisou-text="s24 w700" class="w-16 h-16 rounded-full flex items-center justify-center shrink-0 bg-primary text-background">
               {(detail.profile?.handle ?? data.cleanHandle)[0]?.toUpperCase() ?? "?"}
             </div>
           {/if}
           <div class="flex-1 min-w-0">
-            <h1 class="text-xl font-bold text-foreground">{displayName}</h1>
+            <h1 data-suisou-text="s20 w700" class="text-foreground">{displayName}</h1>
             <p class="mt-0.5 text-muted-foreground">@{detail.profile?.handle ?? data.cleanHandle}</p>
             {#if detail.profile?.description}
               <p class="mt-2 leading-relaxed text-muted-foreground">{detail.profile.description}</p>
@@ -62,7 +62,7 @@
               href={`https://bsky.app/profile/${detail.profile?.handle ?? data.cleanHandle}`}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1 mt-2 text-xs hover:opacity-80 transition-opacity text-blue-400"
+              data-suisou-text="s12" class="inline-flex items-center gap-1 mt-2 hover:opacity-80 transition-opacity text-blue-400"
             >
               <Globe size={11} />
               Blueskyで見る
@@ -74,7 +74,7 @@
         <div class="mb-3 flex items-center justify-between">
           <div data-suisou-layout="row">
             <MessageCircle size={16} class="text-subtle" />
-            <h2 class="font-bold text-muted-foreground">
+            <h2 data-suisou-text="w700" class="text-muted-foreground">
               窓 ({detail.openBoxes.length}件)
             </h2>
           </div>
@@ -149,7 +149,7 @@
           <div class="mt-8">
             <div data-suisou-layout="row" class="mb-3">
               <MessageCircle size={16} class="text-subtle" />
-              <h2 class="font-bold text-muted-foreground">
+              <h2 data-suisou-text="w700" class="text-muted-foreground">
                 その他のMado ({detail.subBoxes.length})
               </h2>
             </div>

@@ -161,7 +161,7 @@
             プロフィールに戻る
           </Button>
         </a>
-        <h1 class="text-xl font-bold text-foreground">窓の設定</h1>
+        <h1 data-suisou-text="s20 w700" class="text-foreground">窓の設定</h1>
       </div>
 
       <div data-suisou-surface="panel" class="p-8 mb-5">
@@ -193,14 +193,14 @@
               maxlength={30}
               disabled={isBusy}
             />
-            <p class="mt-1.5 text-xs font-mono text-subtle break-all">
+            <p data-suisou-text="s12" class="mt-1.5 font-mono text-subtle break-all">
               /@{data.cleanHandle}/<span class="text-blue-400">{slug.trim().toLowerCase() || data.box.slug}</span>
             </p>
           </div>
           <div class="flex items-center justify-between">
             <div>
-              <p class="font-medium text-muted-foreground">声の受付</p>
-              <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
+              <p data-suisou-text="w500" class="text-muted-foreground">声の受付</p>
+              <p data-suisou-text="s12" class="mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
             </div>
             <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
           </div>
@@ -239,14 +239,14 @@
       <div data-suisou-surface="panel" data-suisou-layout="row">
         <Lock size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
-          <p class="text-xs text-muted-foreground mb-0.5">公開URL</p>
+          <p data-suisou-text="s12" class="text-muted-foreground mb-0.5">公開URL</p>
           <p class="font-mono text-foreground truncate">{publicUrlDisplay}</p>
         </div>
         <button
           type="button"
           onclick={copyUrl}
           aria-label="公開URLをコピー"
-          class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer border {copied ? 'bg-green-400/10 border-green-400/30 text-green-400' : 'bg-elevated border-border text-muted-foreground hover:text-foreground'}"
+          data-suisou-text="s12 w500" class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer border {copied ? 'bg-green-400/10 border-green-400/30 text-green-400' : 'bg-elevated border-border text-muted-foreground hover:text-foreground'}"
         >
           {#if copied}
             <Check size={13} />
@@ -262,8 +262,8 @@
       <div data-suisou-surface="panel" data-suisou-layout="row" class="mt-5">
         <Pin size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
-          <p class="font-medium text-foreground">メインMado</p>
-          <p class="text-xs text-muted-foreground mt-0.5">
+          <p data-suisou-text="w500" class="text-foreground">メインMado</p>
+          <p data-suisou-text="s12" class="text-muted-foreground mt-0.5">
             {data.isMain
               ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"
               : "メインにすると /@ハンドル の先頭に表示されます"}
@@ -295,7 +295,7 @@
       <div class="mt-5 text-center">
         <a
           href={`/@${data.cleanHandle}`}
-          class="text-xs hover:opacity-80 transition-opacity text-subtle"
+          data-suisou-text="s12" class="hover:opacity-80 transition-opacity text-subtle"
         >
           ← @{data.cleanHandle} のプロフィールに戻る
         </a>

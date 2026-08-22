@@ -36,17 +36,17 @@
       class="w-10 h-10 rounded-full object-cover shrink-0"
     />
   {:else}
-    <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold bg-primary text-background">
+    <div data-suisou-text="w700" class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-primary text-background">
       {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
     </div>
   {/if}
   <div class="min-w-0">
-    <p class="font-bold text-foreground">{ownerDisplayName}</p>
+    <p data-suisou-text="w700" class="text-foreground">{ownerDisplayName}</p>
     <a
       href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-1 text-xs hover:opacity-80 transition-opacity text-blue-400"
+      data-suisou-text="s12" class="inline-flex items-center gap-1 hover:opacity-80 transition-opacity text-blue-400"
     >
       <Globe size={10} />
       @{ownerProfile?.handle ?? cleanHandle}
@@ -59,7 +59,7 @@
   <div data-suisou-layout="row stretch" class="mb-3">
     <div class="flex-1 min-w-0">
       <div data-suisou-layout="row" class="mb-1">
-        <h1 class="text-lg font-bold text-foreground">{box.title}</h1>
+        <h1 data-suisou-text="s20 w700" class="text-foreground">{box.title}</h1>
         <Badge variant={box.isOpen ? "success" : "muted"} dot size="sm">
           {box.isOpen ? "受付中" : "受付停止"}
         </Badge>
@@ -71,15 +71,15 @@
   </div>
   <div class="flex items-center gap-1.5">
     <Lock size={11} class="text-subtle" />
-    <span class="text-xs text-subtle">ECIES暗号化で保護されています</span>
+    <span data-suisou-text="s12" class="text-subtle">ECIES暗号化で保護されています</span>
   </div>
 </div>
 
 <!-- Semi-anonymous disclosure -->
 <div data-suisou-layout="row stretch" class="rounded-lg p-4 mb-5 bg-amber-400/7 border border-amber-400/25">
   <Shield size={15} class="shrink-0 mt-0.5 text-amber-400" />
-  <p class="text-xs leading-relaxed text-muted-foreground">
-    <span class="font-bold text-amber-400">半匿名のご注意：</span>{" "}
+  <p data-suisou-text="s12" class="leading-relaxed text-muted-foreground">
+    <span data-suisou-text="w700" class="text-amber-400">半匿名のご注意：</span>{" "}
     このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
     <strong class="text-foreground">窓のオーナーにのみ</strong>
     開示されます。第三者には公開されません。
@@ -89,14 +89,14 @@
 {#if !ownerRegistered}
   <!-- Owner not registered -->
   <div data-suisou-surface="panel" class="p-6 text-center">
-    <p class="font-bold mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
-    <p class="text-xs text-muted-foreground">声を送るには、オーナーがMadoにログインしている必要があります。</p>
+    <p data-suisou-text="w700" class="mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
+    <p data-suisou-text="s12" class="text-muted-foreground">声を送るには、オーナーがMadoにログインしている必要があります。</p>
   </div>
 {:else if !box.isOpen}
   <!-- Box closed -->
   <div data-suisou-surface="panel" class="p-6 text-center">
-    <p class="font-bold mb-1 text-foreground">現在この窓は受付停止中です</p>
-    <p class="text-xs text-muted-foreground">オーナーが受付を再開するまでお待ちください。</p>
+    <p data-suisou-text="w700" class="mb-1 text-foreground">現在この窓は受付停止中です</p>
+    <p data-suisou-text="s12" class="text-muted-foreground">オーナーが受付を再開するまでお待ちください。</p>
   </div>
 {:else if !session}
   <!-- Not logged in -->
@@ -105,8 +105,8 @@
       <LogIn size={20} class="text-blue-400" />
     </div>
     <div>
-      <p class="font-bold mb-1 text-foreground">声を送るにはログインが必要です</p>
-      <p class="text-xs leading-relaxed text-muted-foreground">
+      <p data-suisou-text="w700" class="mb-1 text-foreground">声を送るにはログインが必要です</p>
+      <p data-suisou-text="s12" class="leading-relaxed text-muted-foreground">
         Blueskyアカウントでログインして声を送りましょう。
         送り主はオーナーのみに開示されます。
       </p>

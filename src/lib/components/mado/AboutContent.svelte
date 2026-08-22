@@ -26,27 +26,27 @@
       <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary">
         <MessageCircle size={20} class="text-background" />
       </div>
-      <h1 class="text-2xl font-bold text-foreground">Madoについて</h1>
+      <h1 data-suisou-text="s24 w700" class="text-foreground">Madoについて</h1>
     </div>
-    <p class="text-base leading-relaxed text-muted-foreground">
+    <p data-suisou-text="s16" class="leading-relaxed text-muted-foreground">
       Mado（窓）は、Blueskyアカウントを使った<strong class="text-foreground">半匿名の窓サービス</strong>です。
       声を送るにはBlueskyへのログインが必要なため完全匿名ではありませんが、
       送り主の情報は暗号化されて窓のオーナーにのみ届きます。
     </p>
   </div>
   <div class="flex flex-col gap-4">
-    <h2 class="text-lg font-bold text-foreground">3つの特徴</h2>
+    <h2 data-suisou-text="s20 w700" class="text-foreground">3つの特徴</h2>
     {#each features as feat}
       <div data-suisou-surface="panel" class="p-5 flex gap-4">
         <div class={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${feat.bg}`}>
           <feat.icon size={18} class={feat.color} />
         </div>
         <div>
-          <p class="font-bold mb-1 text-foreground">{feat.title}</p>
+          <p data-suisou-text="w700" class="mb-1 text-foreground">{feat.title}</p>
           <p class="leading-relaxed text-muted-foreground">{feat.body}</p>
         </div>
       </div>
     {/each}
   </div>
-  <p class="text-xs text-subtle">Mado はオープンベータです。仕様は予告なく変更される場合があります。</p>
+  <p data-suisou-text="s12" class="text-subtle">Mado はオープンベータです。仕様は予告なく変更される場合があります。</p>
 </div>

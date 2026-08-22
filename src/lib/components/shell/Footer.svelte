@@ -52,7 +52,7 @@
       <p data-suisou-text="s12" class="text-subtle">
         &copy; {new Date().getFullYear()} Mado. All rights reserved.
       </p>
-      <div data-suisou-layout="row" class="text-xs text-subtle">
+      <div data-suisou-layout="row" data-suisou-text="s12" class="text-subtle">
         <Globe size={12} class="opacity-60" />
         <span>Powered by ATProtocol</span>
       </div>
