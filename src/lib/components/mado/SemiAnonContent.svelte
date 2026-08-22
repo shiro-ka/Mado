@@ -61,7 +61,7 @@
       </div>
     {/each}
   </section>
-  <section class="flex flex-col gap-3">
+  <section data-suisou-layout="stack">
     <h2 class="text-base font-semibold text-foreground">暗号化の仕組み</h2>
     <div data-suisou-surface="panel" class="p-5 flex gap-4">
       <Lock size={18} class="shrink-0 mt-0.5 text-emerald-400" />

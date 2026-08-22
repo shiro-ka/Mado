@@ -61,7 +61,7 @@
       {/if}
 
       <!-- Sender info -->
-      <div class="pt-4 flex items-center gap-3 border-t border-border">
+      <div data-suisou-layout="row" class="pt-4 border-t border-border">
         {#if data.senderProfile?.avatar}
           <img
             src={data.senderProfile.avatar}
@@ -100,7 +100,7 @@
 
   <!-- Existing answers -->
   {#if data.answers.length > 0}
-    <div class="mb-5 flex flex-col gap-3">
+    <div data-suisou-layout="stack" class="mb-5">
       <h2 class="font-semibold text-foreground">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
         <div data-suisou-surface="panel" class="p-5">
@@ -129,7 +129,7 @@
       />
     </div>
 
-    <div class="rounded-2xl p-5 flex flex-col sm:flex-row gap-3 bg-red-400/5 border border-red-400/15">
+    <div data-suisou-layout="stack" class="rounded-2xl p-5 sm:flex-row bg-red-400/5 border border-red-400/15">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />

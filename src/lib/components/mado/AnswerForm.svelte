@@ -71,7 +71,7 @@
 </script>
 
 {#if formState === "success"}
-  <div class="rounded-xl p-6 flex flex-col items-center gap-3 text-center bg-emerald-400/8 border border-emerald-400/25">
+  <div data-suisou-layout="stack" class="rounded-xl p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
     <CheckCircle2 size={36} class="text-emerald-400" />
     <div>
       <p class="font-semibold text-foreground">回答を投稿しました</p>
@@ -116,7 +116,7 @@
       </div>
     {/if}
 
-    <div class="flex items-center justify-between gap-3 flex-wrap">
+    <div data-suisou-layout="row" class="justify-between flex-wrap">
       <label data-suisou-layout="row" class="cursor-pointer select-none">
         <input
           type="checkbox"

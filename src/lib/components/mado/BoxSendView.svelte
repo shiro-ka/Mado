@@ -28,7 +28,7 @@
 </script>
 
 <!-- Owner header -->
-<div class="flex items-center gap-3 mb-6">
+<div data-suisou-layout="row" class="mb-6">
   {#if ownerProfile?.avatar}
     <img
       src={ownerProfile.avatar}
@@ -56,7 +56,7 @@
 
 <!-- Box info -->
 <div data-suisou-surface="panel" class="p-6 mb-5">
-  <div class="flex items-start gap-3 mb-3">
+  <div data-suisou-layout="row stretch" class="mb-3">
     <div class="flex-1 min-w-0">
       <div data-suisou-layout="row" class="mb-1">
         <h1 class="text-lg font-bold text-foreground">{box.title}</h1>
@@ -76,7 +76,7 @@
 </div>
 
 <!-- Semi-anonymous disclosure -->
-<div class="rounded-xl p-4 mb-5 flex items-start gap-3 bg-amber-400/7 border border-amber-400/25">
+<div data-suisou-layout="row stretch" class="rounded-xl p-4 mb-5 bg-amber-400/7 border border-amber-400/25">
   <Shield size={15} class="shrink-0 mt-0.5 text-amber-400" />
   <p class="text-xs leading-relaxed text-muted-foreground">
     <span class="font-semibold text-amber-400">半匿名のご注意：</span>{" "}

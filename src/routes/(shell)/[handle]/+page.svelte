@@ -32,7 +32,7 @@
             </Button>
           </a>
         </div>
-        <div class="flex flex-col gap-3">
+        <div data-suisou-layout="stack">
           {#each Array(2) as _}
             <Skeleton class="h-24" />
           {/each}
@@ -97,7 +97,7 @@
             </a>
           </div>
         {:else}
-          <div class="flex flex-col gap-3">
+          <div data-suisou-layout="stack">
             {#each detail.openBoxes as box}
               <div class="relative group">
                 <QuestionBoxCard
@@ -153,7 +153,7 @@
                 その他のMado ({detail.subBoxes.length})
               </h2>
             </div>
-            <div class="flex flex-col gap-3">
+            <div data-suisou-layout="stack">
               {#each detail.subBoxes as box}
                 <QuestionBoxCard {box} ownerHandle={detail.profile?.handle ?? data.cleanHandle} />
               {/each}

@@ -66,7 +66,7 @@
         <div class="px-4 py-2 rounded-lg font-medium text-muted-foreground">{t.label}</div>
       {/each}
     </div>
-    <div class="flex flex-col gap-3">
+    <div data-suisou-layout="stack">
       {#each Array(4) as _}
         <Skeleton class="h-20" />
       {/each}
@@ -115,7 +115,7 @@
         </div>
       </div>
     {:else}
-      <div class="flex flex-col gap-3">
+      <div data-suisou-layout="stack">
         {#each filtered as question}
           <QuestionCard {question} preview={question.body} href={question.href} />
         {/each}

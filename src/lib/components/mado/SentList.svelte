@@ -103,7 +103,7 @@
 
   <!-- List -->
   {#if filtered.length === 0}
-    <div class="text-center py-16 flex flex-col items-center gap-3">
+    <div data-suisou-layout="stack" class="text-center py-16">
       <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-elevated">
         {#if tab === "unread"}
           <MessageCircle size={22} class="text-subtle" />
@@ -116,7 +116,7 @@
       </p>
     </div>
   {:else}
-    <div class="flex flex-col gap-3">
+    <div data-suisou-layout="stack">
       {#each filtered as item}
         {@const key = `${item.ref.ownerDid}:${item.ref.koeRkey}`}
         {@const isExpanded = expanded.has(key)}
@@ -131,7 +131,7 @@
           <!-- Header -->
           <button
             onclick={() => toggle(key, item.ref.ownerDid, item.ref.koeRkey, hasAnswer)}
-            class="w-full text-left p-5 flex flex-col gap-3 cursor-pointer"
+            data-suisou-layout="stack" class="w-full text-left p-5 cursor-pointer"
           >
             <!-- Meta row -->
             <div data-suisou-layout="row">
@@ -158,7 +158,7 @@
 
           <!-- Answers -->
           {#if isExpanded && hasAnswer}
-            <div class="px-5 pb-5 flex flex-col gap-3 border-t border-border">
+            <div data-suisou-layout="stack" class="px-5 pb-5 border-t border-border">
               <p class="text-xs font-medium pt-4 text-subtle">返信（{item.answers.length}件）</p>
               {#each item.answers as answer}
                 <div class="rounded-xl p-4 bg-elevated">

@@ -11,7 +11,7 @@
 </svelte:head>
 
 <div class="px-6 py-8 max-w-2xl mx-auto">
-  <div class="flex items-center gap-3 mb-8">
+  <div data-suisou-layout="row" class="mb-8">
     <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-accent-light">
       <Send size={17} class="text-primary" />
     </div>

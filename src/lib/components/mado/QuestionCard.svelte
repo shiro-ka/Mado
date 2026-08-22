@@ -18,7 +18,7 @@
 <a {href} class="group block">
   <!-- 未読は枠だけアクセント色に。面と余白と罫は Suisou の panel -->
   <div data-suisou-surface="panel" class="card" class:unread={!question.isRead}>
-    <div class="flex items-start gap-3">
+    <div data-suisou-layout="row stretch">
       <!-- Unread indicator -->
       <div class="mt-1 shrink-0">
         {#if question.isRead}

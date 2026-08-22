@@ -154,7 +154,7 @@
   <div class="mx-auto max-w-lg">
     {#if data.isOwner}
       <!-- Owner: settings UI -->
-      <div class="flex items-center gap-3 mb-8">
+      <div data-suisou-layout="row" class="mb-8">
         <a href={`/@${data.cleanHandle}`}>
           <Button variant="ghost" size="sm">
             {#snippet leftIcon()}<ArrowLeft size={15} />{/snippet}
@@ -212,7 +212,7 @@
             </div>
           {/if}
 
-          <div class="flex items-center justify-between gap-3 pt-2">
+          <div data-suisou-layout="row" class="justify-between pt-2">
             <Button
               type="button"
               variant="destructive"
@@ -236,7 +236,7 @@
       </div>
 
       <!-- Public URL -->
-      <div data-suisou-surface="panel" class="flex items-center gap-3">
+      <div data-suisou-surface="panel" data-suisou-layout="row">
         <Lock size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
           <p class="text-xs text-muted-foreground mb-0.5">公開URL</p>
@@ -259,7 +259,7 @@
       </div>
 
       <!-- Main Mado -->
-      <div data-suisou-surface="panel" class="mt-5 flex items-center gap-3">
+      <div data-suisou-surface="panel" data-suisou-layout="row" class="mt-5">
         <Pin size={14} class="text-subtle shrink-0" />
         <div class="flex-1 min-w-0">
           <p class="font-medium text-foreground">メインMado</p>
