@@ -23,7 +23,7 @@ jobs:
         id: deploy
         run: |
           npx wrangler pages deploy .svelte-kit/cloudflare \
-            --project-name mado --branch ${{ github.ref_name }} | tee /tmp/deploy.log
+            --project-name mado-sveltekit --branch ${{ github.ref_name }} | tee /tmp/deploy.log
           {
             echo "### Pages デプロイ（${{ github.ref_name }}）"
             echo ''

@@ -1,9 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import { fade, fly } from "svelte/transition";
-  import { cubicOut } from "svelte/easing";
   import { afterNavigate } from "$app/navigation";
-  import { Menu, X } from "lucide-svelte";
+  import { Menu } from "lucide-svelte";
   import Sidebar from "./Sidebar.svelte";
   import Brand from "./Brand.svelte";
   import type { AppSession } from "$lib/store.js";
@@ -15,115 +13,100 @@
 
   let { session, children }: Props = $props();
 
-  let drawerOpen = $state(false);
-  let menuButton = $state<HTMLButtonElement>();
-  let closeButton = $state<HTMLButtonElement>();
-  let drawerEl = $state<HTMLElement>();
+  let drawer = $state<HTMLElement>();
   let mainEl = $state<HTMLElement>();
 
   // The shell is a fixed-height app frame: `main` scrolls internally rather than
   // the document. SvelteKit's scroll handling targets the window, so reset the
   // real scroll container to the top on navigation.
-  afterNavigate(() => mainEl?.scrollTo({ top: 0 }));
-
-  // Accessibility for the mobile drawer: lock scroll of the content pane (the
-  // shell's real scroll container is `main`, not the document), move focus in on
-  // open and restore it on close, close on Escape, and trap Tab within it.
-  $effect(() => {
-    if (!drawerOpen) return;
-    const prevOverflow = mainEl?.style.overflow ?? "";
-    if (mainEl) mainEl.style.overflow = "hidden";
-    closeButton?.focus();
-
-    function onKeydown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        drawerOpen = false;
-        return;
-      }
-      if (e.key === "Tab" && drawerEl) {
-        const focusables = drawerEl.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    }
-    window.addEventListener("keydown", onKeydown);
-
-    return () => {
-      window.removeEventListener("keydown", onKeydown);
-      if (mainEl) mainEl.style.overflow = prevOverflow;
-      menuButton?.focus();
-    };
+  afterNavigate(() => {
+    mainEl?.scrollTo({ top: 0 });
+    drawer?.hidePopover?.();
   });
 </script>
 
-<div class="flex h-dvh overflow-hidden">
+<!-- 画面の骨格。区画の名前は Suisou が持つ（aside / body）。
+     :has() で aside の有無を見て列を畳むので、狭い画面では
+     aside を消すだけで1列になる ―― ここで grid を書き直す必要がない。 -->
+<div data-suisou-layout="frame" class="frame">
   <!-- Desktop sidebar -->
-  <aside class="hidden md:flex w-64 shrink-0 flex-col sticky top-0 h-dvh bg-surface border-r border-border overflow-y-auto">
+  <aside data-suisou-layout="aside stack scroll" class="side">
     <Sidebar {session} />
   </aside>
 
   <!-- Mobile topbar -->
-  <div class="md:hidden fixed top-0 left-0 right-0 z-40 h-14 flex items-center px-4 gap-3 bg-surface border-b border-border">
-    <button
-      bind:this={menuButton}
-      onclick={() => (drawerOpen = true)}
-      class="p-2 rounded-lg text-muted-foreground cursor-pointer"
-      aria-label="メニューを開く"
-    >
+  <div data-suisou-layout="head row" class="topbar">
+    <!-- ★popovertarget だけで開く。JS は1行も要らない（Suisou 掟4）。
+         ESC・外側クリック・フォーカスの閉じ込め・重なり順・膜は全部ブラウザの仕事。
+         以前はこれを自前で持っていて、焦点トラップ／Escape／スクロール錠／
+         フォーカス復帰で 52 行あった。 -->
+    <button data-suisou-button="icon" popovertarget="nav-drawer" aria-label="メニューを開く">
       <Menu size={20} />
     </button>
-    <a href="/home">
-      <Brand size="sm" />
-    </a>
+    <a href="/home"><Brand size="sm" /></a>
   </div>
 
-  <!-- Mobile drawer -->
-  {#if drawerOpen}
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="ナビゲーション"
-      class="md:hidden fixed inset-0 z-50 flex"
-    >
-      <button
-        class="absolute inset-0 bg-black/50 cursor-default"
-        onclick={() => (drawerOpen = false)}
-        aria-label="メニューを閉じる"
-        tabindex="-1"
-        transition:fade={{ duration: 200 }}
-      ></button>
-      <aside
-        bind:this={drawerEl}
-        class="relative z-10 w-72 flex flex-col h-full bg-surface border-r border-border"
-        transition:fly={{ x: -288, duration: 250, easing: cubicOut }}
-      >
-        <button
-          bind:this={closeButton}
-          onclick={() => (drawerOpen = false)}
-          class="absolute top-4 right-4 p-1.5 rounded-lg text-muted-foreground cursor-pointer"
-          aria-label="メニューを閉じる"
-        >
-          <X size={18} />
-        </button>
-        <Sidebar {session} onNavigate={() => (drawerOpen = false)} />
-      </aside>
-    </div>
-  {/if}
+  <!-- Mobile drawer。左から出る（drawer start は Mado の要求で Suisou に足した） -->
+  <div
+    bind:this={drawer}
+    id="nav-drawer"
+    popover
+    data-suisou-surface="overlay drawer start"
+    data-suisou-layout="stack scroll"
+    aria-label="ナビゲーション"
+    style="--suisou-drawer: 18rem"
+  >
+    <Sidebar {session} />
+  </div>
 
   <!-- Main content -->
-  <main bind:this={mainEl} class="flex-1 overflow-y-auto md:mt-0 mt-14">
+  <main bind:this={mainEl} data-suisou-layout="body scroll">
     {#if children}
       {@render children()}
     {/if}
   </main>
 </div>
+
+<style>
+  /* 骨格の実寸だけが現場のもの。面と罫は Suisou のトークン。
+
+     ★すきまは 0 にする。layout は既定で 8px 空くが、アプリの骨格は
+       区画どうしを**罫で**区切るので隙間が要らない。しかも狭い画面で
+       aside を display:none にしても :has() は当たったままなので、
+       0 にしないと畳んだ側に 8px の帯が残る。 */
+  .frame {
+    gap: 0;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .side {
+    width: 16rem;
+    border-inline-end: 1px solid var(--suisou-line-weak);
+    background: var(--suisou-panel);
+  }
+  .topbar {
+    padding-inline: var(--suisou-space-3);
+    height: 3.5rem;
+    border-block-end: 1px solid var(--suisou-line-weak);
+    background: var(--suisou-panel);
+  }
+
+  /* 狭い画面ではサイドバーを畳み、上のバーを出す。
+     frame の :has(aside) が効かなくなるので、grid は自動で1列になる。 */
+  @media (max-width: 767px) {
+    .side {
+      display: none;
+    }
+  }
+  @media (min-width: 768px) {
+    .topbar {
+      display: none;
+    }
+  }
+
+  /* ドロワーは中身（Sidebar）が自分で余白を持つので、器は端まで */
+  #nav-drawer {
+    padding: 0;
+  }
+</style>
