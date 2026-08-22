@@ -17,14 +17,10 @@
   );
 </script>
 
-<span class="flex items-center gap-2">
+<span data-suisou-layout="row">
   <img src="/mado-logo.svg" alt="Mado" class={dims.logo} />
-  <span class="font-bold {dims.text} text-foreground">Mado</span>
+  <span data-suisou-text="w700" class={dims.text}>Mado</span>
   {#if beta}
-    <span
-      class="text-xs px-1.5 py-0.5 rounded-full font-medium bg-accent-light text-primary border border-border"
-    >
-      beta
-    </span>
+    <span data-suisou-tag="accent">beta</span>
   {/if}
 </span>
