@@ -69,12 +69,12 @@
       size="sm"
       loading={state === "unblocking"}
       onclick={unblock}
-      class="text-xs text-subtle"
+      data-suisou-text="s12" class="text-subtle"
     >
       解除
     </Button>
     {#if state === "unblock-error"}
-      <span class="flex items-center gap-1 text-xs text-error">
+      <span data-suisou-text="s12" class="flex items-center gap-1 text-error">
         <AlertCircle size={12} />
         解除に失敗しました
       </span>
@@ -100,14 +100,14 @@
       <Button
         variant="ghost"
         size="sm"
-        class="text-xs text-subtle"
+        data-suisou-text="s12" class="text-subtle"
         onclick={() => (state = "idle")}
       >
         キャンセル
       </Button>
     {/if}
     {#if state === "block-error"}
-      <span class="flex items-center gap-1 text-xs text-error">
+      <span data-suisou-text="s12" class="flex items-center gap-1 text-error">
         <AlertCircle size={12} />
         ブロックに失敗しました
       </span>

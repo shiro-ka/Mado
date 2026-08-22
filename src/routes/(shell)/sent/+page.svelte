@@ -16,8 +16,8 @@
       <Send size={17} class="text-primary" />
     </div>
     <div>
-      <h1 class="text-xl font-bold text-foreground">送信トレイ</h1>
-      <p class="text-xs text-muted-foreground">あなたが送った声と返信</p>
+      <h1 data-suisou-text="s20 w700" class="text-foreground">送信トレイ</h1>
+      <p data-suisou-text="s12" class="text-muted-foreground">あなたが送った声と返信</p>
     </div>
   </div>
 

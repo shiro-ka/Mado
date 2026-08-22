@@ -37,7 +37,7 @@
 <div class="px-6 py-8 max-w-3xl mx-auto">
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-foreground">受信トレイ</h1>
+      <h1 data-suisou-text="s24 w700" class="text-foreground">受信トレイ</h1>
       <p class="mt-1 text-muted-foreground">届いた声を確認しましょう</p>
     </div>
     <button
@@ -63,7 +63,7 @@
   {#await data.inbox}
     <div class="flex gap-1 p-1 rounded-lg mb-6 w-fit bg-surface">
       {#each tabs as t}
-        <div class="px-4 py-2 rounded-lg font-medium text-muted-foreground">{t.label}</div>
+        <div data-suisou-text="w500" class="px-4 py-2 rounded-lg text-muted-foreground">{t.label}</div>
       {/each}
     </div>
     <div data-suisou-layout="stack">
@@ -106,7 +106,7 @@
       <div data-suisou-surface="panel empty" class="p-12 flex flex-col items-center gap-4 text-center">
         <Inbox size={36} class="text-subtle opacity-50" />
         <div>
-          <p class="font-bold text-base text-foreground">
+          <p data-suisou-text="s16 w700" class="text-foreground">
             {tab === "unread" ? "未読の声はありません" : "声がありません"}
           </p>
           <p class="mt-1 text-muted-foreground">

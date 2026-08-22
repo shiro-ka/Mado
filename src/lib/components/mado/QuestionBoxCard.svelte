@@ -24,9 +24,9 @@
           <MessageCircle size={16} class="text-blue-400" />
         </div>
         <div class="min-w-0">
-          <h3 class="font-bold leading-snug truncate text-foreground">{box.title}</h3>
+          <h3 data-suisou-text="w700" class="leading-snug truncate text-foreground">{box.title}</h3>
           {#if box.description}
-            <p class="text-xs mt-1 line-clamp-2 text-muted-foreground">{box.description}</p>
+            <p data-suisou-text="s12" class="mt-1 line-clamp-2 text-muted-foreground">{box.description}</p>
           {/if}
         </div>
       </div>
@@ -53,7 +53,7 @@
         <span class="text-subtle"><Lock size={12} /></span>
       {/if}
       {#if questionCount !== undefined}
-        <span class="text-xs ml-auto text-subtle">声 {questionCount}件</span>
+        <span data-suisou-text="s12" class="ml-auto text-subtle">声 {questionCount}件</span>
       {/if}
     </div>
   </div>

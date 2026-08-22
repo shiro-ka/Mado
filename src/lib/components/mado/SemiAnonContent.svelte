@@ -25,8 +25,8 @@
 
 <div class="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-10">
   <div>
-    <h1 class="text-2xl font-bold mb-3 text-foreground">半匿名の仕組み</h1>
-    <p class="text-base leading-relaxed text-muted-foreground">
+    <h1 data-suisou-text="s24 w700" class="mb-3 text-foreground">半匿名の仕組み</h1>
+    <p data-suisou-text="s16" class="leading-relaxed text-muted-foreground">
       Madoは<strong class="text-foreground">完全匿名ではありません</strong>。
       声を送るにはBlueskyアカウントでのログインが必要で、あなたのDIDは暗号化された形で記録されます。
       ただしその情報は窓のオーナーだけが復号でき、第三者には一切開示されません。
@@ -41,14 +41,14 @@
     </p>
   </div>
   <section class="flex flex-col gap-4">
-    <h2 class="text-base font-bold text-foreground">誰が何を見られるか</h2>
+    <h2 data-suisou-text="s16 w700" class="text-foreground">誰が何を見られるか</h2>
     {#each visibility as row}
       <div data-suisou-surface="panel" class="p-5 flex gap-4">
         <div class={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${row.bg}`}>
           <row.icon size={17} class={row.color} />
         </div>
         <div>
-          <p class="font-bold mb-1.5 text-foreground">{row.title}</p>
+          <p data-suisou-text="w700" class="mb-1.5 text-foreground">{row.title}</p>
           <ul class="flex flex-col gap-1">
             {#each row.items as item}
               <li class="flex gap-2 text-muted-foreground">
@@ -62,7 +62,7 @@
     {/each}
   </section>
   <section data-suisou-layout="stack">
-    <h2 class="text-base font-bold text-foreground">暗号化の仕組み</h2>
+    <h2 data-suisou-text="s16 w700" class="text-foreground">暗号化の仕組み</h2>
     <div data-suisou-surface="panel" class="p-5 flex gap-4">
       <Lock size={18} class="shrink-0 mt-0.5 text-emerald-400" />
       <div data-suisou-layout="stack" class="leading-relaxed text-muted-foreground">

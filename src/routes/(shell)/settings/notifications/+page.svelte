@@ -68,7 +68,7 @@
 
 <div class="px-6 py-8 max-w-2xl mx-auto">
   <div class="mb-6">
-    <h1 class="text-2xl font-bold text-foreground">通知設定</h1>
+    <h1 data-suisou-text="s24 w700" class="text-foreground">通知設定</h1>
     <p class="mt-1 text-muted-foreground">
       新しい声が届いたときのお知らせ方法を設定します
     </p>
@@ -88,7 +88,7 @@
         <div data-suisou-layout="row stretch">
           <div class="mt-0.5 shrink-0 text-blue-400"><Bell size={20} /></div>
           <div>
-            <p class="font-bold text-foreground">新着をDMで受け取る</p>
+            <p data-suisou-text="w700" class="text-foreground">新着をDMで受け取る</p>
             <p class="mt-0.5 text-muted-foreground">
               mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
             </p>
@@ -105,7 +105,7 @@
       </div>
 
       {#if toggleError}
-        <div class="px-5 pb-3 -mt-2 flex items-center gap-1.5 text-xs text-error">
+        <div data-suisou-text="s12" class="px-5 pb-3 -mt-2 flex items-center gap-1.5 text-error">
           <AlertCircle size={13} />
           設定の保存に失敗しました。時間をおいて再試行してください。
         </div>
@@ -136,7 +136,7 @@
             </a>
           </div>
           {#if followError}
-            <span class="flex items-center gap-1 text-xs text-error">
+            <span data-suisou-text="s12" class="flex items-center gap-1 text-error">
               <AlertCircle size={12} />
               フォローに失敗しました。時間をおいて再試行してください。
             </span>
