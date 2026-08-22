@@ -129,7 +129,7 @@
       />
     </div>
 
-    <div data-suisou-layout="stack" class="rounded-2xl p-5 sm:flex-row bg-red-400/5 border border-red-400/15">
+    <div data-suisou-layout="stack" class="rounded-lg p-5 sm:flex-row bg-red-400/5 border border-red-400/15">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />

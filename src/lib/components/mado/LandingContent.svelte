@@ -97,7 +97,7 @@
 <!-- Semi-anonymous disclosure -->
 <section class="px-4 pb-12">
   <div class="mx-auto max-w-3xl">
-    <div class="rounded-2xl p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
+    <div class="rounded-lg p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
       <Shield size={20} class="shrink-0 mt-0.5 text-amber-400" />
       <div>
         <p class="font-bold mb-1 text-amber-400">半匿名性についてのご説明</p>
@@ -147,7 +147,7 @@
       {#each steps as step}
         <div class="flex flex-col items-center text-center gap-4">
           <div class="relative">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-elevated">
+            <div class="w-14 h-14 rounded-lg flex items-center justify-center bg-elevated">
               <step.icon size={24} class={step.iconClass} />
             </div>
             <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-primary text-background">

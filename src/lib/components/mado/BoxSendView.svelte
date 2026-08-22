@@ -76,7 +76,7 @@
 </div>
 
 <!-- Semi-anonymous disclosure -->
-<div data-suisou-layout="row stretch" class="rounded-xl p-4 mb-5 bg-amber-400/7 border border-amber-400/25">
+<div data-suisou-layout="row stretch" class="rounded-lg p-4 mb-5 bg-amber-400/7 border border-amber-400/25">
   <Shield size={15} class="shrink-0 mt-0.5 text-amber-400" />
   <p class="text-xs leading-relaxed text-muted-foreground">
     <span class="font-bold text-amber-400">半匿名のご注意：</span>{" "}
@@ -101,7 +101,7 @@
 {:else if !session}
   <!-- Not logged in -->
   <div data-suisou-surface="panel" class="p-6 text-center flex flex-col items-center gap-4">
-    <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-accent-light">
+    <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-accent-light">
       <LogIn size={20} class="text-blue-400" />
     </div>
     <div>

@@ -104,7 +104,7 @@
   <!-- List -->
   {#if filtered.length === 0}
     <div data-suisou-layout="stack" class="text-center py-16">
-      <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-elevated">
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-elevated">
         {#if tab === "unread"}
           <MessageCircle size={22} class="text-subtle" />
         {:else}
@@ -161,7 +161,7 @@
             <div data-suisou-layout="stack" class="px-5 pb-5 border-t border-border">
               <p class="text-xs font-medium pt-4 text-subtle">返信（{item.answers.length}件）</p>
               {#each item.answers as answer}
-                <div class="rounded-xl p-4 bg-elevated">
+                <div class="rounded-lg p-4 bg-elevated">
                   <div data-suisou-layout="row" class="mb-2">
                     <div class="w-5 h-5 rounded-full flex items-center justify-center bg-accent-light">
                       <MessageCircle size={10} class="text-primary" />

@@ -46,7 +46,7 @@
     <!-- Header -->
     <div data-suisou-layout="stack" class="mb-8">
       <a href="/" data-suisou-layout="row">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary">
           <MessageCircle size={20} class="text-background" />
         </div>
         <span class="font-bold text-xl text-foreground">Mado</span>

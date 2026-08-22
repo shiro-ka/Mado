@@ -23,7 +23,7 @@
 <div class="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-10">
   <div>
     <div data-suisou-layout="row" class="mb-4">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary">
         <MessageCircle size={20} class="text-background" />
       </div>
       <h1 class="text-2xl font-bold text-foreground">Madoについて</h1>
