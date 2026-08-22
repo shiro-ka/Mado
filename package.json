@@ -7,7 +7,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "wrangler pages dev .svelte-kit/cloudflare",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "lint:classes": "node scripts/check-classes.mjs"
   },
   "devDependencies": {
     "@sveltejs/adapter-cloudflare": "^7.0.0",
