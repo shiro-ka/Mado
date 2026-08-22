@@ -80,7 +80,7 @@
       送り主は窓のオーナーだけに届き、暗号化によって守られます。
     </p>
 
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+    <div data-suisou-layout="stack" class="sm:flex-row justify-center">
       <a href="/auth/login">
         <Button size="lg">
           窓を開く

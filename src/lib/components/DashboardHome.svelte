@@ -41,7 +41,7 @@
 
   <!-- Session expiry warning -->
   {#if sessionExpiringSoon}
-    <div class="mb-6 rounded-xl px-4 py-3 flex items-center gap-3 bg-amber-400/8 border border-amber-400/30">
+    <div data-suisou-layout="row" class="mb-6 rounded-xl px-4 py-3 bg-amber-400/8 border border-amber-400/30">
       <AlertTriangle size={16} class="text-amber-400 shrink-0" />
       <p class="flex-1 text-amber-400">
         セッションがあと{sessionDaysLeft}日で期限切れになります。

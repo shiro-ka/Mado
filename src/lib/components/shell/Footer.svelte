@@ -7,7 +7,7 @@
   <div class="mx-auto max-w-6xl px-4 py-10">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Brand -->
-      <div class="flex flex-col gap-3">
+      <div data-suisou-layout="stack">
         <Brand size="lg" />
         <p class="text-muted-foreground">
           ATProtocol基盤の半匿名メッセージ。<br />窓越しに、想いを届けよう。
@@ -15,7 +15,7 @@
       </div>
 
       <!-- Links -->
-      <div class="flex flex-col gap-3">
+      <div data-suisou-layout="stack">
         <h4 data-suisou-text="s14 w700">リンク</h4>
         <div data-suisou-layout="stack">
           {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/home", label: "ホーム" }] as link}
@@ -27,7 +27,7 @@
       </div>
 
       <!-- Legal / Info -->
-      <div class="flex flex-col gap-3">
+      <div data-suisou-layout="stack">
         <h4 data-suisou-text="s14 w700">情報</h4>
         <div data-suisou-layout="stack">
           {#each [{ href: "/privacy", label: "プライバシーポリシー" }, { href: "/terms", label: "利用規約" }] as link}
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 rule">
+    <div data-suisou-layout="stack" class="mt-8 pt-6 sm:flex-row justify-between rule">
       <p data-suisou-text="s12" class="text-subtle">
         &copy; {new Date().getFullYear()} Mado. All rights reserved.
       </p>

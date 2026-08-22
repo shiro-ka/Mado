@@ -52,7 +52,7 @@
 </script>
 
 {#if formState === "success"}
-  <div class="rounded-xl p-6 flex flex-col items-center gap-3 text-center bg-emerald-400/8 border border-emerald-400/25">
+  <div data-suisou-layout="stack" class="rounded-xl p-6 text-center bg-emerald-400/8 border border-emerald-400/25">
     <CheckCircle2 size={40} class="text-emerald-400" />
     <div>
       <p class="font-semibold text-foreground">声を送信しました！</p>

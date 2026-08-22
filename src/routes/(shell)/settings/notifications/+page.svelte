@@ -75,7 +75,7 @@
   </div>
 
   {#if !data.configured}
-    <div data-suisou-surface="panel empty" class="p-8 flex flex-col items-center gap-3 text-center">
+    <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="p-8 text-center">
       <Bell size={32} class="text-subtle opacity-50" />
       <p class="text-muted-foreground">
         DM通知は現在準備中です。もうしばらくお待ちください。
@@ -85,7 +85,7 @@
     <div data-suisou-surface="panel" class="overflow-hidden">
       <!-- Toggle row -->
       <div class="flex items-center justify-between gap-4 p-5">
-        <div class="flex items-start gap-3">
+        <div data-suisou-layout="row stretch">
           <div class="mt-0.5 shrink-0 text-blue-400"><Bell size={20} /></div>
           <div>
             <p class="font-semibold text-foreground">新着をDMで受け取る</p>
@@ -113,7 +113,7 @@
 
       <!-- Status / gate -->
       {#if !followed}
-        <div class="border-t border-border bg-elevated/40 p-5 flex flex-col gap-3">
+        <div data-suisou-layout="stack" class="border-t border-border bg-elevated/40 p-5">
           <div class="flex items-start gap-2 text-muted-foreground">
             <AlertCircle size={16} class="mt-0.5 shrink-0 text-subtle" />
             <p>
@@ -121,7 +121,7 @@
               <span class="text-subtle">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
             </p>
           </div>
-          <div class="flex flex-wrap items-center gap-3">
+          <div data-suisou-layout="row" class="flex-wrap">
             <Button size="sm" loading={following} onclick={follow}>
               {#snippet leftIcon()}<UserPlus size={15} />{/snippet}
               公式（@{data.official?.handle}）をフォロー

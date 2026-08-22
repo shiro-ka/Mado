@@ -63,7 +63,7 @@
 </svelte:head>
 
 <div class="px-6 py-8 max-w-2xl mx-auto">
-  <div class="flex items-center gap-3 mb-8">
+  <div data-suisou-layout="row" class="mb-8">
     <a href={`/@${data.cleanHandle}`}>
       <Button variant="ghost" size="sm">
         {#snippet leftIcon()}<ArrowLeft size={15} />{/snippet}
@@ -126,7 +126,7 @@
         </div>
       {/if}
 
-      <div class="flex items-center justify-end gap-3 pt-2">
+      <div data-suisou-layout="row" class="justify-end pt-2">
         <a href={`/@${data.cleanHandle}`}>
           <Button variant="ghost" type="button" disabled={formState === "submitting"}>
             キャンセル
