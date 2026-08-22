@@ -75,7 +75,7 @@
       <span class="text-blue-400">想いを届けよう</span>
     </h1>
 
-    <p class="text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed text-muted-foreground">
+    <p data-suisou-text="s20" class="mb-8 max-w-xl mx-auto leading-relaxed text-muted-foreground">
       Madoは、Blueskyアカウントを使った半匿名の窓です。
       送り主は窓のオーナーだけに届き、暗号化によって守られます。
     </p>
@@ -117,8 +117,8 @@
 <section id="features" class="px-4 py-16">
   <div class="mx-auto max-w-5xl">
     <div class="text-center mb-12">
-      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">Madoの特徴</h2>
-      <p class="text-sm md:text-base text-muted-foreground">安全で信頼できる窓を実現する3つの柱</p>
+      <h2 data-suisou-text="s24 md:s28 w700" class="mb-3">Madoの特徴</h2>
+      <p data-suisou-text="s14 md:s16" class="text-muted-foreground">安全で信頼できる窓を実現する3つの柱</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -139,8 +139,8 @@
 <section id="how-it-works" class="px-4 py-16">
   <div data-suisou-surface="panel" class="mx-auto max-w-5xl p-8 md:p-12">
     <div class="text-center mb-10">
-      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">使い方</h2>
-      <p class="text-sm md:text-base text-muted-foreground">3ステップで始められます</p>
+      <h2 data-suisou-text="s24 md:s28 w700" class="mb-3">使い方</h2>
+      <p data-suisou-text="s14 md:s16" class="text-muted-foreground">3ステップで始められます</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -174,7 +174,7 @@
       ></div>
       <div class="relative">
         <Send size={36} class="mx-auto mb-4 opacity-80 text-blue-400" />
-        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">今すぐ始めよう</h2>
+        <h2 data-suisou-text="s24 md:s28 w700" class="mb-3">今すぐ始めよう</h2>
         <p data-suisou-text="s16" class="mb-6 text-muted-foreground">
           Blueskyアカウントがあれば、無料で窓を開けます。
         </p>
