@@ -80,22 +80,21 @@
       return true;
     })}
 
-    <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
+    <!-- 連結のタブ。現在地は aria-current で示し、下地は Suisou が出す -->
+    <div data-suisou-button-group class="mb-6">
       {#each tabs as t}
         <a
           href={`/receive?tab=${t.key}`}
-          class={cn(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2",
-            tab === t.key ? "bg-primary text-white" : "bg-transparent text-muted-foreground"
-          )}
+          data-suisou-button="neutral"
+          aria-current={tab === t.key ? "page" : undefined}
         >
           {t.label}
           {#if t.key === "all"}
-            <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
+            <span data-suisou-tag class="tabular-nums">
               {allQuestions.length}
             </span>
           {:else if t.key === "unread"}
-            <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
+            <span data-suisou-tag class="tabular-nums">
               {unreadCount}
             </span>
           {/if}
