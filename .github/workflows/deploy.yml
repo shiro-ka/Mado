@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main, dev]   # main → 本番 (mado.blue) / dev → プレビュー (dev.mado.pages.dev)
+    branches: [main, dev]   # main → 本番 (mado.blue) / dev → プレビュー (dev.mado-sveltekit.pages.dev)
 
 jobs:
   deploy-app:
@@ -21,8 +21,9 @@ jobs:
 
       - run: npm run build
       # --branch で Pages のプレビュー環境に振り分ける。main は production。
-      # ★出力の URL を Actions のサマリに出す。ブランチ別名（dev.mado.pages.dev）が
-      #   出ないことがあるので、一意 URL を必ず辿れるようにしておく。
+      # ★出力の URL を Actions のサマリに出す。ブランチ別名は Pages プロジェクト名側に付く
+      #   （dev.mado-sveltekit.pages.dev。dev.mado.pages.dev ではない）ので、
+      #   一意 URL を必ず辿れるようにしておく。
       - name: Deploy
         id: deploy
         run: |
