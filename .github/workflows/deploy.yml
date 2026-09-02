@@ -21,14 +21,16 @@ jobs:
 
       - run: npm run build
       # --branch で Pages のプレビュー環境に振り分ける。main は production。
-      # ★出力の URL を Actions のサマリに出す。ブランチ別名は Pages プロジェクト名側に付く
-      #   （dev.mado-sveltekit.pages.dev。dev.mado.pages.dev ではない）ので、
-      #   一意 URL を必ず辿れるようにしておく。
+      # ★プロジェクト名は mado。ドメインは mado-sveltekit.pages.dev。
+      #   作成時の名前が mado-sveltekit で、後で mado にリネームしたが *.pages.dev の
+      #   サブドメインは作成時のまま残る。URL からプロジェクト名を推測すると間違える
+      #   （2026-08-22〜09-02 の11日間、ここが mado-sveltekit でデプロイが全部失敗していた）。
+      # ★出力の URL を Actions のサマリに出す。ブランチ別名は dev.mado-sveltekit.pages.dev。
       - name: Deploy
         id: deploy
         run: |
           npx wrangler pages deploy .svelte-kit/cloudflare \
-            --project-name mado-sveltekit --branch ${{ github.ref_name }} | tee /tmp/deploy.log
+            --project-name mado --branch ${{ github.ref_name }} | tee /tmp/deploy.log
           {
             echo "### Pages デプロイ（${{ github.ref_name }}）"
             echo ''
