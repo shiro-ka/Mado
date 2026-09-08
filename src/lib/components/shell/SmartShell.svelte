@@ -18,7 +18,8 @@
     {@render children()}
   </DashboardShell>
 {:else}
-  <div data-suisou-layout="stack screen" class="shell">
+  <!-- 画面の骨格。区切りは罫がやるのですきまは持たない（gap-0） -->
+  <div data-suisou-layout="stack screen gap-0">
     <Header {session} />
     <main data-suisou-layout="stack grow">
       {@render children()}
@@ -26,12 +27,3 @@
     <Footer />
   </div>
 {/if}
-
-<style>
-  /* ★gap: 0 は打ち消し。Suisou の layout はすきま（space-2）を焼き込む設計で、
-     「すきま無し」の語を持たない。画面の骨格に使うとヘッダ／本文／フッタの間に
-     8px の隙が空き、背景のグラデが縞に見える。 */
-  .shell {
-    gap: 0;
-  }
-</style>

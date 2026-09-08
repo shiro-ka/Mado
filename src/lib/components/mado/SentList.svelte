@@ -78,7 +78,7 @@
   ];
 </script>
 
-<div data-suisou-layout="stack" class="list">
+<div data-suisou-layout="stack gap-3" class="list">
   <!-- ★タブは button-group="even" + aria-pressed。button.css には
        「5現場が同じ打ち消しを書いていた」から昇格した、とある形そのもの。
        旧実装も flex-1 と手書きの影で同じことをやっていた。 -->
@@ -113,7 +113,7 @@
       </p>
     </div>
   {:else}
-    <div data-suisou-layout="stack" class="items">
+    <div data-suisou-layout="stack gap-3" class="items">
       {#each filtered as item}
         {@const key = `${item.ref.ownerDid}:${item.ref.koeRkey}`}
         {@const isExpanded = expanded.has(key)}
@@ -176,14 +176,7 @@
 </div>
 
 <style>
-  .list {
-    gap: var(--suisou-space-3);
-  }
-  .items {
-    gap: var(--suisou-space-3);
-  }
   .empty {
-    gap: var(--suisou-space-2);
     align-items: center;
     padding-block: var(--suisou-space-4);
   }
@@ -206,7 +199,6 @@
   .answers {
     padding: var(--suisou-space-3);
     border-top: 1px solid var(--suisou-line-weak);
-    gap: var(--suisou-space-2);
   }
 
   .body {

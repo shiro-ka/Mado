@@ -21,7 +21,7 @@
   ];
 </script>
 
-<div data-suisou-layout="stack container" class="page">
+<div data-suisou-layout="stack container gap-4" class="page">
   <div data-suisou-layout="stack">
     <h1 data-suisou-text="s24 w700">半匿名の仕組み</h1>
     <p data-suisou-text="s16 doc" class="sub">
@@ -42,7 +42,7 @@
     </p>
   </div>
 
-  <section data-suisou-layout="stack" class="group">
+  <section data-suisou-layout="stack gap-3" class="group">
     <h2 data-suisou-text="s16 w700">誰が何を見られるか</h2>
     {#each visibility as row}
       <div data-suisou-surface="panel" data-suisou-media>
@@ -61,7 +61,7 @@
     {/each}
   </section>
 
-  <section data-suisou-layout="stack" class="group">
+  <section data-suisou-layout="stack gap-3" class="group">
     <h2 data-suisou-text="s16 w700">暗号化の仕組み</h2>
     <div data-suisou-surface="panel" data-suisou-media>
       <Lock data-suisou-icon="success" data-suisou-media-icon />
@@ -80,11 +80,7 @@
 <style>
   .page {
     --suisou-measure: 42rem;
-    gap: var(--suisou-space-4);
     padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .group {
-    gap: var(--suisou-space-3);
   }
   .sub {
     color: var(--suisou-text-sub);

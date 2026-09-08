@@ -4,8 +4,8 @@
 </script>
 
 <footer class="foot">
-  <div data-suisou-layout="stack container" class="inner">
-    <div data-suisou-layout="stack md:even" class="cols">
+  <div data-suisou-layout="stack container gap-4" class="inner">
+    <div data-suisou-layout="stack md:even gap-4" class="cols">
       <!-- Brand -->
       <div data-suisou-layout="stack">
         <Brand size="lg" />
@@ -69,10 +69,6 @@
   }
   .inner {
     padding: var(--suisou-space-4) var(--suisou-space-3);
-    gap: var(--suisou-space-4);
-  }
-  .cols {
-    gap: var(--suisou-space-4);
   }
   .bottom {
     margin-block-start: var(--suisou-space-4);

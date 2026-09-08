@@ -30,11 +30,11 @@
 
 {#if data.isOwner}
   <!-- Owner: manage view — profile + box list with the main box pinned -->
-  <div data-suisou-layout="stack container" class="page">
+  <div data-suisou-layout="stack container gap-3" class="page">
     {#await data.detail}
       <Skeleton height="7rem" />
       {@render listHead("")}
-      <div data-suisou-layout="stack" class="items">
+      <div data-suisou-layout="stack gap-3" class="items">
         {#each Array(2) as _}
           <Skeleton height="6rem" />
         {/each}
@@ -88,7 +88,7 @@
           </a>
         </div>
       {:else}
-        <div data-suisou-layout="stack" class="items">
+        <div data-suisou-layout="stack gap-3" class="items">
           {#each detail.openBoxes as box}
             <!-- ★重ねていた「停止中」タグを外した。QuestionBoxCard が既に
                  受付中／受付停止 を出しており、同じことを2回言っていた。 -->
@@ -115,7 +115,7 @@
   </div>
 {:else}
   <!-- Visitor: send view — main box send form, then the other Mado below -->
-  <div data-suisou-layout="stack container" class="page narrow">
+  <div data-suisou-layout="stack container gap-3" class="page narrow">
     {#await data.detail}
       <Skeleton height="16rem" />
     {:then detail}
@@ -134,14 +134,14 @@
       {/if}
 
       {#if detail.subBoxes.length > 0}
-        <div data-suisou-layout="stack" class="others">
+        <div data-suisou-layout="stack gap-3" class="others">
           <div data-suisou-layout="row">
             <MessageCircle data-suisou-icon="small sub" />
             <h2 data-suisou-text="s14 w700" class="sub">
               その他のMado ({detail.subBoxes.length})
             </h2>
           </div>
-          <div data-suisou-layout="stack" class="items">
+          <div data-suisou-layout="stack gap-3" class="items">
             {#each detail.subBoxes as box}
               <QuestionBoxCard {box} ownerHandle={detail.profile?.handle ?? data.cleanHandle} />
             {/each}
@@ -155,21 +155,15 @@
 <style>
   .page {
     --suisou-measure: 42rem;
-    gap: var(--suisou-space-3);
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .narrow {
     --suisou-measure: 32rem;
   }
-  .items {
-    gap: var(--suisou-space-3);
-  }
   .others {
-    gap: var(--suisou-space-3);
     margin-block-start: var(--suisou-space-4);
   }
   .empty {
-    gap: var(--suisou-space-2);
     align-items: center;
     padding: var(--suisou-space-4);
   }

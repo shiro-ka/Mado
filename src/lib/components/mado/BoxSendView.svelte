@@ -27,7 +27,7 @@
   );
 </script>
 
-<div data-suisou-layout="stack" class="view">
+<div data-suisou-layout="stack gap-3" class="view">
   <!-- オーナー。アバターは Suisou の avatar（円＝人・主体）。 -->
   <div data-suisou-media>
     {#if ownerProfile?.avatar}
@@ -99,7 +99,7 @@
   {:else if !session}
     <div data-suisou-surface="panel" data-suisou-layout="stack" class="notice">
       <Glyph><LogIn data-suisou-icon="accent" /></Glyph>
-      <div data-suisou-layout="stack" class="center">
+      <div data-suisou-layout="stack gap-1" class="center">
         <p data-suisou-text="s14 w700">声を送るにはログインが必要です</p>
         <p data-suisou-text="s12 doc" class="sub">
           Blueskyアカウントでログインして声を送りましょう。
@@ -122,20 +122,12 @@
 </div>
 
 <style>
-  .view {
-    gap: var(--suisou-space-3);
-  }
-  .box {
-    gap: var(--suisou-space-2);
-  }
   .notice {
-    gap: var(--suisou-space-2);
     align-items: center;
     text-align: center;
     padding: var(--suisou-space-4);
   }
   .center {
-    gap: var(--suisou-space-1);
     align-items: center;
   }
   .full {

@@ -33,9 +33,9 @@
   <title>受信トレイ | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack container" class="page">
+<div data-suisou-layout="stack container gap-3" class="page">
   <div data-suisou-layout="row between">
-    <div data-suisou-layout="stack" class="title">
+    <div data-suisou-layout="stack gap-0" class="title">
       <h1 data-suisou-text="s24 w700">受信トレイ</h1>
       <p data-suisou-text="s14" class="sub">届いた声を確認しましょう</p>
     </div>
@@ -62,7 +62,7 @@
         <span data-suisou-button="neutral">{t.label}</span>
       {/each}
     </div>
-    <div data-suisou-layout="stack" class="items">
+    <div data-suisou-layout="stack gap-3" class="items">
       {#each Array(4) as _}
         <Skeleton height="5rem" />
       {/each}
@@ -98,9 +98,9 @@
     </div>
 
     {#if filtered.length === 0}
-      <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+      <div data-suisou-surface="panel empty" data-suisou-layout="stack gap-3" class="empty">
         <Inbox data-suisou-icon="sub" class="big" />
-        <div data-suisou-layout="stack" class="text">
+        <div data-suisou-layout="stack gap-1" class="text">
           <p data-suisou-text="s16 w700">
             {tab === "unread" ? "未読の声はありません" : "声がありません"}
           </p>
@@ -110,7 +110,7 @@
         </div>
       </div>
     {:else}
-      <div data-suisou-layout="stack" class="items">
+      <div data-suisou-layout="stack gap-3" class="items">
         {#each filtered as question}
           <QuestionCard {question} preview={question.body} href={question.href} />
         {/each}
@@ -122,14 +122,7 @@
 <style>
   .page {
     --suisou-measure: 48rem;
-    gap: var(--suisou-space-3);
     padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .title {
-    gap: 0;
-  }
-  .items {
-    gap: var(--suisou-space-3);
   }
   .link {
     color: var(--suisou-text-sub);
@@ -148,13 +141,11 @@
   }
 
   .empty {
-    gap: var(--suisou-space-3);
     align-items: center;
     text-align: center;
     padding: var(--suisou-space-4);
   }
   .text {
-    gap: var(--suisou-space-1);
     align-items: center;
   }
   .empty :global(.big) {

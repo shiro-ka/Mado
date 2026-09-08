@@ -54,14 +54,14 @@
 {#if formState === "success"}
   <div data-suisou-banner="success" data-suisou-layout="stack" role="status" class="done">
     <CheckCircle2 class="big" />
-    <div data-suisou-layout="stack" class="center">
+    <div data-suisou-layout="stack gap-1" class="center">
       <p data-suisou-text="s16 w700">声を送信しました！</p>
       <p data-suisou-text="s14" class="sub">相手に届くまでしばらくお待ちください。</p>
     </div>
     <Button variant="ghost" onclick={() => (formState = "idle")}>別の声を送る</Button>
   </div>
 {:else}
-  <form onsubmit={handleSubmit} data-suisou-layout="stack" class="form">
+  <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
     <!-- ★送り主の開示。Suisou の banner は error / warning / success の3つで、
          「お知らせ」の段を持たない（結果を知らせる帯として作られているため）。
          ここは面 + accent の罫で置いている。→ 申し送り（dev/todo/mado-suisou-ui.md） -->
@@ -105,16 +105,11 @@
 {/if}
 
 <style>
-  .form {
-    gap: var(--suisou-space-3);
-  }
   .done {
-    gap: var(--suisou-space-2);
     padding: var(--suisou-space-4);
     text-align: center;
   }
   .center {
-    gap: var(--suisou-space-1);
     align-items: center;
   }
   .sub {

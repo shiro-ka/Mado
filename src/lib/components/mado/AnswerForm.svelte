@@ -76,7 +76,7 @@
        意味（role）は CSS では足せないので現場が書く、というのが Suisou の約束。 -->
   <div data-suisou-banner="success" data-suisou-layout="stack" role="status" class="done">
     <CheckCircle2 class="big" />
-    <div data-suisou-layout="stack" class="center">
+    <div data-suisou-layout="stack gap-1" class="center">
       <p data-suisou-text="s16 w700">回答を投稿しました</p>
       <p data-suisou-text="s14" class="sub">PDSに保存されました。</p>
       {#if crosspostFailed}
@@ -101,7 +101,7 @@
     <Button variant="ghost" onclick={reset}>続けて回答する</Button>
   </div>
 {:else}
-  <form onsubmit={handleSubmit} data-suisou-layout="stack" class="form">
+  <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
     <Textarea
       placeholder="回答を入力してください..."
       bind:value={body}
@@ -142,16 +142,11 @@
 {/if}
 
 <style>
-  .form {
-    gap: var(--suisou-space-3);
-  }
   .done {
-    gap: var(--suisou-space-2);
     padding: var(--suisou-space-4);
     text-align: center;
   }
   .center {
-    gap: var(--suisou-space-1);
     align-items: center;
   }
   .sub {
