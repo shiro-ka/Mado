@@ -16,7 +16,8 @@
 
 ## 技術スタック
 
-- **SvelteKit 2 / Svelte 5** + **Tailwind v4** + shadcn-svelte（bits-ui）
+- **SvelteKit 2 / Svelte 5** + **[Suisou](https://github.com/shiro-ka/Suisou)**（自作のデザインシステム。`data-suisou-*` 属性で当てる純 CSS）
+  - CSS は `https://suisou.pages.dev/v1/suisou.css` 1本 ＋ 各コンポーネントの scoped style。ビルド時の CSS フレームワークは使っていない
 - **Cloudflare Pages**（`@sveltejs/adapter-cloudflare`）+ **KV** + **D1**
 - 認証: **atproto OAuth**（DPoP / `private_key_jwt`）— `@atproto/oauth-client-node` を Workers 向けに調整（`src/lib/oauth.server.ts`）
 - 暗号: **eciesjs**（secp256k1 ECIES）
