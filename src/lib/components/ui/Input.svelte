@@ -71,6 +71,6 @@
     color: var(--suisou-error);
   }
   .helper {
-    color: var(--suisou-text-disabled);
+    color: var(--suisou-text-sub);
   }
 </style>

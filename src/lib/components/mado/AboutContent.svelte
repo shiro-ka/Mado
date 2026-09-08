@@ -50,7 +50,7 @@
     {/each}
   </div>
 
-  <p data-suisou-text="s12" class="faint">
+  <p data-suisou-text="s12" class="sub">
     Mado はオープンベータです。仕様は予告なく変更される場合があります。
   </p>
 </div>
@@ -68,8 +68,5 @@
   }
   .sub {
     color: var(--suisou-text-sub);
-  }
-  .faint {
-    color: var(--suisou-text-disabled);
   }
 </style>

@@ -42,7 +42,7 @@
       <span data-suisou-tag={data.question.isRead ? "" : "accent"}>
         {data.question.isRead ? "既読" : "未読"}
       </span>
-      <span data-suisou-text="s12" class="faint">{formatDateFull(data.question.createdAt)}</span>
+      <span data-suisou-text="s12" class="sub">{formatDateFull(data.question.createdAt)}</span>
     </div>
 
     <p data-suisou-text="s16 doc" class="body">{data.question.body}</p>
@@ -156,18 +156,15 @@
   }
   .did {
     font-family: var(--suisou-mono);
-    color: var(--suisou-text-disabled);
+    color: var(--suisou-text-sub);
     word-break: break-all;
   }
   .sub {
     color: var(--suisou-text-sub);
   }
-  .faint {
-    color: var(--suisou-text-disabled);
-  }
   .date {
     margin-inline-start: auto;
-    color: var(--suisou-text-disabled);
+    color: var(--suisou-text-sub);
   }
 
   .danger {

@@ -49,10 +49,10 @@
     </div>
 
     <div data-suisou-layout="stack between" class="bottom">
-      <p data-suisou-text="s12" class="faint">
+      <p data-suisou-text="s12" class="sub">
         &copy; {new Date().getFullYear()} Mado. All rights reserved.
       </p>
-      <div data-suisou-layout="row" data-suisou-text="s12" class="faint">
+      <div data-suisou-layout="row" data-suisou-text="s12" class="sub">
         <Globe data-suisou-icon="small" />
         <span>Powered by ATProtocol</span>
       </div>
@@ -94,8 +94,5 @@
   }
   .sub:hover {
     color: var(--suisou-text-main);
-  }
-  .faint {
-    color: var(--suisou-text-disabled);
   }
 </style>

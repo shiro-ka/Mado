@@ -114,7 +114,7 @@
       <div data-suisou-layout="row between">
         <div data-suisou-layout="stack" class="label">
           <p data-suisou-text="s14 w500" class="sub">声の受付</p>
-          <p data-suisou-text="s12" class="faint">オフにすると新しい声を受け付けません</p>
+          <p data-suisou-text="s12" class="sub">オフにすると新しい声を受け付けません</p>
         </div>
         <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
       </div>
@@ -164,7 +164,7 @@
   }
   .preview {
     font-family: var(--suisou-mono);
-    color: var(--suisou-text-disabled);
+    color: var(--suisou-text-sub);
     word-break: break-all;
   }
   .accent {
@@ -172,8 +172,5 @@
   }
   .sub {
     color: var(--suisou-text-sub);
-  }
-  .faint {
-    color: var(--suisou-text-disabled);
   }
 </style>
