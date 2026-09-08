@@ -70,7 +70,7 @@
     </div>
     <div data-suisou-layout="stack">
       {#each Array(4) as _}
-        <Skeleton class="h-20" />
+        <Skeleton height="5rem" />
       {/each}
     </div>
   {:then inbox}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageCircle, AtSign, AlertCircle, Shield } from "lucide-svelte";
+  import { MessageCircle, AlertCircle, Shield } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
 
@@ -67,9 +67,8 @@
           autofocus={true}
           autocomplete="username"
           inputmode="email"
-        >
-          {#snippet leftAddon()}<AtSign size={16} />{/snippet}
-        </Input>
+          prefix="@"
+        />
 
         {#if error}
           <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">

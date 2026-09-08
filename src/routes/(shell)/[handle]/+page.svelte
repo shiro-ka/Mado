@@ -19,7 +19,7 @@
   <div class="px-4 py-10">
     <div class="mx-auto max-w-2xl">
       {#await data.detail}
-        <Skeleton class="h-28 mb-6" />
+        <Skeleton height="7rem" />
         <div class="mb-3 flex items-center justify-between">
           <div data-suisou-layout="row">
             <MessageCircle size={16} class="text-subtle" />
@@ -34,7 +34,7 @@
         </div>
         <div data-suisou-layout="stack">
           {#each Array(2) as _}
-            <Skeleton class="h-24" />
+            <Skeleton height="6rem" />
           {/each}
         </div>
       {:then detail}
@@ -129,7 +129,7 @@
   <div class="px-4 py-10">
     <div class="mx-auto max-w-lg">
       {#await data.detail}
-        <Skeleton class="h-64" />
+        <Skeleton height="16rem" />
       {:then detail}
         {#if detail.box}
           <BoxSendView
