@@ -26,7 +26,7 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
 </svelte:head>
 
-<div data-suisou-layout="stack container" class="page">
+<div data-suisou-layout="stack container gap-3" class="page">
   <div>
     <a href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
       <Button variant="ghost">
@@ -37,7 +37,7 @@
   </div>
 
   <!-- 声 -->
-  <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
+  <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
     <div data-suisou-layout="row between">
       <span data-suisou-tag={data.question.isRead ? "" : "accent"}>
         {data.question.isRead ? "既読" : "未読"}
@@ -96,7 +96,7 @@
 
   <!-- 回答 -->
   {#if data.answers.length > 0}
-    <div data-suisou-layout="stack" class="group">
+    <div data-suisou-layout="stack gap-3" class="group">
       <h2 data-suisou-text="s14 w700">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
         <div data-suisou-surface="panel" data-suisou-layout="stack">
@@ -112,7 +112,7 @@
   {/if}
 
   {#if data.isOwner}
-    <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
+    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
       <h2 data-suisou-text="s14 w700">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
@@ -135,15 +135,10 @@
 <style>
   .page {
     --suisou-measure: 42rem;
-    gap: var(--suisou-space-3);
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .card {
-    gap: var(--suisou-space-3);
     padding: var(--suisou-space-4);
-  }
-  .group {
-    gap: var(--suisou-space-3);
   }
   .sender {
     align-items: center;
@@ -167,9 +162,6 @@
     color: var(--suisou-text-sub);
   }
 
-  .danger {
-    gap: var(--suisou-space-2);
-  }
   /* ★打ち消し：stack md:row（md:row が flex-direction を戻さない） */
   @media (width >= 768px) {
     .danger {

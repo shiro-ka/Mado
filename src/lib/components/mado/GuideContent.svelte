@@ -20,7 +20,7 @@
   ];
 </script>
 
-<div data-suisou-layout="stack container" class="page">
+<div data-suisou-layout="stack container gap-4" class="page">
   <div data-suisou-layout="stack">
     <h1 data-suisou-text="s24 w700">使い方</h1>
     <p data-suisou-text="s16 doc" class="sub">
@@ -29,7 +29,7 @@
   </div>
 
   {#each sections as section}
-    <section data-suisou-layout="stack" class="group">
+    <section data-suisou-layout="stack gap-3" class="group">
       <h2 data-suisou-text="s16 w700">{section.title}</h2>
       {#each section.steps as item}
         <div data-suisou-surface="panel" data-suisou-media>
@@ -50,11 +50,7 @@
 <style>
   .page {
     --suisou-measure: 42rem;
-    gap: var(--suisou-space-4);
     padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .group {
-    gap: var(--suisou-space-3);
   }
   .sub {
     color: var(--suisou-text-sub);

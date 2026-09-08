@@ -17,7 +17,7 @@
     {:else}
       <div data-suisou-avatar>{session.handle[0]?.toUpperCase() ?? "?"}</div>
     {/if}
-    <div data-suisou-layout="grow stack" class="who">
+    <div data-suisou-layout="grow stack gap-0" class="who">
       <p data-suisou-text="s14 w500" class="ellipsis">
         {session.displayName ?? session.handle}
       </p>
@@ -37,10 +37,6 @@
     flex: none;
     padding: var(--suisou-space-2);
     border-block-start: 1px solid var(--suisou-line-weak);
-  }
-  /* 名前とハンドルは1行ずつ詰めて出す（stack の既定 8px より近く） */
-  .who {
-    gap: 0;
   }
   .ellipsis {
     overflow: hidden;

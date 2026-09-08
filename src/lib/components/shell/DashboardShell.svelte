@@ -28,7 +28,7 @@
 <!-- 画面の骨格。区画の名前は Suisou が持つ（aside / body）。
      :has() で aside の有無を見て列を畳むので、狭い画面では
      aside を消すだけで1列になる ―― ここで grid を書き直す必要がない。 -->
-<div data-suisou-layout="frame" class="frame">
+<div data-suisou-layout="frame gap-0" class="frame">
   <!-- Desktop sidebar -->
   <aside data-suisou-layout="aside stack scroll" class="side">
     <Sidebar {session} />
@@ -70,12 +70,11 @@
 <style>
   /* 骨格の実寸だけが現場のもの。面と罫は Suisou のトークン。
 
-     ★すきまは 0 にする。layout は既定で 8px 空くが、アプリの骨格は
-       区画どうしを**罫で**区切るので隙間が要らない。しかも狭い画面で
-       aside を display:none にしても :has() は当たったままなので、
-       0 にしないと畳んだ側に 8px の帯が残る。 */
+     ★すきまは gap-0。アプリの骨格は区画どうしを**罫で**区切るので隙間が要らない。
+       ★★しかも狭い画面で aside を display:none にしても frame の :has() は
+         当たったままなので、0 にしないと畳んだ側に 8px の帯が残る
+         （Suisou への申し送り）。 */
   .frame {
-    gap: 0;
     height: 100dvh;
     overflow: hidden;
   }

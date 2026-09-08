@@ -43,7 +43,7 @@
 </svelte:head>
 
 <div data-suisou-layout="center screen" class="wrap">
-  <div data-suisou-layout="stack" class="col">
+  <div data-suisou-layout="stack gap-4" class="col">
     <div data-suisou-layout="stack" class="head">
       <a data-suisou-layout="row" href="/">
         <Glyph><MessageCircle data-suisou-icon="accent" /></Glyph>
@@ -53,8 +53,8 @@
       <p data-suisou-text="s14" class="sub center">あなたのハンドルを入力して認証します</p>
     </div>
 
-    <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
-      <form onsubmit={handleSubmit} data-suisou-layout="stack" class="form">
+    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
+      <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
         <Input
           label="Blueskyハンドル"
           placeholder="yourname.bsky.social"
@@ -102,18 +102,12 @@
   .col {
     width: 100%;
     max-width: 28rem;
-    gap: var(--suisou-space-4);
   }
   .head {
-    gap: var(--suisou-space-2);
     align-items: center;
   }
   .card {
-    gap: var(--suisou-space-3);
     padding: var(--suisou-space-4);
-  }
-  .form {
-    gap: var(--suisou-space-3);
   }
   .note {
     padding-block-start: var(--suisou-space-3);

@@ -67,7 +67,7 @@
     </span>
     <Button variant="ghost" loading={state === "unblocking"} onclick={unblock}>解除</Button>
     {#if state === "unblock-error"}
-      <span data-suisou-layout="row" data-suisou-text="s12" class="err">
+      <span data-suisou-layout="row gap-1" data-suisou-text="s12" class="err">
         <AlertCircle data-suisou-icon="small" />
         解除に失敗しました
       </span>
@@ -91,7 +91,7 @@
       <Button variant="ghost" onclick={() => (state = "idle")}>キャンセル</Button>
     {/if}
     {#if state === "block-error"}
-      <span data-suisou-layout="row" data-suisou-text="s12" class="err">
+      <span data-suisou-layout="row gap-1" data-suisou-text="s12" class="err">
         <AlertCircle data-suisou-icon="small" />
         ブロックに失敗しました
       </span>
@@ -100,11 +100,7 @@
 {/if}
 
 <style>
-  .bar {
-    gap: var(--suisou-space-2);
-  }
   .err {
     color: var(--suisou-error);
-    gap: var(--suisou-space-1);
   }
 </style>

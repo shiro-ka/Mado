@@ -149,7 +149,7 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
 </svelte:head>
 
-<div data-suisou-layout="stack container" class="page">
+<div data-suisou-layout="stack container gap-3" class="page">
   {#if data.isOwner}
     <div data-suisou-layout="row">
       <a href={`/@${data.cleanHandle}`}>
@@ -162,7 +162,7 @@
     </div>
 
     <div data-suisou-surface="panel" class="card">
-      <form onsubmit={handleSave} data-suisou-layout="stack" class="form">
+      <form onsubmit={handleSave} data-suisou-layout="stack gap-4" class="form">
         <Input
           label="タイトル（必須）"
           placeholder="なんでも声を届けてください！"
@@ -180,7 +180,7 @@
           rows={4}
           disabled={isBusy}
         />
-        <div data-suisou-layout="stack" class="slug">
+        <div data-suisou-layout="stack gap-1" class="slug">
           <Input
             label="URL"
             placeholder="ask"
@@ -196,7 +196,7 @@
         </div>
 
         <div data-suisou-layout="row between">
-          <div data-suisou-layout="stack" class="label">
+          <div data-suisou-layout="stack gap-0" class="label">
             <p data-suisou-text="s14 w500" class="sub">声の受付</p>
             <p data-suisou-text="s12" class="sub">オフにすると新しい声を受け付けません</p>
           </div>
@@ -299,20 +299,10 @@
 <style>
   .page {
     --suisou-measure: 32rem;
-    gap: var(--suisou-space-3);
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .card {
     padding: var(--suisou-space-4);
-  }
-  .form {
-    gap: var(--suisou-space-4);
-  }
-  .slug {
-    gap: var(--suisou-space-1);
-  }
-  .label {
-    gap: 0;
   }
   .strip {
     align-items: center;

@@ -14,7 +14,7 @@
 </svelte:head>
 
 <div data-suisou-layout="center screen" class="wrap">
-  <div data-suisou-layout="stack" class="box">
+  <div data-suisou-layout="stack gap-3" class="box">
     <Glyph><AlertCircle data-suisou-icon="error" /></Glyph>
     <div data-suisou-layout="stack" class="text">
       <p data-suisou-text="s32 w700">{status}</p>
@@ -40,13 +40,11 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .box {
-    gap: var(--suisou-space-3);
     max-width: 28rem;
     text-align: center;
     align-items: center;
   }
   .text {
-    gap: var(--suisou-space-2);
     align-items: center;
   }
   .sub {

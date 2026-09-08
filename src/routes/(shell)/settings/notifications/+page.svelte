@@ -66,8 +66,8 @@
   <title>通知設定 | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack container" class="page">
-  <div data-suisou-layout="stack" class="head">
+<div data-suisou-layout="stack container gap-3" class="page">
+  <div data-suisou-layout="stack gap-1" class="head">
     <h1 data-suisou-text="s24 w700">通知設定</h1>
     <p data-suisou-text="s14" class="sub">
       新しい声が届いたときのお知らせ方法を設定します
@@ -164,14 +164,9 @@
 <style>
   .page {
     --suisou-measure: 42rem;
-    gap: var(--suisou-space-3);
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
-  .head {
-    gap: var(--suisou-space-1);
-  }
   .empty {
-    gap: var(--suisou-space-2);
     align-items: center;
     padding: var(--suisou-space-4);
   }
@@ -182,7 +177,6 @@
 
   .row {
     padding: var(--suisou-space-3);
-    gap: var(--suisou-space-2);
   }
   .foot {
     border-top: 1px solid var(--suisou-line-weak);

@@ -31,7 +31,7 @@
   }
 </script>
 
-<div data-suisou-layout="stack container" class="page">
+<div data-suisou-layout="stack container gap-4" class="page">
   <div data-suisou-layout="row" class="head">
     <Home data-suisou-icon="accent" />
     <h1 data-suisou-text="s24 w700">ホーム</h1>
@@ -49,7 +49,7 @@
 
   <!-- ★数字の色分け（青/緑）はやめた。3枚とも同じ「数」なので、色に意味が無く
        Suisou の意味色（success/warning/error）とも食い違っていた。 -->
-  <div data-suisou-layout="even" class="stats">
+  <div data-suisou-layout="even gap-3" class="stats">
     {#each [
       { label: "開いた窓", value: boxes.length, unit: "個" },
       { label: "未読の声", value: unreadCount, unit: "件" },
@@ -65,9 +65,9 @@
     {/each}
   </div>
 
-  <div data-suisou-layout="stack md:even" class="panes">
+  <div data-suisou-layout="stack md:even gap-3" class="panes">
     <!-- 窓 -->
-    <div data-suisou-surface="panel" data-suisou-layout="stack" class="pane">
+    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="pane">
       <div data-suisou-layout="row between">
         <div data-suisou-layout="row">
           <MessageSquare data-suisou-icon="small accent" />
@@ -107,7 +107,7 @@
     </div>
 
     <!-- 受信トレイ -->
-    <div data-suisou-surface="panel" data-suisou-layout="stack" class="pane">
+    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="pane">
       <div data-suisou-layout="row between">
         <div data-suisou-layout="row">
           <Inbox data-suisou-icon="small success" />
@@ -149,21 +149,9 @@
 <style>
   .page {
     --suisou-measure: 56rem;
-    gap: var(--suisou-space-4);
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
-  .head {
-    gap: var(--suisou-space-2);
-  }
-  .stats,
-  .panes {
-    gap: var(--suisou-space-3);
-  }
-  .pane {
-    gap: var(--suisou-space-3);
-  }
   .empty {
-    gap: var(--suisou-space-2);
     align-items: center;
     padding-block: var(--suisou-space-4);
   }

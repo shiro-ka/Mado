@@ -24,7 +24,7 @@
   ];
 </script>
 
-<div data-suisou-layout="stack container" class="page">
+<div data-suisou-layout="stack container gap-4" class="page">
   <div data-suisou-layout="stack">
     <div data-suisou-layout="row">
       <Glyph><MessageCircle data-suisou-icon="accent" /></Glyph>
@@ -37,7 +37,7 @@
     </p>
   </div>
 
-  <div data-suisou-layout="stack" class="group">
+  <div data-suisou-layout="stack gap-3" class="group">
     <h2 data-suisou-text="s20 w700">3つの特徴</h2>
     {#each features as feat}
       <div data-suisou-surface="panel" data-suisou-media>
@@ -60,11 +60,7 @@
      --suisou-spinner で「実寸は現場のもの」としているのと同じやり方。 */
   .page {
     --suisou-measure: 42rem;
-    gap: var(--suisou-space-4);
     padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .group {
-    gap: var(--suisou-space-3);
   }
   .sub {
     color: var(--suisou-text-sub);
