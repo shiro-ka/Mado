@@ -19,12 +19,12 @@
     </div>
     <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-8">
       {#each Array(3) as _}
-        <Skeleton class="h-[88px] sm:h-[104px]" />
+        <Skeleton height="5.5rem" heightWide="6.5rem" />
       {/each}
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <Skeleton class="h-52" />
-      <Skeleton class="h-52" />
+      <Skeleton height="13rem" />
+      <Skeleton height="13rem" />
     </div>
   </div>
 {:then d}
