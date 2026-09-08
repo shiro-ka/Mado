@@ -12,17 +12,17 @@
 </svelte:head>
 
 {#await data.dashboard}
-  <div class="px-6 py-8 max-w-4xl mx-auto">
-    <div class="flex items-center gap-2.5 mb-8">
-      <Home size={22} class="text-primary shrink-0" />
-      <h1 data-suisou-text="s24 w700" class="text-foreground">ホーム</h1>
+  <div data-suisou-layout="stack container" class="page">
+    <div data-suisou-layout="row" class="head">
+      <Home data-suisou-icon="accent" />
+      <h1 data-suisou-text="s24 w700">ホーム</h1>
     </div>
-    <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-8">
+    <div data-suisou-layout="even" class="row">
       {#each Array(3) as _}
         <Skeleton height="5.5rem" heightWide="6.5rem" />
       {/each}
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div data-suisou-layout="stack md:even" class="row">
       <Skeleton height="13rem" />
       <Skeleton height="13rem" />
     </div>
@@ -36,3 +36,17 @@
     replyCount={d.replyCount}
   />
 {/await}
+
+<style>
+  .page {
+    --suisou-measure: 56rem;
+    gap: var(--suisou-space-4);
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .head {
+    gap: var(--suisou-space-2);
+  }
+  .row {
+    gap: var(--suisou-space-3);
+  }
+</style>

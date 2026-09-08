@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Send } from "lucide-svelte";
   import SentList from "$lib/components/mado/SentList.svelte";
+  import Glyph from "$lib/components/ui/Glyph.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -10,16 +11,25 @@
   <title>送信トレイ | Mado</title>
 </svelte:head>
 
-<div class="px-6 py-8 max-w-2xl mx-auto">
-  <div data-suisou-layout="row" class="mb-8">
-    <div class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-light">
-      <Send size={17} class="text-primary" />
-    </div>
-    <div>
-      <h1 data-suisou-text="s20 w700" class="text-foreground">送信トレイ</h1>
-      <p data-suisou-text="s12" class="text-muted-foreground">あなたが送った声と返信</p>
+<div data-suisou-layout="stack container" class="page">
+  <div data-suisou-media>
+    <Glyph><Send data-suisou-icon="accent" /></Glyph>
+    <div data-suisou-media-content>
+      <h1 data-suisou-text="s20 w700">送信トレイ</h1>
+      <p data-suisou-text="s12" class="sub">あなたが送った声と返信</p>
     </div>
   </div>
 
   <SentList items={data.items} />
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 42rem;
+    gap: var(--suisou-space-4);
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>

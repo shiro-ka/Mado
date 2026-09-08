@@ -2,6 +2,7 @@
   import { MessageCircle, AlertCircle, Shield } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
+  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   let handle = $state("");
   let loading = $state(false);
@@ -41,23 +42,19 @@
   <title>ログイン | Mado</title>
 </svelte:head>
 
-<div class="min-h-dvh flex flex-col items-center justify-center px-4 py-16 bg-background">
-  <div class="w-full max-w-md">
-    <!-- Header -->
-    <div data-suisou-layout="stack" class="mb-8">
-      <a href="/" data-suisou-layout="row">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary">
-          <MessageCircle size={20} class="text-background" />
-        </div>
-        <span data-suisou-text="s20 w700" class="text-foreground">Mado</span>
+<div data-suisou-layout="center screen" class="wrap">
+  <div data-suisou-layout="stack" class="col">
+    <div data-suisou-layout="stack" class="head">
+      <a data-suisou-layout="row" href="/">
+        <Glyph><MessageCircle data-suisou-icon="accent" /></Glyph>
+        <span data-suisou-text="s20 w700">Mado</span>
       </a>
-      <h1 data-suisou-text="s24 w700" class="text-center text-foreground">Blueskyアカウントでログイン</h1>
-      <p class="text-center text-muted-foreground">あなたのハンドルを入力して認証します</p>
+      <h1 data-suisou-text="s24 w700" class="center">Blueskyアカウントでログイン</h1>
+      <p data-suisou-text="s14" class="sub center">あなたのハンドルを入力して認証します</p>
     </div>
 
-    <!-- Card -->
-    <div data-suisou-surface="panel" class="p-8">
-      <form onsubmit={handleSubmit} class="flex flex-col gap-5">
+    <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
+      <form onsubmit={handleSubmit} data-suisou-layout="stack" class="form">
         <Input
           label="Blueskyハンドル"
           placeholder="yourname.bsky.social"
@@ -71,26 +68,20 @@
         />
 
         {#if error}
-          <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">
-            <AlertCircle size={15} />
+          <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+            <AlertCircle data-suisou-icon="small" />
             {error}
-          </div>
+          </p>
         {/if}
 
-        <Button
-          type="submit"
-          size="lg"
-          {loading}
-          disabled={!handle.trim()}
-          class="w-full"
-        >
+        <Button variant="default" wide type="submit" {loading} disabled={!handle.trim()}>
           {loading ? "認証中..." : "ログインする"}
         </Button>
       </form>
 
-      <div class="mt-5 pt-5 flex items-start gap-2.5 border-t border-border">
-        <Shield size={14} class="shrink-0 mt-0.5 text-subtle" />
-        <p data-suisou-text="s12" class="leading-relaxed text-subtle">
+      <div data-suisou-media class="note">
+        <Shield data-suisou-icon="small sub" data-suisou-media-icon />
+        <p data-suisou-media-content data-suisou-text="s12 doc" class="sub">
           認証にはATProtocol OAuth 2.0を使用します。
           パスワードはMadoに送信されません。
           認証後、あなたのDIDとハンドルが声に紐付けられます。
@@ -98,8 +89,40 @@
       </div>
     </div>
 
-    <p data-suisou-text="s12" class="text-center mt-6 text-subtle">
-      <a href="/" class="hover:opacity-80 transition-opacity">← トップページに戻る</a>
+    <p data-suisou-text="s12" class="sub center">
+      <a href="/">← トップページに戻る</a>
     </p>
   </div>
 </div>
+
+<style>
+  .wrap {
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .col {
+    width: 100%;
+    max-width: 28rem;
+    gap: var(--suisou-space-4);
+  }
+  .head {
+    gap: var(--suisou-space-2);
+    align-items: center;
+  }
+  .card {
+    gap: var(--suisou-space-3);
+    padding: var(--suisou-space-4);
+  }
+  .form {
+    gap: var(--suisou-space-3);
+  }
+  .note {
+    padding-block-start: var(--suisou-space-3);
+    border-top: 1px solid var(--suisou-line-weak);
+  }
+  .center {
+    text-align: center;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>

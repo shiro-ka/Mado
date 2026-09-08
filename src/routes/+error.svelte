@@ -2,6 +2,7 @@
   import { page } from "$app/state";
   import { Home, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
+  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   const status = $derived(page.status);
   const message = $derived(page.error?.message ?? "エラーが発生しました");
@@ -12,14 +13,12 @@
   <title>{status} | Mado</title>
 </svelte:head>
 
-<div class="min-h-screen flex items-center justify-center px-6 py-16 bg-background">
-  <div class="w-full max-w-md text-center flex flex-col items-center gap-6">
-    <div data-suisou-banner="error" class="w-14 h-14 flex items-center justify-center">
-      <AlertCircle size={26} class="text-error" />
-    </div>
-    <div>
-      <p class="text-4xl font-bold text-foreground">{status}</p>
-      <p class="mt-3 leading-relaxed text-muted-foreground">
+<div data-suisou-layout="center screen" class="wrap">
+  <div data-suisou-layout="stack" class="box">
+    <Glyph><AlertCircle data-suisou-icon="error" /></Glyph>
+    <div data-suisou-layout="stack" class="text">
+      <p data-suisou-text="s32 w700">{status}</p>
+      <p data-suisou-text="s14 doc" class="sub">
         {#if isNotFound}
           お探しのページは見つかりませんでした。<br />URLが間違っているか、削除された可能性があります。
         {:else}
@@ -28,10 +27,29 @@
       </p>
     </div>
     <a href="/">
-      <Button size="lg">
-        {#snippet leftIcon()}<Home size={16} />{/snippet}
+      <Button variant="default">
+        {#snippet leftIcon()}<Home />{/snippet}
         ホームに戻る
       </Button>
     </a>
   </div>
 </div>
+
+<style>
+  .wrap {
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .box {
+    gap: var(--suisou-space-3);
+    max-width: 28rem;
+    text-align: center;
+    align-items: center;
+  }
+  .text {
+    gap: var(--suisou-space-2);
+    align-items: center;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>
