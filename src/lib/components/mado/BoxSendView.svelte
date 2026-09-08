@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Shield, LogIn, Lock, Globe } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
-  import { Badge } from "$lib/components/ui/badge";
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
+  import Glyph from "$lib/components/ui/Glyph.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
 
   // Structural subset of atproto's ProfileViewDetailed — only the fields shown.
@@ -27,101 +27,130 @@
   );
 </script>
 
-<!-- Owner header -->
-<div data-suisou-layout="row" class="mb-6">
-  {#if ownerProfile?.avatar}
-    <img
-      src={ownerProfile.avatar}
-      alt={ownerProfile.handle}
-      class="w-10 h-10 rounded-full object-cover shrink-0"
-    />
+<div data-suisou-layout="stack" class="view">
+  <!-- オーナー。アバターは Suisou の avatar（円＝人・主体）。 -->
+  <div data-suisou-media>
+    {#if ownerProfile?.avatar}
+      <img
+        data-suisou-avatar="large"
+        data-suisou-media-icon
+        src={ownerProfile.avatar}
+        alt={ownerProfile.handle}
+      />
+    {:else}
+      <div data-suisou-avatar="large" data-suisou-media-icon>
+        {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
+      </div>
+    {/if}
+    <div data-suisou-media-content>
+      <p data-suisou-text="s14 w700">{ownerDisplayName}</p>
+      <a
+        data-suisou-layout="row"
+        data-suisou-text="s12"
+        data-suisou-link
+        class="accent"
+        href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Globe data-suisou-icon="small" />
+        @{ownerProfile?.handle ?? cleanHandle}
+      </a>
+    </div>
+  </div>
+
+  <!-- 窓の情報 -->
+  <div data-suisou-surface="panel" data-suisou-layout="stack" class="box">
+    <div data-suisou-layout="row wrap">
+      <h1 data-suisou-text="s20 w700">{box.title}</h1>
+      <span data-suisou-tag={box.isOpen ? "success" : ""}>
+        {box.isOpen ? "受付中" : "受付停止"}
+      </span>
+    </div>
+    {#if box.description}
+      <p data-suisou-text="s14 doc" class="sub">{box.description}</p>
+    {/if}
+    <div data-suisou-layout="row" data-suisou-text="s12" class="faint">
+      <Lock data-suisou-icon="small" />
+      ECIES暗号化で保護されています
+    </div>
+  </div>
+
+  <div data-suisou-banner="warning" data-suisou-media>
+    <Shield data-suisou-icon="small warning" data-suisou-media-icon />
+    <p data-suisou-media-content data-suisou-text="s12 doc">
+      <strong class="warn">半匿名のご注意：</strong>
+      このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
+      <strong>窓のオーナーにのみ</strong>
+      開示されます。第三者には公開されません。
+    </p>
+  </div>
+
+  {#if !ownerRegistered}
+    <div data-suisou-surface="panel" data-suisou-layout="stack" class="notice">
+      <p data-suisou-text="s14 w700">このユーザーはMadoに登録されていません</p>
+      <p data-suisou-text="s12" class="sub">声を送るには、オーナーがMadoにログインしている必要があります。</p>
+    </div>
+  {:else if !box.isOpen}
+    <div data-suisou-surface="panel" data-suisou-layout="stack" class="notice">
+      <p data-suisou-text="s14 w700">現在この窓は受付停止中です</p>
+      <p data-suisou-text="s12" class="sub">オーナーが受付を再開するまでお待ちください。</p>
+    </div>
+  {:else if !session}
+    <div data-suisou-surface="panel" data-suisou-layout="stack" class="notice">
+      <Glyph><LogIn data-suisou-icon="accent" /></Glyph>
+      <div data-suisou-layout="stack" class="center">
+        <p data-suisou-text="s14 w700">声を送るにはログインが必要です</p>
+        <p data-suisou-text="s12 doc" class="sub">
+          Blueskyアカウントでログインして声を送りましょう。
+          送り主はオーナーのみに開示されます。
+        </p>
+      </div>
+      <a class="full" href={`/auth/login?next=/@${cleanHandle}/${box.slug}`}>
+        <Button variant="default" wide>ログインして声を送る</Button>
+      </a>
+    </div>
   {:else}
-    <div data-suisou-text="w700" class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-primary text-background">
-      {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
+    <div data-suisou-surface="panel">
+      <SendQuestionForm
+        boxOwnerDid={box.ownerDid}
+        boxRkey={box.rkey}
+        senderHandle={session.handle}
+      />
     </div>
   {/if}
-  <div class="min-w-0">
-    <p data-suisou-text="w700" class="text-foreground">{ownerDisplayName}</p>
-    <a
-      href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      data-suisou-text="s12" class="inline-flex items-center gap-1 hover:opacity-80 transition-opacity text-blue-400"
-    >
-      <Globe size={10} />
-      @{ownerProfile?.handle ?? cleanHandle}
-    </a>
-  </div>
 </div>
 
-<!-- Box info -->
-<div data-suisou-surface="panel" class="p-6 mb-5">
-  <div data-suisou-layout="row stretch" class="mb-3">
-    <div class="flex-1 min-w-0">
-      <div data-suisou-layout="row" class="mb-1">
-        <h1 data-suisou-text="s20 w700" class="text-foreground">{box.title}</h1>
-        <Badge variant={box.isOpen ? "success" : "muted"} dot size="sm">
-          {box.isOpen ? "受付中" : "受付停止"}
-        </Badge>
-      </div>
-      {#if box.description}
-        <p class="leading-relaxed text-muted-foreground">{box.description}</p>
-      {/if}
-    </div>
-  </div>
-  <div class="flex items-center gap-1.5">
-    <Lock size={11} class="text-subtle" />
-    <span data-suisou-text="s12" class="text-subtle">ECIES暗号化で保護されています</span>
-  </div>
-</div>
-
-<!-- Semi-anonymous disclosure -->
-<div data-suisou-layout="row stretch" data-suisou-banner="warning" class="mb-5">
-  <Shield size={15} class="shrink-0 mt-0.5 text-amber-400" />
-  <p data-suisou-text="s12" class="leading-relaxed text-muted-foreground">
-    <span data-suisou-text="w700" class="text-amber-400">半匿名のご注意：</span>{" "}
-    このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
-    <strong class="text-foreground">窓のオーナーにのみ</strong>
-    開示されます。第三者には公開されません。
-  </p>
-</div>
-
-{#if !ownerRegistered}
-  <!-- Owner not registered -->
-  <div data-suisou-surface="panel" class="p-6 text-center">
-    <p data-suisou-text="w700" class="mb-1 text-foreground">このユーザーはMadoに登録されていません</p>
-    <p data-suisou-text="s12" class="text-muted-foreground">声を送るには、オーナーがMadoにログインしている必要があります。</p>
-  </div>
-{:else if !box.isOpen}
-  <!-- Box closed -->
-  <div data-suisou-surface="panel" class="p-6 text-center">
-    <p data-suisou-text="w700" class="mb-1 text-foreground">現在この窓は受付停止中です</p>
-    <p data-suisou-text="s12" class="text-muted-foreground">オーナーが受付を再開するまでお待ちください。</p>
-  </div>
-{:else if !session}
-  <!-- Not logged in -->
-  <div data-suisou-surface="panel" class="p-6 text-center flex flex-col items-center gap-4">
-    <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-accent-light">
-      <LogIn size={20} class="text-blue-400" />
-    </div>
-    <div>
-      <p data-suisou-text="w700" class="mb-1 text-foreground">声を送るにはログインが必要です</p>
-      <p data-suisou-text="s12" class="leading-relaxed text-muted-foreground">
-        Blueskyアカウントでログインして声を送りましょう。
-        送り主はオーナーのみに開示されます。
-      </p>
-    </div>
-    <a href={`/auth/login?next=/@${cleanHandle}/${box.slug}`} class="w-full">
-      <Button size="lg" class="w-full">ログインして声を送る</Button>
-    </a>
-  </div>
-{:else}
-  <!-- Logged in -->
-  <div data-suisou-surface="panel" class="p-6">
-    <SendQuestionForm
-      boxOwnerDid={box.ownerDid}
-      boxRkey={box.rkey}
-      senderHandle={session.handle}
-    />
-  </div>
-{/if}
+<style>
+  .view {
+    gap: var(--suisou-space-3);
+  }
+  .box {
+    gap: var(--suisou-space-2);
+  }
+  .notice {
+    gap: var(--suisou-space-2);
+    align-items: center;
+    text-align: center;
+    padding: var(--suisou-space-4);
+  }
+  .center {
+    gap: var(--suisou-space-1);
+    align-items: center;
+  }
+  .full {
+    width: 100%;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .faint {
+    color: var(--suisou-text-disabled);
+  }
+  .accent {
+    color: var(--suisou-accent);
+  }
+  .warn {
+    color: var(--suisou-warning);
+  }
+</style>

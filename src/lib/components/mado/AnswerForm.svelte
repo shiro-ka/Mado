@@ -71,34 +71,37 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-layout="stack" data-suisou-banner="success" class="p-6 text-center">
-    <CheckCircle2 size={36} class="text-emerald-400" />
-    <div>
-      <p data-suisou-text="w700" class="text-foreground">回答を投稿しました</p>
-      <p class="mt-1 text-muted-foreground">PDSに保存されました。</p>
+  <!-- ★Suisou の banner。banner.css には「wixdex の3現場が同じ箱を手書きしていて
+       3回ルールで昇格した」とある ―― Mado も同じ箱を手書きしていた。
+       意味（role）は CSS では足せないので現場が書く、というのが Suisou の約束。 -->
+  <div data-suisou-banner="success" data-suisou-layout="stack" role="status" class="done">
+    <CheckCircle2 class="big" />
+    <div data-suisou-layout="stack" class="center">
+      <p data-suisou-text="s16 w700">回答を投稿しました</p>
+      <p data-suisou-text="s14" class="sub">PDSに保存されました。</p>
       {#if crosspostFailed}
-        <p class="mt-2 flex items-center justify-center gap-1.5 text-amber-400">
-          <AlertCircle size={14} />
+        <p data-suisou-layout="row" data-suisou-text="s14" class="warn">
+          <AlertCircle />
           Blueskyへの転載は失敗しました
         </p>
       {:else if crosspostLink}
         <a
+          data-suisou-layout="row"
+          data-suisou-text="s14"
+          data-suisou-link
           href={crosspostLink}
           target="_blank"
           rel="noopener noreferrer"
-          class="mt-2 inline-flex items-center justify-center gap-1.5 text-blue-400 hover:opacity-80 transition-opacity"
         >
-          <ExternalLink size={14} />
+          <ExternalLink />
           Blueskyの投稿を見る
         </a>
       {/if}
     </div>
-    <Button variant="ghost" size="sm" onclick={reset} class="mt-1">
-      続けて回答する
-    </Button>
+    <Button variant="ghost" onclick={reset}>続けて回答する</Button>
   </div>
 {:else}
-  <form onsubmit={handleSubmit} class="flex flex-col gap-4">
+  <form onsubmit={handleSubmit} data-suisou-layout="stack" class="form">
     <Textarea
       placeholder="回答を入力してください..."
       bind:value={body}
@@ -110,30 +113,66 @@
     />
 
     {#if formState === "error"}
-      <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">
-        <AlertCircle size={15} />
+      <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+        <AlertCircle />
         {errorMsg}
-      </div>
+      </p>
     {/if}
 
     <div data-suisou-layout="row between wrap">
-      <label data-suisou-layout="row" class="cursor-pointer select-none">
+      <label data-suisou-layout="row" class="check">
         <input
           type="checkbox"
           bind:checked={crosspost}
           disabled={formState === "submitting"}
-          class="w-4 h-4 accent-blue-500 cursor-pointer"
         />
-        <span data-suisou-text="s12" class="text-muted-foreground">Bskyにもポスト</span>
+        <span data-suisou-text="s12" class="sub">Bskyにもポスト</span>
       </label>
       <Button
+        variant="outline"
         type="submit"
         loading={formState === "submitting"}
         disabled={!isValid}
       >
-        {#snippet rightIcon()}<Send size={15} />{/snippet}
+        {#snippet rightIcon()}<Send />{/snippet}
         回答を投稿
       </Button>
     </div>
   </form>
 {/if}
+
+<style>
+  .form {
+    gap: var(--suisou-space-3);
+  }
+  .done {
+    gap: var(--suisou-space-2);
+    padding: var(--suisou-space-4);
+    text-align: center;
+  }
+  .center {
+    gap: var(--suisou-space-1);
+    align-items: center;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .warn {
+    color: var(--suisou-warning);
+  }
+  .check {
+    cursor: pointer;
+    user-select: none;
+  }
+  .check input {
+    accent-color: var(--suisou-accent);
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+  }
+  :global(.big) {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--suisou-success);
+  }
+</style>

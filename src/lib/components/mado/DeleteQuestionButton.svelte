@@ -37,11 +37,9 @@
 
 <Button
   variant="destructive"
-  size="sm"
-  class="flex-1 sm:flex-none"
   loading={state === "submitting"}
   onclick={handleClick}
 >
-  {#snippet leftIcon()}<Trash2 size={14} />{/snippet}
+  {#snippet leftIcon()}<Trash2 />{/snippet}
   {state === "confirm" ? "本当に削除しますか？" : state === "error" ? "再試行" : "削除"}
 </Button>

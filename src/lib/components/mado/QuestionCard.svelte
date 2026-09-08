@@ -1,7 +1,6 @@
 <script lang="ts">
   import { MessageCircle, Lock, CheckCircle2 } from "lucide-svelte";
-  import { Badge } from "$lib/components/ui/badge";
-  import { cn, formatDate, truncate } from "$lib/utils.js";
+  import { formatDate, truncate } from "$lib/utils.js";
   import type { Question } from "$lib/../types/index.js";
 
   interface Props {
@@ -15,56 +14,90 @@
   const href = $derived(hrefProp ?? `/receive`);
 </script>
 
-<a {href} class="group block">
-  <!-- 未読は枠だけアクセント色に。面と余白と罫は Suisou の panel -->
-  <div data-suisou-surface="panel" class="card" class:unread={!question.isRead}>
-    <div data-suisou-layout="row stretch">
-      <!-- Unread indicator -->
-      <div class="mt-1 shrink-0">
+<!-- ★面（下地・罫・角丸・余白）は surface="panel"、並びは media。
+     Suisou は「面は並べ方を持たない」ので同じ要素に2つ書ける ――
+     panel の中に flex の箱を作る、という段が1つ消える。 -->
+<a {href} class="link">
+  <div
+    data-suisou-surface="panel"
+    data-suisou-media
+    class="card"
+    class:unread={!question.isRead}
+  >
+    <div data-suisou-media-icon class="mark">
+      {#if question.isRead}
+        <CheckCircle2 data-suisou-icon="small sub" />
+      {:else}
+        <span class="dot"></span>
+      {/if}
+    </div>
+
+    <div data-suisou-media-content>
+      <div data-suisou-layout="row between">
         {#if question.isRead}
-          <CheckCircle2 size={16} class="text-subtle" />
+          <span></span>
         {:else}
-          <div class="w-2 h-2 rounded-full mt-1.5 bg-primary"></div>
+          <span data-suisou-tag="accent">未読</span>
         {/if}
+        <span data-suisou-text="s12" class="sub">{formatDate(question.createdAt)}</span>
       </div>
 
-      <!-- Content -->
-      <div class="flex-1 min-w-0">
-        <div data-suisou-layout="row" class="mb-1">
-          {#if !question.isRead}
-            <Badge variant="default" size="sm">未読</Badge>
-          {/if}
-          <span data-suisou-text="s12" class="ml-auto text-subtle">{formatDate(question.createdAt)}</span>
+      {#if preview}
+        <p class="clamp">{truncate(preview, 120)}</p>
+      {:else}
+        <div data-suisou-layout="row" class="sub">
+          <Lock data-suisou-icon="small" />
+          <span data-suisou-text="s14" class="italic">暗号化されたメッセージ</span>
         </div>
+      {/if}
 
-        <div class="flex items-start gap-2">
-          {#if preview}
-            <p class="line-clamp-2 text-foreground">{truncate(preview, 120)}</p>
-          {:else}
-            <div class="flex items-center gap-1.5">
-              <Lock size={12} class="text-subtle" />
-              <span class="italic text-subtle">暗号化されたメッセージ</span>
-            </div>
-          {/if}
+      {#if question.senderHandle}
+        <div data-suisou-layout="row" class="sub">
+          <MessageCircle data-suisou-icon="small" />
+          <span data-suisou-text="s12">@{question.senderHandle}</span>
         </div>
-
-        {#if question.senderHandle}
-          <div class="flex items-center gap-1.5 mt-2">
-            <MessageCircle size={12} class="text-subtle" />
-            <span data-suisou-text="s12" class="text-muted-foreground">@{question.senderHandle}</span>
-          </div>
-        {/if}
-      </div>
+      {/if}
     </div>
   </div>
 </a>
 
 <style>
+  .link {
+    display: block;
+  }
   .card {
     transition: border-color var(--suisou-motion-fast) var(--suisou-ease);
   }
-  .unread,
-  :global(.group:hover) .card {
+  /* 未読は罫で示す。Suisou に「未読の面」は無いので、面の機能の線を accent に差し替える。 */
+  .card.unread {
     border-color: var(--suisou-accent);
+  }
+  .link:hover .card {
+    border-color: var(--suisou-line-strong);
+  }
+
+  .mark {
+    padding-block-start: var(--suisou-space-1);
+  }
+  .dot {
+    display: block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--suisou-radius-pill);
+    background: var(--suisou-accent);
+  }
+
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .italic {
+    font-style: italic;
+  }
+  .clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
   }
 </style>
