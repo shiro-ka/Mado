@@ -70,7 +70,7 @@
     {#if box.description}
       <p data-suisou-text="s14 doc" class="sub">{box.description}</p>
     {/if}
-    <div data-suisou-layout="row" data-suisou-text="s12" class="faint">
+    <div data-suisou-layout="row" data-suisou-text="s12" class="sub">
       <Lock data-suisou-icon="small" />
       ECIES暗号化で保護されています
     </div>
@@ -143,9 +143,6 @@
   }
   .sub {
     color: var(--suisou-text-sub);
-  }
-  .faint {
-    color: var(--suisou-text-disabled);
   }
   .accent {
     color: var(--suisou-accent);

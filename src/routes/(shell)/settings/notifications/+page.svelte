@@ -116,7 +116,7 @@
             <AlertCircle data-suisou-icon="sub" data-suisou-media-icon />
             <p data-suisou-media-content data-suisou-text="s14 doc" class="sub">
               通知を受け取るには、先に公式アカウントのフォローが必要です。
-              <span class="faint">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
+              <span class="sub">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
             </p>
           </div>
           <div data-suisou-layout="row wrap">
@@ -150,7 +150,7 @@
           {#if enabled}
             <span>
               新着はmado公式からDMで届きます。
-              <span class="faint">（公式のフォローを外すと届かなくなります）</span>
+              <span class="sub">（公式のフォローを外すと届かなくなります）</span>
             </span>
           {:else}
             <span>公式アカウントをフォロー中です。上のスイッチで通知をONにできます。</span>
@@ -190,9 +190,6 @@
 
   .sub {
     color: var(--suisou-text-sub);
-  }
-  .faint {
-    color: var(--suisou-text-disabled);
   }
   .err {
     color: var(--suisou-error);

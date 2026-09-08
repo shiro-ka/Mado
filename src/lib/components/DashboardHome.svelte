@@ -127,7 +127,7 @@
       {#if questions.length === 0}
         <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
           <p data-suisou-text="s14" class="sub">まだ声が届いていません</p>
-          <p data-suisou-text="s12" class="faint">窓のURLをシェアしましょう</p>
+          <p data-suisou-text="s12" class="sub">窓のURLをシェアしましょう</p>
         </div>
       {:else}
         <div data-suisou-layout="stack">
@@ -179,14 +179,11 @@
   .sub {
     color: var(--suisou-text-sub);
   }
-  .faint {
-    color: var(--suisou-text-disabled);
-  }
   .ok {
     color: var(--suisou-success);
   }
   .date {
-    color: var(--suisou-text-disabled);
+    color: var(--suisou-text-sub);
     font-variant-numeric: tabular-nums;
     flex: none;
   }

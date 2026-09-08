@@ -87,10 +87,10 @@
     overflow: hidden;
   }
   .chev {
-    color: var(--suisou-text-disabled);
+    color: var(--suisou-text-sub);
   }
   .link:hover .chev {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-text-main);
   }
 
   /* 件数は行の末尾へ。★鍵アイコンは独立した span をやめて tag の中に入れた ――
