@@ -52,23 +52,23 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-layout="stack" data-suisou-banner="success" class="p-6 text-center">
-    <CheckCircle2 size={40} class="text-emerald-400" />
-    <div>
-      <p data-suisou-text="w700" class="text-foreground">声を送信しました！</p>
-      <p class="mt-1 text-muted-foreground">相手に届くまでしばらくお待ちください。</p>
+  <div data-suisou-banner="success" data-suisou-layout="stack" role="status" class="done">
+    <CheckCircle2 class="big" />
+    <div data-suisou-layout="stack" class="center">
+      <p data-suisou-text="s16 w700">声を送信しました！</p>
+      <p data-suisou-text="s14" class="sub">相手に届くまでしばらくお待ちください。</p>
     </div>
-    <Button variant="ghost" size="sm" onclick={() => (formState = "idle")} class="mt-1">
-      別の声を送る
-    </Button>
+    <Button variant="ghost" onclick={() => (formState = "idle")}>別の声を送る</Button>
   </div>
 {:else}
-  <form onsubmit={handleSubmit} class="flex flex-col gap-4">
-    <!-- Sender disclosure -->
-    <div class="rounded-lg p-3 flex items-start gap-2.5 bg-accent-light border border-blue-600/25">
-      <AlertCircle size={15} class="mt-0.5 shrink-0 text-blue-400" />
-      <p class="text-blue-300">
-        この声は <span data-suisou-text="w700">@{senderHandle}</span> として相手に届きます。
+  <form onsubmit={handleSubmit} data-suisou-layout="stack" class="form">
+    <!-- ★送り主の開示。Suisou の banner は error / warning / success の3つで、
+         「お知らせ」の段を持たない（結果を知らせる帯として作られているため）。
+         ここは面 + accent の罫で置いている。→ 申し送り（dev/todo/mado-suisou-ui.md） -->
+    <div data-suisou-surface="item" data-suisou-media class="notice">
+      <AlertCircle data-suisou-icon="accent" data-suisou-media-icon />
+      <p data-suisou-media-content data-suisou-text="s14">
+        この声は <strong>@{senderHandle}</strong> として相手に届きます。
         送り主は窓のオーナーのみに開示されます。
       </p>
     </div>
@@ -85,22 +85,50 @@
     />
 
     {#if formState === "error"}
-      <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">
-        <AlertCircle size={15} />
+      <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+        <AlertCircle />
         {errorMsg}
-      </div>
+      </p>
     {/if}
 
     <Button
       type="submit"
       variant="default"
-      size="lg"
+      wide
       loading={formState === "submitting"}
       disabled={!isValid}
-      class="w-full"
     >
-      {#snippet rightIcon()}<Send size={16} />{/snippet}
+      {#snippet rightIcon()}<Send />{/snippet}
       声を送る
     </Button>
   </form>
 {/if}
+
+<style>
+  .form {
+    gap: var(--suisou-space-3);
+  }
+  .done {
+    gap: var(--suisou-space-2);
+    padding: var(--suisou-space-4);
+    text-align: center;
+  }
+  .center {
+    gap: var(--suisou-space-1);
+    align-items: center;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .notice {
+    border-color: var(--suisou-accent);
+  }
+  .notice :global(svg) {
+    margin-block-start: 0.15rem;
+  }
+  :global(.big) {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--suisou-success);
+  }
+</style>

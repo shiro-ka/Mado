@@ -1,6 +1,5 @@
 <script lang="ts">
   import { MessageCircle, ChevronRight, Lock, Unlock, Pin } from "lucide-svelte";
-  import { Badge } from "$lib/components/ui/badge";
   import { boxUrl } from "$lib/utils.js";
   import type { QuestionBox } from "$lib/../types/index.js";
 
@@ -16,45 +15,88 @@
   const href = $derived(boxUrl(ownerHandle, box.slug));
 </script>
 
-<a {href} class="group block">
-  <div data-suisou-surface="panel" class="transition-all duration-200 group-hover:scale-[1.01] hover:border-border-strong">
-    <div data-suisou-layout="row stretch between">
-      <div data-suisou-layout="row stretch" class="min-w-0">
-        <div class="mt-0.5 w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 bg-accent-light">
-          <MessageCircle size={16} class="text-blue-400" />
-        </div>
-        <div class="min-w-0">
-          <h3 data-suisou-text="w700" class="leading-snug truncate text-foreground">{box.title}</h3>
-          {#if box.description}
-            <p data-suisou-text="s12" class="mt-1 line-clamp-2 text-muted-foreground">{box.description}</p>
-          {/if}
-        </div>
+<a {href} class="link">
+  <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
+    <div data-suisou-media>
+      <div data-suisou-media-icon class="glyph">
+        <MessageCircle data-suisou-icon="accent" />
       </div>
-
-      <ChevronRight
-        size={16}
-        class="shrink-0 mt-0.5 opacity-40 group-hover:opacity-80 transition-opacity duration-200 text-subtle"
-      />
+      <div data-suisou-media-content>
+        <h3 data-suisou-text="s14 w700" class="title">{box.title}</h3>
+        {#if box.description}
+          <p data-suisou-text="s12" class="desc">{box.description}</p>
+        {/if}
+      </div>
+      <div data-suisou-media-tail class="chev">
+        <ChevronRight data-suisou-icon />
+      </div>
     </div>
 
-    <div data-suisou-layout="row" class="mt-3">
+    <div data-suisou-layout="row wrap">
       {#if isMain}
-        <Badge variant="default" size="sm">
-          <Pin size={11} class="mr-0.5" />
+        <span data-suisou-tag="accent">
+          <Pin />
           メイン
-        </Badge>
+        </span>
       {/if}
-      <Badge variant={box.isOpen ? "success" : "muted"} dot>
+      <span data-suisou-tag={box.isOpen ? "success" : ""}>
+        {#if box.isOpen}<Unlock />{:else}<Lock />{/if}
         {box.isOpen ? "受付中" : "受付停止"}
-      </Badge>
-      {#if box.isOpen}
-        <span class="text-subtle"><Unlock size={12} /></span>
-      {:else}
-        <span class="text-subtle"><Lock size={12} /></span>
-      {/if}
+      </span>
       {#if questionCount !== undefined}
-        <span data-suisou-text="s12" class="ml-auto text-subtle">声 {questionCount}件</span>
+        <span data-suisou-text="s12" class="count">声 {questionCount}件</span>
       {/if}
     </div>
   </div>
 </a>
+
+<style>
+  .link {
+    display: block;
+  }
+  .card {
+    transition: border-color var(--suisou-motion-fast) var(--suisou-ease);
+  }
+  .link:hover .card {
+    border-color: var(--suisou-line-strong);
+  }
+
+  /* ★アイコンの下地。Suisou は塗らない主義なので、面ではなく item の段 + 罫で置く。
+     旧実装は bg-primary-light（accent の薄塗り）だった。 */
+  .glyph {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--suisou-radius);
+    background: var(--suisou-item);
+    border: 1px solid var(--suisou-line-weak);
+  }
+
+  .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .desc {
+    color: var(--suisou-text-sub);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+  .chev {
+    color: var(--suisou-text-disabled);
+  }
+  .link:hover .chev {
+    color: var(--suisou-text-sub);
+  }
+
+  /* 件数は行の末尾へ。★鍵アイコンは独立した span をやめて tag の中に入れた ――
+     「受付中」と鍵が別々に並んでいて、同じことを2回言っていた。 */
+  .count {
+    margin-inline-start: auto;
+    color: var(--suisou-text-sub);
+  }
+</style>

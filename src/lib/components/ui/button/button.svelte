@@ -32,6 +32,8 @@
 		WithElementRef<HTMLAnchorAttributes> & {
 			variant?: ButtonVariant;
 			size?: ButtonSize;
+			/** 全幅の CTA。Suisou の button="wide"。旧実装は class="w-full" で逃げていた */
+			wide?: boolean;
 			loading?: boolean;
 			leftIcon?: import("svelte").Snippet;
 			rightIcon?: import("svelte").Snippet;
@@ -43,6 +45,7 @@
 		class: className,
 		variant = "default",
 		size = "default",
+		wide = false,
 		ref = $bindable(null),
 		href = undefined,
 		type = "button",
@@ -56,7 +59,9 @@
 
 	const isDisabled = $derived(disabled || loading);
 	const suisou = $derived(
-		[VARIANT_MAP[variant], size.startsWith("icon") ? "icon" : ""].filter(Boolean).join(" "),
+		[VARIANT_MAP[variant], size.startsWith("icon") ? "icon" : "", wide ? "wide" : ""]
+			.filter(Boolean)
+			.join(" "),
 	);
 </script>
 

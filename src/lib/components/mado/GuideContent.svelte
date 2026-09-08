@@ -1,43 +1,81 @@
 <script lang="ts">
   import { UserCheck, MessageCircle, Inbox, Send, Eye } from "lucide-svelte";
+  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   const ownerSteps = [
-    { step: "1", icon: UserCheck, color: "text-blue-400", title: "Blueskyでログイン", body: "右上の「ログイン」からBlueskyアカウントで認証します。OAuthを使うためパスワードは不要です。" },
-    { step: "2", icon: MessageCircle, color: "text-emerald-400", title: "窓を作る", body: "ホーム → 窓 → 新しく作成。タイトルと説明を入力して公開します。URLをSNSでシェアして声を募集しましょう。" },
-    { step: "3", icon: Inbox, color: "text-blue-400", title: "声を受け取る・回答する", body: "受信トレイに届いた声を確認できます。送り主のハンドルも表示されます。回答はBluesky上にそのまま投稿することもできます。" },
+    { step: "1", icon: UserCheck, tone: "accent", title: "Blueskyでログイン", body: "右上の「ログイン」からBlueskyアカウントで認証します。OAuthを使うためパスワードは不要です。" },
+    { step: "2", icon: MessageCircle, tone: "success", title: "窓を作る", body: "ホーム → 窓 → 新しく作成。タイトルと説明を入力して公開します。URLをSNSでシェアして声を募集しましょう。" },
+    { step: "3", icon: Inbox, tone: "accent", title: "声を受け取る・回答する", body: "受信トレイに届いた声を確認できます。送り主のハンドルも表示されます。回答はBluesky上にそのまま投稿することもできます。" },
   ];
 
   const senderSteps = [
-    { step: "1", icon: UserCheck, color: "text-blue-400", title: "Blueskyでログイン", body: "声を送るにもログインが必要です。これによりスパムを防ぎ、半匿名性を担保します。" },
-    { step: "2", icon: Send, color: "text-emerald-400", title: "窓のURLにアクセスして送信", body: "オーナーが共有したURLを開き、声を入力して送信します。あなたのDIDは暗号化されてオーナーにのみ届きます。" },
-    { step: "3", icon: Eye, color: "text-blue-400", title: "送り主はオーナーのみ確認できる", body: "送信した声の内容と送り主情報は、窓のオーナーだけが確認できます。第三者には一切見えません。" },
+    { step: "1", icon: UserCheck, tone: "accent", title: "Blueskyでログイン", body: "声を送るにもログインが必要です。これによりスパムを防ぎ、半匿名性を担保します。" },
+    { step: "2", icon: Send, tone: "success", title: "窓のURLにアクセスして送信", body: "オーナーが共有したURLを開き、声を入力して送信します。あなたのDIDは暗号化されてオーナーにのみ届きます。" },
+    { step: "3", icon: Eye, tone: "accent", title: "送り主はオーナーのみ確認できる", body: "送信した声の内容と送り主情報は、窓のオーナーだけが確認できます。第三者には一切見えません。" },
+  ];
+
+  const sections = [
+    { title: "窓を開く", steps: ownerSteps },
+    { title: "声を送る", steps: senderSteps },
   ];
 </script>
 
-<div class="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-10">
-  <div>
-    <h1 data-suisou-text="s24 w700" class="mb-3 text-foreground">使い方</h1>
-    <p data-suisou-text="s16" class="leading-relaxed text-muted-foreground">Madoは「窓を開くオーナー」と「声を送る訪問者」の2つの役割があります。</p>
+<div data-suisou-layout="stack container" class="page">
+  <div data-suisou-layout="stack">
+    <h1 data-suisou-text="s24 w700">使い方</h1>
+    <p data-suisou-text="s16 doc" class="sub">
+      Madoは「窓を開くオーナー」と「声を送る訪問者」の2つの役割があります。
+    </p>
   </div>
-  {#each [{ title: "窓を開く", steps: ownerSteps }, { title: "声を送る", steps: senderSteps }] as section}
-    <section class="flex flex-col gap-4">
-      <h2 data-suisou-text="s16 w700" class="text-foreground">{section.title}</h2>
+
+  {#each sections as section}
+    <section data-suisou-layout="stack" class="group">
+      <h2 data-suisou-text="s16 w700">{section.title}</h2>
       {#each section.steps as item}
-        <div data-suisou-surface="panel" class="p-5 flex gap-4">
-          <div class="relative shrink-0">
-            <div class="w-9 h-9 rounded-lg flex items-center justify-center mt-0.5 bg-elevated">
-              <item.icon size={17} class={item.color} />
-            </div>
-            <div data-suisou-text="w700" class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center bg-primary text-background" style="font-size:10px">
-              {item.step}
-            </div>
-          </div>
-          <div>
-            <p data-suisou-text="w700" class="mb-1 text-foreground">{item.title}</p>
-            <p class="leading-relaxed text-muted-foreground">{item.body}</p>
+        <div data-suisou-surface="panel" data-suisou-media>
+          <span class="step">
+            <Glyph><item.icon data-suisou-icon={item.tone} /></Glyph>
+            <span data-suisou-text="s12 w700" class="num">{item.step}</span>
+          </span>
+          <div data-suisou-media-content>
+            <p data-suisou-text="s14 w700">{item.title}</p>
+            <p data-suisou-text="s14 doc" class="sub">{item.body}</p>
           </div>
         </div>
       {/each}
     </section>
   {/each}
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 42rem;
+    gap: var(--suisou-space-4);
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .group {
+    gap: var(--suisou-space-3);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+
+  /* 手順の番号。タイルの角に小さく載せる */
+  .step {
+    position: relative;
+    flex: none;
+  }
+  .num {
+    position: absolute;
+    top: -0.375rem;
+    inset-inline-end: -0.375rem;
+    display: grid;
+    place-items: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: var(--suisou-radius-pill);
+    background: var(--suisou-bg);
+    border: 1px solid var(--suisou-accent);
+    color: var(--suisou-accent);
+  }
+</style>

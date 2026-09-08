@@ -59,37 +59,28 @@
 </script>
 
 {#if state === "blocked" || state === "unblocking" || state === "unblock-error"}
-  <div data-suisou-layout="row" class="flex-1 sm:flex-none">
-    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground">
-      <CheckCircle2 size={14} />
+  <div data-suisou-layout="row wrap" class="bar">
+    <!-- 状態のしるしであって押せるものではないので Tag。旧実装はボタン風の箱だった -->
+    <span data-suisou-tag>
+      <CheckCircle2 />
       ブロック中
-    </div>
-    <Button
-      variant="ghost"
-      size="sm"
-      loading={state === "unblocking"}
-      onclick={unblock}
-      data-suisou-text="s12" class="text-subtle"
-    >
-      解除
-    </Button>
+    </span>
+    <Button variant="ghost" loading={state === "unblocking"} onclick={unblock}>解除</Button>
     {#if state === "unblock-error"}
-      <span data-suisou-text="s12" class="flex items-center gap-1 text-error">
-        <AlertCircle size={12} />
+      <span data-suisou-layout="row" data-suisou-text="s12" class="err">
+        <AlertCircle data-suisou-icon="small" />
         解除に失敗しました
       </span>
     {/if}
   </div>
 {:else}
-  <div data-suisou-layout="row" class="flex-1 sm:flex-none">
+  <div data-suisou-layout="row wrap" class="bar">
     <Button
-      variant={state === "confirm" ? "destructive" : "outline"}
-      size="sm"
-      class="flex-1 sm:flex-none"
+      variant={state === "confirm" ? "destructive" : "secondary"}
       loading={state === "blocking"}
       onclick={handlePrimary}
     >
-      {#snippet leftIcon()}<Ban size={14} />{/snippet}
+      {#snippet leftIcon()}<Ban />{/snippet}
       {state === "confirm"
         ? "本当にブロックしますか？"
         : state === "block-error"
@@ -97,20 +88,23 @@
           : "送信者をブロック"}
     </Button>
     {#if state === "confirm"}
-      <Button
-        variant="ghost"
-        size="sm"
-        data-suisou-text="s12" class="text-subtle"
-        onclick={() => (state = "idle")}
-      >
-        キャンセル
-      </Button>
+      <Button variant="ghost" onclick={() => (state = "idle")}>キャンセル</Button>
     {/if}
     {#if state === "block-error"}
-      <span data-suisou-text="s12" class="flex items-center gap-1 text-error">
-        <AlertCircle size={12} />
+      <span data-suisou-layout="row" data-suisou-text="s12" class="err">
+        <AlertCircle data-suisou-icon="small" />
         ブロックに失敗しました
       </span>
     {/if}
   </div>
 {/if}
+
+<style>
+  .bar {
+    gap: var(--suisou-space-2);
+  }
+  .err {
+    color: var(--suisou-error);
+    gap: var(--suisou-space-1);
+  }
+</style>
