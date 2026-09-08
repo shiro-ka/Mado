@@ -18,15 +18,15 @@
       <div data-suisou-avatar>{session.handle[0]?.toUpperCase() ?? "?"}</div>
     {/if}
     <div data-suisou-layout="grow stack" class="who">
-      <p data-suisou-text="s14 w500" class="truncate">
+      <p data-suisou-text="s14 w500" class="ellipsis">
         {session.displayName ?? session.handle}
       </p>
-      <p data-suisou-text="s12" class="truncate text-muted-foreground">@{session.handle}</p>
+      <p data-suisou-text="s12" class="ellipsis sub">@{session.handle}</p>
     </div>
   </div>
   <form action="/api/auth/logout" method="POST">
     <button type="submit" data-suisou-button="block">
-      <LogOut size={15} />
+      <LogOut />
       ログアウト
     </button>
   </form>
@@ -41,5 +41,13 @@
   /* 名前とハンドルは1行ずつ詰めて出す（stack の既定 8px より近く） */
   .who {
     gap: 0;
+  }
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
   }
 </style>

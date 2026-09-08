@@ -26,8 +26,8 @@
     aria-expanded={open}
     data-suisou-button="block"
   >
-    <Info size={17} class="shrink-0" />
-    <span data-suisou-layout="grow" class="text-left">Madoについて</span>
+    <Info data-suisou-icon />
+    <span data-suisou-layout="grow" class="label">Madoについて</span>
     <ChevronDown
       size={14}
       style="transition: transform 0.2s; transform: {open ? 'rotate(180deg)' : 'rotate(0deg)'}"
@@ -43,7 +43,7 @@
           aria-current={active ? "page" : undefined}
           data-suisou-button="block"
         >
-          <item.icon size={15} class="shrink-0" />
+          <item.icon data-suisou-icon="small" />
           {item.label}
         </a>
       {/each}
@@ -52,6 +52,10 @@
 </div>
 
 <style>
+  .label {
+    text-align: start;
+  }
+
   /* 入れ子のぶんだけ字下げ。字下げの幅は現場のもの */
   .sub {
     padding-inline-start: var(--suisou-space-3);

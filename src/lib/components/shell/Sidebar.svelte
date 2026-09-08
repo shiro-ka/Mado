@@ -43,7 +43,7 @@
         aria-current={active ? "page" : undefined}
         data-suisou-button="block"
       >
-        <item.icon size={17} class="shrink-0" />
+        <item.icon data-suisou-icon />
         {item.label}
       </a>
     {/each}
