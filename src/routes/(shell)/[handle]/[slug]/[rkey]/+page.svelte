@@ -2,7 +2,6 @@
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/button/button.svelte";
-  import { Badge } from "$lib/components/ui/badge";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import BlockButton from "$lib/components/mado/BlockButton.svelte";
   import DeleteQuestionButton from "$lib/components/mado/DeleteQuestionButton.svelte";
@@ -27,100 +26,94 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
 </svelte:head>
 
-<div class="px-6 py-8 max-w-2xl mx-auto">
-  <!-- Back -->
-  <div class="mb-8">
+<div data-suisou-layout="stack container" class="page">
+  <div>
     <a href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
-      <Button variant="ghost" size="sm">
-        {#snippet leftIcon()}<ArrowLeft size={15} />{/snippet}
+      <Button variant="ghost">
+        {#snippet leftIcon()}<ArrowLeft />{/snippet}
         {data.isOwner ? "受信トレイに戻る" : "窓に戻る"}
       </Button>
     </a>
   </div>
 
-  <!-- Question card -->
-  <div data-suisou-surface="panel" class="p-6 mb-5">
-    <div class="flex items-center justify-between mb-4">
-      <Badge variant={data.question.isRead ? "muted" : "default"} dot>
+  <!-- 声 -->
+  <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
+    <div data-suisou-layout="row between">
+      <span data-suisou-tag={data.question.isRead ? "" : "accent"}>
         {data.question.isRead ? "既読" : "未読"}
-      </Badge>
-      <span data-suisou-text="s12" class="text-subtle">{formatDateFull(data.question.createdAt)}</span>
+      </span>
+      <span data-suisou-text="s12" class="faint">{formatDateFull(data.question.createdAt)}</span>
     </div>
 
-    <div class="mb-5">
-      <p data-suisou-text="s16" class="leading-relaxed whitespace-pre-wrap text-foreground">{data.question.body}</p>
-    </div>
+    <p data-suisou-text="s16 doc" class="body">{data.question.body}</p>
 
     {#if data.isOwner}
-      <!-- Decrypt error -->
       {#if data.decryptError}
-        <div data-suisou-layout="row" data-suisou-banner="error" class="mb-4">
-          <Lock size={14} class="text-error" />
-          <p class="text-error">送信者の特定に失敗しました。秘密鍵が見つかりません。</p>
-        </div>
+        <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+          <Lock data-suisou-icon="small" />
+          送信者の特定に失敗しました。秘密鍵が見つかりません。
+        </p>
       {/if}
 
-      <!-- Sender info -->
-      <div data-suisou-layout="row" class="pt-4 border-t border-border">
+      <div data-suisou-media class="sender">
         {#if data.senderProfile?.avatar}
           <img
+            data-suisou-avatar
+            data-suisou-media-icon
             src={data.senderProfile.avatar}
             alt={data.senderProfile.handle}
-            class="w-9 h-9 rounded-full object-cover shrink-0"
           />
         {:else}
-          <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-elevated">
-            <User size={16} class="text-subtle" />
+          <div data-suisou-avatar data-suisou-media-icon>
+            <User data-suisou-icon="small sub" />
           </div>
         {/if}
-        <div class="flex-1 min-w-0">
+        <div data-suisou-media-content>
           {#if data.senderProfile}
-            <p data-suisou-text="w500" class="text-foreground">
+            <p data-suisou-text="s14 w500">
               {data.senderProfile.displayName ?? data.senderProfile.handle}
             </p>
-            <p data-suisou-text="s12" class="text-muted-foreground">@{data.senderProfile.handle}</p>
+            <p data-suisou-text="s12" class="sub">@{data.senderProfile.handle}</p>
           {:else if data.senderDid}
-            <p data-suisou-text="s12" class="font-mono text-subtle">{data.senderDid}</p>
+            <p data-suisou-text="s12" class="did">{data.senderDid}</p>
           {:else}
-            <p class="text-subtle">送信者情報なし</p>
+            <p data-suisou-text="s14" class="sub">送信者情報なし</p>
           {/if}
         </div>
         {#if data.senderProfile}
           <a
+            data-suisou-media-tail
             href={`https://bsky.app/profile/${data.senderProfile.handle}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="ghost" size="sm"><ExternalLink size={13} /></Button>
+            <Button size="icon"><ExternalLink /></Button>
           </a>
         {/if}
       </div>
     {/if}
   </div>
 
-  <!-- Existing answers -->
+  <!-- 回答 -->
   {#if data.answers.length > 0}
-    <div data-suisou-layout="stack" class="mb-5">
-      <h2 data-suisou-text="w700" class="text-foreground">回答済み（{data.answers.length}件）</h2>
+    <div data-suisou-layout="stack" class="group">
+      <h2 data-suisou-text="s14 w700">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
-        <div data-suisou-surface="panel" class="p-5">
-          <div data-suisou-layout="row" class="mb-3">
-            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-accent-light">
-              <MessageCircle size={12} class="text-primary" />
-            </div>
-            <span data-suisou-text="s12 w500" class="text-muted-foreground">回答</span>
-            <span data-suisou-text="s12" class="ml-auto text-subtle">{formatDateFull(answer.createdAt)}</span>
+        <div data-suisou-surface="panel" data-suisou-layout="stack">
+          <div data-suisou-layout="row">
+            <MessageCircle data-suisou-icon="small accent" />
+            <span data-suisou-text="s12 w500" class="sub">回答</span>
+            <span data-suisou-text="s12" class="date">{formatDateFull(answer.createdAt)}</span>
           </div>
-          <p class="leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
+          <p data-suisou-text="s14 doc" class="body">{answer.body}</p>
         </div>
       {/each}
     </div>
   {/if}
 
-  <!-- Owner-only: answer form + danger zone -->
   {#if data.isOwner}
-    <div data-suisou-surface="panel" class="p-6 mb-5">
-      <h2 data-suisou-text="w700" class="mb-4 text-foreground">回答を書く</h2>
+    <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
+      <h2 data-suisou-text="s14 w700">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}
@@ -129,7 +122,8 @@
       />
     </div>
 
-    <div data-suisou-layout="stack" class="danger-zone sm:flex-row">
+    <!-- 取り返しのつかない操作。手書きの赤い面 → banner="error" -->
+    <div data-suisou-banner="error" data-suisou-layout="stack md:row" class="danger">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />
@@ -139,11 +133,51 @@
 </div>
 
 <style>
-  /* 破壊的操作の置き場。下地と罫は Suisou の意味色（手書きの赤 α を置き換えた） */
-  .danger-zone {
-    padding: var(--suisou-space-3);
-    border-radius: var(--suisou-radius);
-    background: var(--suisou-error-surface);
-    border: 1px solid var(--suisou-error);
+  .page {
+    --suisou-measure: 42rem;
+    gap: var(--suisou-space-3);
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .card {
+    gap: var(--suisou-space-3);
+    padding: var(--suisou-space-4);
+  }
+  .group {
+    gap: var(--suisou-space-3);
+  }
+  .sender {
+    align-items: center;
+    padding-block-start: var(--suisou-space-3);
+    border-top: 1px solid var(--suisou-line-weak);
+  }
+
+  .body {
+    white-space: pre-wrap;
+  }
+  .did {
+    font-family: var(--suisou-mono);
+    color: var(--suisou-text-disabled);
+    word-break: break-all;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .faint {
+    color: var(--suisou-text-disabled);
+  }
+  .date {
+    margin-inline-start: auto;
+    color: var(--suisou-text-disabled);
+  }
+
+  .danger {
+    gap: var(--suisou-space-2);
+  }
+  /* ★打ち消し：stack md:row（md:row が flex-direction を戻さない） */
+  @media (width >= 768px) {
+    .danger {
+      flex-direction: row;
+      align-items: center;
+    }
   }
 </style>

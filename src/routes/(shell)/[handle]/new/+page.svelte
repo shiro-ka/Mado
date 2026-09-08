@@ -62,19 +62,19 @@
   <title>窓を作る | Mado</title>
 </svelte:head>
 
-<div class="px-6 py-8 max-w-2xl mx-auto">
-  <div data-suisou-layout="row" class="mb-8">
+<div data-suisou-layout="stack container" class="page">
+  <div data-suisou-layout="row">
     <a href={`/@${data.cleanHandle}`}>
-      <Button variant="ghost" size="sm">
-        {#snippet leftIcon()}<ArrowLeft size={15} />{/snippet}
+      <Button variant="ghost">
+        {#snippet leftIcon()}<ArrowLeft />{/snippet}
         戻る
       </Button>
     </a>
-    <h1 data-suisou-text="s24 w700" class="text-foreground">窓を作る</h1>
+    <h1 data-suisou-text="s24 w700">窓を作る</h1>
   </div>
 
-  <div data-suisou-surface="panel" class="p-8">
-    <form onsubmit={handleSubmit} class="flex flex-col gap-6">
+  <div data-suisou-surface="panel" class="card">
+    <form onsubmit={handleSubmit} data-suisou-layout="stack" class="form">
       <Input
         label="タイトル（必須）"
         placeholder="なんでも声を届けてください！"
@@ -96,7 +96,7 @@
         disabled={formState === "submitting"}
       />
 
-      <div>
+      <div data-suisou-layout="stack" class="slug">
         <Input
           label="URL（任意）"
           placeholder="ask"
@@ -106,41 +106,74 @@
           maxlength={30}
           disabled={formState === "submitting"}
         />
-        <p data-suisou-text="s12" class="mt-1.5 font-mono text-subtle break-all">
-          /@{data.cleanHandle}/<span class="text-blue-400">{slugPreview}</span>
+        <p data-suisou-text="s12" class="preview">
+          /@{data.cleanHandle}/<span class="accent">{slugPreview}</span>
         </p>
       </div>
 
-      <div class="flex items-center justify-between">
-        <div>
-          <p data-suisou-text="w500" class="text-muted-foreground">声の受付</p>
-          <p data-suisou-text="s12" class="mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
+      <div data-suisou-layout="row between">
+        <div data-suisou-layout="stack" class="label">
+          <p data-suisou-text="s14 w500" class="sub">声の受付</p>
+          <p data-suisou-text="s12" class="faint">オフにすると新しい声を受け付けません</p>
         </div>
         <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
       </div>
 
       {#if errorMsg}
-        <div data-suisou-layout="row" data-suisou-banner="error" class="text-error">
-          <AlertCircle size={15} />
+        <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+          <AlertCircle data-suisou-icon="small" />
           {errorMsg}
-        </div>
+        </p>
       {/if}
 
-      <div data-suisou-layout="row" class="justify-end pt-2">
+      <div data-suisou-layout="row end">
         <a href={`/@${data.cleanHandle}`}>
-          <Button variant="ghost" type="button" disabled={formState === "submitting"}>
-            キャンセル
-          </Button>
+          <Button type="button" disabled={formState === "submitting"}>キャンセル</Button>
         </a>
         <Button
+          variant="outline"
           type="submit"
           loading={formState === "submitting"}
           disabled={!title.trim() || !!slugErr}
         >
-          {#snippet leftIcon()}<Plus size={16} />{/snippet}
+          {#snippet leftIcon()}<Plus />{/snippet}
           作成する
         </Button>
       </div>
     </form>
   </div>
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 42rem;
+    gap: var(--suisou-space-4);
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .card {
+    padding: var(--suisou-space-4);
+  }
+  .form {
+    gap: var(--suisou-space-4);
+  }
+  .slug {
+    gap: var(--suisou-space-1);
+  }
+  .label {
+    gap: 0;
+  }
+  .preview {
+    font-family: var(--suisou-mono);
+    color: var(--suisou-text-disabled);
+    word-break: break-all;
+  }
+  .accent {
+    color: var(--suisou-accent);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .faint {
+    color: var(--suisou-text-disabled);
+  }
+</style>
