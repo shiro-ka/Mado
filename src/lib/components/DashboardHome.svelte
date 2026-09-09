@@ -58,7 +58,7 @@
       <div data-suisou-surface="panel" data-suisou-layout="stack">
         <p data-suisou-text="s12 w500" class="sub">{stat.label}</p>
         <p class="value">
-          <span data-suisou-text="s24 md:s28 w700" class="num">{stat.value}</span>
+          <span data-suisou-text="s24 md:s28 w700 tabular" class="num">{stat.value}</span>
           <span data-suisou-text="s12" class="sub">{stat.unit}</span>
         </p>
       </div>
@@ -96,7 +96,7 @@
         <div data-suisou-layout="stack">
           {#each boxes.slice(0, 3) as box}
             <a data-suisou-row data-suisou-layout="row between" href={`/@${session.handle}/${box.slug}`}>
-              <span data-suisou-text="s14" class="title">{box.title}</span>
+              <span data-suisou-text="s14 one-line" class="title">{box.title}</span>
               <span data-suisou-text="s12" class={box.isOpen ? "ok" : "sub"}>
                 {box.isOpen ? "受付中" : "停止中"}
               </span>
@@ -134,8 +134,8 @@
           {#each questions.slice(0, 4) as q}
             <a data-suisou-row data-suisou-layout="row" href={questionHref(q)}>
               {#if !q.isRead}<span class="dot"></span>{/if}
-              <span data-suisou-layout="grow" data-suisou-text="s14" class="title sub">{q.body}</span>
-              <span data-suisou-text="s12" class="date">
+              <span data-suisou-layout="grow" data-suisou-text="s14 one-line" class="title sub">{q.body}</span>
+              <span data-suisou-text="s12 tabular" class="date">
                 {new Date(q.createdAt).toLocaleDateString("ja-JP")}
               </span>
             </a>
@@ -160,7 +160,6 @@
     text-align: end;
   }
   .num {
-    font-variant-numeric: tabular-nums;
     color: var(--suisou-accent);
   }
 
@@ -172,14 +171,7 @@
   }
   .date {
     color: var(--suisou-text-sub);
-    font-variant-numeric: tabular-nums;
     flex: none;
-  }
-  .title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
   }
   .dot {
     flex: none;

@@ -290,7 +290,7 @@
       session={data.session}
     />
 
-    <p data-suisou-text="s12" class="sub back">
+    <p data-suisou-text="s12 center" class="sub back">
       <a href={`/@${data.cleanHandle}`}>← @{data.cleanHandle} のプロフィールに戻る</a>
     </p>
   {/if}
@@ -320,8 +320,5 @@
   }
   .sub {
     color: var(--suisou-text-sub);
-  }
-  .back {
-    text-align: center;
   }
 </style>

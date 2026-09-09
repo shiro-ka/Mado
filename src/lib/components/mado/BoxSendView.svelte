@@ -2,7 +2,6 @@
   import { Shield, LogIn, Lock, Globe } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
 
   // Structural subset of atproto's ProfileViewDetailed — only the fields shown.
@@ -87,18 +86,18 @@
   </div>
 
   {#if !ownerRegistered}
-    <div data-suisou-surface="panel" data-suisou-layout="stack" class="notice">
+    <div data-suisou-surface="panel" data-suisou-layout="stack" data-suisou-text="center" class="notice">
       <p data-suisou-text="s14 w700">このユーザーはMadoに登録されていません</p>
       <p data-suisou-text="s12" class="sub">声を送るには、オーナーがMadoにログインしている必要があります。</p>
     </div>
   {:else if !box.isOpen}
-    <div data-suisou-surface="panel" data-suisou-layout="stack" class="notice">
+    <div data-suisou-surface="panel" data-suisou-layout="stack" data-suisou-text="center" class="notice">
       <p data-suisou-text="s14 w700">現在この窓は受付停止中です</p>
       <p data-suisou-text="s12" class="sub">オーナーが受付を再開するまでお待ちください。</p>
     </div>
   {:else if !session}
-    <div data-suisou-surface="panel" data-suisou-layout="stack" class="notice">
-      <Glyph><LogIn data-suisou-icon="accent" /></Glyph>
+    <div data-suisou-surface="panel" data-suisou-layout="stack" data-suisou-text="center" class="notice">
+      <span data-suisou-tile><LogIn data-suisou-icon="accent" /></span>
       <div data-suisou-layout="stack gap-1" class="center">
         <p data-suisou-text="s14 w700">声を送るにはログインが必要です</p>
         <p data-suisou-text="s12 doc" class="sub">
@@ -124,7 +123,6 @@
 <style>
   .notice {
     align-items: center;
-    text-align: center;
     padding: var(--suisou-space-4);
   }
   .center {

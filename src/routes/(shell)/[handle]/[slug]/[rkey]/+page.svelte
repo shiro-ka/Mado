@@ -55,7 +55,7 @@
         </p>
       {/if}
 
-      <div data-suisou-media class="sender">
+      <div data-suisou-media data-suisou-rule="top" class="sender">
         {#if data.senderProfile?.avatar}
           <img
             data-suisou-avatar
@@ -143,7 +143,6 @@
   .sender {
     align-items: center;
     padding-block-start: var(--suisou-space-3);
-    border-top: 1px solid var(--suisou-line-weak);
   }
 
   .body {
@@ -162,11 +161,4 @@
     color: var(--suisou-text-sub);
   }
 
-  /* ★打ち消し：stack md:row（md:row が flex-direction を戻さない） */
-  @media (width >= 768px) {
-    .danger {
-      flex-direction: row;
-      align-items: center;
-    }
-  }
 </style>

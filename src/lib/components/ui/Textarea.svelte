@@ -46,7 +46,7 @@
       {/if}
       {#if showCount || maxlength}
         <span
-          data-suisou-text="s12"
+          data-suisou-text="s12 tabular"
           class="count"
           class:over={isOverLimit}
           class:near={!isOverLimit && isNearLimit}
@@ -77,9 +77,6 @@
   .label,
   .count {
     color: var(--suisou-text-sub);
-  }
-  .count {
-    font-variant-numeric: tabular-nums;
   }
   .count.near {
     color: var(--suisou-warning);

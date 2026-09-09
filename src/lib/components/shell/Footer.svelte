@@ -3,7 +3,7 @@
   import Brand from "./Brand.svelte";
 </script>
 
-<footer class="foot">
+<footer data-suisou-rule="top" class="foot">
   <div data-suisou-layout="stack container gap-4" class="inner">
     <div data-suisou-layout="stack md:even gap-4" class="cols">
       <!-- Brand -->
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div data-suisou-layout="stack between" class="bottom">
+    <div data-suisou-layout="stack md:row between" data-suisou-rule="top" class="bottom">
       <p data-suisou-text="s12" class="sub">
         &copy; {new Date().getFullYear()} Mado. All rights reserved.
       </p>
@@ -65,7 +65,6 @@
     width: 100%;
     margin-block-start: auto;
     background: var(--suisou-panel);
-    border-block-start: 1px solid var(--suisou-line-weak);
   }
   .inner {
     padding: var(--suisou-space-4) var(--suisou-space-3);
@@ -73,16 +72,6 @@
   .bottom {
     margin-block-start: var(--suisou-space-4);
     padding-block-start: var(--suisou-space-3);
-    border-block-start: 1px solid var(--suisou-line-weak);
-  }
-  /* ★打ち消し。`stack md:row` が効かない ―― layout.css の md:row は align-items
-     しか持たず、stack の flex-direction: column を戻せない。md:even / md:frame は
-     display ごと切り替わるので効くが、row だけ穴。 */
-  @media (width >= 768px) {
-    .bottom {
-      flex-direction: row;
-      align-items: center;
-    }
   }
 
   .sub {

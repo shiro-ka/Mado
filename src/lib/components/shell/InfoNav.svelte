@@ -27,7 +27,7 @@
     data-suisou-button="block"
   >
     <Info data-suisou-icon />
-    <span data-suisou-layout="grow" class="label">Madoについて</span>
+    <span data-suisou-layout="grow" data-suisou-text="start" class="label">Madoについて</span>
     <ChevronDown
       size={14}
       style="transition: transform 0.2s; transform: {open ? 'rotate(180deg)' : 'rotate(0deg)'}"
@@ -52,9 +52,6 @@
 </div>
 
 <style>
-  .label {
-    text-align: start;
-  }
 
   /* 入れ子のぶんだけ字下げ。字下げの幅は現場のもの */
   .sub {

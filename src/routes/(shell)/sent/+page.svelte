@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Send } from "lucide-svelte";
   import SentList from "$lib/components/mado/SentList.svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -13,7 +12,7 @@
 
 <div data-suisou-layout="stack container gap-4" class="page">
   <div data-suisou-media>
-    <Glyph><Send data-suisou-icon="accent" /></Glyph>
+    <span data-suisou-tile><Send data-suisou-icon="accent" /></span>
     <div data-suisou-media-content>
       <h1 data-suisou-text="s20 w700">送信トレイ</h1>
       <p data-suisou-text="s12" class="sub">あなたが送った声と返信</p>

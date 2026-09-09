@@ -12,7 +12,6 @@
     Inbox,
   } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   const features = [
     {
@@ -56,7 +55,7 @@
        Suisou のスケール（12/14/16/20/24/28/32）に段が無い。**ヒーローは小さくなる**。
        Suisou に display の段を足すかどうかは要判断 → dev/todo/mado-suisou-ui.md -->
 <section data-suisou-layout="stack" class="hero">
-  <div data-suisou-layout="stack container gap-4" class="hero-inner">
+  <div data-suisou-layout="stack container gap-4" data-suisou-text="center" class="hero-inner">
     <span data-suisou-tag="accent">
       <Sparkles />
       ATProtocol基盤
@@ -72,7 +71,7 @@
       送り主は窓のオーナーだけに届き、暗号化によって守られます。
     </p>
 
-    <div data-suisou-layout="stack" class="cta">
+    <div data-suisou-layout="stack md:row md:middle" class="cta">
       <a href="/auth/login">
         <Button variant="default">
           窓を開く
@@ -106,7 +105,7 @@
 <!-- Features -->
 <section id="features" class="band">
   <div data-suisou-layout="stack container gap-4" class="block">
-    <div data-suisou-layout="stack gap-1" class="heading">
+    <div data-suisou-layout="stack gap-1" data-suisou-text="center" class="heading">
       <h2 data-suisou-text="s24 md:s28 w700">Madoの特徴</h2>
       <p data-suisou-text="s14 md:s16" class="sub">安全で信頼できる窓を実現する3つの柱</p>
     </div>
@@ -114,7 +113,7 @@
     <div data-suisou-layout="stack md:even gap-3" class="cards">
       {#each features as feat}
         <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
-          <Glyph><feat.icon data-suisou-icon={feat.tone} /></Glyph>
+          <span data-suisou-tile><feat.icon data-suisou-icon={feat.tone} /></span>
           <h3 data-suisou-text="s16 w700">{feat.title}</h3>
           <p data-suisou-text="s14 doc" class="sub">{feat.description}</p>
         </div>
@@ -126,16 +125,16 @@
 <!-- How it works -->
 <section id="how-it-works" class="band">
   <div data-suisou-surface="panel" data-suisou-layout="stack container gap-4" class="block pad">
-    <div data-suisou-layout="stack gap-1" class="heading">
+    <div data-suisou-layout="stack gap-1" data-suisou-text="center" class="heading">
       <h2 data-suisou-text="s24 md:s28 w700">使い方</h2>
       <p data-suisou-text="s14 md:s16" class="sub">3ステップで始められます</p>
     </div>
 
     <div data-suisou-layout="stack md:even gap-3" class="cards">
       {#each steps as step}
-        <div data-suisou-layout="stack gap-3" class="step">
+        <div data-suisou-layout="stack gap-3" data-suisou-text="center" class="step">
           <span class="tile">
-            <Glyph><step.icon data-suisou-icon={step.tone} /></Glyph>
+            <span data-suisou-tile><step.icon data-suisou-icon={step.tone} /></span>
             <span data-suisou-text="s12 w700" class="num">{step.step}</span>
           </span>
           <div data-suisou-layout="stack gap-1" class="step-text">
@@ -153,7 +152,7 @@
        ので、面 + accent の罫に置き換えている。**見た目の華やぎは落ちる**ので、
        残したいならここは意図的な例外として扱う必要がある → 申し送り -->
 <section class="band">
-  <div data-suisou-surface="panel" data-suisou-layout="stack container gap-3" class="cta-box">
+  <div data-suisou-surface="panel" data-suisou-layout="stack container gap-3" data-suisou-text="center" class="cta-box">
     <Send data-suisou-icon="accent" class="cta-icon" />
     <h2 data-suisou-text="s24 md:s28 w700">今すぐ始めよう</h2>
     <p data-suisou-text="s16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
@@ -172,7 +171,6 @@
   }
   .hero-inner {
     --suisou-measure: 48rem;
-    text-align: center;
     align-items: center;
   }
   .title {
@@ -188,13 +186,6 @@
   .cta {
     align-items: center;
   }
-  /* ★打ち消し：stack md:row は効かない（md:row が align-items しか持たない）。 */
-  @media (width >= 768px) {
-    .cta {
-      flex-direction: row;
-      justify-content: center;
-    }
-  }
 
   .band {
     padding: var(--suisou-space-4) var(--suisou-space-3);
@@ -203,7 +194,6 @@
     padding: var(--suisou-space-4);
   }
   .heading {
-    text-align: center;
     align-items: center;
   }
   .sub {
@@ -214,7 +204,6 @@
   }
 
   .step {
-    text-align: center;
     align-items: center;
   }
   .step-text {
@@ -241,7 +230,6 @@
   .cta-box {
     --suisou-measure: 36rem;
     padding: var(--suisou-space-4);
-    text-align: center;
     align-items: center;
     border-color: var(--suisou-accent);
   }

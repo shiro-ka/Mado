@@ -2,7 +2,6 @@
   import { untrack } from "svelte";
   import { ChevronDown, ChevronUp, Send, MessageCircle, Clock } from "lucide-svelte";
   import { formatDateFull } from "$lib/utils.js";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
   import type { SentRef, Answer } from "$lib/../types/index.js";
 
   export interface SentItem {
@@ -101,13 +100,13 @@
 
   {#if filtered.length === 0}
     <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
-      <Glyph>
+      <span data-suisou-tile>
         {#if tab === "unread"}
           <MessageCircle data-suisou-icon="sub" />
         {:else}
           <Send data-suisou-icon="sub" />
         {/if}
-      </Glyph>
+      </span>
       <p data-suisou-text="s14" class="sub">
         {tab === "unread" ? "未読の返信はありません" : tab === "read" ? "既読の返信はありません" : "まだ声を送っていません"}
       </p>
@@ -127,6 +126,7 @@
         >
           <button
             data-suisou-layout="stack"
+            data-suisou-text="start"
             class="head"
             onclick={() => toggle(key, item.ref.ownerDid, item.ref.koeRkey, hasAnswer)}
           >
@@ -152,7 +152,7 @@
           </button>
 
           {#if isExpanded && hasAnswer}
-            <div data-suisou-layout="stack" class="answers">
+            <div data-suisou-layout="stack" data-suisou-rule="top" class="answers">
               <p data-suisou-text="s12 w500" class="sub">返信（{item.answers.length}件）</p>
               {#each item.answers as answer}
                 <div data-suisou-surface="item" data-suisou-layout="stack">
@@ -165,7 +165,7 @@
               {/each}
             </div>
           {:else if isExpanded}
-            <div class="answers">
+            <div data-suisou-rule="top" class="answers">
               <p data-suisou-text="s14" class="sub">まだ返信がありません</p>
             </div>
           {/if}
@@ -193,12 +193,10 @@
     background: transparent;
     font: inherit;
     color: inherit;
-    text-align: start;
     cursor: pointer;
   }
   .answers {
     padding: var(--suisou-space-3);
-    border-top: 1px solid var(--suisou-line-weak);
   }
 
   .body {

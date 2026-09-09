@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Eye, Lock, Globe, MessageCircle } from "lucide-svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   // ★色は Suisou の閉じた集合（data-suisou-icon の値）で持つ。
   //   旧実装は "text-blue-400" / "bg-emerald-400/10" という Tailwind の生の色名を
@@ -27,7 +26,7 @@
 <div data-suisou-layout="stack container gap-4" class="page">
   <div data-suisou-layout="stack">
     <div data-suisou-layout="row">
-      <Glyph><MessageCircle data-suisou-icon="accent" /></Glyph>
+      <span data-suisou-tile><MessageCircle data-suisou-icon="accent" /></span>
       <h1 data-suisou-text="s24 w700">Madoについて</h1>
     </div>
     <p data-suisou-text="s16 doc" class="sub">
@@ -41,7 +40,7 @@
     <h2 data-suisou-text="s20 w700">3つの特徴</h2>
     {#each features as feat}
       <div data-suisou-surface="panel" data-suisou-media>
-        <Glyph><feat.icon data-suisou-icon={feat.tone} /></Glyph>
+        <span data-suisou-tile><feat.icon data-suisou-icon={feat.tone} /></span>
         <div data-suisou-media-content>
           <p data-suisou-text="s14 w700">{feat.title}</p>
           <p data-suisou-text="s14 doc" class="sub">{feat.body}</p>

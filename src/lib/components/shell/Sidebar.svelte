@@ -24,7 +24,7 @@
 </script>
 
 <!-- Logo -->
-<div data-suisou-layout="row" class="brandbar">
+<div data-suisou-layout="row" data-suisou-rule="bottom" class="brandbar">
   <a href="/home" onclick={onNavigate}>
     <Brand size="md" />
   </a>
@@ -59,7 +59,6 @@
     height: 4rem;
     flex: none;
     padding-inline: var(--suisou-space-3);
-    border-block-end: 1px solid var(--suisou-line-weak);
   }
   .nav {
     padding: var(--suisou-space-2);

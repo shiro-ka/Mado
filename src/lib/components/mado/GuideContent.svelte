@@ -1,6 +1,5 @@
 <script lang="ts">
   import { UserCheck, MessageCircle, Inbox, Send, Eye } from "lucide-svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   const ownerSteps = [
     { step: "1", icon: UserCheck, tone: "accent", title: "Blueskyでログイン", body: "右上の「ログイン」からBlueskyアカウントで認証します。OAuthを使うためパスワードは不要です。" },
@@ -34,7 +33,7 @@
       {#each section.steps as item}
         <div data-suisou-surface="panel" data-suisou-media>
           <span class="step">
-            <Glyph><item.icon data-suisou-icon={item.tone} /></Glyph>
+            <span data-suisou-tile><item.icon data-suisou-icon={item.tone} /></span>
             <span data-suisou-text="s12 w700" class="num">{item.step}</span>
           </span>
           <div data-suisou-media-content>

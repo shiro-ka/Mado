@@ -74,7 +74,7 @@
   <!-- ★Suisou の banner。banner.css には「wixdex の3現場が同じ箱を手書きしていて
        3回ルールで昇格した」とある ―― Mado も同じ箱を手書きしていた。
        意味（role）は CSS では足せないので現場が書く、というのが Suisou の約束。 -->
-  <div data-suisou-banner="success" data-suisou-layout="stack" role="status" class="done">
+  <div data-suisou-banner="success" data-suisou-layout="stack" role="status" data-suisou-text="center" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1" class="center">
       <p data-suisou-text="s16 w700">回答を投稿しました</p>
@@ -144,7 +144,6 @@
 <style>
   .done {
     padding: var(--suisou-space-4);
-    text-align: center;
   }
   .center {
     align-items: center;
