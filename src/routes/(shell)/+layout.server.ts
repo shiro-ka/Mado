@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
-import { getProfile } from "$lib/atproto.js";
+import { getProfile } from "$lib/atproto/index.js";
 import { updateSessionProfile } from "$lib/auth.server.js";
 
 export const load: LayoutServerLoad = async ({ parent, cookies, platform }) => {

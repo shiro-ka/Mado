@@ -11,7 +11,7 @@
     Send,
     Inbox,
   } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
 
   const features = [
     {
@@ -51,9 +51,7 @@
 </script>
 
 <!-- Hero
-     ★見出しは s28 md:s32 が Suisou の上限。旧実装は text-4xl md:text-6xl（36/60px）で、
-       Suisou のスケール（12/14/16/20/24/28/32）に段が無い。**ヒーローは小さくなる**。
-       Suisou に display の段を足すかどうかは要判断 → dev/todo/mado-suisou-ui.md -->
+     見出しは s28 md:s32 ＝ Suisou のスケール（12/14/16/20/24/28/32）の上限。 -->
 <section data-suisou-layout="stack" class="hero">
   <div data-suisou-layout="stack container gap-4" data-suisou-text="center" class="hero-inner">
     <span data-suisou-tag="accent">
@@ -148,9 +146,7 @@
 </section>
 
 <!-- CTA
-     ★旧実装は青のグラデーション + 放射状の光だった。Suisou は「塗らない」「影は持たない」
-       ので、面 + accent の罫に置き換えている。**見た目の華やぎは落ちる**ので、
-       残したいならここは意図的な例外として扱う必要がある → 申し送り -->
+     Suisou は「塗らない」「影は持たない」ので、面 + accent の罫で立てる。 -->
 <section class="band">
   <div data-suisou-surface="panel" data-suisou-layout="stack container gap-3" data-suisou-text="center" class="cta-box">
     <Send data-suisou-icon="accent" class="cta-icon" />

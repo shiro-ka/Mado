@@ -2,8 +2,7 @@
   import { Eye, Lock, Globe, MessageCircle } from "lucide-svelte";
 
   // ★色は Suisou の閉じた集合（data-suisou-icon の値）で持つ。
-  //   旧実装は "text-blue-400" / "bg-emerald-400/10" という Tailwind の生の色名を
-  //   データに埋めていた ―― 色を決めるのは solve.py だけ、という掟から外れていた。
+  //   生の色名をデータに埋めないこと ―― 色を決めるのは solve.py だけ。
   const features = [
     {
       icon: Eye, tone: "accent",

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Shield, LogIn, Lock, Globe } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
 

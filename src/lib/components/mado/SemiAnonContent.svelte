@@ -48,7 +48,7 @@
         <span data-suisou-tile><row.icon data-suisou-icon={row.tone} /></span>
         <div data-suisou-media-content>
           <p data-suisou-text="s14 w700">{row.title}</p>
-          <!-- ★しるしはブラウザに任せる（data-suisou-list）。旧実装は "•" を
+          <!-- ★しるしはブラウザに任せる（data-suisou-list）。"•" を
                span で手書きしていて、読み上げから「箇条書き」の意味が消えていた。 -->
           <ul data-suisou-list data-suisou-text="s14" class="sub">
             {#each row.items as item}

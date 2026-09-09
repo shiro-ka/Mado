@@ -77,8 +77,7 @@
     })}
 
     <!-- ★タブがリンクなので状態は aria-current="page"（リンクの正しい ARIA）。
-         Suisou の Button が aria-current を見るようになった（2026-09-09）ので、
-         現場の打ち消しは不要になった。 -->
+         Suisou の Button がこれを見るので、現場で打ち消さないこと。 -->
     <div data-suisou-button-group="even">
       {#each tabs as t}
         <a

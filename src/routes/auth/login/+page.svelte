@@ -1,6 +1,6 @@
 <script lang="ts">
   import { MessageCircle, AlertCircle, Shield } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
 
   let handle = $state("");

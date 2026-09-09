@@ -2,7 +2,7 @@ import type { RequestHandler } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { createOAuthClient } from "$lib/oauth.server.js";
 import { createSession } from "$lib/auth.server.js";
-import { getProfile } from "$lib/atproto.js";
+import { getProfile } from "$lib/atproto/index.js";
 import { customAlphabet } from "nanoid";
 
 export const GET: RequestHandler = async ({ url, cookies, platform }) => {

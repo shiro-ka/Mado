@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Menu } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Brand from "./Brand.svelte";
   import type { AppSession } from "$lib/store.js";
 
@@ -28,7 +28,7 @@
     <nav data-suisou-layout="row" class="links">
       {#each navLinks as link}
         <a href={link.href}>
-          <Button variant="ghost" size="sm">{link.label}</Button>
+          <Button variant="ghost">{link.label}</Button>
         </a>
       {/each}
     </nav>
@@ -37,11 +37,11 @@
     <div data-suisou-layout="row">
       {#if session}
         <a href="/home">
-          <Button variant="default" size="sm">ホーム</Button>
+          <Button variant="default">ホーム</Button>
         </a>
       {:else}
         <a href="/auth/login">
-          <Button variant="default" size="sm">ログイン</Button>
+          <Button variant="default">ログイン</Button>
         </a>
       {/if}
       <!-- popovertarget だけで開閉。ESC・外側クリックはブラウザの仕事 -->

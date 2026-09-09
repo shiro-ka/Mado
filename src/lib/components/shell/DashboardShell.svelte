@@ -38,8 +38,7 @@
   <div data-suisou-layout="head row" data-suisou-rule="bottom" class="topbar">
     <!-- ★popovertarget だけで開く。JS は1行も要らない（Suisou 掟4）。
          ESC・外側クリック・フォーカスの閉じ込め・重なり順・膜は全部ブラウザの仕事。
-         以前はこれを自前で持っていて、焦点トラップ／Escape／スクロール錠／
-         フォーカス復帰で 52 行あった。 -->
+         自前で持つと焦点トラップ／Escape／スクロール錠／フォーカス復帰で 50 行を超える。 -->
     <button data-suisou-button="icon" popovertarget="nav-drawer" aria-label="メニューを開く">
       <Menu size={20} />
     </button>

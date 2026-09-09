@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { Home, AlertCircle } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
 
   const status = $derived(page.status);
   const message = $derived(page.error?.message ?? "エラーが発生しました");

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Home, MessageSquare, Inbox, ChevronRight, Plus, AlertTriangle } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import type { AppSession } from "$lib/store.js";
   import type { QuestionBox, Question } from "$lib/../types/index.js";
 

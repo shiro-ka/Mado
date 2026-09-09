@@ -14,7 +14,7 @@
   }: Props = $props();
 </script>
 
-<!-- 手製スイッチをやめてネイティブ checkbox に（2026-08-22）。
+<!-- ネイティブの checkbox。
      Suisou はネイティブ部品を奪わない ―― accent-color が根にあるので
      色は勝手にテーマへ追従する。wixdex の公開トグルと同じ判断。
      role="switch" は checkbox に載せて意味を保つ。

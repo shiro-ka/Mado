@@ -78,9 +78,7 @@
 </script>
 
 <div data-suisou-layout="stack gap-3" class="list">
-  <!-- ★タブは button-group="even" + aria-pressed。button.css には
-       「5現場が同じ打ち消しを書いていた」から昇格した、とある形そのもの。
-       旧実装も flex-1 と手書きの影で同じことをやっていた。 -->
+  <!-- タブは button-group="even" + aria-pressed。押された段は Suisou が出す -->
   <div data-suisou-button-group="even">
     {#each tabs as t}
       <button

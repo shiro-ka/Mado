@@ -1,7 +1,7 @@
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
-import { resolveHandle, findBoxBySlug, getProfile, listBoxes } from "$lib/atproto.js";
+import { resolveHandle, findBoxBySlug, getProfile, listBoxes } from "$lib/atproto/index.js";
 
 export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
   const { session } = await parent();
