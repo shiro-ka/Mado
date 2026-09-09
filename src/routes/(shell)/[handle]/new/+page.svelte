@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto, invalidateAll } from "$app/navigation";
   import { ArrowLeft, Plus, AlertCircle } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";

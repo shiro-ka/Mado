@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import BlockButton from "$lib/components/mado/BlockButton.svelte";
   import DeleteQuestionButton from "$lib/components/mado/DeleteQuestionButton.svelte";
@@ -87,7 +87,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button size="icon"><ExternalLink /></Button>
+            <Button icon><ExternalLink /></Button>
           </a>
         {/if}
       </div>

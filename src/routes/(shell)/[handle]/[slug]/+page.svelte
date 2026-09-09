@@ -2,7 +2,7 @@
   import { untrack } from "svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import { Lock, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check, Pin } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";

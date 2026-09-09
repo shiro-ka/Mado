@@ -2,8 +2,7 @@
   // Shared Mado wordmark (logo + "Mado" + optional beta badge). Presentational
   // only — callers wrap it in their own <a>/onclick so link targets stay local.
   //
-  // ★寸法は Suisou の段に寄せた。旧実装は text-sm / text-base / text-lg（14/16/18）
-  //   だったが、18 は Suisou のスケールに無い（12/14/16/20/24/28/32）ので s20 に上げた。
+  // ★寸法は Suisou の段（12/14/16/20/24/28/32）に乗せる。18 は段に無いので s20。
   //   ロゴの実寸だけは Suisou に語彙が無いので scoped style で持つ。
   interface Props {
     size?: "sm" | "md" | "lg";

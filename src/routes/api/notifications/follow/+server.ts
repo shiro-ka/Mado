@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { writeFollow, getViewerFollowsActor } from "$lib/atproto.js";
+import { writeFollow, getViewerFollowsActor } from "$lib/atproto/index.js";
 import { getOfficialAccount } from "$lib/notify.server.js";
 
 // Follow the official Mado account on the caller's behalf. Deliberately does

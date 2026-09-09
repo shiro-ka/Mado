@@ -3,7 +3,7 @@
   import { Bell, Check, ExternalLink, AlertCircle, UserPlus } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import Toggle from "$lib/components/ui/Toggle.svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();

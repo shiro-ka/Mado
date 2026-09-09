@@ -62,7 +62,7 @@
   }
 
   /* ★アイコンの下地。Suisou は塗らない主義なので、面ではなく item の段 + 罫で置く。
-     旧実装は bg-primary-light（accent の薄塗り）だった。 */
+ */
   .glyph {
     display: grid;
     place-items: center;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Send, AlertCircle, CheckCircle2, ExternalLink } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import { bskyPostUrl } from "$lib/utils.js";
 

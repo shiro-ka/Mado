@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Trash2 } from "lucide-svelte";
   import { goto, invalidateAll } from "$app/navigation";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
 
   interface Props {
     rkey: string;

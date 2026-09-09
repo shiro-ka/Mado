@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Globe, MessageCircle, Plus, Settings2 } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import QuestionBoxCard from "$lib/components/mado/QuestionBoxCard.svelte";
   import BoxSendView from "$lib/components/mado/BoxSendView.svelte";
   import Skeleton from "$lib/components/ui/Skeleton.svelte";

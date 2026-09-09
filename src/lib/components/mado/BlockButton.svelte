@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from "svelte";
   import { Ban, CheckCircle2, AlertCircle } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
 
   interface Props {
     senderDid: string;
@@ -60,7 +60,7 @@
 
 {#if state === "blocked" || state === "unblocking" || state === "unblock-error"}
   <div data-suisou-layout="row wrap" class="bar">
-    <!-- 状態のしるしであって押せるものではないので Tag。旧実装はボタン風の箱だった -->
+    <!-- 状態のしるしであって押せるものではないので Tag -->
     <span data-suisou-tag>
       <CheckCircle2 />
       ブロック中
