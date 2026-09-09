@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Inbox, RefreshCw, Bell, ChevronRight } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
-  import { cn } from "$lib/utils.js";
   import QuestionCard from "$lib/components/mado/QuestionCard.svelte";
   import Skeleton from "$lib/components/ui/Skeleton.svelte";
   import type { PageData } from "./$types";
@@ -34,41 +33,38 @@
   <title>受信トレイ | Mado</title>
 </svelte:head>
 
-<div class="px-6 py-8 max-w-3xl mx-auto">
-  <div class="flex items-center justify-between mb-6">
-    <div>
-      <h1 class="text-2xl font-bold text-foreground">受信トレイ</h1>
-      <p class="text-sm mt-1 text-muted-foreground">届いた声を確認しましょう</p>
+<div data-suisou-layout="stack container gap-3" class="page">
+  <div data-suisou-layout="row between">
+    <div data-suisou-layout="stack gap-0" class="title">
+      <h1 data-suisou-text="s24 w700">受信トレイ</h1>
+      <p data-suisou-text="s14" class="sub">届いた声を確認しましょう</p>
     </div>
     <button
+      data-suisou-button="icon"
       onclick={refresh}
       disabled={refreshing}
-      class="p-2 rounded-lg transition-colors duration-200 cursor-pointer text-subtle hover:text-foreground disabled:opacity-50"
       title="更新"
       aria-label="更新"
     >
-      <RefreshCw size={16} class={cn(refreshing && "animate-spin")} />
+      <RefreshCw class={refreshing ? "spin" : ""} />
     </button>
   </div>
 
-  <a
-    href="/settings/notifications"
-    class="flex items-center gap-2.5 px-4 py-3 mb-6 rounded-xl bg-surface border border-border text-sm text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
-  >
-    <Bell size={16} class="shrink-0 text-blue-400" />
-    <span class="flex-1">新着をDMで受け取る設定</span>
-    <ChevronRight size={16} class="shrink-0 text-subtle" />
+  <a data-suisou-row data-suisou-layout="row" data-suisou-text="s14" href="/settings/notifications" class="link">
+    <Bell data-suisou-icon="accent" />
+    <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
+    <ChevronRight data-suisou-icon="sub" />
   </a>
 
   {#await data.inbox}
-    <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
+    <div data-suisou-button-group="even">
       {#each tabs as t}
-        <div class="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground">{t.label}</div>
+        <span data-suisou-button="neutral">{t.label}</span>
       {/each}
     </div>
-    <div class="flex flex-col gap-3">
+    <div data-suisou-layout="stack gap-3" class="items">
       {#each Array(4) as _}
-        <Skeleton class="h-20" />
+        <Skeleton height="5rem" />
       {/each}
     </div>
   {:then inbox}
@@ -80,43 +76,39 @@
       return true;
     })}
 
-    <div class="flex gap-1 p-1 rounded-xl mb-6 w-fit bg-surface">
+    <!-- ★タブがリンクなので状態は aria-current="page"（リンクの正しい ARIA）。
+         Suisou の Button がこれを見るので、現場で打ち消さないこと。 -->
+    <div data-suisou-button-group="even">
       {#each tabs as t}
         <a
+          data-suisou-button="neutral"
           href={`/receive?tab=${t.key}`}
-          class={cn(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2",
-            tab === t.key ? "bg-primary text-white" : "bg-transparent text-muted-foreground"
-          )}
+          aria-current={tab === t.key ? "page" : undefined}
         >
           {t.label}
           {#if t.key === "all"}
-            <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
-              {allQuestions.length}
-            </span>
+            <span data-suisou-tag>{allQuestions.length}</span>
           {:else if t.key === "unread"}
-            <span class={cn("text-xs px-1.5 py-0.5 rounded-full tabular-nums", tab === t.key ? "bg-white/20 text-white" : "bg-elevated text-subtle")}>
-              {unreadCount}
-            </span>
+            <span data-suisou-tag>{unreadCount}</span>
           {/if}
         </a>
       {/each}
     </div>
 
     {#if filtered.length === 0}
-      <div class="rounded-2xl p-12 flex flex-col items-center gap-4 text-center bg-surface border border-dashed border-border-strong">
-        <Inbox size={36} class="text-subtle opacity-50" />
-        <div>
-          <p class="font-semibold text-base text-foreground">
+      <div data-suisou-surface="panel empty" data-suisou-layout="stack gap-3" data-suisou-text="center" class="empty">
+        <Inbox data-suisou-icon="sub" class="big" />
+        <div data-suisou-layout="stack gap-1" class="text">
+          <p data-suisou-text="s16 w700">
             {tab === "unread" ? "未読の声はありません" : "声がありません"}
           </p>
-          <p class="text-sm mt-1 text-muted-foreground">
+          <p data-suisou-text="s14" class="sub">
             {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
           </p>
         </div>
       </div>
     {:else}
-      <div class="flex flex-col gap-3">
+      <div data-suisou-layout="stack gap-3" class="items">
         {#each filtered as question}
           <QuestionCard {question} preview={question.body} href={question.href} />
         {/each}
@@ -124,3 +116,42 @@
     {/if}
   {/await}
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 48rem;
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .link {
+    color: var(--suisou-text-sub);
+  }
+  .link:hover {
+    color: var(--suisou-text-main);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+
+  .empty {
+    align-items: center;
+    padding: var(--suisou-space-4);
+  }
+  .text {
+    align-items: center;
+  }
+  .empty :global(.big) {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  /* Suisou の spinner は「いつ終わるか分からない」もの用。ここは更新ボタンの
+     アイコンが回るだけなので、部品ではなく現場の動き。 */
+  :global(.spin) {
+    animation: spin 800ms linear infinite;
+  }
+  @keyframes spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+</style>

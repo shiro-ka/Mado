@@ -10,16 +10,24 @@
   <title>送信トレイ | Mado</title>
 </svelte:head>
 
-<div class="px-6 py-8 max-w-2xl mx-auto">
-  <div class="flex items-center gap-3 mb-8">
-    <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-primary-light">
-      <Send size={17} class="text-primary" />
-    </div>
-    <div>
-      <h1 class="text-xl font-bold text-foreground">送信トレイ</h1>
-      <p class="text-xs text-muted-foreground">あなたが送った声と返信</p>
+<div data-suisou-layout="stack container gap-4" class="page">
+  <div data-suisou-media>
+    <span data-suisou-tile><Send data-suisou-icon="accent" /></span>
+    <div data-suisou-media-content>
+      <h1 data-suisou-text="s20 w700">送信トレイ</h1>
+      <p data-suisou-text="s12" class="sub">あなたが送った声と返信</p>
     </div>
   </div>
 
   <SentList items={data.items} />
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 42rem;
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>

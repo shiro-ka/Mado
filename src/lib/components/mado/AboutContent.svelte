@@ -1,52 +1,66 @@
 <script lang="ts">
   import { Eye, Lock, Globe, MessageCircle } from "lucide-svelte";
 
+  // ★色は Suisou の閉じた集合（data-suisou-icon の値）で持つ。
+  //   生の色名をデータに埋めないこと ―― 色を決めるのは solve.py だけ。
   const features = [
     {
-      icon: Eye, color: "text-blue-400", bg: "bg-blue-600/12",
+      icon: Eye, tone: "accent",
       title: "半匿名性",
       body: "送り主は窓のオーナーにのみ開示されます。第三者が声と送信者の紐付けを知る手段はありません。",
     },
     {
-      icon: Lock, color: "text-emerald-400", bg: "bg-emerald-400/10",
+      icon: Lock, tone: "success",
       title: "暗号化保護",
       body: "送り主のDIDはECIES（楕円曲線統合暗号化スキーム）で窓の公開鍵により暗号化されます。秘密鍵を持つオーナーだけが復号できます。",
     },
     {
-      icon: Globe, color: "text-blue-400", bg: "bg-blue-400/10",
+      icon: Globe, tone: "accent",
       title: "ATProtocol基盤",
       body: "声・回答データはあなたのBluesky PDS（Personal Data Server）に保存されます。Mado独自のデータベースには頼らず、オープンな分散型プロトコルで動作します。",
     },
   ];
 </script>
 
-<div class="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-10">
-  <div>
-    <div class="flex items-center gap-3 mb-4">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
-        <MessageCircle size={20} class="text-white" />
-      </div>
-      <h1 class="text-2xl font-bold text-foreground">Madoについて</h1>
+<div data-suisou-layout="stack container gap-4" class="page">
+  <div data-suisou-layout="stack">
+    <div data-suisou-layout="row">
+      <span data-suisou-tile><MessageCircle data-suisou-icon="accent" /></span>
+      <h1 data-suisou-text="s24 w700">Madoについて</h1>
     </div>
-    <p class="text-base leading-relaxed text-muted-foreground">
-      Mado（窓）は、Blueskyアカウントを使った<strong class="text-foreground">半匿名の窓サービス</strong>です。
+    <p data-suisou-text="s16 doc" class="sub">
+      Mado（窓）は、Blueskyアカウントを使った<strong>半匿名の窓サービス</strong>です。
       声を送るにはBlueskyへのログインが必要なため完全匿名ではありませんが、
       送り主の情報は暗号化されて窓のオーナーにのみ届きます。
     </p>
   </div>
-  <div class="flex flex-col gap-4">
-    <h2 class="text-lg font-semibold text-foreground">3つの特徴</h2>
+
+  <div data-suisou-layout="stack gap-3" class="group">
+    <h2 data-suisou-text="s20 w700">3つの特徴</h2>
     {#each features as feat}
-      <div class="rounded-xl p-5 flex gap-4 bg-surface border border-border">
-        <div class={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${feat.bg}`}>
-          <feat.icon size={18} class={feat.color} />
-        </div>
-        <div>
-          <p class="font-semibold text-sm mb-1 text-foreground">{feat.title}</p>
-          <p class="text-sm leading-relaxed text-muted-foreground">{feat.body}</p>
+      <div data-suisou-surface="panel" data-suisou-media>
+        <span data-suisou-tile><feat.icon data-suisou-icon={feat.tone} /></span>
+        <div data-suisou-media-content>
+          <p data-suisou-text="s14 w700">{feat.title}</p>
+          <p data-suisou-text="s14 doc" class="sub">{feat.body}</p>
         </div>
       </div>
     {/each}
   </div>
-  <p class="text-xs text-subtle">Mado はオープンベータです。仕様は予告なく変更される場合があります。</p>
+
+  <p data-suisou-text="s12" class="sub">
+    Mado はオープンベータです。仕様は予告なく変更される場合があります。
+  </p>
 </div>
+
+<style>
+  /* ★読む幅は container に任せ、上限だけ現場が決める。Suisou が --suisou-drawer や
+     --suisou-spinner で「実寸は現場のもの」としているのと同じやり方。 */
+  .page {
+    --suisou-measure: 42rem;
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>

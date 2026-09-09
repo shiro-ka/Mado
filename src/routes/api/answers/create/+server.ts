@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { writeAnswer, createBskyPost, invalidateRecords, NSID } from "$lib/atproto.js";
+import { writeAnswer, createBskyPost, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { atUriSchema } from "$lib/validation.js";
 
 const createAnswerSchema = z.object({

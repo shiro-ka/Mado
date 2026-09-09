@@ -2,7 +2,7 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { getViewerFollowsActor } from "$lib/atproto.js";
+import { getViewerFollowsActor } from "$lib/atproto/index.js";
 import { getOfficialAccount } from "$lib/notify.server.js";
 
 export const load: PageServerLoad = async ({ parent, platform, cookies }) => {

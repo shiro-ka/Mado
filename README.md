@@ -12,11 +12,12 @@
 
 つまり「誰が送ったか」は一般公開されないが、受け取った本人には分かる。質問は送信者ではなく所有者のリポジトリに書かれるため、送信者のリポジトリには痕跡が残らない。
 
-> **トラストモデル（開発者向けの事実）**: サーバー（D1）は各箱の ECIES 秘密鍵（`keypairs.private_hex`）と送信履歴（`sent`：送信者 DID・本文）を平文で保持する。したがって匿名性は「他の Bluesky ユーザーに対して」成立するもので、運営者に対するものではない。ユーザー向けの開示文言は別途整備すること（TODO）。
+> **トラストモデル（開発者向けの事実）**: サーバー（D1）は各箱の ECIES 秘密鍵（`keypairs.private_hex`）と送信履歴（`sent`：送信者 DID・本文）を平文で保持する。したがって匿名性は「他の Bluesky ユーザーに対して」成立するもので、運営者に対するものではない。
 
 ## 技術スタック
 
-- **SvelteKit 2 / Svelte 5** + **Tailwind v4** + shadcn-svelte（bits-ui）
+- **SvelteKit 2 / Svelte 5** + **[Suisou](https://github.com/shiro-ka/Suisou)**（自作のデザインシステム。`data-suisou-*` 属性で当てる純 CSS）
+  - CSS は `https://suisou.pages.dev/v1/suisou.css` 1本 ＋ 各コンポーネントの scoped style。ビルド時の CSS フレームワークは使っていない
 - **Cloudflare Pages**（`@sveltejs/adapter-cloudflare`）+ **KV** + **D1**
 - 認証: **atproto OAuth**（DPoP / `private_key_jwt`）— `@atproto/oauth-client-node` を Workers 向けに調整（`src/lib/oauth.server.ts`）
 - 暗号: **eciesjs**（secp256k1 ECIES）

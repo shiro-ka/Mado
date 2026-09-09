@@ -6,7 +6,7 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { generateKeyPair } from "$lib/crypto.js";
-import { createBoxRecord, deleteRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto.js";
+import { createBoxRecord, deleteRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { slugSchema } from "$lib/validation.js";
 
 const createBoxSchema = z.object({

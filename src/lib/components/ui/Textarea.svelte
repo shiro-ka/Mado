@@ -1,14 +1,19 @@
 <script lang="ts">
   import type { HTMLTextareaAttributes } from "svelte/elements";
-  import { Textarea as ShadcnTextarea } from "$lib/components/ui/textarea";
-  import { cn } from "$lib/utils.js";
+
+  /* ラベル・文字数・エラーを連れた textarea。
+
+     ★入力欄そのものは Suisou の field。shadcn の textarea ラッパ（ui/textarea/）を
+       挟んでいたのをやめた ―― 同じ「入力欄」を2枚で持っていて、余白と罫が両方に
+       書いてあった。ラッパごと削除。
+
+     ★構造は data-suisou-layout に任せる。すきまは Suisou の間合い（8px）。 */
 
   interface Props extends Omit<HTMLTextareaAttributes, "class"> {
     label?: string;
     error?: string;
     helper?: string;
     showCount?: boolean;
-    class?: string;
   }
 
   let {
@@ -16,7 +21,6 @@
     error,
     helper,
     showCount = false,
-    class: className = "",
     id,
     maxlength,
     value = $bindable(""),
@@ -32,39 +36,60 @@
   const isOverLimit = $derived(maxlength ? charCount > (maxlength as number) : false);
 </script>
 
-<div class="flex flex-col gap-1.5 w-full">
-  <div class="flex items-center justify-between">
-    {#if label}
-      <label for={inputId} class="text-sm font-medium text-muted-foreground">{label}</label>
-    {:else}
-      <span></span>
-    {/if}
-    {#if showCount || maxlength}
-      <span
-        class={cn(
-          "text-xs tabular-nums",
-          isOverLimit ? "text-error" : isNearLimit ? "text-warning" : "text-subtle"
-        )}
-      >
-        {charCount}{maxlength ? `/${maxlength}` : ""}
-      </span>
-    {/if}
-  </div>
-  <ShadcnTextarea
+<div data-suisou-layout="stack">
+  {#if label || showCount || maxlength}
+    <div data-suisou-layout="row between">
+      {#if label}
+        <label for={inputId} data-suisou-text="s14 w500" class="label">{label}</label>
+      {:else}
+        <span></span>
+      {/if}
+      {#if showCount || maxlength}
+        <span
+          data-suisou-text="s12 tabular"
+          class="count"
+          class:over={isOverLimit}
+          class:near={!isOverLimit && isNearLimit}
+        >
+          {charCount}{maxlength ? `/${maxlength}` : ""}
+        </span>
+      {/if}
+    </div>
+  {/if}
+
+  <textarea
+    data-suisou-field="block"
     id={inputId}
     bind:value
-    maxlength={maxlength}
-    class={cn(
-      "px-4 py-3 min-h-[120px] resize-y",
-      error && "border-destructive/60 focus-visible:ring-destructive/40",
-      className
-    )}
-    aria-invalid={error ? true : undefined}
+    {maxlength}
+    aria-invalid={error ? "true" : undefined}
     {...restProps}
-  />
+  ></textarea>
+
   {#if error}
-    <p class="text-xs text-error">{error}</p>
+    <p data-suisou-text="s12" class="error">{error}</p>
   {:else if helper}
-    <p class="text-xs text-subtle">{helper}</p>
+    <p data-suisou-text="s12" class="helper">{helper}</p>
   {/if}
 </div>
+
+<style>
+  .label,
+  .count {
+    color: var(--suisou-text-sub);
+  }
+  .count.near {
+    color: var(--suisou-warning);
+  }
+  .count.over,
+  .error {
+    color: var(--suisou-error);
+  }
+  .helper {
+    color: var(--suisou-text-sub);
+  }
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+</style>

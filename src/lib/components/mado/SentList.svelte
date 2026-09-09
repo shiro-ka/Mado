@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from "svelte";
   import { ChevronDown, ChevronUp, Send, MessageCircle, Clock } from "lucide-svelte";
-  import { cn, formatDateFull } from "$lib/utils.js";
+  import { formatDateFull } from "$lib/utils.js";
   import type { SentRef, Answer } from "$lib/../types/index.js";
 
   export interface SentItem {
@@ -77,49 +77,40 @@
   ];
 </script>
 
-<div>
-  <!-- Tabs -->
-  <div class="flex gap-1 mb-5 p-1 rounded-xl bg-elevated">
+<div data-suisou-layout="stack gap-3" class="list">
+  <!-- タブは button-group="even" + aria-pressed。押された段は Suisou が出す -->
+  <div data-suisou-button-group="even">
     {#each tabs as t}
       <button
+        data-suisou-button="neutral"
+        aria-pressed={tab === t.id}
         onclick={() => (tab = t.id)}
-        class={cn(
-          "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer",
-          tab === t.id
-            ? "bg-surface text-foreground shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
-            : "bg-transparent text-subtle"
-        )}
       >
         {t.label}
         {#if t.id === "all" && items.length > 0}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full", "bg-elevated text-subtle")}>
-            {items.length}
-          </span>
+          <span data-suisou-tag>{items.length}</span>
         {:else if t.id === "unread" && unreadCount > 0}
-          <span class={cn("text-xs px-1.5 py-0.5 rounded-full", tab !== "unread" ? "bg-primary text-white" : "bg-elevated text-subtle")}>
-            {unreadCount}
-          </span>
+          <span data-suisou-tag={tab === "unread" ? "" : "accent"}>{unreadCount}</span>
         {/if}
       </button>
     {/each}
   </div>
 
-  <!-- List -->
   {#if filtered.length === 0}
-    <div class="text-center py-16 flex flex-col items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-elevated">
+    <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+      <span data-suisou-tile>
         {#if tab === "unread"}
-          <MessageCircle size={22} class="text-subtle" />
+          <MessageCircle data-suisou-icon="sub" />
         {:else}
-          <Send size={22} class="text-subtle" />
+          <Send data-suisou-icon="sub" />
         {/if}
-      </div>
-      <p class="text-sm text-subtle">
+      </span>
+      <p data-suisou-text="s14" class="sub">
         {tab === "unread" ? "未読の返信はありません" : tab === "read" ? "既読の返信はありません" : "まだ声を送っていません"}
       </p>
     </div>
   {:else}
-    <div class="flex flex-col gap-3">
+    <div data-suisou-layout="stack gap-3" class="items">
       {#each filtered as item}
         {@const key = `${item.ref.ownerDid}:${item.ref.koeRkey}`}
         {@const isExpanded = expanded.has(key)}
@@ -127,67 +118,53 @@
         {@const isRead = readSet.has(key)}
 
         <div
-          class={cn(
-            "rounded-2xl overflow-hidden bg-surface",
-            hasAnswer && !isRead ? "border border-blue-600/40" : "border border-border"
-          )}
+          data-suisou-surface="panel bleed"
+          class="item"
+          class:fresh={hasAnswer && !isRead}
         >
-          <!-- Header -->
           <button
+            data-suisou-layout="stack"
+            data-suisou-text="start"
+            class="head"
             onclick={() => toggle(key, item.ref.ownerDid, item.ref.koeRkey, hasAnswer)}
-            class="w-full text-left p-5 flex flex-col gap-3 cursor-pointer"
           >
-            <!-- Meta row -->
-            <div class="flex items-center gap-2">
-              <Clock size={12} class="text-subtle" />
-              <span class="text-xs text-subtle">{formatDateFull(item.ref.sentAt)}</span>
-              <div class="flex-1"></div>
+            <div data-suisou-layout="row">
+              <Clock data-suisou-icon="small sub" />
+              <span data-suisou-text="s12" class="sub">{formatDateFull(item.ref.sentAt)}</span>
+              <span data-suisou-layout="grow"></span>
               {#if hasAnswer}
-                <span
-                  class={cn(
-                    "text-xs px-2 py-0.5 rounded-full font-medium",
-                    isRead
-                      ? "bg-elevated text-subtle border border-border"
-                      : "bg-blue-600/15 text-blue-400 border border-blue-600/30"
-                  )}
-                >
+                <span data-suisou-tag={isRead ? "" : "accent"}>
                   {isRead ? "返信済み" : "返信あり"}
                 </span>
               {/if}
               {#if isExpanded}
-                <ChevronUp size={15} class="text-subtle" />
+                <ChevronUp data-suisou-icon="small sub" />
               {:else}
-                <ChevronDown size={15} class="text-subtle" />
+                <ChevronDown data-suisou-icon="small sub" />
               {/if}
             </div>
 
-            <!-- Question body -->
-            <p class={cn("text-sm leading-relaxed whitespace-pre-wrap text-foreground", !isExpanded && "line-clamp-2")}>
+            <p data-suisou-text="s14 doc" class="body" class:clamp={!isExpanded}>
               {item.ref.body}
             </p>
           </button>
 
-          <!-- Answers -->
           {#if isExpanded && hasAnswer}
-            <div class="px-5 pb-5 flex flex-col gap-3 border-t border-border">
-              <p class="text-xs font-medium pt-4 text-subtle">返信（{item.answers.length}件）</p>
+            <div data-suisou-layout="stack" data-suisou-rule="top" class="answers">
+              <p data-suisou-text="s12 w500" class="sub">返信（{item.answers.length}件）</p>
               {#each item.answers as answer}
-                <div class="rounded-xl p-4 bg-elevated">
-                  <div class="flex items-center gap-2 mb-2">
-                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-primary-light">
-                      <MessageCircle size={10} class="text-primary" />
-                    </div>
-                    <span class="text-xs text-muted-foreground">{formatDateFull(answer.createdAt)}</span>
+                <div data-suisou-surface="item" data-suisou-layout="stack">
+                  <div data-suisou-layout="row">
+                    <MessageCircle data-suisou-icon="small accent" />
+                    <span data-suisou-text="s12" class="sub">{formatDateFull(answer.createdAt)}</span>
                   </div>
-                  <p class="text-sm leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
+                  <p data-suisou-text="s14 doc" class="body">{answer.body}</p>
                 </div>
               {/each}
             </div>
-          {/if}
-
-          {#if isExpanded && !hasAnswer}
-            <div class="px-5 pb-5 pt-4 border-t border-border">
-              <p class="text-sm text-subtle">まだ返信がありません</p>
+          {:else if isExpanded}
+            <div data-suisou-rule="top" class="answers">
+              <p data-suisou-text="s14" class="sub">まだ返信がありません</p>
             </div>
           {/if}
         </div>
@@ -195,3 +172,42 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .empty {
+    align-items: center;
+    padding-block: var(--suisou-space-4);
+  }
+
+  /* 返信が来ていて未読のものだけ罫を accent にする（QuestionCard と同じ扱い） */
+  .item.fresh {
+    border-color: var(--suisou-accent);
+  }
+
+  .head {
+    width: 100%;
+    padding: var(--suisou-space-3);
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  .answers {
+    padding: var(--suisou-space-3);
+  }
+
+  .body {
+    white-space: pre-wrap;
+  }
+  .clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>

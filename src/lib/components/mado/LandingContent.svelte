@@ -11,27 +11,21 @@
     Send,
     Inbox,
   } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
 
   const features = [
     {
-      icon: Eye,
-      iconClass: "text-blue-400",
-      bgClass: "bg-blue-600/12",
+      icon: Eye, tone: "accent",
       title: "半匿名性",
       description: "送り主は窓のオーナーにのみ開示。声の内容と送信者情報は暗号化されて保存されるため、第三者には一切見えません。",
     },
     {
-      icon: Lock,
-      iconClass: "text-emerald-400",
-      bgClass: "bg-emerald-400/10",
+      icon: Lock, tone: "success",
       title: "暗号化保護",
       description: "ECIES (楕円曲線統合暗号化スキーム) を使用。窓のオーナーの公開鍵で暗号化し、秘密鍵がなければ誰も読めません。",
     },
     {
-      icon: Globe,
-      iconClass: "text-blue-400",
-      bgClass: "bg-blue-400/10",
+      icon: Globe, tone: "accent",
       title: "ATProtocol基盤",
       description: "データはあなたのBlueskyアカウントのPDSに保存されます。特定サービスに依存せず、オープンな分散型プロトコルで動作します。",
     },
@@ -39,96 +33,87 @@
 
   const steps = [
     {
-      step: "01",
-      icon: UserCheck,
-      iconClass: "text-blue-400",
+      step: "1", icon: UserCheck, tone: "accent",
       title: "Blueskyでログイン",
       description: "Blueskyアカウントで認証します。窓を開くにはログインが必要です。",
     },
     {
-      step: "02",
-      icon: MessageCircle,
-      iconClass: "text-emerald-400",
+      step: "2", icon: MessageCircle, tone: "success",
       title: "窓を作る",
       description: "タイトルと説明文を設定して窓を公開。URLをシェアして声を募集しましょう。",
     },
     {
-      step: "03",
-      icon: Inbox,
-      iconClass: "text-blue-400",
+      step: "3", icon: Inbox, tone: "accent",
       title: "声を受け取る",
       description: "ホームから届いた声を確認・返答。送り主の情報も安全に確認できます。",
     },
   ];
 </script>
 
-<!-- Hero -->
-<section class="relative overflow-hidden px-4 pt-24 pb-20 md:pt-32 md:pb-28">
-  <div class="relative mx-auto max-w-3xl text-center">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-primary-light border border-blue-600/30 text-blue-300">
-      <Sparkles size={14} />
+<!-- Hero
+     見出しは s28 md:s32 ＝ Suisou のスケール（12/14/16/20/24/28/32）の上限。 -->
+<section data-suisou-layout="stack" class="hero">
+  <div data-suisou-layout="stack container gap-4" data-suisou-text="center" class="hero-inner">
+    <span data-suisou-tag="accent">
+      <Sparkles />
       ATProtocol基盤
-    </div>
+    </span>
 
-    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground">
+    <h1 data-suisou-text="s28 md:s32 w700" class="title">
       窓越しに、<br />
-      <span class="text-blue-400">想いを届けよう</span>
+      <span class="accent">想いを届けよう</span>
     </h1>
 
-    <p class="text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed text-muted-foreground">
+    <p data-suisou-text="s16 md:s20 doc" class="lead">
       Madoは、Blueskyアカウントを使った半匿名の窓です。
       送り主は窓のオーナーだけに届き、暗号化によって守られます。
     </p>
 
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+    <div data-suisou-layout="stack md:row md:middle" class="cta">
       <a href="/auth/login">
-        <Button size="lg">
+        <Button variant="default">
           窓を開く
-          {#snippet rightIcon()}<ChevronRight size={18} />{/snippet}
+          {#snippet rightIcon()}<ChevronRight />{/snippet}
         </Button>
       </a>
       <a href="#how-it-works">
-        <Button variant="secondary" size="lg">使い方を見る</Button>
+        <Button variant="secondary">使い方を見る</Button>
       </a>
     </div>
   </div>
 </section>
 
 <!-- Semi-anonymous disclosure -->
-<section class="px-4 pb-12">
-  <div class="mx-auto max-w-3xl">
-    <div class="rounded-2xl p-5 flex gap-4 bg-amber-400/7 border border-amber-400/25">
-      <Shield size={20} class="shrink-0 mt-0.5 text-amber-400" />
-      <div>
-        <p class="font-semibold text-sm mb-1 text-amber-400">半匿名性についてのご説明</p>
-        <p class="text-sm leading-relaxed text-muted-foreground">
-          このサービスは<strong class="text-foreground">完全匿名ではありません</strong>。
-          声を送信するにはBlueskyアカウントでのログインが必要です。
-          あなたのDIDとハンドルは声に暗号化された形で含まれ、
-          <strong class="text-foreground">窓のオーナーのみ</strong>が復号して確認できます。
-          第三者には開示されません。
-        </p>
-      </div>
+<section class="band">
+  <div data-suisou-banner="warning" data-suisou-media data-suisou-layout="container">
+    <Shield data-suisou-icon="warning" data-suisou-media-icon />
+    <div data-suisou-media-content>
+      <p data-suisou-text="s14 w700" class="warn">半匿名性についてのご説明</p>
+      <p data-suisou-text="s14 doc">
+        このサービスは<strong>完全匿名ではありません</strong>。
+        声を送信するにはBlueskyアカウントでのログインが必要です。
+        あなたのDIDとハンドルは声に暗号化された形で含まれ、
+        <strong>窓のオーナーのみ</strong>が復号して確認できます。
+        第三者には開示されません。
+      </p>
     </div>
   </div>
 </section>
 
 <!-- Features -->
-<section id="features" class="px-4 py-16">
-  <div class="mx-auto max-w-5xl">
-    <div class="text-center mb-12">
-      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">Madoの特徴</h2>
-      <p class="text-sm md:text-base text-muted-foreground">安全で信頼できる窓を実現する3つの柱</p>
+<section id="features" class="band">
+  <div data-suisou-layout="stack container gap-4" class="block">
+    <div data-suisou-layout="stack gap-1" data-suisou-text="center" class="heading">
+      <h2 data-suisou-text="s24 md:s28 w700">Madoの特徴</h2>
+      <p data-suisou-text="s14 md:s16" class="sub">安全で信頼できる窓を実現する3つの柱</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div data-suisou-layout="stack md:even gap-3" class="cards">
       {#each features as feat}
-        <div class="rounded-xl p-6 bg-surface border border-border">
-          <div class={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${feat.bgClass}`}>
-            <feat.icon size={20} class={feat.iconClass} />
-          </div>
-          <h3 class="font-semibold text-base mb-2 text-foreground">{feat.title}</h3>
-          <p class="text-sm leading-relaxed text-muted-foreground">{feat.description}</p>
+        <div data-suisou-surface="panel" data-suisou-layout="stack" class="card">
+          <span data-suisou-tile><feat.icon data-suisou-icon={feat.tone} /></span>
+          <h3 data-suisou-text="s16 w700">{feat.title}</h3>
+          <p data-suisou-text="s14 doc" class="sub">{feat.description}</p>
         </div>
       {/each}
     </div>
@@ -136,27 +121,23 @@
 </section>
 
 <!-- How it works -->
-<section id="how-it-works" class="px-4 py-16">
-  <div class="mx-auto max-w-5xl rounded-2xl p-8 md:p-12 bg-surface border border-border">
-    <div class="text-center mb-10">
-      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">使い方</h2>
-      <p class="text-sm md:text-base text-muted-foreground">3ステップで始められます</p>
+<section id="how-it-works" class="band">
+  <div data-suisou-surface="panel" data-suisou-layout="stack container gap-4" class="block pad">
+    <div data-suisou-layout="stack gap-1" data-suisou-text="center" class="heading">
+      <h2 data-suisou-text="s24 md:s28 w700">使い方</h2>
+      <p data-suisou-text="s14 md:s16" class="sub">3ステップで始められます</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div data-suisou-layout="stack md:even gap-3" class="cards">
       {#each steps as step}
-        <div class="flex flex-col items-center text-center gap-4">
-          <div class="relative">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-elevated">
-              <step.icon size={24} class={step.iconClass} />
-            </div>
-            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-primary text-white">
-              {step.step.slice(-1)}
-            </div>
-          </div>
-          <div>
-            <h3 class="font-semibold text-base mb-1.5 text-foreground">{step.title}</h3>
-            <p class="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
+        <div data-suisou-layout="stack gap-3" data-suisou-text="center" class="step">
+          <span class="tile">
+            <span data-suisou-tile><step.icon data-suisou-icon={step.tone} /></span>
+            <span data-suisou-text="s12 w700" class="num">{step.step}</span>
+          </span>
+          <div data-suisou-layout="stack gap-1" class="step-text">
+            <h3 data-suisou-text="s16 w700">{step.title}</h3>
+            <p data-suisou-text="s14 doc" class="sub">{step.description}</p>
           </div>
         </div>
       {/each}
@@ -164,27 +145,92 @@
   </div>
 </section>
 
-<!-- CTA -->
-<section class="px-4 py-16">
-  <div class="mx-auto max-w-2xl text-center">
-    <div class="rounded-3xl p-10 md:p-14 relative overflow-hidden bg-gradient-to-br from-blue-600/20 to-blue-900/20 border border-blue-600/35">
-      <div
-        class="absolute inset-0 opacity-30 pointer-events-none"
-        style="background: radial-gradient(ellipse at 50% 0%, rgba(0,133,255,0.4), transparent 70%)"
-      ></div>
-      <div class="relative">
-        <Send size={36} class="mx-auto mb-4 opacity-80 text-blue-400" />
-        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-foreground">今すぐ始めよう</h2>
-        <p class="mb-6 text-base text-muted-foreground">
-          Blueskyアカウントがあれば、無料で窓を開けます。
-        </p>
-        <a href="/auth/login">
-          <Button size="lg">
-            窓を開く
-            {#snippet rightIcon()}<ChevronRight size={18} />{/snippet}
-          </Button>
-        </a>
-      </div>
-    </div>
+<!-- CTA
+     Suisou は「塗らない」「影は持たない」ので、面 + accent の罫で立てる。 -->
+<section class="band">
+  <div data-suisou-surface="panel" data-suisou-layout="stack container gap-3" data-suisou-text="center" class="cta-box">
+    <Send data-suisou-icon="accent" class="cta-icon" />
+    <h2 data-suisou-text="s24 md:s28 w700">今すぐ始めよう</h2>
+    <p data-suisou-text="s16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
+    <a href="/auth/login">
+      <Button variant="default">
+        窓を開く
+        {#snippet rightIcon()}<ChevronRight />{/snippet}
+      </Button>
+    </a>
   </div>
 </section>
+
+<style>
+  .hero {
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .hero-inner {
+    --suisou-measure: 48rem;
+    align-items: center;
+  }
+  .title {
+    letter-spacing: -0.01em;
+  }
+  .accent {
+    color: var(--suisou-accent);
+  }
+  .lead {
+    max-width: 36rem;
+    color: var(--suisou-text-sub);
+  }
+  .cta {
+    align-items: center;
+  }
+
+  .band {
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .pad {
+    padding: var(--suisou-space-4);
+  }
+  .heading {
+    align-items: center;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .warn {
+    color: var(--suisou-warning);
+  }
+
+  .step {
+    align-items: center;
+  }
+  .step-text {
+    align-items: center;
+  }
+  .tile {
+    position: relative;
+    flex: none;
+  }
+  .num {
+    position: absolute;
+    top: -0.375rem;
+    inset-inline-end: -0.375rem;
+    display: grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: var(--suisou-radius-pill);
+    background: var(--suisou-bg);
+    border: 1px solid var(--suisou-accent);
+    color: var(--suisou-accent);
+  }
+
+  .cta-box {
+    --suisou-measure: 36rem;
+    padding: var(--suisou-space-4);
+    align-items: center;
+    border-color: var(--suisou-accent);
+  }
+  .cta-box :global(.cta-icon) {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+</style>

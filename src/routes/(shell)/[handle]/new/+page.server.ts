@@ -1,6 +1,6 @@
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { resolveHandle } from "$lib/atproto.js";
+import { resolveHandle } from "$lib/atproto/index.js";
 
 export const load: PageServerLoad = async ({ parent, params }) => {
   const { session } = await parent();

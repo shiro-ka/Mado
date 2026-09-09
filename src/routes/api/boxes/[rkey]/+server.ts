@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { getBoxRecord, updateBoxRecord, deleteRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto.js";
+import { getBoxRecord, updateBoxRecord, deleteRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { slugSchema } from "$lib/validation.js";
 
 const updateSchema = z.object({

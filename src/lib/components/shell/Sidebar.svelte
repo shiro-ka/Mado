@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { Home, Inbox, Send, User } from "lucide-svelte";
-  import { cn } from "$lib/utils.js";
   import InfoNav from "./InfoNav.svelte";
   import UserCard from "./UserCard.svelte";
   import Brand from "./Brand.svelte";
@@ -25,29 +24,26 @@
 </script>
 
 <!-- Logo -->
-<div class="h-16 px-5 flex items-center gap-2 shrink-0 border-b border-border">
+<div data-suisou-layout="row" data-suisou-rule="bottom" class="brandbar">
   <a href="/home" onclick={onNavigate}>
     <Brand size="md" />
   </a>
 </div>
 
 <!-- Navigation -->
-<nav class="flex-1 py-4 px-3 overflow-y-auto">
-  <div class="flex flex-col gap-0.5">
+<nav data-suisou-layout="stack grow scroll" class="nav">
+  <div data-suisou-layout="stack">
     {#each navItems as item}
       {@const active = currentPath === item.href}
+      <!-- メニューの行 ＝ block ボタン（左寄せ・縦8横16）。
+           現在地は aria-current で示し、下地は Suisou が出す -->
       <a
         href={item.href}
         onclick={onNavigate}
         aria-current={active ? "page" : undefined}
-        class={cn(
-          "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
-          active
-            ? "bg-accent-light text-primary"
-            : "text-muted-foreground hover:bg-elevated hover:text-foreground"
-        )}
+        data-suisou-button="block"
       >
-        <item.icon size={17} class="shrink-0" />
+        <item.icon data-suisou-icon />
         {item.label}
       </a>
     {/each}
@@ -57,3 +53,14 @@
 
 <!-- User info -->
 <UserCard {session} />
+
+<style>
+  .brandbar {
+    height: 4rem;
+    flex: none;
+    padding-inline: var(--suisou-space-3);
+  }
+  .nav {
+    padding: var(--suisou-space-2);
+  }
+</style>
