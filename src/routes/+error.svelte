@@ -2,7 +2,6 @@
   import { page } from "$app/state";
   import { Home, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   const status = $derived(page.status);
   const message = $derived(page.error?.message ?? "エラーが発生しました");
@@ -14,8 +13,8 @@
 </svelte:head>
 
 <div data-suisou-layout="center screen" class="wrap">
-  <div data-suisou-layout="stack gap-3" class="box">
-    <Glyph><AlertCircle data-suisou-icon="error" /></Glyph>
+  <div data-suisou-layout="stack gap-3" data-suisou-text="center" class="box">
+    <span data-suisou-tile><AlertCircle data-suisou-icon="error" /></span>
     <div data-suisou-layout="stack" class="text">
       <p data-suisou-text="s32 w700">{status}</p>
       <p data-suisou-text="s14 doc" class="sub">
@@ -41,7 +40,6 @@
   }
   .box {
     max-width: 28rem;
-    text-align: center;
     align-items: center;
   }
   .text {

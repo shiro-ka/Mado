@@ -9,7 +9,7 @@
   let { session }: Props = $props();
 </script>
 
-<div data-suisou-layout="stack" class="card">
+<div data-suisou-layout="stack" data-suisou-rule="top" class="card">
   <div data-suisou-layout="row">
     {#if session.avatar}
       <!-- 画像も頭文字も同じ部品が受ける。円形＝人という約束ごと Suisou に -->
@@ -18,10 +18,10 @@
       <div data-suisou-avatar>{session.handle[0]?.toUpperCase() ?? "?"}</div>
     {/if}
     <div data-suisou-layout="grow stack gap-0" class="who">
-      <p data-suisou-text="s14 w500" class="ellipsis">
+      <p data-suisou-text="s14 w500 one-line" class="ellipsis">
         {session.displayName ?? session.handle}
       </p>
-      <p data-suisou-text="s12" class="ellipsis sub">@{session.handle}</p>
+      <p data-suisou-text="s12 one-line" class="ellipsis sub">@{session.handle}</p>
     </div>
   </div>
   <form action="/api/auth/logout" method="POST">
@@ -36,12 +36,6 @@
   .card {
     flex: none;
     padding: var(--suisou-space-2);
-    border-block-start: 1px solid var(--suisou-line-weak);
-  }
-  .ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .sub {
     color: var(--suisou-text-sub);

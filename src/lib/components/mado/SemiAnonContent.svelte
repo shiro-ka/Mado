@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Shield, Lock, Eye, EyeOff, User } from "lucide-svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   const visibility = [
     {
@@ -46,7 +45,7 @@
     <h2 data-suisou-text="s16 w700">誰が何を見られるか</h2>
     {#each visibility as row}
       <div data-suisou-surface="panel" data-suisou-media>
-        <Glyph><row.icon data-suisou-icon={row.tone} /></Glyph>
+        <span data-suisou-tile><row.icon data-suisou-icon={row.tone} /></span>
         <div data-suisou-media-content>
           <p data-suisou-text="s14 w700">{row.title}</p>
           <!-- ★しるしはブラウザに任せる（data-suisou-list）。旧実装は "•" を

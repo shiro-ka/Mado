@@ -77,9 +77,8 @@
     })}
 
     <!-- ★タブがリンクなので状態は aria-current="page"（リンクの正しい ARIA）。
-         Suisou の Button は aria-pressed しか見ない ―― Row は aria-current も
-         aria-selected も見るので、部品間で揃っていない。下の1行はその打ち消し。
-         → 申し送り（dev/todo/mado-suisou-ui.md） -->
+         Suisou の Button が aria-current を見るようになった（2026-09-09）ので、
+         現場の打ち消しは不要になった。 -->
     <div data-suisou-button-group="even">
       {#each tabs as t}
         <a
@@ -98,7 +97,7 @@
     </div>
 
     {#if filtered.length === 0}
-      <div data-suisou-surface="panel empty" data-suisou-layout="stack gap-3" class="empty">
+      <div data-suisou-surface="panel empty" data-suisou-layout="stack gap-3" data-suisou-text="center" class="empty">
         <Inbox data-suisou-icon="sub" class="big" />
         <div data-suisou-layout="stack gap-1" class="text">
           <p data-suisou-text="s16 w700">
@@ -134,15 +133,8 @@
     color: var(--suisou-text-sub);
   }
 
-  /* Button の押しっぱなしは aria-pressed だけ。リンクのタブは aria-current で示す */
-  [data-suisou-button][aria-current="page"] {
-    background: var(--suisou-selected-neutral-surface);
-    color: var(--suisou-text-main);
-  }
-
   .empty {
     align-items: center;
-    text-align: center;
     padding: var(--suisou-space-4);
   }
   .text {

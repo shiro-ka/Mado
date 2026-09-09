@@ -2,7 +2,6 @@
   import { MessageCircle, AlertCircle, Shield } from "lucide-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
-  import Glyph from "$lib/components/ui/Glyph.svelte";
 
   let handle = $state("");
   let loading = $state(false);
@@ -46,11 +45,11 @@
   <div data-suisou-layout="stack gap-4" class="col">
     <div data-suisou-layout="stack" class="head">
       <a data-suisou-layout="row" href="/">
-        <Glyph><MessageCircle data-suisou-icon="accent" /></Glyph>
+        <span data-suisou-tile><MessageCircle data-suisou-icon="accent" /></span>
         <span data-suisou-text="s20 w700">Mado</span>
       </a>
-      <h1 data-suisou-text="s24 w700" class="center">Blueskyアカウントでログイン</h1>
-      <p data-suisou-text="s14" class="sub center">あなたのハンドルを入力して認証します</p>
+      <h1 data-suisou-text="s24 w700 center" class="center">Blueskyアカウントでログイン</h1>
+      <p data-suisou-text="s14 center" class="sub center">あなたのハンドルを入力して認証します</p>
     </div>
 
     <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
@@ -79,7 +78,7 @@
         </Button>
       </form>
 
-      <div data-suisou-media class="note">
+      <div data-suisou-media data-suisou-rule="top" class="note">
         <Shield data-suisou-icon="small sub" data-suisou-media-icon />
         <p data-suisou-media-content data-suisou-text="s12 doc" class="sub">
           認証にはATProtocol OAuth 2.0を使用します。
@@ -89,7 +88,7 @@
       </div>
     </div>
 
-    <p data-suisou-text="s12" class="sub center">
+    <p data-suisou-text="s12 center" class="sub center">
       <a href="/">← トップページに戻る</a>
     </p>
   </div>
@@ -111,10 +110,6 @@
   }
   .note {
     padding-block-start: var(--suisou-space-3);
-    border-top: 1px solid var(--suisou-line-weak);
-  }
-  .center {
-    text-align: center;
   }
   .sub {
     color: var(--suisou-text-sub);

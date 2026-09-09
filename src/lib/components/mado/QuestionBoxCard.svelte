@@ -22,7 +22,7 @@
         <MessageCircle data-suisou-icon="accent" />
       </div>
       <div data-suisou-media-content>
-        <h3 data-suisou-text="s14 w700" class="title">{box.title}</h3>
+        <h3 data-suisou-text="s14 w700 one-line" class="title">{box.title}</h3>
         {#if box.description}
           <p data-suisou-text="s12" class="desc">{box.description}</p>
         {/if}
@@ -71,12 +71,6 @@
     border-radius: var(--suisou-radius);
     background: var(--suisou-item);
     border: 1px solid var(--suisou-line-weak);
-  }
-
-  .title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .desc {
     color: var(--suisou-text-sub);

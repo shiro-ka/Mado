@@ -111,7 +111,7 @@
       {/if}
 
       {#if !followed}
-        <div data-suisou-layout="stack" class="row foot">
+        <div data-suisou-layout="stack" data-suisou-rule="top" class="row foot">
           <div data-suisou-media>
             <AlertCircle data-suisou-icon="sub" data-suisou-media-icon />
             <p data-suisou-media-content data-suisou-text="s14 doc" class="sub">
@@ -145,7 +145,7 @@
           {/if}
         </div>
       {:else}
-        <div data-suisou-layout="row" data-suisou-text="s14" class="row foot sub">
+        <div data-suisou-layout="row" data-suisou-text="s14" data-suisou-rule="top" class="row foot sub">
           <Check data-suisou-icon="small success" />
           {#if enabled}
             <span>
@@ -177,9 +177,6 @@
 
   .row {
     padding: var(--suisou-space-3);
-  }
-  .foot {
-    border-top: 1px solid var(--suisou-line-weak);
   }
 
   .sub {

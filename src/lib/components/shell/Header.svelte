@@ -17,7 +17,7 @@
   ];
 </script>
 
-<header class="bar">
+<header data-suisou-rule="bottom" class="bar">
   <div data-suisou-layout="row between" class="inner">
     <!-- Logo -->
     <a href="/" class="group">
@@ -71,7 +71,6 @@
     z-index: 40;
     width: 100%;
     background: var(--suisou-panel);
-    border-block-end: 1px solid var(--suisou-line-weak);
   }
   .inner {
     margin-inline: auto;
