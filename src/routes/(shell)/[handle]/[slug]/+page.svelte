@@ -2,8 +2,7 @@
   import { untrack } from "svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import { Lock, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check, Pin } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
-  import { Badge } from "$lib/components/ui/badge";
+  import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
@@ -150,156 +149,176 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
 </svelte:head>
 
-<div class="px-4 py-10">
-  <div class="mx-auto max-w-lg">
-    {#if data.isOwner}
-      <!-- Owner: settings UI -->
-      <div class="flex items-center gap-3 mb-8">
-        <a href={`/@${data.cleanHandle}`}>
-          <Button variant="ghost" size="sm">
-            {#snippet leftIcon()}<ArrowLeft size={15} />{/snippet}
-            プロフィールに戻る
-          </Button>
-        </a>
-        <h1 class="text-xl font-bold text-foreground">窓の設定</h1>
-      </div>
+<div data-suisou-layout="stack container gap-3" class="page">
+  {#if data.isOwner}
+    <div data-suisou-layout="row">
+      <a href={`/@${data.cleanHandle}`}>
+        <Button variant="ghost">
+          {#snippet leftIcon()}<ArrowLeft />{/snippet}
+          プロフィールに戻る
+        </Button>
+      </a>
+      <h1 data-suisou-text="s20 w700">窓の設定</h1>
+    </div>
 
-      <div class="rounded-2xl p-8 mb-5 bg-surface border border-border">
-        <form onsubmit={handleSave} class="flex flex-col gap-6">
+    <div data-suisou-surface="panel" class="card">
+      <form onsubmit={handleSave} data-suisou-layout="stack gap-4" class="form">
+        <Input
+          label="タイトル（必須）"
+          placeholder="なんでも声を届けてください！"
+          bind:value={title}
+          maxlength={100}
+          required
+          disabled={isBusy}
+        />
+        <Textarea
+          label="説明文"
+          placeholder="どんな声でも歓迎です。"
+          bind:value={description}
+          maxlength={300}
+          showCount
+          rows={4}
+          disabled={isBusy}
+        />
+        <div data-suisou-layout="stack gap-1" class="slug">
           <Input
-            label="タイトル（必須）"
-            placeholder="なんでも声を届けてください！"
-            bind:value={title}
-            maxlength={100}
-            required
+            label="URL"
+            placeholder="ask"
+            bind:value={slug}
+            error={slugErr ?? undefined}
+            helper="英小文字・数字・ハイフンのみ。変更すると以前に共有したURLは開けなくなります。"
+            maxlength={30}
             disabled={isBusy}
           />
-          <Textarea
-            label="説明文"
-            placeholder="どんな声でも歓迎です。"
-            bind:value={description}
-            maxlength={300}
-            showCount
-            rows={4}
-            disabled={isBusy}
-          />
-          <div>
-            <Input
-              label="URL"
-              placeholder="ask"
-              bind:value={slug}
-              error={slugErr ?? undefined}
-              helper="英小文字・数字・ハイフンのみ。変更すると以前に共有したURLは開けなくなります。"
-              maxlength={30}
-              disabled={isBusy}
-            />
-            <p class="mt-1.5 text-xs font-mono text-subtle break-all">
-              /@{data.cleanHandle}/<span class="text-blue-400">{slug.trim().toLowerCase() || data.box.slug}</span>
-            </p>
-          </div>
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-muted-foreground">声の受付</p>
-              <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
-            </div>
-            <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
-          </div>
-
-          {#if errorMsg}
-            <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
-              <AlertCircle size={15} />
-              {errorMsg}
-            </div>
-          {/if}
-
-          <div class="flex items-center justify-between gap-3 pt-2">
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              loading={formState === "deleting"}
-              onclick={handleDelete}
-            >
-              {#snippet leftIcon()}<Trash2 size={14} />{/snippet}
-              削除
-            </Button>
-            <Button
-              type="submit"
-              loading={formState === "submitting"}
-              disabled={!title.trim() || !!slugErr}
-            >
-              {#snippet leftIcon()}<Save size={16} />{/snippet}
-              保存する
-            </Button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Public URL -->
-      <div class="rounded-xl p-4 flex items-center gap-3 bg-surface border border-border">
-        <Lock size={14} class="text-subtle shrink-0" />
-        <div class="flex-1 min-w-0">
-          <p class="text-xs text-muted-foreground mb-0.5">公開URL</p>
-          <p class="text-sm font-mono text-foreground truncate">{publicUrlDisplay}</p>
-        </div>
-        <button
-          type="button"
-          onclick={copyUrl}
-          aria-label="公開URLをコピー"
-          class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer border {copied ? 'bg-green-400/10 border-green-400/30 text-green-400' : 'bg-elevated border-border text-muted-foreground hover:text-foreground'}"
-        >
-          {#if copied}
-            <Check size={13} />
-            コピー済み
-          {:else}
-            <Copy size={13} />
-            コピー
-          {/if}
-        </button>
-      </div>
-
-      <!-- Main Mado -->
-      <div class="rounded-xl p-4 mt-5 flex items-center gap-3 bg-surface border border-border">
-        <Pin size={14} class="text-subtle shrink-0" />
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium text-foreground">メインMado</p>
-          <p class="text-xs text-muted-foreground mt-0.5">
-            {data.isMain
-              ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"
-              : "メインにすると /@ハンドル の先頭に表示されます"}
+          <p data-suisou-text="s12" class="preview">
+            /@{data.cleanHandle}/<span class="accent">{slug.trim().toLowerCase() || data.box.slug}</span>
           </p>
         </div>
+
+        <div data-suisou-layout="row between">
+          <div data-suisou-layout="stack gap-0" class="label">
+            <p data-suisou-text="s14 w500" class="sub">声の受付</p>
+            <p data-suisou-text="s12" class="sub">オフにすると新しい声を受け付けません</p>
+          </div>
+          <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
+        </div>
+
+        {#if errorMsg}
+          <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+            <AlertCircle data-suisou-icon="small" />
+            {errorMsg}
+          </p>
+        {/if}
+
+        <div data-suisou-layout="row between">
+          <Button
+            type="button"
+            variant="destructive"
+            loading={formState === "deleting"}
+            onclick={handleDelete}
+          >
+            {#snippet leftIcon()}<Trash2 />{/snippet}
+            削除
+          </Button>
+          <Button
+            variant="outline"
+            type="submit"
+            loading={formState === "submitting"}
+            disabled={!title.trim() || !!slugErr}
+          >
+            {#snippet leftIcon()}<Save />{/snippet}
+            保存する
+          </Button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 公開URL -->
+    <div data-suisou-surface="panel" data-suisou-media class="strip">
+      <Lock data-suisou-icon="small sub" data-suisou-media-icon />
+      <div data-suisou-media-content>
+        <p data-suisou-text="s12" class="sub">公開URL</p>
+        <p data-suisou-text="s14" class="url">{publicUrlDisplay}</p>
+      </div>
+      <div data-suisou-media-tail>
+        <!-- ★コピー済みの状態は aria-pressed。Suisou の Button が持っている語なので、
+             手書きの3色分岐（bg/border/text を green に差し替え）が消えた。 -->
+        <Button
+          variant="secondary"
+          aria-pressed={copied}
+          onclick={copyUrl}
+          aria-label="公開URLをコピー"
+        >
+          {#snippet leftIcon()}
+            {#if copied}<Check />{:else}<Copy />{/if}
+          {/snippet}
+          {copied ? "コピー済み" : "コピー"}
+        </Button>
+      </div>
+    </div>
+
+    <!-- メインMado -->
+    <div data-suisou-surface="panel" data-suisou-media class="strip">
+      <Pin data-suisou-icon="small sub" data-suisou-media-icon />
+      <div data-suisou-media-content>
+        <p data-suisou-text="s14 w500">メインMado</p>
+        <p data-suisou-text="s12" class="sub">
+          {data.isMain
+            ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"
+            : "メインにすると /@ハンドル の先頭に表示されます"}
+        </p>
+      </div>
+      <div data-suisou-media-tail>
         {#if data.isMain}
-          <Badge variant="default" size="sm">
-            <Pin size={11} class="mr-0.5" />
+          <span data-suisou-tag="accent">
+            <Pin />
             メイン
-          </Badge>
+          </span>
         {:else}
-          <Button variant="secondary" size="sm" loading={settingMain} onclick={handleSetMain}>
+          <Button variant="secondary" loading={settingMain} onclick={handleSetMain}>
             メインにする
           </Button>
         {/if}
       </div>
+    </div>
+  {:else}
+    <BoxSendView
+      box={data.box}
+      ownerProfile={data.ownerProfile}
+      cleanHandle={data.cleanHandle}
+      ownerRegistered={data.ownerRegistered}
+      session={data.session}
+    />
 
-    {:else}
-      <!-- Visitor: send screen for this box -->
-      <BoxSendView
-        box={data.box}
-        ownerProfile={data.ownerProfile}
-        cleanHandle={data.cleanHandle}
-        ownerRegistered={data.ownerRegistered}
-        session={data.session}
-      />
-
-      <!-- Back link -->
-      <div class="mt-5 text-center">
-        <a
-          href={`/@${data.cleanHandle}`}
-          class="text-xs hover:opacity-80 transition-opacity text-subtle"
-        >
-          ← @{data.cleanHandle} のプロフィールに戻る
-        </a>
-      </div>
-    {/if}
-  </div>
+    <p data-suisou-text="s12 center" class="sub back">
+      <a href={`/@${data.cleanHandle}`}>← @{data.cleanHandle} のプロフィールに戻る</a>
+    </p>
+  {/if}
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 32rem;
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .card {
+    padding: var(--suisou-space-4);
+  }
+  .strip {
+    align-items: center;
+  }
+  .preview,
+  .url {
+    font-family: var(--suisou-mono);
+    word-break: break-all;
+  }
+  .preview {
+    color: var(--suisou-text-sub);
+  }
+  .accent {
+    color: var(--suisou-accent);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>

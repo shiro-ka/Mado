@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto, invalidateAll } from "$app/navigation";
   import { ArrowLeft, Plus, AlertCircle } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
@@ -62,19 +62,19 @@
   <title>窓を作る | Mado</title>
 </svelte:head>
 
-<div class="px-6 py-8 max-w-2xl mx-auto">
-  <div class="flex items-center gap-3 mb-8">
+<div data-suisou-layout="stack container gap-4" class="page">
+  <div data-suisou-layout="row">
     <a href={`/@${data.cleanHandle}`}>
-      <Button variant="ghost" size="sm">
-        {#snippet leftIcon()}<ArrowLeft size={15} />{/snippet}
+      <Button variant="ghost">
+        {#snippet leftIcon()}<ArrowLeft />{/snippet}
         戻る
       </Button>
     </a>
-    <h1 class="text-2xl font-bold text-foreground">窓を作る</h1>
+    <h1 data-suisou-text="s24 w700">窓を作る</h1>
   </div>
 
-  <div class="rounded-2xl p-8 bg-surface border border-border">
-    <form onsubmit={handleSubmit} class="flex flex-col gap-6">
+  <div data-suisou-surface="panel" class="card">
+    <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
       <Input
         label="タイトル（必須）"
         placeholder="なんでも声を届けてください！"
@@ -96,7 +96,7 @@
         disabled={formState === "submitting"}
       />
 
-      <div>
+      <div data-suisou-layout="stack gap-1" class="slug">
         <Input
           label="URL（任意）"
           placeholder="ask"
@@ -106,41 +106,61 @@
           maxlength={30}
           disabled={formState === "submitting"}
         />
-        <p class="mt-1.5 text-xs font-mono text-subtle break-all">
-          /@{data.cleanHandle}/<span class="text-blue-400">{slugPreview}</span>
+        <p data-suisou-text="s12" class="preview">
+          /@{data.cleanHandle}/<span class="accent">{slugPreview}</span>
         </p>
       </div>
 
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-muted-foreground">声の受付</p>
-          <p class="text-xs mt-0.5 text-subtle">オフにすると新しい声を受け付けません</p>
+      <div data-suisou-layout="row between">
+        <div data-suisou-layout="stack gap-0" class="label">
+          <p data-suisou-text="s14 w500" class="sub">声の受付</p>
+          <p data-suisou-text="s12" class="sub">オフにすると新しい声を受け付けません</p>
         </div>
         <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
       </div>
 
       {#if errorMsg}
-        <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
-          <AlertCircle size={15} />
+        <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+          <AlertCircle data-suisou-icon="small" />
           {errorMsg}
-        </div>
+        </p>
       {/if}
 
-      <div class="flex items-center justify-end gap-3 pt-2">
+      <div data-suisou-layout="row end">
         <a href={`/@${data.cleanHandle}`}>
-          <Button variant="ghost" type="button" disabled={formState === "submitting"}>
-            キャンセル
-          </Button>
+          <Button type="button" disabled={formState === "submitting"}>キャンセル</Button>
         </a>
         <Button
+          variant="outline"
           type="submit"
           loading={formState === "submitting"}
           disabled={!title.trim() || !!slugErr}
         >
-          {#snippet leftIcon()}<Plus size={16} />{/snippet}
+          {#snippet leftIcon()}<Plus />{/snippet}
           作成する
         </Button>
       </div>
     </form>
   </div>
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 42rem;
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .card {
+    padding: var(--suisou-space-4);
+  }
+  .preview {
+    font-family: var(--suisou-mono);
+    color: var(--suisou-text-sub);
+    word-break: break-all;
+  }
+  .accent {
+    color: var(--suisou-accent);
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+</style>

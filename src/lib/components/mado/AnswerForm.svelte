@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Send, AlertCircle, CheckCircle2, ExternalLink } from "lucide-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import { bskyPostUrl } from "$lib/utils.js";
 
@@ -71,34 +71,37 @@
 </script>
 
 {#if formState === "success"}
-  <div class="rounded-xl p-6 flex flex-col items-center gap-3 text-center bg-emerald-400/8 border border-emerald-400/25">
-    <CheckCircle2 size={36} class="text-emerald-400" />
-    <div>
-      <p class="font-semibold text-foreground">回答を投稿しました</p>
-      <p class="text-sm mt-1 text-muted-foreground">PDSに保存されました。</p>
+  <!-- ★Suisou の banner。banner.css には「wixdex の3現場が同じ箱を手書きしていて
+       3回ルールで昇格した」とある ―― Mado も同じ箱を手書きしていた。
+       意味（role）は CSS では足せないので現場が書く、というのが Suisou の約束。 -->
+  <div data-suisou-banner="success" data-suisou-layout="stack" role="status" data-suisou-text="center" class="done">
+    <CheckCircle2 class="big" />
+    <div data-suisou-layout="stack gap-1" class="center">
+      <p data-suisou-text="s16 w700">回答を投稿しました</p>
+      <p data-suisou-text="s14" class="sub">PDSに保存されました。</p>
       {#if crosspostFailed}
-        <p class="text-sm mt-2 flex items-center justify-center gap-1.5 text-amber-400">
-          <AlertCircle size={14} />
+        <p data-suisou-layout="row" data-suisou-text="s14" class="warn">
+          <AlertCircle />
           Blueskyへの転載は失敗しました
         </p>
       {:else if crosspostLink}
         <a
+          data-suisou-layout="row"
+          data-suisou-text="s14"
+          data-suisou-link
           href={crosspostLink}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-sm mt-2 inline-flex items-center justify-center gap-1.5 text-blue-400 hover:opacity-80 transition-opacity"
         >
-          <ExternalLink size={14} />
+          <ExternalLink />
           Blueskyの投稿を見る
         </a>
       {/if}
     </div>
-    <Button variant="ghost" size="sm" onclick={reset} class="mt-1">
-      続けて回答する
-    </Button>
+    <Button variant="ghost" onclick={reset}>続けて回答する</Button>
   </div>
 {:else}
-  <form onsubmit={handleSubmit} class="flex flex-col gap-4">
+  <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
     <Textarea
       placeholder="回答を入力してください..."
       bind:value={body}
@@ -110,30 +113,60 @@
     />
 
     {#if formState === "error"}
-      <div class="rounded-lg p-3 flex items-center gap-2 text-sm bg-red-400/8 border border-red-400/25 text-error">
-        <AlertCircle size={15} />
+      <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+        <AlertCircle />
         {errorMsg}
-      </div>
+      </p>
     {/if}
 
-    <div class="flex items-center justify-between gap-3 flex-wrap">
-      <label class="flex items-center gap-2 cursor-pointer select-none">
+    <div data-suisou-layout="row between wrap">
+      <label data-suisou-layout="row" class="check">
         <input
           type="checkbox"
           bind:checked={crosspost}
           disabled={formState === "submitting"}
-          class="w-4 h-4 accent-blue-500 cursor-pointer"
         />
-        <span class="text-xs text-muted-foreground">Bskyにもポスト</span>
+        <span data-suisou-text="s12" class="sub">Bskyにもポスト</span>
       </label>
       <Button
+        variant="outline"
         type="submit"
         loading={formState === "submitting"}
         disabled={!isValid}
       >
-        {#snippet rightIcon()}<Send size={15} />{/snippet}
+        {#snippet rightIcon()}<Send />{/snippet}
         回答を投稿
       </Button>
     </div>
   </form>
 {/if}
+
+<style>
+  .done {
+    padding: var(--suisou-space-4);
+  }
+  .center {
+    align-items: center;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .warn {
+    color: var(--suisou-warning);
+  }
+  .check {
+    cursor: pointer;
+    user-select: none;
+  }
+  .check input {
+    accent-color: var(--suisou-accent);
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+  }
+  :global(.big) {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--suisou-success);
+  }
+</style>

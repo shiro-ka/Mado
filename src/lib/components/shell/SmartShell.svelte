@@ -18,9 +18,10 @@
     {@render children()}
   </DashboardShell>
 {:else}
-  <div class="flex flex-col min-h-dvh">
+  <!-- 画面の骨格。区切りは罫がやるのですきまは持たない（gap-0） -->
+  <div data-suisou-layout="stack screen gap-0">
     <Header {session} />
-    <main class="flex-1">
+    <main data-suisou-layout="stack grow">
       {@render children()}
     </main>
     <Footer />

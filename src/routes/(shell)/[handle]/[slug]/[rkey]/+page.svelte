@@ -1,8 +1,7 @@
 <script lang="ts">
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
-  import Button from "$lib/components/ui/button/button.svelte";
-  import { Badge } from "$lib/components/ui/badge";
+  import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import BlockButton from "$lib/components/mado/BlockButton.svelte";
   import DeleteQuestionButton from "$lib/components/mado/DeleteQuestionButton.svelte";
@@ -27,100 +26,94 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
 </svelte:head>
 
-<div class="px-6 py-8 max-w-2xl mx-auto">
-  <!-- Back -->
-  <div class="mb-8">
+<div data-suisou-layout="stack container gap-3" class="page">
+  <div>
     <a href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
-      <Button variant="ghost" size="sm">
-        {#snippet leftIcon()}<ArrowLeft size={15} />{/snippet}
+      <Button variant="ghost">
+        {#snippet leftIcon()}<ArrowLeft />{/snippet}
         {data.isOwner ? "受信トレイに戻る" : "窓に戻る"}
       </Button>
     </a>
   </div>
 
-  <!-- Question card -->
-  <div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
-    <div class="flex items-center justify-between mb-4">
-      <Badge variant={data.question.isRead ? "muted" : "default"} dot>
+  <!-- 声 -->
+  <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
+    <div data-suisou-layout="row between">
+      <span data-suisou-tag={data.question.isRead ? "" : "accent"}>
         {data.question.isRead ? "既読" : "未読"}
-      </Badge>
-      <span class="text-xs text-subtle">{formatDateFull(data.question.createdAt)}</span>
+      </span>
+      <span data-suisou-text="s12" class="sub">{formatDateFull(data.question.createdAt)}</span>
     </div>
 
-    <div class="mb-5">
-      <p class="text-base leading-relaxed whitespace-pre-wrap text-foreground">{data.question.body}</p>
-    </div>
+    <p data-suisou-text="s16 doc" class="body">{data.question.body}</p>
 
     {#if data.isOwner}
-      <!-- Decrypt error -->
       {#if data.decryptError}
-        <div class="mb-4 rounded-lg p-3 flex items-center gap-2 bg-red-400/8 border border-red-400/20">
-          <Lock size={14} class="text-error" />
-          <p class="text-sm text-error">送信者の特定に失敗しました。秘密鍵が見つかりません。</p>
-        </div>
+        <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+          <Lock data-suisou-icon="small" />
+          送信者の特定に失敗しました。秘密鍵が見つかりません。
+        </p>
       {/if}
 
-      <!-- Sender info -->
-      <div class="pt-4 flex items-center gap-3 border-t border-border">
+      <div data-suisou-media data-suisou-rule="top" class="sender">
         {#if data.senderProfile?.avatar}
           <img
+            data-suisou-avatar
+            data-suisou-media-icon
             src={data.senderProfile.avatar}
             alt={data.senderProfile.handle}
-            class="w-9 h-9 rounded-full object-cover shrink-0"
           />
         {:else}
-          <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-elevated">
-            <User size={16} class="text-subtle" />
+          <div data-suisou-avatar data-suisou-media-icon>
+            <User data-suisou-icon="small sub" />
           </div>
         {/if}
-        <div class="flex-1 min-w-0">
+        <div data-suisou-media-content>
           {#if data.senderProfile}
-            <p class="text-sm font-medium text-foreground">
+            <p data-suisou-text="s14 w500">
               {data.senderProfile.displayName ?? data.senderProfile.handle}
             </p>
-            <p class="text-xs text-muted-foreground">@{data.senderProfile.handle}</p>
+            <p data-suisou-text="s12" class="sub">@{data.senderProfile.handle}</p>
           {:else if data.senderDid}
-            <p class="text-xs font-mono text-subtle">{data.senderDid}</p>
+            <p data-suisou-text="s12" class="did">{data.senderDid}</p>
           {:else}
-            <p class="text-sm text-subtle">送信者情報なし</p>
+            <p data-suisou-text="s14" class="sub">送信者情報なし</p>
           {/if}
         </div>
         {#if data.senderProfile}
           <a
+            data-suisou-media-tail
             href={`https://bsky.app/profile/${data.senderProfile.handle}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="ghost" size="sm"><ExternalLink size={13} /></Button>
+            <Button icon><ExternalLink /></Button>
           </a>
         {/if}
       </div>
     {/if}
   </div>
 
-  <!-- Existing answers -->
+  <!-- 回答 -->
   {#if data.answers.length > 0}
-    <div class="mb-5 flex flex-col gap-3">
-      <h2 class="text-sm font-semibold text-foreground">回答済み（{data.answers.length}件）</h2>
+    <div data-suisou-layout="stack gap-3" class="group">
+      <h2 data-suisou-text="s14 w700">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
-        <div class="rounded-2xl p-5 bg-surface border border-border">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-primary-light">
-              <MessageCircle size={12} class="text-primary" />
-            </div>
-            <span class="text-xs font-medium text-muted-foreground">回答</span>
-            <span class="text-xs ml-auto text-subtle">{formatDateFull(answer.createdAt)}</span>
+        <div data-suisou-surface="panel" data-suisou-layout="stack">
+          <div data-suisou-layout="row">
+            <MessageCircle data-suisou-icon="small accent" />
+            <span data-suisou-text="s12 w500" class="sub">回答</span>
+            <span data-suisou-text="s12" class="date">{formatDateFull(answer.createdAt)}</span>
           </div>
-          <p class="text-sm leading-relaxed whitespace-pre-wrap text-foreground">{answer.body}</p>
+          <p data-suisou-text="s14 doc" class="body">{answer.body}</p>
         </div>
       {/each}
     </div>
   {/if}
 
-  <!-- Owner-only: answer form + danger zone -->
   {#if data.isOwner}
-    <div class="rounded-2xl p-6 mb-5 bg-surface border border-border">
-      <h2 class="text-sm font-semibold mb-4 text-foreground">回答を書く</h2>
+    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
+      <h2 data-suisou-text="s14 w700">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}
@@ -129,7 +122,8 @@
       />
     </div>
 
-    <div class="rounded-2xl p-5 flex flex-col sm:flex-row gap-3 bg-red-400/5 border border-red-400/15">
+    <!-- 取り返しのつかない操作。手書きの赤い面 → banner="error" -->
+    <div data-suisou-banner="error" data-suisou-layout="stack md:row" class="danger">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />
@@ -137,3 +131,34 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 42rem;
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .card {
+    padding: var(--suisou-space-4);
+  }
+  .sender {
+    align-items: center;
+    padding-block-start: var(--suisou-space-3);
+  }
+
+  .body {
+    white-space: pre-wrap;
+  }
+  .did {
+    font-family: var(--suisou-mono);
+    color: var(--suisou-text-sub);
+    word-break: break-all;
+  }
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .date {
+    margin-inline-start: auto;
+    color: var(--suisou-text-sub);
+  }
+
+</style>

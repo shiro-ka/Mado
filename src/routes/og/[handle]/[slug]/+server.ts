@@ -1,5 +1,5 @@
 import type { RequestHandler } from "./$types";
-import { resolveHandle, findBoxBySlug, getProfile } from "$lib/atproto";
+import { resolveHandle, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
 import {
   resolveTheme,
   escapeHtml,

@@ -1,5 +1,3 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
 
 export type WithElementRef<T, E extends HTMLElement = HTMLElement> = T & {
@@ -8,10 +6,6 @@ export type WithElementRef<T, E extends HTMLElement = HTMLElement> = T & {
 
 export type WithoutChildren<T> = Omit<T, "children">;
 import { ja } from "date-fns/locale";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);

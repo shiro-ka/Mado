@@ -3,7 +3,7 @@
   import { Bell, Check, ExternalLink, AlertCircle, UserPlus } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import Toggle from "$lib/components/ui/Toggle.svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -66,35 +66,34 @@
   <title>通知設定 | Mado</title>
 </svelte:head>
 
-<div class="px-6 py-8 max-w-2xl mx-auto">
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-foreground">通知設定</h1>
-    <p class="text-sm mt-1 text-muted-foreground">
+<div data-suisou-layout="stack container gap-3" class="page">
+  <div data-suisou-layout="stack gap-1" class="head">
+    <h1 data-suisou-text="s24 w700">通知設定</h1>
+    <p data-suisou-text="s14" class="sub">
       新しい声が届いたときのお知らせ方法を設定します
     </p>
   </div>
 
   {#if !data.configured}
-    <div class="rounded-2xl p-8 flex flex-col items-center gap-3 text-center bg-surface border border-dashed border-border-strong">
-      <Bell size={32} class="text-subtle opacity-50" />
-      <p class="text-sm text-muted-foreground">
+    <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+      <Bell data-suisou-icon="sub" class="big" />
+      <p data-suisou-text="s14" class="sub">
         DM通知は現在準備中です。もうしばらくお待ちください。
       </p>
     </div>
   {:else}
-    <div class="rounded-2xl bg-surface border border-border overflow-hidden">
-      <!-- Toggle row -->
-      <div class="flex items-center justify-between gap-4 p-5">
-        <div class="flex items-start gap-3">
-          <div class="mt-0.5 shrink-0 text-blue-400"><Bell size={20} /></div>
-          <div>
-            <p class="font-semibold text-foreground">新着をDMで受け取る</p>
-            <p class="text-sm mt-0.5 text-muted-foreground">
-              mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
-            </p>
-          </div>
+    <!-- ★bleed で面の余白を落とし、中の行が自分で余白を持つ形。
+         Suisou の「行が自分で余白を持つ一覧」の使い方そのもの。 -->
+    <div data-suisou-surface="panel bleed" class="card">
+      <div data-suisou-media class="row">
+        <Bell data-suisou-icon="accent" data-suisou-media-icon />
+        <div data-suisou-media-content>
+          <p data-suisou-text="s16 w700">新着をDMで受け取る</p>
+          <p data-suisou-text="s14 doc" class="sub">
+            mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
+          </p>
         </div>
-        <div class="shrink-0">
+        <div data-suisou-media-tail>
           <Toggle
             bind:checked={enabled}
             disabled={!followed || saving}
@@ -105,55 +104,85 @@
       </div>
 
       {#if toggleError}
-        <div class="px-5 pb-3 -mt-2 flex items-center gap-1.5 text-xs text-error">
-          <AlertCircle size={13} />
+        <p data-suisou-layout="row" data-suisou-text="s12" class="err row" role="alert">
+          <AlertCircle data-suisou-icon="small" />
           設定の保存に失敗しました。時間をおいて再試行してください。
-        </div>
+        </p>
       {/if}
 
-      <!-- Status / gate -->
       {#if !followed}
-        <div class="border-t border-border bg-elevated/40 p-5 flex flex-col gap-3">
-          <div class="flex items-start gap-2 text-sm text-muted-foreground">
-            <AlertCircle size={16} class="mt-0.5 shrink-0 text-subtle" />
-            <p>
+        <div data-suisou-layout="stack" data-suisou-rule="top" class="row foot">
+          <div data-suisou-media>
+            <AlertCircle data-suisou-icon="sub" data-suisou-media-icon />
+            <p data-suisou-media-content data-suisou-text="s14 doc" class="sub">
               通知を受け取るには、先に公式アカウントのフォローが必要です。
-              <span class="text-subtle">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
+              <span class="sub">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
             </p>
           </div>
-          <div class="flex flex-wrap items-center gap-3">
-            <Button size="sm" loading={following} onclick={follow}>
-              {#snippet leftIcon()}<UserPlus size={15} />{/snippet}
+          <div data-suisou-layout="row wrap">
+            <Button variant="default" loading={following} onclick={follow}>
+              {#snippet leftIcon()}<UserPlus />{/snippet}
               公式（@{data.official?.handle}）をフォロー
             </Button>
             <a
+              data-suisou-layout="row"
+              data-suisou-text="s14"
+              data-suisou-link
+              class="sub"
               href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              bsky.appで開く <ExternalLink size={13} />
+              bsky.appで開く
+              <ExternalLink data-suisou-icon="small" />
             </a>
           </div>
           {#if followError}
-            <span class="flex items-center gap-1 text-xs text-error">
-              <AlertCircle size={12} />
+            <p data-suisou-layout="row" data-suisou-text="s12" class="err" role="alert">
+              <AlertCircle data-suisou-icon="small" />
               フォローに失敗しました。時間をおいて再試行してください。
-            </span>
+            </p>
           {/if}
         </div>
-      {:else if enabled}
-        <div class="border-t border-border bg-elevated/40 px-5 py-4 flex items-center gap-2 text-sm text-muted-foreground">
-          <Check size={16} class="shrink-0 text-green-400" />
-          新着はmado公式からDMで届きます。
-          <span class="text-subtle">（公式のフォローを外すと届かなくなります）</span>
-        </div>
       {:else}
-        <div class="border-t border-border bg-elevated/40 px-5 py-4 flex items-center gap-2 text-sm text-muted-foreground">
-          <Check size={16} class="shrink-0 text-green-400" />
-          公式アカウントをフォロー中です。上のスイッチで通知をONにできます。
+        <div data-suisou-layout="row" data-suisou-text="s14" data-suisou-rule="top" class="row foot sub">
+          <Check data-suisou-icon="small success" />
+          {#if enabled}
+            <span>
+              新着はmado公式からDMで届きます。
+              <span class="sub">（公式のフォローを外すと届かなくなります）</span>
+            </span>
+          {:else}
+            <span>公式アカウントをフォロー中です。上のスイッチで通知をONにできます。</span>
+          {/if}
         </div>
       {/if}
     </div>
   {/if}
 </div>
+
+<style>
+  .page {
+    --suisou-measure: 42rem;
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .empty {
+    align-items: center;
+    padding: var(--suisou-space-4);
+  }
+  .empty :global(.big) {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .row {
+    padding: var(--suisou-space-3);
+  }
+
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .err {
+    color: var(--suisou-error);
+  }
+</style>

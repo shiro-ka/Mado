@@ -1,7 +1,7 @@
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
-import { getAnswersByOwner } from "$lib/atproto.js";
+import { getAnswersByOwner } from "$lib/atproto/index.js";
 
 export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();

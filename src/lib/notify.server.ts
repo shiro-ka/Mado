@@ -1,6 +1,6 @@
 import { AtpAgent, type AtpSessionData } from "@atproto/api";
 import type { CloudflareStore } from "./store.js";
-import { resolveHandle } from "./atproto.js";
+import { resolveHandle } from "./atproto/index.js";
 
 /**
  * Official-account DM notifications.

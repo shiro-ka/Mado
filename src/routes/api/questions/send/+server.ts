@@ -6,7 +6,7 @@ import type { SentRef } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreAnyOAuthSession } from "$lib/oauth.server.js";
 import { encryptDid } from "$lib/crypto.js";
-import { writeQuestion, getBoxRecord, getProfile, invalidateRecords, NSID } from "$lib/atproto.js";
+import { writeQuestion, getBoxRecord, getProfile, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { notifyNewKoe } from "$lib/notify.server.js";
 import { didSchema, rkeySchema } from "$lib/validation.js";
 

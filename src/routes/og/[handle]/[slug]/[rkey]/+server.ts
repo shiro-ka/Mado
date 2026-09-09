@@ -1,5 +1,5 @@
 import type { RequestHandler } from "./$types";
-import { resolveHandle, getKoeRecord, findBoxBySlug, getProfile } from "$lib/atproto";
+import { resolveHandle, getKoeRecord, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
 import {
   resolveTheme,
   escapeHtml,

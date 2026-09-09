@@ -3,23 +3,23 @@
   import Brand from "./Brand.svelte";
 </script>
 
-<footer class="w-full mt-auto border-t border-border bg-surface">
-  <div class="mx-auto max-w-6xl px-4 py-10">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer data-suisou-rule="top" class="foot">
+  <div data-suisou-layout="stack container gap-4" class="inner">
+    <div data-suisou-layout="stack md:even gap-4" class="cols">
       <!-- Brand -->
-      <div class="flex flex-col gap-3">
+      <div data-suisou-layout="stack">
         <Brand size="lg" />
-        <p class="text-sm text-muted-foreground">
+        <p data-suisou-text="s14" class="sub">
           ATProtocol基盤の半匿名メッセージ。<br />窓越しに、想いを届けよう。
         </p>
       </div>
 
       <!-- Links -->
-      <div class="flex flex-col gap-3">
-        <h4 class="text-sm font-semibold text-foreground">リンク</h4>
-        <div class="flex flex-col gap-2">
+      <div data-suisou-layout="stack">
+        <h4 data-suisou-text="s14 w700">リンク</h4>
+        <div data-suisou-layout="stack">
           {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/home", label: "ホーム" }] as link}
-            <a href={link.href} class="text-sm transition-colors duration-200 hover:opacity-80 text-muted-foreground">
+            <a href={link.href} data-suisou-link data-suisou-text="s14" class="sub">
               {link.label}
             </a>
           {/each}
@@ -27,11 +27,11 @@
       </div>
 
       <!-- Legal / Info -->
-      <div class="flex flex-col gap-3">
-        <h4 class="text-sm font-semibold text-foreground">情報</h4>
-        <div class="flex flex-col gap-2">
+      <div data-suisou-layout="stack">
+        <h4 data-suisou-text="s14 w700">情報</h4>
+        <div data-suisou-layout="stack">
           {#each [{ href: "/privacy", label: "プライバシーポリシー" }, { href: "/terms", label: "利用規約" }] as link}
-            <a href={link.href} class="text-sm transition-colors duration-200 hover:opacity-80 text-muted-foreground">
+            <a href={link.href} data-suisou-link data-suisou-text="s14" class="sub">
               {link.label}
             </a>
           {/each}
@@ -39,23 +39,45 @@
             href="https://atproto.com"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 text-sm transition-colors duration-200 hover:opacity-80 text-muted-foreground"
+            data-suisou-link data-suisou-layout="row" data-suisou-text="s14" class="sub"
           >
-            <Globe size={12} />
+            <Globe data-suisou-icon="small" />
             ATProtocol
           </a>
         </div>
       </div>
     </div>
 
-    <div class="mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-border">
-      <p class="text-xs text-subtle">
+    <div data-suisou-layout="stack md:row between" data-suisou-rule="top" class="bottom">
+      <p data-suisou-text="s12" class="sub">
         &copy; {new Date().getFullYear()} Mado. All rights reserved.
       </p>
-      <div class="flex items-center gap-1.5 text-xs text-subtle">
-        <Globe size={12} class="opacity-60" />
+      <div data-suisou-layout="row" data-suisou-text="s12" class="sub">
+        <Globe data-suisou-icon="small" />
         <span>Powered by ATProtocol</span>
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  .foot {
+    width: 100%;
+    margin-block-start: auto;
+    background: var(--suisou-panel);
+  }
+  .inner {
+    padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .bottom {
+    margin-block-start: var(--suisou-space-4);
+    padding-block-start: var(--suisou-space-3);
+  }
+
+  .sub {
+    color: var(--suisou-text-sub);
+  }
+  .sub:hover {
+    color: var(--suisou-text-main);
+  }
+</style>
