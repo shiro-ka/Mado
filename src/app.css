@@ -8,31 +8,20 @@
    ここに残るのは「ページそのもの」の見た目だけ。部品の見た目は
    Suisou（app.html が読む /v1/suisou.css）と、各コンポーネントの scoped style。
 
-   ★ライトモードは今回の移行では触っていない（しろさま判断・後回し）。
-     Suisou はダーク専用（data-suisou-theme="trench" 固定）なので、
-     **ライト環境ではページの地だけ明るく、Suisou の部品は暗いまま**になる。
-     直すなら prefers-color-scheme で data-suisou-theme を shoal に差し替えるか、
-     ライト自体をやめるか。 */
+   ★ライトモードは 2026-09-09 に**畳んだ**（しろさま判断）。
 
-:root {
-  /* ページの地の色。Suisou のトークンから引く */
-  --bg: var(--suisou-bg);
-  --bg-grad-top: var(--suisou-panel);
-  --text-primary: var(--suisou-text-main);
-  --border-strong: var(--suisou-line-strong);
-  --accent-light: var(--suisou-selected-surface);
-}
+     実測すると、ライト用の値は**ほとんどどこにも届いていなかった**。
+     body に data-suisou-root が付いているので、Suisou の
+     `[data-suisou-root] { background; color }` が**詳細度で勝つ**（0,1,0 対 0,0,1）。
+     ライト環境で --bg は #e6eefb になっていたのに、body の計算値は暗いままだった。
 
-/* Light — 未移行。OGP の "light" テーマと同期した手書きの値 */
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #e6eefb;
-    --bg-grad-top: #f5f9ff;
-    --text-primary: #14233f;
-    --border-strong: rgba(47, 111, 224, 0.45);
-    --accent-light: rgba(47, 111, 224, 0.1);
-  }
-}
+     ★同時に「OGP と揃えた紺のグラデーション」も死んでいた。Suisou の
+       `background:` は**ショートハンドなので background-image を none に潰す**。
+       誰も気づかないまま消えていた ―― Suisou が「塗らない・線形」の設計なので、
+       装飾グラデとは元々相性が悪い。**消えたままにする**と決めた。
+
+     ★html だけは data-suisou-root を持たないので、ライト値が**本当に効いていた**。
+       スクロールバーの溝に明るい帯が出る実害があった。--suisou-bg に直した。 */
 
 * {
   box-sizing: border-box;
@@ -83,40 +72,22 @@ select {
   color: inherit;
 }
 
-/* Solid backdrop so that any gutter left by a scrollbar (or by the mobile
-   address bar / fixed-background quirks) shows the theme navy — not the white
-   browser canvas. Without this, an appearing scrollbar leaves a white strip on
-   the right/bottom that flickers while scrolling. */
+/* ★html は data-suisou-root を持たない（付くのは body）ので、ここは現場が持つ。
+   スクロールバーの溝やモバイルのアドレスバーの裏に、ブラウザ既定の白いキャンバスが
+   覗くのを防ぐ。無いと、バーが出た瞬間に右下へ白い帯が走る。 */
 html {
-  background-color: var(--bg);
+  background-color: var(--suisou-bg);
 }
 
+/* ★body の見た目は Suisou が持つ（[data-suisou-root] の background / color /
+   font-family / scrollbar-*）。ここに書いても詳細度で負けるので書かない。
+   残すのは Suisou が持たない「高さ」だけ。 */
 body {
-  margin: 0;
-  font-family: var(--font-zen-maru), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100dvh;
-  color: var(--text-primary);
-  /* OGP-style navy gradient (linear-gradient(140deg,#152238→#0c1424)) */
-  background-color: var(--bg);
-  background-image: linear-gradient(150deg, var(--bg-grad-top) 0%, var(--bg) 60%);
-  background-attachment: fixed;
 }
 
+/* 選択範囲。Suisou は擬似要素を持たないので現場のもの。値はトークンから引く。 */
 ::selection {
-  background: var(--accent-light);
-  color: var(--text-primary);
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 3px;
+  background: var(--suisou-selected-surface);
+  color: var(--suisou-text-main);
 }
