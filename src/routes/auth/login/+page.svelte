@@ -41,9 +41,9 @@
   <title>ログイン | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="center screen" class="wrap">
+<div data-suisou-layout="pin screen" class="wrap">
   <div data-suisou-layout="stack gap-4" class="col">
-    <div data-suisou-layout="stack" class="head">
+    <div data-suisou-layout="stack center">
       <a data-suisou-layout="row" href="/">
         <span data-suisou-tile><MessageCircle data-suisou-icon="accent" /></span>
         <span data-suisou-text="s20 w700">Mado</span>
@@ -101,9 +101,6 @@
   .col {
     width: 100%;
     max-width: 28rem;
-  }
-  .head {
-    align-items: center;
   }
   .card {
     padding: var(--suisou-space-4);

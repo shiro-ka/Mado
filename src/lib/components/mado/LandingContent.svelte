@@ -53,7 +53,7 @@
 <!-- Hero
      見出しは s28 md:s32 ＝ Suisou のスケール（12/14/16/20/24/28/32）の上限。 -->
 <section data-suisou-layout="stack" class="hero">
-  <div data-suisou-layout="stack container gap-4" data-suisou-text="center" class="hero-inner">
+  <div data-suisou-layout="stack container gap-4 center" data-suisou-text="center" class="hero-inner">
     <span data-suisou-tag="accent">
       <Sparkles />
       ATProtocol基盤
@@ -69,7 +69,7 @@
       送り主は窓のオーナーだけに届き、暗号化によって守られます。
     </p>
 
-    <div data-suisou-layout="stack md:row md:middle" class="cta">
+    <div data-suisou-layout="stack md:row md:middle center">
       <a href="/auth/login">
         <Button variant="default">
           窓を開く
@@ -103,7 +103,7 @@
 <!-- Features -->
 <section id="features" class="band">
   <div data-suisou-layout="stack container gap-4" class="block">
-    <div data-suisou-layout="stack gap-1" data-suisou-text="center" class="heading">
+    <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="s24 md:s28 w700">Madoの特徴</h2>
       <p data-suisou-text="s14 md:s16" class="sub">安全で信頼できる窓を実現する3つの柱</p>
     </div>
@@ -123,19 +123,19 @@
 <!-- How it works -->
 <section id="how-it-works" class="band">
   <div data-suisou-surface="panel" data-suisou-layout="stack container gap-4" class="block pad">
-    <div data-suisou-layout="stack gap-1" data-suisou-text="center" class="heading">
+    <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="s24 md:s28 w700">使い方</h2>
       <p data-suisou-text="s14 md:s16" class="sub">3ステップで始められます</p>
     </div>
 
     <div data-suisou-layout="stack md:even gap-3" class="cards">
       {#each steps as step}
-        <div data-suisou-layout="stack gap-3" data-suisou-text="center" class="step">
+        <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
           <span class="tile">
             <span data-suisou-tile><step.icon data-suisou-icon={step.tone} /></span>
             <span data-suisou-text="s12 w700" class="num">{step.step}</span>
           </span>
-          <div data-suisou-layout="stack gap-1" class="step-text">
+          <div data-suisou-layout="stack gap-1 center">
             <h3 data-suisou-text="s16 w700">{step.title}</h3>
             <p data-suisou-text="s14 doc" class="sub">{step.description}</p>
           </div>
@@ -148,7 +148,7 @@
 <!-- CTA
      Suisou は「塗らない」「影は持たない」ので、面 + accent の罫で立てる。 -->
 <section class="band">
-  <div data-suisou-surface="panel" data-suisou-layout="stack container gap-3" data-suisou-text="center" class="cta-box">
+  <div data-suisou-surface="panel" data-suisou-layout="stack container gap-3 center" data-suisou-text="center" class="cta-box">
     <Send data-suisou-icon="accent" class="cta-icon" />
     <h2 data-suisou-text="s24 md:s28 w700">今すぐ始めよう</h2>
     <p data-suisou-text="s16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
@@ -167,7 +167,6 @@
   }
   .hero-inner {
     --suisou-measure: 48rem;
-    align-items: center;
   }
   .title {
     letter-spacing: -0.01em;
@@ -179,9 +178,6 @@
     max-width: 36rem;
     color: var(--suisou-text-sub);
   }
-  .cta {
-    align-items: center;
-  }
 
   .band {
     padding: var(--suisou-space-4) var(--suisou-space-3);
@@ -189,21 +185,11 @@
   .pad {
     padding: var(--suisou-space-4);
   }
-  .heading {
-    align-items: center;
-  }
   .sub {
     color: var(--suisou-text-sub);
   }
   .warn {
     color: var(--suisou-warning);
-  }
-
-  .step {
-    align-items: center;
-  }
-  .step-text {
-    align-items: center;
   }
   .tile {
     position: relative;
@@ -226,7 +212,6 @@
   .cta-box {
     --suisou-measure: 36rem;
     padding: var(--suisou-space-4);
-    align-items: center;
     border-color: var(--suisou-accent);
   }
   .cta-box :global(.cta-icon) {

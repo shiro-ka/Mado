@@ -54,7 +54,7 @@
 {#if formState === "success"}
   <div data-suisou-banner="success" data-suisou-layout="stack" role="status" data-suisou-text="center" class="done">
     <CheckCircle2 class="big" />
-    <div data-suisou-layout="stack gap-1" class="center">
+    <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="s16 w700">声を送信しました！</p>
       <p data-suisou-text="s14" class="sub">相手に届くまでしばらくお待ちください。</p>
     </div>
@@ -107,9 +107,6 @@
 <style>
   .done {
     padding: var(--suisou-space-4);
-  }
-  .center {
-    align-items: center;
   }
   .sub {
     color: var(--suisou-text-sub);
