@@ -12,10 +12,10 @@
   <title>{status} | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="center screen" class="wrap">
-  <div data-suisou-layout="stack gap-3" data-suisou-text="center" class="box">
+<div data-suisou-layout="pin screen" class="wrap">
+  <div data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="box">
     <span data-suisou-tile><AlertCircle data-suisou-icon="error" /></span>
-    <div data-suisou-layout="stack" class="text">
+    <div data-suisou-layout="stack center">
       <p data-suisou-text="s32 w700">{status}</p>
       <p data-suisou-text="s14 doc" class="sub">
         {#if isNotFound}
@@ -40,10 +40,6 @@
   }
   .box {
     max-width: 28rem;
-    align-items: center;
-  }
-  .text {
-    align-items: center;
   }
   .sub {
     color: var(--suisou-text-sub);

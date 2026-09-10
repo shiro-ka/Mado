@@ -78,7 +78,7 @@
       {@render listHead(` (${detail.openBoxes.length}件)`)}
 
       {#if detail.openBoxes.length === 0}
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
           <p data-suisou-text="s14" class="sub">まだ窓がありません</p>
           <a href={`/@${data.cleanHandle}/new`}>
             <Button variant="default">
@@ -128,7 +128,7 @@
           session={data.session}
         />
       {:else}
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
           <p data-suisou-text="s14" class="sub">現在受付中の窓はありません</p>
         </div>
       {/if}
@@ -164,7 +164,6 @@
     margin-block-start: var(--suisou-space-4);
   }
   .empty {
-    align-items: center;
     padding: var(--suisou-space-4);
   }
   .sub {

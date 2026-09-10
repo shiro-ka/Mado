@@ -96,9 +96,9 @@
     </div>
 
     {#if filtered.length === 0}
-      <div data-suisou-surface="panel empty" data-suisou-layout="stack gap-3" data-suisou-text="center" class="empty">
+      <div data-suisou-surface="panel empty" data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="empty">
         <Inbox data-suisou-icon="sub" class="big" />
-        <div data-suisou-layout="stack gap-1" class="text">
+        <div data-suisou-layout="stack gap-1 center">
           <p data-suisou-text="s16 w700">
             {tab === "unread" ? "未読の声はありません" : "声がありません"}
           </p>
@@ -133,11 +133,7 @@
   }
 
   .empty {
-    align-items: center;
     padding: var(--suisou-space-4);
-  }
-  .text {
-    align-items: center;
   }
   .empty :global(.big) {
     width: 2.25rem;

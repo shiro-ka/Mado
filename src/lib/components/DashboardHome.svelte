@@ -83,7 +83,7 @@
 
       {#if boxes.length === 0}
         <!-- ★空表示は surface="empty"（破線）。Suisou には Mado の4現場から昇格した値。 -->
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
           <p data-suisou-text="s14" class="sub">まだ窓がありません</p>
           <a href={`/@${session.handle}/new`}>
             <Button variant="default">
@@ -125,7 +125,7 @@
       </div>
 
       {#if questions.length === 0}
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
           <p data-suisou-text="s14" class="sub">まだ声が届いていません</p>
           <p data-suisou-text="s12" class="sub">窓のURLをシェアしましょう</p>
         </div>
@@ -152,7 +152,6 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .empty {
-    align-items: center;
     padding-block: var(--suisou-space-4);
   }
 

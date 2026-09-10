@@ -76,7 +76,7 @@
        意味（role）は CSS では足せないので現場が書く、というのが Suisou の約束。 -->
   <div data-suisou-banner="success" data-suisou-layout="stack" role="status" data-suisou-text="center" class="done">
     <CheckCircle2 class="big" />
-    <div data-suisou-layout="stack gap-1" class="center">
+    <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="s16 w700">回答を投稿しました</p>
       <p data-suisou-text="s14" class="sub">PDSに保存されました。</p>
       {#if crosspostFailed}
@@ -144,9 +144,6 @@
 <style>
   .done {
     padding: var(--suisou-space-4);
-  }
-  .center {
-    align-items: center;
   }
   .sub {
     color: var(--suisou-text-sub);

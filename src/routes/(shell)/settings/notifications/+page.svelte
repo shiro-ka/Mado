@@ -75,7 +75,7 @@
   </div>
 
   {#if !data.configured}
-    <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+    <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
       <Bell data-suisou-icon="sub" class="big" />
       <p data-suisou-text="s14" class="sub">
         DM通知は現在準備中です。もうしばらくお待ちください。
@@ -167,7 +167,6 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .empty {
-    align-items: center;
     padding: var(--suisou-space-4);
   }
   .empty :global(.big) {

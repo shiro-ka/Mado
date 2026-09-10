@@ -97,7 +97,7 @@
   </div>
 
   {#if filtered.length === 0}
-    <div data-suisou-surface="panel empty" data-suisou-layout="stack" class="empty">
+    <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
       <span data-suisou-tile>
         {#if tab === "unread"}
           <MessageCircle data-suisou-icon="sub" />
@@ -175,7 +175,6 @@
 
 <style>
   .empty {
-    align-items: center;
     padding-block: var(--suisou-space-4);
   }
 
