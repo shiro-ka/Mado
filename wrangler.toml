@@ -4,13 +4,16 @@ compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = ".svelte-kit/cloudflare"
 
+# ★OAUTH_STATE / OAUTH_SESSION / RATE_LIMIT は 2026-09-27 まで wixdex と同じ namespace を
+#   共有していた。キー書式がたまたま違うので衝突していなかっただけで、Mado が deviceKey を
+#   外すと同じ DID のキーで wixdex のセッションを上書きする。Mado 専用の MADO_* に分けた。
 [[kv_namespaces]]
 binding = "OAUTH_STATE"
-id = "245187d80c4e42fdacd2e17b4cc51486"
+id = "d4753769cf1a4fa19c0752d841cb5d54"   # MADO_OAUTH_STATE
 
 [[kv_namespaces]]
 binding = "OAUTH_SESSION"
-id = "94ad081eaad14043b94effea000c6ca9"
+id = "7ca15b3015334b979a955da014209e2e"   # MADO_OAUTH_SESSION
 
 [[kv_namespaces]]
 binding = "MADO_SESSION"
@@ -18,7 +21,7 @@ id = "78246f681d304c87800b15fedb04d719"
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "62ad51eb191b4bb6949a279ccaf92343"
+id = "68841092f7b6485689d223a370c4fd34"   # MADO_RATE_LIMIT
 
 [[d1_databases]]
 binding = "DB"
