@@ -3,6 +3,7 @@ name: Deploy
 on:
   push:
     branches: [main, dev]   # main → 本番 (mado.blue) / dev → プレビュー (dev.mado-sveltekit.pages.dev)
+  workflow_dispatch:
 
 jobs:
   deploy-app:
