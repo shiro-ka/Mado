@@ -50,16 +50,16 @@
     </button>
   </div>
 
-  <a data-suisou-row data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
+  <a data-suisou-button="block" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
     <Bell data-suisou-text="fs-20" data-suisou="accent" />
     <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
     <ChevronRight data-suisou-text="fs-20" data-suisou="sub" />
   </a>
 
   {#await data.inbox}
-    <div data-suisou-button-group="even">
+    <div data-suisou-tray data-suisou-layout="row gap-0">
       {#each tabs as t}
-        <span data-suisou-button>{t.label}</span>
+        <span data-suisou-button data-suisou-layout="grow">{t.label}</span>
       {/each}
     </div>
     <div data-suisou-layout="stack gap-3" class="items">
@@ -78,10 +78,11 @@
 
     <!-- ★タブがリンクなので状態は aria-current="page"（リンクの正しい ARIA）。
          Suisou の Button がこれを見るので、現場で打ち消さないこと。 -->
-    <div data-suisou-button-group="even">
+    <div data-suisou-tray data-suisou-layout="row gap-0">
       {#each tabs as t}
         <a
           data-suisou-button
+          data-suisou-layout="grow"
           href={`/receive?tab=${t.key}`}
           aria-current={tab === t.key ? "page" : undefined}
         >
@@ -119,7 +120,7 @@
 
 <style>
   .page {
-    --suisou-measure: 48rem;
+    max-width: 48rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .link {

@@ -152,11 +152,11 @@
 
 <style>
   .page {
-    --suisou-measure: 42rem;
+    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .narrow {
-    --suisou-measure: 32rem;
+    max-width: 32rem;
   }
   .others {
     margin-block-start: var(--suisou-space-4);

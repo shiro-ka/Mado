@@ -39,7 +39,7 @@
           メイン
         </span>
       {/if}
-      <span data-suisou-tag={box.isOpen ? "success" : ""}>
+      <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
         {#if box.isOpen}<Unlock />{:else}<Lock />{/if}
         {box.isOpen ? "受付中" : "受付停止"}
       </span>

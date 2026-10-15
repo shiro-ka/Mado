@@ -65,7 +65,7 @@
   .foot {
     width: 100%;
     margin-block-start: auto;
-    background: var(--suisou-panel);
+    background: var(--suisou-color-panel);
   }
   .inner {
     padding: var(--suisou-space-4) var(--suisou-space-3);

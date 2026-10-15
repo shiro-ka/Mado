@@ -16,54 +16,6 @@
    ★Suisou の `background:` はショートハンドなので background-image を none に潰す。
      装飾のグラデーションは載らない（塗らない・線形の設計なので元々相性が悪い）。 */
 
-* {
-  box-sizing: border-box;
-}
-
-/* ★最小限のリセット。
-
-   Suisou は**要素セレクタを一切使わない**設計（base.css:「適用先の全ボタンに漏れるため」）
-   なので、見出し・段落・リストの既定マージンには手を出さない。
-   それは正しい判断だが、**リセットは現場が持つ**ということでもある。
-   これが無いと見出し・段落・リストの既定マージンが一斉に効いて余白が壊れる。
-
-   すきまは data-suisou-layout が焼き込みで持つので、既定のマージンは邪魔にしかならない。 */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-figure,
-blockquote,
-dl,
-dd,
-ul,
-ol {
-  margin: 0;
-}
-
-/* リストの字下げは data-suisou-list / prose が属性で持つ。素の ul/ol は持たない */
-ul,
-ol {
-  padding-inline-start: 0;
-}
-
-img,
-svg {
-  display: block;
-  max-width: 100%;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
-}
-
 /* ★html は data-suisou-root を持たない（付くのは body）ので、ここは現場が持つ。
    スクロールバーの溝やモバイルのアドレスバーの裏に、ブラウザ既定の白いキャンバスが
    覗くのを防ぐ。無いと、バーが出た瞬間に右下へ白い帯が走る。 */
@@ -80,6 +32,6 @@ body {
 
 /* 選択範囲。Suisou は擬似要素を持たないので現場のもの。値はトークンから引く。 */
 ::selection {
-  background: var(--suisou-selected-surface);
+  background: var(--suisou-color-accent-tint);
   color: var(--suisou-color-text);
 }

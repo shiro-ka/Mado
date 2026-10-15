@@ -120,6 +120,6 @@
   :global(.big) {
     width: 2.5rem;
     height: 2.5rem;
-    color: var(--suisou-success);
+    color: var(--suisou-color-success);
   }
 </style>

@@ -39,7 +39,7 @@
   <!-- 声 -->
   <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
     <div data-suisou-layout="row between">
-      <span data-suisou-tag={data.question.isRead ? "" : "accent"}>
+      <span data-suisou-item="tag" data-suisou={data.question.isRead ? undefined : "accent"}>
         {data.question.isRead ? "既読" : "未読"}
       </span>
       <span data-suisou-text="fs-12" class="sub">{formatDateFull(data.question.createdAt)}</span>
@@ -133,7 +133,7 @@
 
 <style>
   .page {
-    --suisou-measure: 42rem;
+    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .card {

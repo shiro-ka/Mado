@@ -32,8 +32,8 @@
 <style>
   .switch {
     flex: none;
-    width: var(--suisou-icon);
-    height: var(--suisou-icon);
+    width: var(--suisou-size-icon);
+    height: var(--suisou-size-icon);
     cursor: pointer;
   }
   .switch:disabled {

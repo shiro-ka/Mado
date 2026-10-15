@@ -298,7 +298,7 @@
 
 <style>
   .page {
-    --suisou-measure: 32rem;
+    max-width: 32rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .card {

@@ -33,7 +33,7 @@
       {#each section.steps as item}
         <div data-suisou-tray data-suisou-item="media">
           <span class="step">
-            <span data-suisou-item="square"><item.icon data-suisou-icon={item.tone} /></span>
+            <span data-suisou-item="square"><item.icon data-suisou-text="fs-20" data-suisou={item.tone} /></span>
             <span data-suisou-text="fs-12 fw-700" class="num">{item.step}</span>
           </span>
           <div data-suisou-item="media-content">
@@ -48,7 +48,7 @@
 
 <style>
   .page {
-    --suisou-measure: 42rem;
+    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {

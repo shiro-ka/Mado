@@ -26,7 +26,7 @@
     aria-expanded={open}
     data-suisou-button="block"
   >
-    <Info data-suisou-text="fs-20" />
+    <Info />
     <span data-suisou-layout="grow" data-suisou-text="start" class="label">Madoについて</span>
     <ChevronDown
       size={14}

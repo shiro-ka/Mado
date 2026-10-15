@@ -95,7 +95,7 @@
       {:else}
         <div data-suisou-layout="stack">
           {#each boxes.slice(0, 3) as box}
-            <a data-suisou-row data-suisou-layout="row between" href={`/@${session.handle}/${box.slug}`}>
+            <a data-suisou-button="block" data-suisou-layout="row between" href={`/@${session.handle}/${box.slug}`}>
               <span data-suisou-text="fs-14 one-line" class="title">{box.title}</span>
               <span data-suisou-text="fs-12" class={box.isOpen ? "ok" : "sub"}>
                 {box.isOpen ? "受付中" : "停止中"}
@@ -132,7 +132,7 @@
       {:else}
         <div data-suisou-layout="stack">
           {#each questions.slice(0, 4) as q}
-            <a data-suisou-row data-suisou-layout="row" href={questionHref(q)}>
+            <a data-suisou-button="block" data-suisou-layout="row" href={questionHref(q)}>
               {#if !q.isRead}<span class="dot"></span>{/if}
               <span data-suisou-layout="grow" data-suisou-text="fs-14 one-line" class="title sub">{q.body}</span>
               <span data-suisou-text="fs-12" class="date">
@@ -148,7 +148,7 @@
 
 <style>
   .page {
-    --suisou-measure: 56rem;
+    max-width: 56rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .empty {
@@ -166,7 +166,7 @@
     color: var(--suisou-color-text-sub);
   }
   .ok {
-    color: var(--suisou-success);
+    color: var(--suisou-color-success);
   }
   .date {
     color: var(--suisou-color-text-sub);

@@ -111,7 +111,7 @@
     <div data-suisou-layout="stack md:even gap-3" class="cards">
       {#each features as feat}
         <div data-suisou-tray data-suisou-layout="stack" class="card">
-          <span data-suisou-item="square"><feat.icon data-suisou-icon={feat.tone} /></span>
+          <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
           <h3 data-suisou-text="fs-16 fw-700">{feat.title}</h3>
           <p data-suisou-text="fs-14 doc" class="sub">{feat.description}</p>
         </div>
@@ -132,7 +132,7 @@
       {#each steps as step}
         <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
           <span class="tile">
-            <span data-suisou-item="square"><step.icon data-suisou-icon={step.tone} /></span>
+            <span data-suisou-item="square"><step.icon data-suisou-text="fs-20" data-suisou={step.tone} /></span>
             <span data-suisou-text="fs-12 fw-700" class="num">{step.step}</span>
           </span>
           <div data-suisou-layout="stack gap-1 center">
@@ -166,7 +166,7 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .hero-inner {
-    --suisou-measure: 48rem;
+    max-width: 48rem;
   }
   .title {
     letter-spacing: -0.01em;
@@ -189,7 +189,7 @@
     color: var(--suisou-color-text-sub);
   }
   .warn {
-    color: var(--suisou-warning);
+    color: var(--suisou-color-warning);
   }
   .tile {
     position: relative;
@@ -210,7 +210,7 @@
   }
 
   .cta-box {
-    --suisou-measure: 36rem;
+    max-width: 36rem;
     padding: var(--suisou-space-4);
     border-color: var(--suisou-color-accent);
   }

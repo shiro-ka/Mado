@@ -14,12 +14,12 @@
        余白の段が吸う。本当に困る場所が3回出たら Suisou 側に相談する。 */
   export type ButtonVariant = "default" | "outline" | "secondary" | "ghost" | "destructive";
 
-  const VARIANT_MAP: Record<ButtonVariant, string> = {
-    default: "outline",
-    outline: "plain",
-    secondary: "plain",
-    ghost: "",
-    destructive: "danger",
+  const VARIANT_MAP: Record<ButtonVariant, [string, string]> = {
+    default: ["outline", "accent"],
+    outline: ["outline", ""],
+    secondary: ["outline", ""],
+    ghost: ["", ""],
+    destructive: ["outline", "error"],
   };
 
   export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
@@ -53,15 +53,15 @@
   }: ButtonProps = $props();
 
   const isDisabled = $derived(disabled || loading);
-  const suisou = $derived(
-    [VARIANT_MAP[variant], icon ? "icon" : "", wide ? "wide" : ""].filter(Boolean).join(" "),
-  );
+  const suisou = $derived([VARIANT_MAP[variant][0], icon ? "icon" : ""].filter(Boolean).join(" "));
+  const tone = $derived([VARIANT_MAP[variant][1], wide ? "w-full" : ""].filter(Boolean).join(" ") || undefined);
 </script>
 
 {#if href}
   <a
     bind:this={ref}
     data-suisou-button={suisou}
+    data-suisou={tone}
     class={className}
     href={isDisabled ? undefined : href}
     aria-disabled={isDisabled}
@@ -71,7 +71,7 @@
   >
     {#if loading}
       <!-- 読み込み中は Suisou の Spinner。回転アイコンより意味が乗る -->
-      <span data-suisou-spinner role="status" aria-label="処理中"></span>
+      <progress data-suisou-loading="small" aria-label="処理中"></progress>
     {:else if leftIcon}
       {@render leftIcon()}
     {/if}
@@ -84,13 +84,14 @@
   <button
     bind:this={ref}
     data-suisou-button={suisou}
+    data-suisou={tone}
     class={className}
     {type}
     disabled={isDisabled}
     {...restProps}
   >
     {#if loading}
-      <span data-suisou-spinner role="status" aria-label="処理中"></span>
+      <progress data-suisou-loading="small" aria-label="処理中"></progress>
     {:else if leftIcon}
       {@render leftIcon()}
     {/if}

@@ -45,12 +45,12 @@
     <h2 data-suisou-text="fs-16 fw-700">誰が何を見られるか</h2>
     {#each visibility as row}
       <div data-suisou-tray data-suisou-item="media">
-        <span data-suisou-item="square"><row.icon data-suisou-icon={row.tone} /></span>
+        <span data-suisou-item="square"><row.icon data-suisou-text="fs-20" data-suisou={row.tone} /></span>
         <div data-suisou-item="media-content">
           <p data-suisou-text="fs-14 fw-700">{row.title}</p>
           <!-- ★しるしはブラウザに任せる（data-suisou-list）。"•" を
                span で手書きしていて、読み上げから「箇条書き」の意味が消えていた。 -->
-          <ul data-suisou-list data-suisou-text="fs-14" class="sub">
+          <ul data-suisou-text="fs-14" class="sub list">
             {#each row.items as item}
               <li>{item}</li>
             {/each}
@@ -78,10 +78,19 @@
 
 <style>
   .page {
-    --suisou-measure: 42rem;
+    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {
+    color: var(--suisou-color-text-sub);
+  }
+  .list {
+    padding-inline-start: var(--suisou-space-4);
+  }
+  .list li + li {
+    margin-block-start: var(--suisou-space-1);
+  }
+  .list ::marker {
     color: var(--suisou-color-text-sub);
   }
   strong {

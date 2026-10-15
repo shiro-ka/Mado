@@ -101,6 +101,6 @@
 
 <style>
   .err {
-    color: var(--suisou-error);
+    color: var(--suisou-color-error);
   }
 </style>

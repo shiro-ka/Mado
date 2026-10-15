@@ -79,10 +79,11 @@
 
 <div data-suisou-layout="stack gap-3" class="list">
   <!-- タブは button-group="even" + aria-pressed。押された段は Suisou が出す -->
-  <div data-suisou-button-group="even">
+  <div data-suisou-tray data-suisou-layout="row gap-0">
     {#each tabs as t}
       <button
         data-suisou-button
+        data-suisou-layout="grow"
         aria-pressed={tab === t.id}
         onclick={() => (tab = t.id)}
       >
@@ -90,7 +91,7 @@
         {#if t.id === "all" && items.length > 0}
           <span data-suisou-item="tag">{items.length}</span>
         {:else if t.id === "unread" && unreadCount > 0}
-          <span data-suisou-tag={tab === "unread" ? "" : "accent"}>{unreadCount}</span>
+          <span data-suisou-item="tag" data-suisou={tab === "unread" ? undefined : "accent"}>{unreadCount}</span>
         {/if}
       </button>
     {/each}
@@ -134,7 +135,7 @@
               <span data-suisou-text="fs-12" class="sub">{formatDateFull(item.ref.sentAt)}</span>
               <span data-suisou-layout="grow"></span>
               {#if hasAnswer}
-                <span data-suisou-tag={isRead ? "" : "accent"}>
+                <span data-suisou-item="tag" data-suisou={isRead ? undefined : "accent"}>
                   {isRead ? "返信済み" : "返信あり"}
                 </span>
               {/if}

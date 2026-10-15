@@ -79,11 +79,11 @@
     color: var(--suisou-color-text-sub);
   }
   .count.near {
-    color: var(--suisou-warning);
+    color: var(--suisou-color-warning);
   }
   .count.over,
   .error {
-    color: var(--suisou-error);
+    color: var(--suisou-color-error);
   }
   .helper {
     color: var(--suisou-color-text-sub);

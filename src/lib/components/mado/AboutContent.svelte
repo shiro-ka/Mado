@@ -39,7 +39,7 @@
     <h2 data-suisou-text="fs-20 fw-700">3つの特徴</h2>
     {#each features as feat}
       <div data-suisou-tray data-suisou-item="media">
-        <span data-suisou-item="square"><feat.icon data-suisou-icon={feat.tone} /></span>
+        <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
         <div data-suisou-item="media-content">
           <p data-suisou-text="fs-14 fw-700">{feat.title}</p>
           <p data-suisou-text="fs-14 doc" class="sub">{feat.body}</p>
@@ -57,7 +57,7 @@
   /* ★読む幅は container に任せ、上限だけ現場が決める。Suisou が --suisou-drawer や
      --suisou-spinner で「実寸は現場のもの」としているのと同じやり方。 */
   .page {
-    --suisou-measure: 42rem;
+    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {

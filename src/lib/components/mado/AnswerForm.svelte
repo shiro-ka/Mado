@@ -148,7 +148,7 @@
     color: var(--suisou-color-text-sub);
   }
   .warn {
-    color: var(--suisou-warning);
+    color: var(--suisou-color-warning);
   }
   .check {
     cursor: pointer;
@@ -163,6 +163,6 @@
   :global(.big) {
     width: 2.25rem;
     height: 2.25rem;
-    color: var(--suisou-success);
+    color: var(--suisou-color-success);
   }
 </style>

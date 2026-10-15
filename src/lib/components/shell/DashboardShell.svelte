@@ -53,7 +53,7 @@
     data-suisou-tray="drawer left"
     data-suisou-layout="stack scroll"
     aria-label="ナビゲーション"
-    style="--suisou-drawer: 18rem"
+    style="--suisou-size-drawer: 18rem"
   >
     <Sidebar {session} />
   </div>
@@ -80,12 +80,12 @@
 
   .side {
     width: 16rem;
-    background: var(--suisou-panel);
+    background: var(--suisou-color-panel);
   }
   .topbar {
     padding-inline: var(--suisou-space-3);
     height: 3.5rem;
-    background: var(--suisou-panel);
+    background: var(--suisou-color-panel);
   }
 
   /* 狭い画面ではサイドバーを畳み、上のバーを出す。

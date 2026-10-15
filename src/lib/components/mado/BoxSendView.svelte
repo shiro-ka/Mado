@@ -60,7 +60,7 @@
   <div data-suisou-tray data-suisou-layout="stack" class="box">
     <div data-suisou-layout="row wrap">
       <h1 data-suisou-text="fs-20 fw-700">{box.title}</h1>
-      <span data-suisou-tag={box.isOpen ? "success" : ""}>
+      <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
         {box.isOpen ? "受付中" : "受付停止"}
       </span>
     </div>
@@ -132,6 +132,6 @@
     color: var(--suisou-color-accent);
   }
   .warn {
-    color: var(--suisou-warning);
+    color: var(--suisou-color-warning);
   }
 </style>

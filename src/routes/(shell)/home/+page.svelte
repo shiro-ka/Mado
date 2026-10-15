@@ -39,7 +39,7 @@
 
 <style>
   .page {
-    --suisou-measure: 56rem;
+    max-width: 56rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
 </style>

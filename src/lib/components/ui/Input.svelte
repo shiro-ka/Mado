@@ -36,8 +36,8 @@
     <!-- ★even は「等分」の語だが、ここで欲しいのは幅いっぱい。button-group の既定が
          inline-flex なので、全幅にする語が even しか無くて借りている。
          Suisou 側に block か wide が要る。 -->
-    <div data-suisou-button-group="even">
-      <span data-suisou-affix>{prefix}</span>
+    <div data-suisou-item="field">
+      <span>{prefix}</span>
       <input
         id={inputId}
         bind:value
@@ -67,7 +67,7 @@
     color: var(--suisou-color-text-sub);
   }
   .error {
-    color: var(--suisou-error);
+    color: var(--suisou-color-error);
   }
   .helper {
     color: var(--suisou-color-text-sub);

@@ -70,7 +70,7 @@
     top: 0;
     z-index: 40;
     width: 100%;
-    background: var(--suisou-panel);
+    background: var(--suisou-color-panel);
   }
   .inner {
     margin-inline: auto;
