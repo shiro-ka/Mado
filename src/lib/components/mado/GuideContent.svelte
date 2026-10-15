@@ -22,7 +22,7 @@
 <div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
   <div data-suisou-layout="stack">
     <h1 data-suisou-text="fs-24 fw-700">使い方</h1>
-    <p data-suisou-text="fs-16 doc" class="sub">
+    <p data-suisou-text="fs-16" class="sub doc">
       Madoは「窓を開くオーナー」と「声を送る訪問者」の2つの役割があります。
     </p>
   </div>
@@ -38,7 +38,7 @@
           </span>
           <div data-suisou-item="media-content">
             <p data-suisou-text="fs-14 fw-700">{item.title}</p>
-            <p data-suisou-text="fs-14 doc" class="sub">{item.body}</p>
+            <p data-suisou-text="fs-14" class="sub doc">{item.body}</p>
           </div>
         </div>
       {/each}

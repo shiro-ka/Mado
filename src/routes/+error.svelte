@@ -12,12 +12,12 @@
   <title>{status} | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="pin" data-suisou="min-screen" class="wrap">
+<div data-suisou-layout="stack center middle" data-suisou="min-screen" class="wrap">
   <div data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="box">
     <span data-suisou-item="square"><AlertCircle data-suisou-text="fs-20" data-suisou="error" /></span>
     <div data-suisou-layout="stack center">
       <p data-suisou-text="fs-32 fw-700">{status}</p>
-      <p data-suisou-text="fs-14 doc" class="sub">
+      <p data-suisou-text="fs-14" class="sub doc">
         {#if isNotFound}
           お探しのページは見つかりませんでした。<br />URLが間違っているか、削除された可能性があります。
         {:else}

@@ -45,7 +45,7 @@
       <span data-suisou-text="fs-12" class="sub">{formatDateFull(data.question.createdAt)}</span>
     </div>
 
-    <p data-suisou-text="fs-16 doc" class="body">{data.question.body}</p>
+    <p data-suisou-text="fs-16" class="body doc">{data.question.body}</p>
 
     {#if data.isOwner}
       {#if data.decryptError}
@@ -104,7 +104,7 @@
             <span data-suisou-text="fs-12 fw-500" class="sub">回答</span>
             <span data-suisou-text="fs-12" class="date">{formatDateFull(answer.createdAt)}</span>
           </div>
-          <p data-suisou-text="fs-14 doc" class="body">{answer.body}</p>
+          <p data-suisou-text="fs-14" class="body doc">{answer.body}</p>
         </div>
       {/each}
     </div>

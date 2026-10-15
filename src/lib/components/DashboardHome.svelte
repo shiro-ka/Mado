@@ -49,7 +49,7 @@
 
   <!-- ★数字の色分け（青/緑）はやめた。3枚とも同じ「数」なので、色に意味が無く
        Suisou の意味色（success/warning/error）とも食い違っていた。 -->
-  <div data-suisou-layout="even gap-3" class="stats">
+  <div data-suisou-layout="grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="stats">
     {#each [
       { label: "開いた窓", value: boxes.length, unit: "個" },
       { label: "未読の声", value: unreadCount, unit: "件" },
@@ -65,7 +65,7 @@
     {/each}
   </div>
 
-  <div data-suisou-layout="stack md:even gap-3" class="panes">
+  <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))" class="panes">
     <!-- 窓 -->
     <div data-suisou-tray data-suisou-layout="stack gap-3" class="pane">
       <div data-suisou-layout="row between">

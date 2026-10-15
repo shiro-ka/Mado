@@ -28,7 +28,7 @@
       <span data-suisou-item="square"><MessageCircle data-suisou-text="fs-20" data-suisou="accent" /></span>
       <h1 data-suisou-text="fs-24 fw-700">Madoについて</h1>
     </div>
-    <p data-suisou-text="fs-16 doc" class="sub">
+    <p data-suisou-text="fs-16" class="sub doc">
       Mado（窓）は、Blueskyアカウントを使った<strong>半匿名の窓サービス</strong>です。
       声を送るにはBlueskyへのログインが必要なため完全匿名ではありませんが、
       送り主の情報は暗号化されて窓のオーナーにのみ届きます。
@@ -42,7 +42,7 @@
         <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
         <div data-suisou-item="media-content">
           <p data-suisou-text="fs-14 fw-700">{feat.title}</p>
-          <p data-suisou-text="fs-14 doc" class="sub">{feat.body}</p>
+          <p data-suisou-text="fs-14" class="sub doc">{feat.body}</p>
         </div>
       </div>
     {/each}

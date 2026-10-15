@@ -89,7 +89,7 @@
         <Bell data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />
         <div data-suisou-item="media-content">
           <p data-suisou-text="fs-16 fw-700">新着をDMで受け取る</p>
-          <p data-suisou-text="fs-14 doc" class="sub">
+          <p data-suisou-text="fs-14" class="sub doc">
             mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
           </p>
         </div>
@@ -114,7 +114,7 @@
         <div data-suisou-layout="stack" data-suisou="bd-top" class="row foot">
           <div data-suisou-item="media">
             <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="sub" />
-            <p data-suisou-item="media-content" data-suisou-text="fs-14 doc" class="sub">
+            <p data-suisou-item="media-content" data-suisou-text="fs-14" class="sub doc">
               通知を受け取るには、先に公式アカウントのフォローが必要です。
               <span class="sub">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
             </p>

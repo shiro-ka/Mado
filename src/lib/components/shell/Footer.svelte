@@ -5,7 +5,7 @@
 
 <footer data-suisou="bd-top" class="foot">
   <div data-suisou-layout="stack gap-4" data-suisou="container" class="inner">
-    <div data-suisou-layout="stack md:even gap-4" class="cols">
+    <div data-suisou-layout="stack s:grid gap-4" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cols">
       <!-- Brand -->
       <div data-suisou-layout="stack">
         <Brand size="lg" />

@@ -23,7 +23,7 @@
 <div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
   <div data-suisou-layout="stack">
     <h1 data-suisou-text="fs-24 fw-700">半匿名の仕組み</h1>
-    <p data-suisou-text="fs-16 doc" class="sub">
+    <p data-suisou-text="fs-16" class="sub doc">
       Madoは<strong>完全匿名ではありません</strong>。
       声を送るにはBlueskyアカウントでのログインが必要で、あなたのDIDは暗号化された形で記録されます。
       ただしその情報は窓のオーナーだけが復号でき、第三者には一切開示されません。
@@ -34,7 +34,7 @@
        枠・下地・文字色の組は solve.py が検証済みのものに置き換わる。 -->
   <div data-suisou-item="notice media" data-suisou="warning">
     <Shield data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="warning" />
-    <p data-suisou-item="media-content" data-suisou-text="fs-14 doc">
+    <p data-suisou-item="media-content" data-suisou-text="fs-14" class="doc">
       声を送ると、あなたのBluesky DID（分散型識別子）がオーナーに届きます。
       オーナーはあなたのハンドル（@example.bsky.social）を確認できます。
       これを理解した上でご利用ください。
@@ -64,7 +64,7 @@
     <h2 data-suisou-text="fs-16 fw-700">暗号化の仕組み</h2>
     <div data-suisou-tray data-suisou-item="media">
       <Lock data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="success" />
-      <div data-suisou-item="media-content" data-suisou-layout="stack" data-suisou-text="fs-14 doc">
+      <div data-suisou-item="media-content" data-suisou-layout="stack" data-suisou-text="fs-14" class="doc">
         <p class="sub">
           送り主のDIDは<strong>ECIES（楕円曲線統合暗号化スキーム）</strong>によって暗号化されます。窓ごとに公開鍵・秘密鍵のペアが生成され、公開鍵で暗号化されたDIDは対応する秘密鍵がなければ復号できません。
         </p>

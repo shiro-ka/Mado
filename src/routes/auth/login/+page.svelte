@@ -41,7 +41,7 @@
   <title>ログイン | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="pin" data-suisou="min-screen" class="wrap">
+<div data-suisou-layout="stack center middle" data-suisou="min-screen" class="wrap">
   <div data-suisou-layout="stack gap-4" class="col">
     <div data-suisou-layout="stack center">
       <a data-suisou-layout="row" href="/">
@@ -80,7 +80,7 @@
 
       <div data-suisou-item="media" data-suisou="bd-top" class="note">
         <Shield data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
-        <p data-suisou-item="media-content" data-suisou-text="fs-12 doc" class="sub">
+        <p data-suisou-item="media-content" data-suisou-text="fs-12" class="sub doc">
           認証にはATProtocol OAuth 2.0を使用します。
           パスワードはMadoに送信されません。
           認証後、あなたのDIDとハンドルが声に紐付けられます。

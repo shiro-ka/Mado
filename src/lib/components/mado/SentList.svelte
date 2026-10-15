@@ -146,7 +146,7 @@
               {/if}
             </div>
 
-            <p data-suisou-text="fs-14 doc" class="body" class:clamp={!isExpanded}>
+            <p data-suisou-text="fs-14" class="body doc" class:clamp={!isExpanded}>
               {item.ref.body}
             </p>
           </button>
@@ -160,7 +160,7 @@
                     <MessageCircle data-suisou-text="fs-16" data-suisou="accent" />
                     <span data-suisou-text="fs-12" class="sub">{formatDateFull(answer.createdAt)}</span>
                   </div>
-                  <p data-suisou-text="fs-14 doc" class="body">{answer.body}</p>
+                  <p data-suisou-text="fs-14" class="body doc">{answer.body}</p>
                 </div>
               {/each}
             </div>

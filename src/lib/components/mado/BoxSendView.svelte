@@ -65,7 +65,7 @@
       </span>
     </div>
     {#if box.description}
-      <p data-suisou-text="fs-14 doc" class="sub">{box.description}</p>
+      <p data-suisou-text="fs-14" class="sub doc">{box.description}</p>
     {/if}
     <div data-suisou-layout="row" data-suisou-text="fs-12" class="sub">
       <Lock data-suisou-text="fs-16" />
@@ -75,7 +75,7 @@
 
   <div data-suisou-item="notice media" data-suisou="warning">
     <Shield data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="warning" />
-    <p data-suisou-item="media-content" data-suisou-text="fs-12 doc">
+    <p data-suisou-item="media-content" data-suisou-text="fs-12" class="doc">
       <strong class="warn">半匿名のご注意：</strong>
       このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
       <strong>窓のオーナーにのみ</strong>
@@ -98,7 +98,7 @@
       <span data-suisou-item="square"><LogIn data-suisou-text="fs-20" data-suisou="accent" /></span>
       <div data-suisou-layout="stack gap-1 center">
         <p data-suisou-text="fs-14 fw-700">声を送るにはログインが必要です</p>
-        <p data-suisou-text="fs-12 doc" class="sub">
+        <p data-suisou-text="fs-12" class="sub doc">
           Blueskyアカウントでログインして声を送りましょう。
           送り主はオーナーのみに開示されます。
         </p>

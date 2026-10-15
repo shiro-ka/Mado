@@ -64,7 +64,7 @@
       <span class="accent">想いを届けよう</span>
     </h1>
 
-    <p data-suisou-text="fs-16 s:fs-20 doc" class="lead">
+    <p data-suisou-text="fs-16 s:fs-20" class="lead doc">
       Madoは、Blueskyアカウントを使った半匿名の窓です。
       送り主は窓のオーナーだけに届き、暗号化によって守られます。
     </p>
@@ -89,7 +89,7 @@
     <Shield data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="warning" />
     <div data-suisou-item="media-content">
       <p data-suisou-text="fs-14 fw-700" class="warn">半匿名性についてのご説明</p>
-      <p data-suisou-text="fs-14 doc">
+      <p data-suisou-text="fs-14" class="doc">
         このサービスは<strong>完全匿名ではありません</strong>。
         声を送信するにはBlueskyアカウントでのログインが必要です。
         あなたのDIDとハンドルは声に暗号化された形で含まれ、
@@ -108,12 +108,12 @@
       <p data-suisou-text="fs-14 s:fs-16" class="sub">安全で信頼できる窓を実現する3つの柱</p>
     </div>
 
-    <div data-suisou-layout="stack md:even gap-3" class="cards">
+    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cards">
       {#each features as feat}
         <div data-suisou-tray data-suisou-layout="stack" class="card">
           <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
           <h3 data-suisou-text="fs-16 fw-700">{feat.title}</h3>
-          <p data-suisou-text="fs-14 doc" class="sub">{feat.description}</p>
+          <p data-suisou-text="fs-14" class="sub doc">{feat.description}</p>
         </div>
       {/each}
     </div>
@@ -128,7 +128,7 @@
       <p data-suisou-text="fs-14 s:fs-16" class="sub">3ステップで始められます</p>
     </div>
 
-    <div data-suisou-layout="stack md:even gap-3" class="cards">
+    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cards">
       {#each steps as step}
         <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
           <span class="tile">
@@ -137,7 +137,7 @@
           </span>
           <div data-suisou-layout="stack gap-1 center">
             <h3 data-suisou-text="fs-16 fw-700">{step.title}</h3>
-            <p data-suisou-text="fs-14 doc" class="sub">{step.description}</p>
+            <p data-suisou-text="fs-14" class="sub doc">{step.description}</p>
           </div>
         </div>
       {/each}

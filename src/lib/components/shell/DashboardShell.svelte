@@ -28,14 +28,14 @@
 <!-- 画面の骨格。区画の名前は Suisou が持つ（aside / body）。
      :has() で aside の有無を見て列を畳むので、狭い画面では
      aside を消すだけで1列になる ―― ここで grid を書き直す必要がない。 -->
-<div data-suisou-layout="frame gap-0" class="frame">
+<div class="frame">
   <!-- Desktop sidebar -->
-  <aside data-suisou-layout="aside stack scroll" data-suisou="bd-end" class="side">
+  <aside data-suisou-layout="stack" data-suisou="bd-end scroll-y" class="side">
     <Sidebar {session} />
   </aside>
 
   <!-- Mobile topbar -->
-  <div data-suisou-layout="head row" data-suisou="bd-bottom" class="topbar">
+  <div data-suisou-layout="row" data-suisou="bd-bottom" class="topbar">
     <!-- ★popovertarget だけで開く。JS は1行も要らない（Suisou 掟4）。
          ESC・外側クリック・フォーカスの閉じ込め・重なり順・膜は全部ブラウザの仕事。
          自前で持つと焦点トラップ／Escape／スクロール錠／フォーカス復帰で 50 行を超える。 -->
@@ -51,7 +51,8 @@
     id="nav-drawer"
     popover
     data-suisou-tray="drawer left"
-    data-suisou-layout="stack scroll"
+    data-suisou-layout="stack"
+    data-suisou="scroll-y"
     aria-label="ナビゲーション"
     style="--suisou-size-drawer: 18rem"
   >
@@ -59,7 +60,7 @@
   </div>
 
   <!-- Main content -->
-  <main bind:this={mainEl} data-suisou-layout="body scroll">
+  <main bind:this={mainEl} data-suisou="scroll-y" class="body">
     {#if children}
       {@render children()}
     {/if}
@@ -74,15 +75,24 @@
          当たったままなので、0 にしないと畳んだ側に 8px の帯が残る
          （Suisou への申し送り）。 */
   .frame {
+    display: grid;
+    grid-template-areas: "side head" "side body";
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
     height: 100dvh;
     overflow: hidden;
   }
+  .body {
+    grid-area: body;
+  }
 
   .side {
+    grid-area: side;
     width: 16rem;
     background: var(--suisou-color-panel);
   }
   .topbar {
+    grid-area: head;
     padding-inline: var(--suisou-space-3);
     height: 3.5rem;
     background: var(--suisou-color-panel);

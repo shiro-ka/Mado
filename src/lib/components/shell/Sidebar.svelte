@@ -31,7 +31,7 @@
 </div>
 
 <!-- Navigation -->
-<nav data-suisou-layout="stack grow scroll" class="nav">
+<nav data-suisou-layout="stack grow" data-suisou="scroll-y" class="nav">
   <div data-suisou-layout="stack">
     {#each navItems as item}
       {@const active = currentPath === item.href}

@@ -17,12 +17,12 @@
       <Home data-suisou-text="fs-20" data-suisou="accent" />
       <h1 data-suisou-text="fs-24 fw-700">ホーム</h1>
     </div>
-    <div data-suisou-layout="even gap-3" class="row">
+    <div data-suisou-layout="grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="row">
       {#each Array(3) as _}
         <Skeleton height="5.5rem" heightWide="6.5rem" />
       {/each}
     </div>
-    <div data-suisou-layout="stack md:even gap-3" class="row">
+    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))" class="row">
       <Skeleton height="13rem" />
       <Skeleton height="13rem" />
     </div>

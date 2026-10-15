@@ -21,9 +21,15 @@
   <!-- 画面の骨格。区切りは罫がやるのですきまは持たない（gap-0） -->
   <div data-suisou-layout="stack gap-0" data-suisou="min-screen">
     <Header {session} />
-    <main data-suisou-layout="stack grow">
+    <main data-suisou-layout="stack" class="main">
       {@render children()}
     </main>
     <Footer />
   </div>
 {/if}
+
+<style>
+  .main {
+    flex: 1 0 auto;
+  }
+</style>

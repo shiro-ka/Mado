@@ -19,6 +19,10 @@
 /* ★html は data-suisou-root を持たない（付くのは body）ので、ここは現場が持つ。
    スクロールバーの溝やモバイルのアドレスバーの裏に、ブラウザ既定の白いキャンバスが
    覗くのを防ぐ。無いと、バーが出た瞬間に右下へ白い帯が走る。 */
+.doc {
+  line-height: calc(var(--suisou-type-lh) + 0.25rem);
+}
+
 html {
   background-color: var(--suisou-color-bg);
 }
