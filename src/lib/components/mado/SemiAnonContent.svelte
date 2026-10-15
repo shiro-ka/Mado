@@ -30,8 +30,6 @@
     </p>
   </div>
 
-  <!-- ★手書きの琥珀色の箱 → Suisou の banner="warning"。
-       枠・下地・文字色の組は solve.py が検証済みのものに置き換わる。 -->
   <div data-suisou-item="notice media" data-suisou="warning">
     <Shield data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="warning" />
     <p data-suisou-item="media-content" data-suisou-text="fs-14" class="doc">
@@ -48,8 +46,6 @@
         <span data-suisou-item="square"><row.icon data-suisou-text="fs-20" data-suisou={row.tone} /></span>
         <div data-suisou-item="media-content">
           <p data-suisou-text="fs-14 fw-700">{row.title}</p>
-          <!-- ★しるしはブラウザに任せる（data-suisou-list）。"•" を
-               span で手書きしていて、読み上げから「箇条書き」の意味が消えていた。 -->
           <ul data-suisou-text="fs-14" class="sub list">
             {#each row.items as item}
               <li>{item}</li>

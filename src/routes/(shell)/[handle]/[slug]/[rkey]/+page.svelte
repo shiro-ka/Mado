@@ -16,8 +16,6 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mado" />
   <meta property="og:title" content={`${data.ownerName} への声 - Mado 半匿名メッセージ`} />
-  <!-- No og:description: the OG image already renders the question body in full,
-       so a text caption would just duplicate it. Image-only card reads cleaner. -->
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
   <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
   <meta property="og:image:width" content="1200" />
@@ -36,7 +34,6 @@
     </a>
   </div>
 
-  <!-- 声 -->
   <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
     <div data-suisou-layout="row between">
       <span data-suisou-item="tag" data-suisou={data.question.isRead ? undefined : "accent"}>
@@ -93,7 +90,6 @@
     {/if}
   </div>
 
-  <!-- 回答 -->
   {#if data.answers.length > 0}
     <div data-suisou-layout="stack gap-3" class="group">
       <h2 data-suisou-text="fs-14 fw-700">回答済み（{data.answers.length}件）</h2>
@@ -121,7 +117,6 @@
       />
     </div>
 
-    <!-- 取り返しのつかない操作。手書きの赤い面 → banner="error" -->
     <div data-suisou-item="notice" data-suisou-layout="stack s:row" data-suisou="error" class="danger">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
@@ -159,5 +154,4 @@
     margin-inline-start: auto;
     color: var(--suisou-color-text-sub);
   }
-
 </style>

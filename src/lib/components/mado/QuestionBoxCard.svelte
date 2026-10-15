@@ -61,8 +61,6 @@
     border-color: var(--suisou-color-line-strong);
   }
 
-  /* ★アイコンの下地。Suisou は塗らない主義なので、面ではなく item の段 + 罫で置く。
- */
   .glyph {
     display: grid;
     place-items: center;
@@ -87,8 +85,6 @@
     color: var(--suisou-color-text);
   }
 
-  /* 件数は行の末尾へ。★鍵アイコンは独立した span をやめて tag の中に入れた ――
-     「受付中」と鍵が別々に並んでいて、同じことを2回言っていた。 */
   .count {
     margin-inline-start: auto;
     color: var(--suisou-color-text-sub);

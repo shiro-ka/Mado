@@ -76,8 +76,6 @@
       return true;
     })}
 
-    <!-- ★タブがリンクなので状態は aria-current="page"（リンクの正しい ARIA）。
-         Suisou の Button がこれを見るので、現場で打ち消さないこと。 -->
     <div data-suisou-tray data-suisou-layout="row gap-0">
       {#each tabs as t}
         <a
@@ -141,8 +139,6 @@
     height: 2.25rem;
   }
 
-  /* Suisou の spinner は「いつ終わるか分からない」もの用。ここは更新ボタンの
-     アイコンが回るだけなので、部品ではなく現場の動き。 */
   :global(.spin) {
     animation: spin 800ms linear infinite;
   }

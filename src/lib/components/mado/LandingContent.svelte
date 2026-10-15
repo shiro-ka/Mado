@@ -50,8 +50,6 @@
   ];
 </script>
 
-<!-- Hero
-     見出しは s28 md:s32 ＝ Suisou のスケール（12/14/16/20/24/28/32）の上限。 -->
 <section data-suisou-layout="stack" class="hero">
   <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container" class="hero-inner">
     <span data-suisou-item="tag" data-suisou="accent">
@@ -83,7 +81,6 @@
   </div>
 </section>
 
-<!-- Semi-anonymous disclosure -->
 <section class="band">
   <div data-suisou-item="notice media" data-suisou="warning container">
     <Shield data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="warning" />
@@ -100,7 +97,6 @@
   </div>
 </section>
 
-<!-- Features -->
 <section id="features" class="band">
   <div data-suisou-layout="stack gap-4" data-suisou="container" class="block">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
@@ -120,7 +116,6 @@
   </div>
 </section>
 
-<!-- How it works -->
 <section id="how-it-works" class="band">
   <div data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="container" class="block pad">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
@@ -145,8 +140,6 @@
   </div>
 </section>
 
-<!-- CTA
-     Suisou は「塗らない」「影は持たない」ので、面 + accent の罫で立てる。 -->
 <section class="band">
   <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="container" class="cta-box">
     <Send data-suisou-text="fs-20" data-suisou="accent" class="cta-icon" />

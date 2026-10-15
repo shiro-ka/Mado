@@ -71,9 +71,6 @@
 </script>
 
 {#if formState === "success"}
-  <!-- ★Suisou の banner。banner.css には「wixdex の3現場が同じ箱を手書きしていて
-       3回ルールで昇格した」とある ―― Mado も同じ箱を手書きしていた。
-       意味（role）は CSS では足せないので現場が書く、というのが Suisou の約束。 -->
   <div data-suisou-item="notice" data-suisou-layout="stack" data-suisou-text="center" data-suisou="success" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">

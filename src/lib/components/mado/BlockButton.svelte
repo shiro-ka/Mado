@@ -19,8 +19,6 @@
     | "block-error"
     | "unblock-error";
 
-  // Seed from the server so the button reflects the real block state on load
-  // (previously it always started "idle" and forgot after a navigation).
   let state = $state<State>(untrack(() => (isBlocked ? "blocked" : "idle")));
 
   async function block() {
@@ -45,7 +43,6 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ senderDid }),
       });
-      // On failure, surface it instead of pretending the user is still blocked.
       state = res.ok ? "idle" : "unblock-error";
     } catch {
       state = "unblock-error";
@@ -60,7 +57,6 @@
 
 {#if state === "blocked" || state === "unblocking" || state === "unblock-error"}
   <div data-suisou-layout="row wrap" class="bar">
-    <!-- 状態のしるしであって押せるものではないので Tag -->
     <span data-suisou-item="tag">
       <CheckCircle2 />
       ブロック中

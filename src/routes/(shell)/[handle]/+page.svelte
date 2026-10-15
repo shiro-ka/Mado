@@ -29,7 +29,6 @@
 {/snippet}
 
 {#if data.isOwner}
-  <!-- Owner: manage view — profile + box list with the main box pinned -->
   <div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
     {#await data.detail}
       <Skeleton height="7rem" />
@@ -88,8 +87,6 @@
       {:else}
         <div data-suisou-layout="stack gap-3" class="items">
           {#each detail.openBoxes as box}
-            <!-- ★重ねていた「停止中」タグを外した。QuestionBoxCard が既に
-                 受付中／受付停止 を出しており、同じことを2回言っていた。 -->
             <div class="slot">
               <QuestionBoxCard
                 {box}
@@ -112,7 +109,6 @@
     {/await}
   </div>
 {:else}
-  <!-- Visitor: send view — main box send form, then the other Mado below -->
   <div data-suisou-layout="stack gap-3" data-suisou="container" class="page narrow">
     {#await data.detail}
       <Skeleton height="16rem" />
@@ -171,7 +167,6 @@
     color: var(--suisou-color-accent);
   }
 
-  /* 設定への近道。カードの上に重ねるので、位置だけ現場が持つ */
   .slot {
     position: relative;
   }

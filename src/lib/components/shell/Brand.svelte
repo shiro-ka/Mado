@@ -1,9 +1,4 @@
 <script lang="ts">
-  // Shared Mado wordmark (logo + "Mado" + optional beta badge). Presentational
-  // only — callers wrap it in their own <a>/onclick so link targets stay local.
-  //
-  // ★寸法は Suisou の段（12/14/16/20/24/28/32）に乗せる。18 は段に無いので s20。
-  //   ロゴの実寸だけは Suisou に語彙が無いので scoped style で持つ。
   interface Props {
     size?: "sm" | "md" | "lg";
     beta?: boolean;

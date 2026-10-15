@@ -19,12 +19,10 @@
 
 <header data-suisou="bd-bottom" class="bar">
   <div data-suisou-layout="row between" class="inner">
-    <!-- Logo -->
     <a href="/" class="group">
       <Brand size="lg" beta />
     </a>
 
-    <!-- Nav links (desktop) -->
     <nav data-suisou-layout="row" class="links">
       {#each navLinks as link}
         <a href={link.href}>
@@ -33,7 +31,6 @@
       {/each}
     </nav>
 
-    <!-- Auth CTA + mobile menu toggle -->
     <div data-suisou-layout="row">
       {#if session}
         <a href="/home">
@@ -44,7 +41,6 @@
           <Button variant="default">ログイン</Button>
         </a>
       {/if}
-      <!-- popovertarget だけで開閉。ESC・外側クリックはブラウザの仕事 -->
       <button
         data-suisou-button="icon"
         class="burger"
@@ -56,7 +52,6 @@
     </div>
   </div>
 
-  <!-- Mobile nav panel。ドロワーではなく上に降りるシートなので overlay のまま -->
   <nav id="site-nav" popover data-suisou-tray data-suisou-layout="stack" class="sheet">
     {#each navLinks as link}
       <a href={link.href} data-suisou-button="block">{link.label}</a>
@@ -78,7 +73,6 @@
     padding-inline: var(--suisou-space-3);
     height: 4rem;
   }
-  /* 狭い画面ではリンクを畳んでハンバーガーに寄せる */
   @media (max-width: 767px) {
     .links {
       display: none;
@@ -89,7 +83,6 @@
       display: none;
     }
   }
-  /* シートは画面幅いっぱいで上から。位置だけ現場が決める */
   .sheet {
     position: fixed;
     inset: 4rem 0 auto 0;

@@ -12,10 +12,8 @@
 
   let { data }: { data: PageData } = $props();
 
-  // Share/OG label: prefer the owner's display name, fall back to the handle.
   const ownerName = $derived(data.ownerProfile?.displayName || data.cleanHandle);
 
-  // Owner settings form state
   type FormState = "idle" | "submitting" | "error" | "deleting";
   let title = $state(untrack(() => data.box.title));
   let description = $state(untrack(() => data.box.description ?? ""));
@@ -24,11 +22,6 @@
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
 
-  // SvelteKit reuses this component instance across same-route navigations
-  // (e.g. /@me/boxA → /@me/boxB), so $state would keep showing boxA's values —
-  // and a save would overwrite boxB with them. Re-seed the form whenever the
-  // box identity changes. Keyed on rkey so it does NOT clobber in-progress
-  // edits on invalidateAll() (same box), only on an actual box switch.
   let seededRkey = $state(untrack(() => data.box.rkey));
   $effect(() => {
     if (data.box.rkey !== seededRkey) {
@@ -65,8 +58,6 @@
         throw new Error(d.message ?? "更新に失敗しました");
       }
       formState = "idle";
-      // The slug is the URL, so a change moves this page — navigate to the new
-      // address before revalidating (the old /@handle/<oldslug> no longer resolves).
       if (slugChanged) {
         await goto(`/@${data.cleanHandle}/${nextSlug}`);
       }
@@ -96,10 +87,8 @@
   }
 
   const isBusy = $derived(formState === "submitting" || formState === "deleting");
-  // Instant client-side format check (same rules as the server's slugSchema).
   const slugErr = $derived(slugFormatError(slug));
 
-  // Shareable public URL of this box (the core "share to get questions" link).
   const publicUrl = $derived(`${data.origin}/@${data.cleanHandle}/${data.box.slug}`);
   const publicUrlDisplay = $derived(publicUrl.replace(/^https?:\/\//, ""));
   let copied = $state(false);
@@ -109,12 +98,9 @@
       copied = true;
       setTimeout(() => (copied = false), 2000);
     } catch {
-      // Clipboard API unavailable (insecure context / permissions) — no-op;
-      // the URL is still visible for manual copy.
     }
   }
 
-  // Promote this box to the owner's main Mado.
   let settingMain = $state(false);
   async function handleSetMain() {
     if (settingMain || data.isMain) return;
@@ -233,7 +219,6 @@
       </form>
     </div>
 
-    <!-- 公開URL -->
     <div data-suisou-tray data-suisou-item="media" class="strip">
       <Lock data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
       <div data-suisou-item="media-content">
@@ -241,8 +226,6 @@
         <p data-suisou-text="fs-14" class="url">{publicUrlDisplay}</p>
       </div>
       <div data-suisou-item="media-tail">
-        <!-- ★コピー済みの状態は aria-pressed。Suisou の Button が持っている語なので、
-             手書きの3色分岐（bg/border/text を green に差し替え）が消えた。 -->
         <Button
           variant="secondary"
           aria-pressed={copied}
@@ -257,7 +240,6 @@
       </div>
     </div>
 
-    <!-- メインMado -->
     <div data-suisou-tray data-suisou-item="media" class="strip">
       <Pin data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
       <div data-suisou-item="media-content">

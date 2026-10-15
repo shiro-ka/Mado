@@ -62,9 +62,6 @@
   </div>
 {:else}
   <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
-    <!-- ★送り主の開示。Suisou の banner は error / warning / success の3つで、
-         「お知らせ」の段を持たない（結果を知らせる帯として作られているため）。
-         ここは面 + accent の罫で置いている。→ 申し送り（dev/todo/mado-suisou-ui.md） -->
     <div data-suisou-item="media" class="notice">
       <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />
       <p data-suisou-item="media-content" data-suisou-text="fs-14">

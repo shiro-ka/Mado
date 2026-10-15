@@ -6,7 +6,6 @@
 <footer data-suisou="bd-top" class="foot">
   <div data-suisou-layout="stack gap-4" data-suisou="container" class="inner">
     <div data-suisou-layout="stack s:grid gap-4" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cols">
-      <!-- Brand -->
       <div data-suisou-layout="stack">
         <Brand size="lg" />
         <p data-suisou-text="fs-14" class="sub">
@@ -14,7 +13,6 @@
         </p>
       </div>
 
-      <!-- Links -->
       <div data-suisou-layout="stack">
         <h4 data-suisou-text="fs-14 fw-700">リンク</h4>
         <div data-suisou-layout="stack">
@@ -26,7 +24,6 @@
         </div>
       </div>
 
-      <!-- Legal / Info -->
       <div data-suisou-layout="stack">
         <h4 data-suisou-text="fs-14 fw-700">情報</h4>
         <div data-suisou-layout="stack">

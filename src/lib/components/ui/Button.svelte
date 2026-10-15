@@ -2,16 +2,6 @@
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
   import type { WithElementRef } from "$lib/utils.js";
 
-  /* Suisou の Button に乗せる薄い層。
-     variant の対応 ―― Suisou は塗らない（線形デザイン）ので:
-       default     → outline   目的の一本。塗りの CTA はアクセント色の枠に
-       secondary   → plain     罫だけで立つ
-       outline     → plain
-       ghost       → 基本形     幽霊。hover で下地
-       destructive → danger
-
-     ★大きさの段は持たない。Suisou の Button は1段しかなく、詰めの差は
-       余白の段が吸う。本当に困る場所が3回出たら Suisou 側に相談する。 */
   export type ButtonVariant = "default" | "outline" | "secondary" | "ghost" | "destructive";
 
   const VARIANT_MAP: Record<ButtonVariant, [string, string]> = {
@@ -25,9 +15,7 @@
   export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
     WithElementRef<HTMLAnchorAttributes> & {
       variant?: ButtonVariant;
-      /** アイコン1つだけの正方形のボタン。Suisou の button="icon" */
       icon?: boolean;
-      /** 全幅の CTA。Suisou の button="wide" */
       wide?: boolean;
       loading?: boolean;
       leftIcon?: import("svelte").Snippet;
@@ -70,7 +58,6 @@
     {...restProps}
   >
     {#if loading}
-      <!-- 読み込み中は Suisou の Spinner。回転アイコンより意味が乗る -->
       <progress data-suisou-loading="small" aria-label="処理中"></progress>
     {:else if leftIcon}
       {@render leftIcon()}

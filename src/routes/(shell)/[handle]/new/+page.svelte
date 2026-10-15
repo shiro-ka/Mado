@@ -19,9 +19,7 @@
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
 
-  // Live preview of the box's public URL. Empty slug → auto-generated on save.
   const slugPreview = $derived(slug.trim().toLowerCase() || "（自動生成）");
-  // Instant client-side format check (same rules as the server's slugSchema).
   const slugErr = $derived(slugFormatError(slug));
 
   async function handleSubmit(e: SubmitEvent) {

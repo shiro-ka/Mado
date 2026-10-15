@@ -51,8 +51,6 @@
       });
       if (!res.ok) throw new Error();
     } catch {
-      // Revert the optimistic mark so the UI doesn't claim "read" when the
-      // server never recorded it.
       const next = new Set(readSet);
       next.delete(key);
       readSet = next;
@@ -78,7 +76,6 @@
 </script>
 
 <div data-suisou-layout="stack gap-3" class="list">
-  <!-- タブは button-group="even" + aria-pressed。押された段は Suisou が出す -->
   <div data-suisou-tray data-suisou-layout="row gap-0">
     {#each tabs as t}
       <button
@@ -180,7 +177,6 @@
     padding-block: var(--suisou-space-4);
   }
 
-  /* 返信が来ていて未読のものだけ罫を accent にする（QuestionCard と同じ扱い） */
   .item.fresh {
     border-color: var(--suisou-color-accent);
   }

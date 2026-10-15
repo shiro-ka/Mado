@@ -23,20 +23,16 @@
   const currentPath = $derived(page.url.pathname);
 </script>
 
-<!-- Logo -->
 <div data-suisou-layout="row" data-suisou="bd-bottom" class="brandbar">
   <a href="/home" onclick={onNavigate}>
     <Brand size="md" />
   </a>
 </div>
 
-<!-- Navigation -->
 <nav data-suisou-layout="stack grow" data-suisou="scroll-y" class="nav">
   <div data-suisou-layout="stack">
     {#each navItems as item}
       {@const active = currentPath === item.href}
-      <!-- メニューの行 ＝ block ボタン（左寄せ・縦8横16）。
-           現在地は aria-current で示し、下地は Suisou が出す -->
       <a
         href={item.href}
         onclick={onNavigate}
@@ -51,7 +47,6 @@
   </div>
 </nav>
 
-<!-- User info -->
 <UserCard {session} />
 
 <style>

@@ -1,8 +1,6 @@
 <script lang="ts">
   import { Eye, Lock, Globe, MessageCircle } from "lucide-svelte";
 
-  // ★色は Suisou の閉じた集合（data-suisou-icon の値）で持つ。
-  //   生の色名をデータに埋めないこと ―― 色を決めるのは solve.py だけ。
   const features = [
     {
       icon: Eye, tone: "accent",
@@ -54,8 +52,6 @@
 </div>
 
 <style>
-  /* ★読む幅は container に任せ、上限だけ現場が決める。Suisou が --suisou-drawer や
-     --suisou-spinner で「実寸は現場のもの」としているのと同じやり方。 */
   .page {
     max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);

@@ -8,14 +8,12 @@
 
   let { data }: { data: PageData } = $props();
 
-  // Seed local optimistic state from the server load; mutated directly on
-  // follow / toggle so the UI reacts instantly, then reconciled via invalidateAll.
   let followed = $state(untrack(() => data.following));
   let enabled = $state(untrack(() => data.dmEnabled));
 
-  let following = $state(false); // follow request in flight
+  let following = $state(false);
   let followError = $state(false);
-  let saving = $state(false); // toggle persist in flight
+  let saving = $state(false);
   let toggleError = $state(false);
 
   const profileUrl = $derived(
@@ -30,7 +28,6 @@
       const res = await fetch("/api/notifications/follow", { method: "POST" });
       if (res.ok) {
         followed = true;
-        // Refresh server-side viewer state so a reload stays consistent.
         await invalidateAll();
       } else {
         followError = true;
@@ -53,7 +50,6 @@
       });
       if (!res.ok) throw new Error();
     } catch {
-      // Revert the optimistic flip on failure.
       enabled = !next;
       toggleError = true;
     } finally {
@@ -82,8 +78,6 @@
       </p>
     </div>
   {:else}
-    <!-- ★bleed で面の余白を落とし、中の行が自分で余白を持つ形。
-         Suisou の「行が自分で余白を持つ一覧」の使い方そのもの。 -->
     <div data-suisou-tray data-suisou="p-0" class="card">
       <div data-suisou-item="media" class="row">
         <Bell data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />

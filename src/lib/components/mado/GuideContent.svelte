@@ -55,7 +55,6 @@
     color: var(--suisou-color-text-sub);
   }
 
-  /* 手順の番号。タイルの角に小さく載せる */
   .step {
     position: relative;
     flex: none;

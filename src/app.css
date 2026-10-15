@@ -1,24 +1,3 @@
-/* Mado のグローバル CSS。
-
-   ここに残るのは「ページそのもの」の見た目だけ。部品の見た目は
-   Suisou（app.html が読む /v1/suisou.css）と、各コンポーネントの scoped style。
-
-   ★色の受け渡しの段を作らないこと。以前は --suisou-* → Mado の意味変数 →
-     shadcn のトークン → …と4段あり、その中身はほぼ受け渡しだけだった。
-     部品も画面も Suisou の属性を直に着る。
-
-   ★ダーク一本。ライト用の値を足しても body には届かない ――
-     body は data-suisou-root を持つので、Suisou の
-     `[data-suisou-root] { background; color }` が詳細度で勝つ（0,1,0 対 0,0,1）。
-     html だけは data-suisou-root を持たないので、ここに書いた値が**本当に効く**
-     （スクロールバーの溝に出る）。--suisou-bg 以外を入れない。
-
-   ★Suisou の `background:` はショートハンドなので background-image を none に潰す。
-     装飾のグラデーションは載らない（塗らない・線形の設計なので元々相性が悪い）。 */
-
-/* ★html は data-suisou-root を持たない（付くのは body）ので、ここは現場が持つ。
-   スクロールバーの溝やモバイルのアドレスバーの裏に、ブラウザ既定の白いキャンバスが
-   覗くのを防ぐ。無いと、バーが出た瞬間に右下へ白い帯が走る。 */
 .doc {
   line-height: calc(var(--suisou-type-lh) + 0.25rem);
 }
@@ -27,14 +6,10 @@ html {
   background-color: var(--suisou-color-bg);
 }
 
-/* ★body の見た目は Suisou が持つ（[data-suisou-root] の background / color /
-   font-family / scrollbar-*）。ここに書いても詳細度で負けるので書かない。
-   残すのは Suisou が持たない「高さ」だけ。 */
 body {
   min-height: 100dvh;
 }
 
-/* 選択範囲。Suisou は擬似要素を持たないので現場のもの。値はトークンから引く。 */
 ::selection {
   background: var(--suisou-color-accent-tint);
   color: var(--suisou-color-text);

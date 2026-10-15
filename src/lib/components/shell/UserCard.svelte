@@ -12,7 +12,6 @@
 <div data-suisou-layout="stack" data-suisou="bd-top" class="card">
   <div data-suisou-layout="row">
     {#if session.avatar}
-      <!-- 画像も頭文字も同じ部品が受ける。円形＝人という約束ごと Suisou に -->
       <img src={session.avatar} alt={session.handle} data-suisou-item="circle" />
     {:else}
       <div data-suisou-item="circle">{session.handle[0]?.toUpperCase() ?? "?"}</div>

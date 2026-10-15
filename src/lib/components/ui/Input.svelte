@@ -1,28 +1,16 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from "svelte/elements";
 
-  /* ラベル・エラー・補足を連れた input。枠・下地・焦点の輪・invalid の赤枠は
-     Suisou の field が持つ。
-
-     ★leftAddon / rightAddon（Snippet を絶対配置で重ねて padding で逃げる仕組み）は捨てた。
-       実測で rightAddon は 0 件、leftAddon は login の @ アイコン 1 件だけ。
-       しかもそれは Suisou が語彙を持っている形 ―― button-group の中に affix
-       （押せず書けない文字）を置く、URL の接頭辞と同じ idiom。
-       任意の Snippet を重ねる穴より、文字列 1 つを受ける prefix の方が狭くて強い。 */
 
   interface Props extends Omit<HTMLInputAttributes, "class"> {
     label?: string;
     error?: string;
     helper?: string;
-    /** 入力欄の手前に置く、押せず書けない文字（"@" など）。 */
     prefix?: string;
   }
 
   let { label, error, helper, prefix, id, value = $bindable(""), ...restProps }: Props = $props();
 
-  // Unique, hydration-stable fallback id. Deriving from the label text (as
-  // before) produced duplicate ids when two fields shared a label, breaking
-  // label/for association and focus.
   const uid = $props.id();
   const inputId = $derived(id ?? (label ? `${uid}-input` : undefined));
 </script>
@@ -33,9 +21,6 @@
   {/if}
 
   {#if prefix}
-    <!-- ★even は「等分」の語だが、ここで欲しいのは幅いっぱい。button-group の既定が
-         inline-flex なので、全幅にする語が even しか無くて借りている。
-         Suisou 側に block か wide が要る。 -->
     <div data-suisou-item="field">
       <span>{prefix}</span>
       <input

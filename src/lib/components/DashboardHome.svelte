@@ -47,8 +47,6 @@
     </div>
   {/if}
 
-  <!-- ★数字の色分け（青/緑）はやめた。3枚とも同じ「数」なので、色に意味が無く
-       Suisou の意味色（success/warning/error）とも食い違っていた。 -->
   <div data-suisou-layout="grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="stats">
     {#each [
       { label: "開いた窓", value: boxes.length, unit: "個" },
@@ -66,7 +64,6 @@
   </div>
 
   <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))" class="panes">
-    <!-- 窓 -->
     <div data-suisou-tray data-suisou-layout="stack gap-3" class="pane">
       <div data-suisou-layout="row between">
         <div data-suisou-layout="row">
@@ -82,7 +79,6 @@
       </div>
 
       {#if boxes.length === 0}
-        <!-- ★空表示は surface="empty"（破線）。Suisou には Mado の4現場から昇格した値。 -->
         <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
           <p data-suisou-text="fs-14" class="sub">まだ窓がありません</p>
           <a href={`/@${session.handle}/new`}>
@@ -106,7 +102,6 @@
       {/if}
     </div>
 
-    <!-- 受信トレイ -->
     <div data-suisou-tray data-suisou-layout="stack gap-3" class="pane">
       <div data-suisou-layout="row between">
         <div data-suisou-layout="row">

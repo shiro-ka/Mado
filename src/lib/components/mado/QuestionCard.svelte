@@ -14,9 +14,6 @@
   const href = $derived(hrefProp ?? `/receive`);
 </script>
 
-<!-- ★面（下地・罫・角丸・余白）は surface="panel"、並びは media。
-     Suisou は「面は並べ方を持たない」ので同じ要素に2つ書ける ――
-     panel の中に flex の箱を作る、という段が1つ消える。 -->
 <a {href} class="link">
   <div
     data-suisou-tray
@@ -68,7 +65,6 @@
   .card {
     transition: border-color var(--suisou-duration-fast) var(--suisou-ease);
   }
-  /* 未読は罫で示す。Suisou に「未読の面」は無いので、面の機能の線を accent に差し替える。 */
   .card.unread {
     border-color: var(--suisou-color-accent);
   }

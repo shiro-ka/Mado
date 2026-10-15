@@ -4,7 +4,6 @@
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
 
-  // Structural subset of atproto's ProfileViewDetailed — only the fields shown.
   interface OwnerProfile {
     handle?: string;
     displayName?: string;
@@ -27,7 +26,6 @@
 </script>
 
 <div data-suisou-layout="stack gap-3" class="view">
-  <!-- オーナー。アバターは Suisou の avatar（円＝人・主体）。 -->
   <div data-suisou-item="media">
     {#if ownerProfile?.avatar}
       <img
@@ -56,7 +54,6 @@
     </div>
   </div>
 
-  <!-- 窓の情報 -->
   <div data-suisou-tray data-suisou-layout="stack" class="box">
     <div data-suisou-layout="row wrap">
       <h1 data-suisou-text="fs-20 fw-700">{box.title}</h1>

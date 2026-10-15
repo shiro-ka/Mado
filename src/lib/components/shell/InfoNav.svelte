@@ -16,7 +16,6 @@
   ];
 
   const currentPath = $derived(page.url.pathname);
-  // Start expanded when the user is already on one of these pages.
   let open = $state(untrack(() => items.some((i) => i.href === page.url.pathname)));
 </script>
 
@@ -52,8 +51,6 @@
 </div>
 
 <style>
-
-  /* 入れ子のぶんだけ字下げ。字下げの幅は現場のもの */
   .sub {
     padding-inline-start: var(--suisou-space-3);
   }

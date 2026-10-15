@@ -1,13 +1,6 @@
 <script lang="ts">
   import type { HTMLTextareaAttributes } from "svelte/elements";
 
-  /* ラベル・文字数・エラーを連れた textarea。
-
-     ★入力欄そのものは Suisou の field。shadcn の textarea ラッパ（ui/textarea/）を
-       挟んでいたのをやめた ―― 同じ「入力欄」を2枚で持っていて、余白と罫が両方に
-       書いてあった。ラッパごと削除。
-
-     ★構造は data-suisou-layout に任せる。すきまは Suisou の間合い（8px）。 */
 
   interface Props extends Omit<HTMLTextareaAttributes, "class"> {
     label?: string;
@@ -27,8 +20,6 @@
     ...restProps
   }: Props = $props();
 
-  // Unique, hydration-stable fallback id (avoids duplicate ids when two fields
-  // share a label — that breaks label/for association and focus).
   const uid = $props.id();
   const inputId = $derived(id ?? (label ? `${uid}-textarea` : undefined));
   const charCount = $derived(typeof value === "string" ? value.length : 0);
