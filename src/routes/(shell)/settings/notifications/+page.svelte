@@ -66,34 +66,34 @@
   <title>通知設定 | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack container gap-3" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
   <div data-suisou-layout="stack gap-1" class="head">
-    <h1 data-suisou-text="s24 w700">通知設定</h1>
-    <p data-suisou-text="s14" class="sub">
+    <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
+    <p data-suisou-text="fs-14" class="sub">
       新しい声が届いたときのお知らせ方法を設定します
     </p>
   </div>
 
   {#if !data.configured}
-    <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
-      <Bell data-suisou-icon="sub" class="big" />
-      <p data-suisou-text="s14" class="sub">
+    <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
+      <Bell data-suisou-text="fs-20" data-suisou="sub" class="big" />
+      <p data-suisou-text="fs-14" class="sub">
         DM通知は現在準備中です。もうしばらくお待ちください。
       </p>
     </div>
   {:else}
     <!-- ★bleed で面の余白を落とし、中の行が自分で余白を持つ形。
          Suisou の「行が自分で余白を持つ一覧」の使い方そのもの。 -->
-    <div data-suisou-surface="panel bleed" class="card">
-      <div data-suisou-media class="row">
-        <Bell data-suisou-icon="accent" data-suisou-media-icon />
-        <div data-suisou-media-content>
-          <p data-suisou-text="s16 w700">新着をDMで受け取る</p>
-          <p data-suisou-text="s14 doc" class="sub">
+    <div data-suisou-tray data-suisou="p-0" class="card">
+      <div data-suisou-item="media" class="row">
+        <Bell data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />
+        <div data-suisou-item="media-content">
+          <p data-suisou-text="fs-16 fw-700">新着をDMで受け取る</p>
+          <p data-suisou-text="fs-14 doc" class="sub">
             mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
           </p>
         </div>
-        <div data-suisou-media-tail>
+        <div data-suisou-item="media-tail">
           <Toggle
             bind:checked={enabled}
             disabled={!followed || saving}
@@ -104,17 +104,17 @@
       </div>
 
       {#if toggleError}
-        <p data-suisou-layout="row" data-suisou-text="s12" class="err row" role="alert">
-          <AlertCircle data-suisou-icon="small" />
+        <p data-suisou-layout="row" data-suisou-text="fs-12" class="err row" role="alert">
+          <AlertCircle data-suisou-text="fs-16" />
           設定の保存に失敗しました。時間をおいて再試行してください。
         </p>
       {/if}
 
       {#if !followed}
-        <div data-suisou-layout="stack" data-suisou-rule="top" class="row foot">
-          <div data-suisou-media>
-            <AlertCircle data-suisou-icon="sub" data-suisou-media-icon />
-            <p data-suisou-media-content data-suisou-text="s14 doc" class="sub">
+        <div data-suisou-layout="stack" data-suisou="bd-top" class="row foot">
+          <div data-suisou-item="media">
+            <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="sub" />
+            <p data-suisou-item="media-content" data-suisou-text="fs-14 doc" class="sub">
               通知を受け取るには、先に公式アカウントのフォローが必要です。
               <span class="sub">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
             </p>
@@ -126,27 +126,26 @@
             </Button>
             <a
               data-suisou-layout="row"
-              data-suisou-text="s14"
-              data-suisou-link
+              data-suisou-text="fs-14 link"
               class="sub"
               href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
               bsky.appで開く
-              <ExternalLink data-suisou-icon="small" />
+              <ExternalLink data-suisou-text="fs-16" />
             </a>
           </div>
           {#if followError}
-            <p data-suisou-layout="row" data-suisou-text="s12" class="err" role="alert">
-              <AlertCircle data-suisou-icon="small" />
+            <p data-suisou-layout="row" data-suisou-text="fs-12" class="err" role="alert">
+              <AlertCircle data-suisou-text="fs-16" />
               フォローに失敗しました。時間をおいて再試行してください。
             </p>
           {/if}
         </div>
       {:else}
-        <div data-suisou-layout="row" data-suisou-text="s14" data-suisou-rule="top" class="row foot sub">
-          <Check data-suisou-icon="small success" />
+        <div data-suisou-layout="row" data-suisou-text="fs-14" data-suisou="bd-top" class="row foot sub">
+          <Check data-suisou-text="fs-16" data-suisou="success" />
           {#if enabled}
             <span>
               新着はmado公式からDMで届きます。
@@ -179,7 +178,7 @@
   }
 
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .err {
     color: var(--suisou-error);

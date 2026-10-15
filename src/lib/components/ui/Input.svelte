@@ -29,7 +29,7 @@
 
 <div data-suisou-layout="stack">
   {#if label}
-    <label for={inputId} data-suisou-text="s14 w500" class="label">{label}</label>
+    <label for={inputId} data-suisou-text="fs-14 fw-500" class="label">{label}</label>
   {/if}
 
   {#if prefix}
@@ -39,7 +39,6 @@
     <div data-suisou-button-group="even">
       <span data-suisou-affix>{prefix}</span>
       <input
-        data-suisou-field
         id={inputId}
         bind:value
         aria-invalid={error ? "true" : undefined}
@@ -48,7 +47,7 @@
     </div>
   {:else}
     <input
-      data-suisou-field="block"
+      data-suisou="w-full"
       id={inputId}
       bind:value
       aria-invalid={error ? "true" : undefined}
@@ -57,20 +56,20 @@
   {/if}
 
   {#if error}
-    <p data-suisou-text="s12" class="error">{error}</p>
+    <p data-suisou-text="fs-12" class="error">{error}</p>
   {:else if helper}
-    <p data-suisou-text="s12" class="helper">{helper}</p>
+    <p data-suisou-text="fs-12" class="helper">{helper}</p>
   {/if}
 </div>
 
 <style>
   .label {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .error {
     color: var(--suisou-error);
   }
   .helper {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 </style>

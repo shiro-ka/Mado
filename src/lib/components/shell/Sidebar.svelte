@@ -24,7 +24,7 @@
 </script>
 
 <!-- Logo -->
-<div data-suisou-layout="row" data-suisou-rule="bottom" class="brandbar">
+<div data-suisou-layout="row" data-suisou="bd-bottom" class="brandbar">
   <a href="/home" onclick={onNavigate}>
     <Brand size="md" />
   </a>
@@ -43,7 +43,7 @@
         aria-current={active ? "page" : undefined}
         data-suisou-button="block"
       >
-        <item.icon data-suisou-icon />
+        <item.icon data-suisou-text="fs-20" />
         {item.label}
       </a>
     {/each}

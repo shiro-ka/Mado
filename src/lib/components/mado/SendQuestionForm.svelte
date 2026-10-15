@@ -52,11 +52,11 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-banner="success" data-suisou-layout="stack" role="status" data-suisou-text="center" class="done">
+  <div data-suisou-item="notice" data-suisou-layout="stack" data-suisou-text="center" data-suisou="success" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
-      <p data-suisou-text="s16 w700">声を送信しました！</p>
-      <p data-suisou-text="s14" class="sub">相手に届くまでしばらくお待ちください。</p>
+      <p data-suisou-text="fs-16 fw-700">声を送信しました！</p>
+      <p data-suisou-text="fs-14" class="sub">相手に届くまでしばらくお待ちください。</p>
     </div>
     <Button variant="ghost" onclick={() => (formState = "idle")}>別の声を送る</Button>
   </div>
@@ -65,9 +65,9 @@
     <!-- ★送り主の開示。Suisou の banner は error / warning / success の3つで、
          「お知らせ」の段を持たない（結果を知らせる帯として作られているため）。
          ここは面 + accent の罫で置いている。→ 申し送り（dev/todo/mado-suisou-ui.md） -->
-    <div data-suisou-surface="item" data-suisou-media class="notice">
-      <AlertCircle data-suisou-icon="accent" data-suisou-media-icon />
-      <p data-suisou-media-content data-suisou-text="s14">
+    <div data-suisou-item="media" class="notice">
+      <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />
+      <p data-suisou-item="media-content" data-suisou-text="fs-14">
         この声は <strong>@{senderHandle}</strong> として相手に届きます。
         送り主は窓のオーナーのみに開示されます。
       </p>
@@ -85,7 +85,7 @@
     />
 
     {#if formState === "error"}
-      <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+      <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
         <AlertCircle />
         {errorMsg}
       </p>
@@ -109,10 +109,10 @@
     padding: var(--suisou-space-4);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .notice {
-    border-color: var(--suisou-accent);
+    border-color: var(--suisou-color-accent);
   }
   .notice :global(svg) {
     margin-block-start: 0.15rem;

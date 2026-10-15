@@ -30,12 +30,12 @@
      aside を消すだけで1列になる ―― ここで grid を書き直す必要がない。 -->
 <div data-suisou-layout="frame gap-0" class="frame">
   <!-- Desktop sidebar -->
-  <aside data-suisou-layout="aside stack scroll" data-suisou-rule="end" class="side">
+  <aside data-suisou-layout="aside stack scroll" data-suisou="bd-end" class="side">
     <Sidebar {session} />
   </aside>
 
   <!-- Mobile topbar -->
-  <div data-suisou-layout="head row" data-suisou-rule="bottom" class="topbar">
+  <div data-suisou-layout="head row" data-suisou="bd-bottom" class="topbar">
     <!-- ★popovertarget だけで開く。JS は1行も要らない（Suisou 掟4）。
          ESC・外側クリック・フォーカスの閉じ込め・重なり順・膜は全部ブラウザの仕事。
          自前で持つと焦点トラップ／Escape／スクロール錠／フォーカス復帰で 50 行を超える。 -->
@@ -50,7 +50,7 @@
     bind:this={drawer}
     id="nav-drawer"
     popover
-    data-suisou-surface="overlay drawer start"
+    data-suisou-tray="drawer left"
     data-suisou-layout="stack scroll"
     aria-label="ナビゲーション"
     style="--suisou-drawer: 18rem"

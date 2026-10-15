@@ -19,7 +19,7 @@
   </DashboardShell>
 {:else}
   <!-- 画面の骨格。区切りは罫がやるのですきまは持たない（gap-0） -->
-  <div data-suisou-layout="stack screen gap-0">
+  <div data-suisou-layout="stack gap-0" data-suisou="min-screen">
     <Header {session} />
     <main data-suisou-layout="stack grow">
       {@render children()}

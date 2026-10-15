@@ -26,7 +26,7 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
 </svelte:head>
 
-<div data-suisou-layout="stack container gap-3" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
   <div>
     <a href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
       <Button variant="ghost">
@@ -37,52 +37,51 @@
   </div>
 
   <!-- 声 -->
-  <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
+  <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
     <div data-suisou-layout="row between">
       <span data-suisou-tag={data.question.isRead ? "" : "accent"}>
         {data.question.isRead ? "既読" : "未読"}
       </span>
-      <span data-suisou-text="s12" class="sub">{formatDateFull(data.question.createdAt)}</span>
+      <span data-suisou-text="fs-12" class="sub">{formatDateFull(data.question.createdAt)}</span>
     </div>
 
-    <p data-suisou-text="s16 doc" class="body">{data.question.body}</p>
+    <p data-suisou-text="fs-16 doc" class="body">{data.question.body}</p>
 
     {#if data.isOwner}
       {#if data.decryptError}
-        <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
-          <Lock data-suisou-icon="small" />
+        <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+          <Lock data-suisou-text="fs-16" />
           送信者の特定に失敗しました。秘密鍵が見つかりません。
         </p>
       {/if}
 
-      <div data-suisou-media data-suisou-rule="top" class="sender">
+      <div data-suisou-item="media" data-suisou="bd-top" class="sender">
         {#if data.senderProfile?.avatar}
           <img
-            data-suisou-avatar
-            data-suisou-media-icon
+            data-suisou-item="circle media-figure"
             src={data.senderProfile.avatar}
             alt={data.senderProfile.handle}
           />
         {:else}
-          <div data-suisou-avatar data-suisou-media-icon>
-            <User data-suisou-icon="small sub" />
+          <div data-suisou-item="circle media-figure">
+            <User data-suisou-text="fs-16" data-suisou="sub" />
           </div>
         {/if}
-        <div data-suisou-media-content>
+        <div data-suisou-item="media-content">
           {#if data.senderProfile}
-            <p data-suisou-text="s14 w500">
+            <p data-suisou-text="fs-14 fw-500">
               {data.senderProfile.displayName ?? data.senderProfile.handle}
             </p>
-            <p data-suisou-text="s12" class="sub">@{data.senderProfile.handle}</p>
+            <p data-suisou-text="fs-12" class="sub">@{data.senderProfile.handle}</p>
           {:else if data.senderDid}
-            <p data-suisou-text="s12" class="did">{data.senderDid}</p>
+            <p data-suisou-text="fs-12" class="did">{data.senderDid}</p>
           {:else}
-            <p data-suisou-text="s14" class="sub">送信者情報なし</p>
+            <p data-suisou-text="fs-14" class="sub">送信者情報なし</p>
           {/if}
         </div>
         {#if data.senderProfile}
           <a
-            data-suisou-media-tail
+            data-suisou-item="media-tail"
             href={`https://bsky.app/profile/${data.senderProfile.handle}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -97,23 +96,23 @@
   <!-- 回答 -->
   {#if data.answers.length > 0}
     <div data-suisou-layout="stack gap-3" class="group">
-      <h2 data-suisou-text="s14 w700">回答済み（{data.answers.length}件）</h2>
+      <h2 data-suisou-text="fs-14 fw-700">回答済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
-        <div data-suisou-surface="panel" data-suisou-layout="stack">
+        <div data-suisou-tray data-suisou-layout="stack">
           <div data-suisou-layout="row">
-            <MessageCircle data-suisou-icon="small accent" />
-            <span data-suisou-text="s12 w500" class="sub">回答</span>
-            <span data-suisou-text="s12" class="date">{formatDateFull(answer.createdAt)}</span>
+            <MessageCircle data-suisou-text="fs-16" data-suisou="accent" />
+            <span data-suisou-text="fs-12 fw-500" class="sub">回答</span>
+            <span data-suisou-text="fs-12" class="date">{formatDateFull(answer.createdAt)}</span>
           </div>
-          <p data-suisou-text="s14 doc" class="body">{answer.body}</p>
+          <p data-suisou-text="fs-14 doc" class="body">{answer.body}</p>
         </div>
       {/each}
     </div>
   {/if}
 
   {#if data.isOwner}
-    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
-      <h2 data-suisou-text="s14 w700">回答を書く</h2>
+    <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
+      <h2 data-suisou-text="fs-14 fw-700">回答を書く</h2>
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}
@@ -123,7 +122,7 @@
     </div>
 
     <!-- 取り返しのつかない操作。手書きの赤い面 → banner="error" -->
-    <div data-suisou-banner="error" data-suisou-layout="stack md:row" class="danger">
+    <div data-suisou-item="notice" data-suisou-layout="stack s:row" data-suisou="error" class="danger">
       <DeleteQuestionButton rkey={data.question.rkey} />
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />
@@ -149,16 +148,16 @@
     white-space: pre-wrap;
   }
   .did {
-    font-family: var(--suisou-mono);
-    color: var(--suisou-text-sub);
+    font-family: var(--suisou-font-mono);
+    color: var(--suisou-color-text-sub);
     word-break: break-all;
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .date {
     margin-inline-start: auto;
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 
 </style>

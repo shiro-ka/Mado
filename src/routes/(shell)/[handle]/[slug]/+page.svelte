@@ -149,7 +149,7 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
 </svelte:head>
 
-<div data-suisou-layout="stack container gap-3" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
   {#if data.isOwner}
     <div data-suisou-layout="row">
       <a href={`/@${data.cleanHandle}`}>
@@ -158,10 +158,10 @@
           プロフィールに戻る
         </Button>
       </a>
-      <h1 data-suisou-text="s20 w700">窓の設定</h1>
+      <h1 data-suisou-text="fs-20 fw-700">窓の設定</h1>
     </div>
 
-    <div data-suisou-surface="panel" class="card">
+    <div data-suisou-tray class="card">
       <form onsubmit={handleSave} data-suisou-layout="stack gap-4" class="form">
         <Input
           label="タイトル（必須）"
@@ -190,22 +190,22 @@
             maxlength={30}
             disabled={isBusy}
           />
-          <p data-suisou-text="s12" class="preview">
+          <p data-suisou-text="fs-12" class="preview">
             /@{data.cleanHandle}/<span class="accent">{slug.trim().toLowerCase() || data.box.slug}</span>
           </p>
         </div>
 
         <div data-suisou-layout="row between">
           <div data-suisou-layout="stack gap-0" class="label">
-            <p data-suisou-text="s14 w500" class="sub">声の受付</p>
-            <p data-suisou-text="s12" class="sub">オフにすると新しい声を受け付けません</p>
+            <p data-suisou-text="fs-14 fw-500" class="sub">声の受付</p>
+            <p data-suisou-text="fs-12" class="sub">オフにすると新しい声を受け付けません</p>
           </div>
           <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
         </div>
 
         {#if errorMsg}
-          <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
-            <AlertCircle data-suisou-icon="small" />
+          <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+            <AlertCircle data-suisou-text="fs-16" />
             {errorMsg}
           </p>
         {/if}
@@ -234,13 +234,13 @@
     </div>
 
     <!-- 公開URL -->
-    <div data-suisou-surface="panel" data-suisou-media class="strip">
-      <Lock data-suisou-icon="small sub" data-suisou-media-icon />
-      <div data-suisou-media-content>
-        <p data-suisou-text="s12" class="sub">公開URL</p>
-        <p data-suisou-text="s14" class="url">{publicUrlDisplay}</p>
+    <div data-suisou-tray data-suisou-item="media" class="strip">
+      <Lock data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
+      <div data-suisou-item="media-content">
+        <p data-suisou-text="fs-12" class="sub">公開URL</p>
+        <p data-suisou-text="fs-14" class="url">{publicUrlDisplay}</p>
       </div>
-      <div data-suisou-media-tail>
+      <div data-suisou-item="media-tail">
         <!-- ★コピー済みの状態は aria-pressed。Suisou の Button が持っている語なので、
              手書きの3色分岐（bg/border/text を green に差し替え）が消えた。 -->
         <Button
@@ -258,19 +258,19 @@
     </div>
 
     <!-- メインMado -->
-    <div data-suisou-surface="panel" data-suisou-media class="strip">
-      <Pin data-suisou-icon="small sub" data-suisou-media-icon />
-      <div data-suisou-media-content>
-        <p data-suisou-text="s14 w500">メインMado</p>
-        <p data-suisou-text="s12" class="sub">
+    <div data-suisou-tray data-suisou-item="media" class="strip">
+      <Pin data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
+      <div data-suisou-item="media-content">
+        <p data-suisou-text="fs-14 fw-500">メインMado</p>
+        <p data-suisou-text="fs-12" class="sub">
           {data.isMain
             ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"
             : "メインにすると /@ハンドル の先頭に表示されます"}
         </p>
       </div>
-      <div data-suisou-media-tail>
+      <div data-suisou-item="media-tail">
         {#if data.isMain}
-          <span data-suisou-tag="accent">
+          <span data-suisou-item="tag" data-suisou="accent">
             <Pin />
             メイン
           </span>
@@ -290,7 +290,7 @@
       session={data.session}
     />
 
-    <p data-suisou-text="s12 center" class="sub back">
+    <p data-suisou-text="fs-12 center" class="sub back">
       <a href={`/@${data.cleanHandle}`}>← @{data.cleanHandle} のプロフィールに戻る</a>
     </p>
   {/if}
@@ -309,16 +309,16 @@
   }
   .preview,
   .url {
-    font-family: var(--suisou-mono);
+    font-family: var(--suisou-font-mono);
     word-break: break-all;
   }
   .preview {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .accent {
-    color: var(--suisou-accent);
+    color: var(--suisou-color-accent);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 </style>

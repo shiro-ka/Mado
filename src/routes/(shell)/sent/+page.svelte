@@ -10,12 +10,12 @@
   <title>送信トレイ | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack container gap-4" class="page">
-  <div data-suisou-media>
-    <span data-suisou-tile><Send data-suisou-icon="accent" /></span>
-    <div data-suisou-media-content>
-      <h1 data-suisou-text="s20 w700">送信トレイ</h1>
-      <p data-suisou-text="s12" class="sub">あなたが送った声と返信</p>
+<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
+  <div data-suisou-item="media">
+    <span data-suisou-item="square"><Send data-suisou-text="fs-20" data-suisou="accent" /></span>
+    <div data-suisou-item="media-content">
+      <h1 data-suisou-text="fs-20 fw-700">送信トレイ</h1>
+      <p data-suisou-text="fs-12" class="sub">あなたが送った声と返信</p>
     </div>
   </div>
 
@@ -28,6 +28,6 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 </style>

@@ -17,7 +17,7 @@
   ];
 </script>
 
-<header data-suisou-rule="bottom" class="bar">
+<header data-suisou="bd-bottom" class="bar">
   <div data-suisou-layout="row between" class="inner">
     <!-- Logo -->
     <a href="/" class="group">
@@ -57,7 +57,7 @@
   </div>
 
   <!-- Mobile nav panel。ドロワーではなく上に降りるシートなので overlay のまま -->
-  <nav id="site-nav" popover data-suisou-surface="overlay" data-suisou-layout="stack" class="sheet">
+  <nav id="site-nav" popover data-suisou-tray data-suisou-layout="stack" class="sheet">
     {#each navLinks as link}
       <a href={link.href} data-suisou-button="block">{link.label}</a>
     {/each}

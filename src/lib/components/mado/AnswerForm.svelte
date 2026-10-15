@@ -74,21 +74,20 @@
   <!-- ★Suisou の banner。banner.css には「wixdex の3現場が同じ箱を手書きしていて
        3回ルールで昇格した」とある ―― Mado も同じ箱を手書きしていた。
        意味（role）は CSS では足せないので現場が書く、というのが Suisou の約束。 -->
-  <div data-suisou-banner="success" data-suisou-layout="stack" role="status" data-suisou-text="center" class="done">
+  <div data-suisou-item="notice" data-suisou-layout="stack" data-suisou-text="center" data-suisou="success" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
-      <p data-suisou-text="s16 w700">回答を投稿しました</p>
-      <p data-suisou-text="s14" class="sub">PDSに保存されました。</p>
+      <p data-suisou-text="fs-16 fw-700">回答を投稿しました</p>
+      <p data-suisou-text="fs-14" class="sub">PDSに保存されました。</p>
       {#if crosspostFailed}
-        <p data-suisou-layout="row" data-suisou-text="s14" class="warn">
+        <p data-suisou-layout="row" data-suisou-text="fs-14" class="warn">
           <AlertCircle />
           Blueskyへの転載は失敗しました
         </p>
       {:else if crosspostLink}
         <a
           data-suisou-layout="row"
-          data-suisou-text="s14"
-          data-suisou-link
+          data-suisou-text="fs-14 link"
           href={crosspostLink}
           target="_blank"
           rel="noopener noreferrer"
@@ -113,7 +112,7 @@
     />
 
     {#if formState === "error"}
-      <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
+      <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
         <AlertCircle />
         {errorMsg}
       </p>
@@ -126,7 +125,7 @@
           bind:checked={crosspost}
           disabled={formState === "submitting"}
         />
-        <span data-suisou-text="s12" class="sub">Bskyにもポスト</span>
+        <span data-suisou-text="fs-12" class="sub">Bskyにもポスト</span>
       </label>
       <Button
         variant="outline"
@@ -146,7 +145,7 @@
     padding: var(--suisou-space-4);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .warn {
     color: var(--suisou-warning);
@@ -156,7 +155,7 @@
     user-select: none;
   }
   .check input {
-    accent-color: var(--suisou-accent);
+    accent-color: var(--suisou-color-accent);
     width: 1rem;
     height: 1rem;
     cursor: pointer;

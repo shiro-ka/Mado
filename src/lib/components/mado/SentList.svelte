@@ -82,13 +82,13 @@
   <div data-suisou-button-group="even">
     {#each tabs as t}
       <button
-        data-suisou-button="neutral"
+        data-suisou-button
         aria-pressed={tab === t.id}
         onclick={() => (tab = t.id)}
       >
         {t.label}
         {#if t.id === "all" && items.length > 0}
-          <span data-suisou-tag>{items.length}</span>
+          <span data-suisou-item="tag">{items.length}</span>
         {:else if t.id === "unread" && unreadCount > 0}
           <span data-suisou-tag={tab === "unread" ? "" : "accent"}>{unreadCount}</span>
         {/if}
@@ -97,15 +97,15 @@
   </div>
 
   {#if filtered.length === 0}
-    <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
-      <span data-suisou-tile>
+    <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
+      <span data-suisou-item="square">
         {#if tab === "unread"}
-          <MessageCircle data-suisou-icon="sub" />
+          <MessageCircle data-suisou-text="fs-20" data-suisou="sub" />
         {:else}
-          <Send data-suisou-icon="sub" />
+          <Send data-suisou-text="fs-20" data-suisou="sub" />
         {/if}
       </span>
-      <p data-suisou-text="s14" class="sub">
+      <p data-suisou-text="fs-14" class="sub">
         {tab === "unread" ? "未読の返信はありません" : tab === "read" ? "既読の返信はありません" : "まだ声を送っていません"}
       </p>
     </div>
@@ -118,7 +118,8 @@
         {@const isRead = readSet.has(key)}
 
         <div
-          data-suisou-surface="panel bleed"
+          data-suisou-tray
+          data-suisou="p-0"
           class="item"
           class:fresh={hasAnswer && !isRead}
         >
@@ -129,8 +130,8 @@
             onclick={() => toggle(key, item.ref.ownerDid, item.ref.koeRkey, hasAnswer)}
           >
             <div data-suisou-layout="row">
-              <Clock data-suisou-icon="small sub" />
-              <span data-suisou-text="s12" class="sub">{formatDateFull(item.ref.sentAt)}</span>
+              <Clock data-suisou-text="fs-16" data-suisou="sub" />
+              <span data-suisou-text="fs-12" class="sub">{formatDateFull(item.ref.sentAt)}</span>
               <span data-suisou-layout="grow"></span>
               {#if hasAnswer}
                 <span data-suisou-tag={isRead ? "" : "accent"}>
@@ -138,33 +139,33 @@
                 </span>
               {/if}
               {#if isExpanded}
-                <ChevronUp data-suisou-icon="small sub" />
+                <ChevronUp data-suisou-text="fs-16" data-suisou="sub" />
               {:else}
-                <ChevronDown data-suisou-icon="small sub" />
+                <ChevronDown data-suisou-text="fs-16" data-suisou="sub" />
               {/if}
             </div>
 
-            <p data-suisou-text="s14 doc" class="body" class:clamp={!isExpanded}>
+            <p data-suisou-text="fs-14 doc" class="body" class:clamp={!isExpanded}>
               {item.ref.body}
             </p>
           </button>
 
           {#if isExpanded && hasAnswer}
-            <div data-suisou-layout="stack" data-suisou-rule="top" class="answers">
-              <p data-suisou-text="s12 w500" class="sub">返信（{item.answers.length}件）</p>
+            <div data-suisou-layout="stack" data-suisou="bd-top" class="answers">
+              <p data-suisou-text="fs-12 fw-500" class="sub">返信（{item.answers.length}件）</p>
               {#each item.answers as answer}
-                <div data-suisou-surface="item" data-suisou-layout="stack">
+                <div data-suisou-item data-suisou-layout="stack">
                   <div data-suisou-layout="row">
-                    <MessageCircle data-suisou-icon="small accent" />
-                    <span data-suisou-text="s12" class="sub">{formatDateFull(answer.createdAt)}</span>
+                    <MessageCircle data-suisou-text="fs-16" data-suisou="accent" />
+                    <span data-suisou-text="fs-12" class="sub">{formatDateFull(answer.createdAt)}</span>
                   </div>
-                  <p data-suisou-text="s14 doc" class="body">{answer.body}</p>
+                  <p data-suisou-text="fs-14 doc" class="body">{answer.body}</p>
                 </div>
               {/each}
             </div>
           {:else if isExpanded}
-            <div data-suisou-rule="top" class="answers">
-              <p data-suisou-text="s14" class="sub">まだ返信がありません</p>
+            <div data-suisou="bd-top" class="answers">
+              <p data-suisou-text="fs-14" class="sub">まだ返信がありません</p>
             </div>
           {/if}
         </div>
@@ -180,7 +181,7 @@
 
   /* 返信が来ていて未読のものだけ罫を accent にする（QuestionCard と同じ扱い） */
   .item.fresh {
-    border-color: var(--suisou-accent);
+    border-color: var(--suisou-color-accent);
   }
 
   .head {
@@ -207,6 +208,6 @@
     overflow: hidden;
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 </style>

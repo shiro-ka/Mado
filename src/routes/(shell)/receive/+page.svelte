@@ -33,11 +33,11 @@
   <title>受信トレイ | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack container gap-3" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
   <div data-suisou-layout="row between">
     <div data-suisou-layout="stack gap-0" class="title">
-      <h1 data-suisou-text="s24 w700">受信トレイ</h1>
-      <p data-suisou-text="s14" class="sub">届いた声を確認しましょう</p>
+      <h1 data-suisou-text="fs-24 fw-700">受信トレイ</h1>
+      <p data-suisou-text="fs-14" class="sub">届いた声を確認しましょう</p>
     </div>
     <button
       data-suisou-button="icon"
@@ -50,16 +50,16 @@
     </button>
   </div>
 
-  <a data-suisou-row data-suisou-layout="row" data-suisou-text="s14" href="/settings/notifications" class="link">
-    <Bell data-suisou-icon="accent" />
+  <a data-suisou-row data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
+    <Bell data-suisou-text="fs-20" data-suisou="accent" />
     <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
-    <ChevronRight data-suisou-icon="sub" />
+    <ChevronRight data-suisou-text="fs-20" data-suisou="sub" />
   </a>
 
   {#await data.inbox}
     <div data-suisou-button-group="even">
       {#each tabs as t}
-        <span data-suisou-button="neutral">{t.label}</span>
+        <span data-suisou-button>{t.label}</span>
       {/each}
     </div>
     <div data-suisou-layout="stack gap-3" class="items">
@@ -81,28 +81,28 @@
     <div data-suisou-button-group="even">
       {#each tabs as t}
         <a
-          data-suisou-button="neutral"
+          data-suisou-button
           href={`/receive?tab=${t.key}`}
           aria-current={tab === t.key ? "page" : undefined}
         >
           {t.label}
           {#if t.key === "all"}
-            <span data-suisou-tag>{allQuestions.length}</span>
+            <span data-suisou-item="tag">{allQuestions.length}</span>
           {:else if t.key === "unread"}
-            <span data-suisou-tag>{unreadCount}</span>
+            <span data-suisou-item="tag">{unreadCount}</span>
           {/if}
         </a>
       {/each}
     </div>
 
     {#if filtered.length === 0}
-      <div data-suisou-surface="panel empty" data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="empty">
-        <Inbox data-suisou-icon="sub" class="big" />
+      <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash" class="empty">
+        <Inbox data-suisou-text="fs-20" data-suisou="sub" class="big" />
         <div data-suisou-layout="stack gap-1 center">
-          <p data-suisou-text="s16 w700">
+          <p data-suisou-text="fs-16 fw-700">
             {tab === "unread" ? "未読の声はありません" : "声がありません"}
           </p>
-          <p data-suisou-text="s14" class="sub">
+          <p data-suisou-text="fs-14" class="sub">
             {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
           </p>
         </div>
@@ -123,13 +123,13 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .link {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .link:hover {
-    color: var(--suisou-text-main);
+    color: var(--suisou-color-text);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 
   .empty {

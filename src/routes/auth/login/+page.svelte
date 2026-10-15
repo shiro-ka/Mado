@@ -41,18 +41,18 @@
   <title>ログイン | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="pin screen" class="wrap">
+<div data-suisou-layout="pin" data-suisou="min-screen" class="wrap">
   <div data-suisou-layout="stack gap-4" class="col">
     <div data-suisou-layout="stack center">
       <a data-suisou-layout="row" href="/">
-        <span data-suisou-tile><MessageCircle data-suisou-icon="accent" /></span>
-        <span data-suisou-text="s20 w700">Mado</span>
+        <span data-suisou-item="square"><MessageCircle data-suisou-text="fs-20" data-suisou="accent" /></span>
+        <span data-suisou-text="fs-20 fw-700">Mado</span>
       </a>
-      <h1 data-suisou-text="s24 w700 center" class="center">Blueskyアカウントでログイン</h1>
-      <p data-suisou-text="s14 center" class="sub center">あなたのハンドルを入力して認証します</p>
+      <h1 data-suisou-text="fs-24 fw-700 center" class="center">Blueskyアカウントでログイン</h1>
+      <p data-suisou-text="fs-14 center" class="sub center">あなたのハンドルを入力して認証します</p>
     </div>
 
-    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="card">
+    <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
       <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
         <Input
           label="Blueskyハンドル"
@@ -67,8 +67,8 @@
         />
 
         {#if error}
-          <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
-            <AlertCircle data-suisou-icon="small" />
+          <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+            <AlertCircle data-suisou-text="fs-16" />
             {error}
           </p>
         {/if}
@@ -78,9 +78,9 @@
         </Button>
       </form>
 
-      <div data-suisou-media data-suisou-rule="top" class="note">
-        <Shield data-suisou-icon="small sub" data-suisou-media-icon />
-        <p data-suisou-media-content data-suisou-text="s12 doc" class="sub">
+      <div data-suisou-item="media" data-suisou="bd-top" class="note">
+        <Shield data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
+        <p data-suisou-item="media-content" data-suisou-text="fs-12 doc" class="sub">
           認証にはATProtocol OAuth 2.0を使用します。
           パスワードはMadoに送信されません。
           認証後、あなたのDIDとハンドルが声に紐付けられます。
@@ -88,7 +88,7 @@
       </div>
     </div>
 
-    <p data-suisou-text="s12 center" class="sub center">
+    <p data-suisou-text="fs-12 center" class="sub center">
       <a href="/">← トップページに戻る</a>
     </p>
   </div>
@@ -109,6 +109,6 @@
     padding-block-start: var(--suisou-space-3);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 </style>

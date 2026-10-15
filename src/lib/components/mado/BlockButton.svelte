@@ -61,14 +61,14 @@
 {#if state === "blocked" || state === "unblocking" || state === "unblock-error"}
   <div data-suisou-layout="row wrap" class="bar">
     <!-- 状態のしるしであって押せるものではないので Tag -->
-    <span data-suisou-tag>
+    <span data-suisou-item="tag">
       <CheckCircle2 />
       ブロック中
     </span>
     <Button variant="ghost" loading={state === "unblocking"} onclick={unblock}>解除</Button>
     {#if state === "unblock-error"}
-      <span data-suisou-layout="row gap-1" data-suisou-text="s12" class="err">
-        <AlertCircle data-suisou-icon="small" />
+      <span data-suisou-layout="row gap-1" data-suisou-text="fs-12" class="err">
+        <AlertCircle data-suisou-text="fs-16" />
         解除に失敗しました
       </span>
     {/if}
@@ -91,8 +91,8 @@
       <Button variant="ghost" onclick={() => (state = "idle")}>キャンセル</Button>
     {/if}
     {#if state === "block-error"}
-      <span data-suisou-layout="row gap-1" data-suisou-text="s12" class="err">
-        <AlertCircle data-suisou-icon="small" />
+      <span data-suisou-layout="row gap-1" data-suisou-text="fs-12" class="err">
+        <AlertCircle data-suisou-text="fs-16" />
         ブロックに失敗しました
       </span>
     {/if}

@@ -12,10 +12,10 @@
 </svelte:head>
 
 {#await data.dashboard}
-  <div data-suisou-layout="stack container gap-4" class="page">
+  <div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
     <div data-suisou-layout="row" class="head">
-      <Home data-suisou-icon="accent" />
-      <h1 data-suisou-text="s24 w700">ホーム</h1>
+      <Home data-suisou-text="fs-20" data-suisou="accent" />
+      <h1 data-suisou-text="fs-24 fw-700">ホーム</h1>
     </div>
     <div data-suisou-layout="even gap-3" class="row">
       {#each Array(3) as _}

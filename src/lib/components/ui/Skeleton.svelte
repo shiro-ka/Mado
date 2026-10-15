@@ -24,7 +24,7 @@
   .skeleton {
     height: var(--h);
     border-radius: var(--suisou-radius);
-    background: var(--suisou-item);
+    background: var(--suisou-color-item);
     animation: skeleton-pulse 1.6s ease-in-out infinite;
   }
   @media (width >= 768px) {

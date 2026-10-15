@@ -31,19 +31,19 @@
   }
 </script>
 
-<div data-suisou-layout="stack container gap-4" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
   <div data-suisou-layout="row" class="head">
-    <Home data-suisou-icon="accent" />
-    <h1 data-suisou-text="s24 w700">ホーム</h1>
+    <Home data-suisou-text="fs-20" data-suisou="accent" />
+    <h1 data-suisou-text="fs-24 fw-700">ホーム</h1>
   </div>
 
   {#if sessionExpiringSoon}
-    <div data-suisou-banner="warning" data-suisou-layout="row" role="status">
-      <AlertTriangle data-suisou-icon="warning" />
-      <p data-suisou-layout="grow" data-suisou-text="s14">
+    <div data-suisou-item="notice" data-suisou-layout="row" data-suisou="warning" role="status">
+      <AlertTriangle data-suisou-text="fs-20" data-suisou="warning" />
+      <p data-suisou-layout="grow" data-suisou-text="fs-14">
         セッションがあと{sessionDaysLeft}日で期限切れになります。
       </p>
-      <a data-suisou-link data-suisou-text="s12" href="/auth/login">再ログイン</a>
+      <a data-suisou-text="link fs-12" href="/auth/login">再ログイン</a>
     </div>
   {/if}
 
@@ -55,11 +55,11 @@
       { label: "未読の声", value: unreadCount, unit: "件" },
       { label: "声の返信", value: replyCount, unit: "回" },
     ] as stat}
-      <div data-suisou-surface="panel" data-suisou-layout="stack">
-        <p data-suisou-text="s12 w500" class="sub">{stat.label}</p>
+      <div data-suisou-tray data-suisou-layout="stack">
+        <p data-suisou-text="fs-12 fw-500" class="sub">{stat.label}</p>
         <p class="value">
-          <span data-suisou-text="s24 md:s28 w700 tabular" class="num">{stat.value}</span>
-          <span data-suisou-text="s12" class="sub">{stat.unit}</span>
+          <span data-suisou-text="fs-24 s:fs-28 fw-700" class="num">{stat.value}</span>
+          <span data-suisou-text="fs-12" class="sub">{stat.unit}</span>
         </p>
       </div>
     {/each}
@@ -67,11 +67,11 @@
 
   <div data-suisou-layout="stack md:even gap-3" class="panes">
     <!-- 窓 -->
-    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="pane">
+    <div data-suisou-tray data-suisou-layout="stack gap-3" class="pane">
       <div data-suisou-layout="row between">
         <div data-suisou-layout="row">
-          <MessageSquare data-suisou-icon="small accent" />
-          <h2 data-suisou-text="s14 w700">窓</h2>
+          <MessageSquare data-suisou-text="fs-16" data-suisou="accent" />
+          <h2 data-suisou-text="fs-14 fw-700">窓</h2>
         </div>
         <a href={`/@${session.handle}`}>
           <Button variant="ghost">
@@ -83,8 +83,8 @@
 
       {#if boxes.length === 0}
         <!-- ★空表示は surface="empty"（破線）。Suisou には Mado の4現場から昇格した値。 -->
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
-          <p data-suisou-text="s14" class="sub">まだ窓がありません</p>
+        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
+          <p data-suisou-text="fs-14" class="sub">まだ窓がありません</p>
           <a href={`/@${session.handle}/new`}>
             <Button variant="default">
               {#snippet leftIcon()}<Plus />{/snippet}
@@ -96,8 +96,8 @@
         <div data-suisou-layout="stack">
           {#each boxes.slice(0, 3) as box}
             <a data-suisou-row data-suisou-layout="row between" href={`/@${session.handle}/${box.slug}`}>
-              <span data-suisou-text="s14 one-line" class="title">{box.title}</span>
-              <span data-suisou-text="s12" class={box.isOpen ? "ok" : "sub"}>
+              <span data-suisou-text="fs-14 one-line" class="title">{box.title}</span>
+              <span data-suisou-text="fs-12" class={box.isOpen ? "ok" : "sub"}>
                 {box.isOpen ? "受付中" : "停止中"}
               </span>
             </a>
@@ -107,13 +107,13 @@
     </div>
 
     <!-- 受信トレイ -->
-    <div data-suisou-surface="panel" data-suisou-layout="stack gap-3" class="pane">
+    <div data-suisou-tray data-suisou-layout="stack gap-3" class="pane">
       <div data-suisou-layout="row between">
         <div data-suisou-layout="row">
-          <Inbox data-suisou-icon="small success" />
-          <h2 data-suisou-text="s14 w700">受信トレイ</h2>
+          <Inbox data-suisou-text="fs-16" data-suisou="success" />
+          <h2 data-suisou-text="fs-14 fw-700">受信トレイ</h2>
           {#if unreadCount > 0}
-            <span data-suisou-tag="accent">{unreadCount}</span>
+            <span data-suisou-item="tag" data-suisou="accent">{unreadCount}</span>
           {/if}
         </div>
         <a href="/receive">
@@ -125,17 +125,17 @@
       </div>
 
       {#if questions.length === 0}
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
-          <p data-suisou-text="s14" class="sub">まだ声が届いていません</p>
-          <p data-suisou-text="s12" class="sub">窓のURLをシェアしましょう</p>
+        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
+          <p data-suisou-text="fs-14" class="sub">まだ声が届いていません</p>
+          <p data-suisou-text="fs-12" class="sub">窓のURLをシェアしましょう</p>
         </div>
       {:else}
         <div data-suisou-layout="stack">
           {#each questions.slice(0, 4) as q}
             <a data-suisou-row data-suisou-layout="row" href={questionHref(q)}>
               {#if !q.isRead}<span class="dot"></span>{/if}
-              <span data-suisou-layout="grow" data-suisou-text="s14 one-line" class="title sub">{q.body}</span>
-              <span data-suisou-text="s12 tabular" class="date">
+              <span data-suisou-layout="grow" data-suisou-text="fs-14 one-line" class="title sub">{q.body}</span>
+              <span data-suisou-text="fs-12" class="date">
                 {new Date(q.createdAt).toLocaleDateString("ja-JP")}
               </span>
             </a>
@@ -159,17 +159,17 @@
     text-align: end;
   }
   .num {
-    color: var(--suisou-accent);
+    color: var(--suisou-color-accent);
   }
 
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .ok {
     color: var(--suisou-success);
   }
   .date {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
     flex: none;
   }
   .dot {
@@ -177,6 +177,6 @@
     width: 0.375rem;
     height: 0.375rem;
     border-radius: var(--suisou-radius-pill);
-    background: var(--suisou-accent);
+    background: var(--suisou-color-accent);
   }
 </style>

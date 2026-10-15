@@ -16,8 +16,8 @@
 {#snippet listHead(count: string)}
   <div data-suisou-layout="row between">
     <div data-suisou-layout="row">
-      <MessageCircle data-suisou-icon="small sub" />
-      <h2 data-suisou-text="s14 w700" class="sub">窓{count}</h2>
+      <MessageCircle data-suisou-text="fs-16" data-suisou="sub" />
+      <h2 data-suisou-text="fs-14 fw-700" class="sub">窓{count}</h2>
     </div>
     <a href={`/@${data.cleanHandle}/new`}>
       <Button variant="default">
@@ -30,7 +30,7 @@
 
 {#if data.isOwner}
   <!-- Owner: manage view — profile + box list with the main box pinned -->
-  <div data-suisou-layout="stack container gap-3" class="page">
+  <div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
     {#await data.detail}
       <Skeleton height="7rem" />
       {@render listHead("")}
@@ -41,35 +41,33 @@
       </div>
     {:then detail}
       {@const displayName = detail.profile?.displayName ?? `@${detail.profile?.handle ?? data.cleanHandle}`}
-      <div data-suisou-surface="panel" data-suisou-media>
+      <div data-suisou-tray data-suisou-item="media">
         {#if detail.profile?.avatar}
           <img
-            data-suisou-avatar="large"
-            data-suisou-media-icon
+            data-suisou-item="circle large media-figure"
             src={detail.profile.avatar}
             alt={detail.profile.handle}
           />
         {:else}
-          <div data-suisou-avatar="large" data-suisou-media-icon>
+          <div data-suisou-item="circle large media-figure">
             {(detail.profile?.handle ?? data.cleanHandle)[0]?.toUpperCase() ?? "?"}
           </div>
         {/if}
-        <div data-suisou-media-content>
-          <h1 data-suisou-text="s20 w700">{displayName}</h1>
-          <p data-suisou-text="s14" class="sub">@{detail.profile?.handle ?? data.cleanHandle}</p>
+        <div data-suisou-item="media-content">
+          <h1 data-suisou-text="fs-20 fw-700">{displayName}</h1>
+          <p data-suisou-text="fs-14" class="sub">@{detail.profile?.handle ?? data.cleanHandle}</p>
           {#if detail.profile?.description}
-            <p data-suisou-text="s14 doc" class="sub">{detail.profile.description}</p>
+            <p data-suisou-text="fs-14 doc" class="sub">{detail.profile.description}</p>
           {/if}
           <a
             data-suisou-layout="row"
-            data-suisou-text="s12"
-            data-suisou-link
+            data-suisou-text="fs-12 link"
             class="accent"
             href={`https://bsky.app/profile/${detail.profile?.handle ?? data.cleanHandle}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Globe data-suisou-icon="small" />
+            <Globe data-suisou-text="fs-16" />
             Blueskyで見る
           </a>
         </div>
@@ -78,8 +76,8 @@
       {@render listHead(` (${detail.openBoxes.length}件)`)}
 
       {#if detail.openBoxes.length === 0}
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
-          <p data-suisou-text="s14" class="sub">まだ窓がありません</p>
+        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
+          <p data-suisou-text="fs-14" class="sub">まだ窓がありません</p>
           <a href={`/@${data.cleanHandle}/new`}>
             <Button variant="default">
               {#snippet leftIcon()}<Plus />{/snippet}
@@ -105,7 +103,7 @@
                 title="設定"
                 aria-label="設定"
               >
-                <Settings2 data-suisou-icon="small" />
+                <Settings2 data-suisou-text="fs-16" />
               </a>
             </div>
           {/each}
@@ -115,7 +113,7 @@
   </div>
 {:else}
   <!-- Visitor: send view — main box send form, then the other Mado below -->
-  <div data-suisou-layout="stack container gap-3" class="page narrow">
+  <div data-suisou-layout="stack gap-3" data-suisou="container" class="page narrow">
     {#await data.detail}
       <Skeleton height="16rem" />
     {:then detail}
@@ -128,16 +126,16 @@
           session={data.session}
         />
       {:else}
-        <div data-suisou-surface="panel empty" data-suisou-layout="stack center" class="empty">
-          <p data-suisou-text="s14" class="sub">現在受付中の窓はありません</p>
+        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
+          <p data-suisou-text="fs-14" class="sub">現在受付中の窓はありません</p>
         </div>
       {/if}
 
       {#if detail.subBoxes.length > 0}
         <div data-suisou-layout="stack gap-3" class="others">
           <div data-suisou-layout="row">
-            <MessageCircle data-suisou-icon="small sub" />
-            <h2 data-suisou-text="s14 w700" class="sub">
+            <MessageCircle data-suisou-text="fs-16" data-suisou="sub" />
+            <h2 data-suisou-text="fs-14 fw-700" class="sub">
               その他のMado ({detail.subBoxes.length})
             </h2>
           </div>
@@ -167,10 +165,10 @@
     padding: var(--suisou-space-4);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .accent {
-    color: var(--suisou-accent);
+    color: var(--suisou-color-accent);
   }
 
   /* 設定への近道。カードの上に重ねるので、位置だけ現場が持つ */
@@ -182,7 +180,7 @@
     top: var(--suisou-space-2);
     inset-inline-end: var(--suisou-space-2);
     opacity: 0;
-    transition: opacity var(--suisou-motion-fast) var(--suisou-ease);
+    transition: opacity var(--suisou-duration-fast) var(--suisou-ease);
   }
   .slot:hover .gear,
   .gear:focus-visible {

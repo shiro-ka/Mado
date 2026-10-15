@@ -62,7 +62,7 @@
   <title>窓を作る | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack container gap-4" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
   <div data-suisou-layout="row">
     <a href={`/@${data.cleanHandle}`}>
       <Button variant="ghost">
@@ -70,10 +70,10 @@
         戻る
       </Button>
     </a>
-    <h1 data-suisou-text="s24 w700">窓を作る</h1>
+    <h1 data-suisou-text="fs-24 fw-700">窓を作る</h1>
   </div>
 
-  <div data-suisou-surface="panel" class="card">
+  <div data-suisou-tray class="card">
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
       <Input
         label="タイトル（必須）"
@@ -106,22 +106,22 @@
           maxlength={30}
           disabled={formState === "submitting"}
         />
-        <p data-suisou-text="s12" class="preview">
+        <p data-suisou-text="fs-12" class="preview">
           /@{data.cleanHandle}/<span class="accent">{slugPreview}</span>
         </p>
       </div>
 
       <div data-suisou-layout="row between">
         <div data-suisou-layout="stack gap-0" class="label">
-          <p data-suisou-text="s14 w500" class="sub">声の受付</p>
-          <p data-suisou-text="s12" class="sub">オフにすると新しい声を受け付けません</p>
+          <p data-suisou-text="fs-14 fw-500" class="sub">声の受付</p>
+          <p data-suisou-text="fs-12" class="sub">オフにすると新しい声を受け付けません</p>
         </div>
         <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
       </div>
 
       {#if errorMsg}
-        <p data-suisou-banner="error" data-suisou-layout="row" role="alert">
-          <AlertCircle data-suisou-icon="small" />
+        <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+          <AlertCircle data-suisou-text="fs-16" />
           {errorMsg}
         </p>
       {/if}
@@ -153,14 +153,14 @@
     padding: var(--suisou-space-4);
   }
   .preview {
-    font-family: var(--suisou-mono);
-    color: var(--suisou-text-sub);
+    font-family: var(--suisou-font-mono);
+    color: var(--suisou-color-text-sub);
     word-break: break-all;
   }
   .accent {
-    color: var(--suisou-accent);
+    color: var(--suisou-color-accent);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 </style>

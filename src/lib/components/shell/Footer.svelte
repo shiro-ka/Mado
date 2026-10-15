@@ -3,23 +3,23 @@
   import Brand from "./Brand.svelte";
 </script>
 
-<footer data-suisou-rule="top" class="foot">
-  <div data-suisou-layout="stack container gap-4" class="inner">
+<footer data-suisou="bd-top" class="foot">
+  <div data-suisou-layout="stack gap-4" data-suisou="container" class="inner">
     <div data-suisou-layout="stack md:even gap-4" class="cols">
       <!-- Brand -->
       <div data-suisou-layout="stack">
         <Brand size="lg" />
-        <p data-suisou-text="s14" class="sub">
+        <p data-suisou-text="fs-14" class="sub">
           ATProtocol基盤の半匿名メッセージ。<br />窓越しに、想いを届けよう。
         </p>
       </div>
 
       <!-- Links -->
       <div data-suisou-layout="stack">
-        <h4 data-suisou-text="s14 w700">リンク</h4>
+        <h4 data-suisou-text="fs-14 fw-700">リンク</h4>
         <div data-suisou-layout="stack">
           {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/home", label: "ホーム" }] as link}
-            <a href={link.href} data-suisou-link data-suisou-text="s14" class="sub">
+            <a href={link.href} data-suisou-text="link fs-14" class="sub">
               {link.label}
             </a>
           {/each}
@@ -28,10 +28,10 @@
 
       <!-- Legal / Info -->
       <div data-suisou-layout="stack">
-        <h4 data-suisou-text="s14 w700">情報</h4>
+        <h4 data-suisou-text="fs-14 fw-700">情報</h4>
         <div data-suisou-layout="stack">
           {#each [{ href: "/privacy", label: "プライバシーポリシー" }, { href: "/terms", label: "利用規約" }] as link}
-            <a href={link.href} data-suisou-link data-suisou-text="s14" class="sub">
+            <a href={link.href} data-suisou-text="link fs-14" class="sub">
               {link.label}
             </a>
           {/each}
@@ -39,21 +39,22 @@
             href="https://atproto.com"
             target="_blank"
             rel="noopener noreferrer"
-            data-suisou-link data-suisou-layout="row" data-suisou-text="s14" class="sub"
+            data-suisou-layout="row"
+            data-suisou-text="link fs-14" class="sub"
           >
-            <Globe data-suisou-icon="small" />
+            <Globe data-suisou-text="fs-16" />
             ATProtocol
           </a>
         </div>
       </div>
     </div>
 
-    <div data-suisou-layout="stack md:row between" data-suisou-rule="top" class="bottom">
-      <p data-suisou-text="s12" class="sub">
+    <div data-suisou-layout="stack s:row between" data-suisou="bd-top" class="bottom">
+      <p data-suisou-text="fs-12" class="sub">
         &copy; {new Date().getFullYear()} Mado. All rights reserved.
       </p>
-      <div data-suisou-layout="row" data-suisou-text="s12" class="sub">
-        <Globe data-suisou-icon="small" />
+      <div data-suisou-layout="row" data-suisou-text="fs-12" class="sub">
+        <Globe data-suisou-text="fs-16" />
         <span>Powered by ATProtocol</span>
       </div>
     </div>
@@ -75,9 +76,9 @@
   }
 
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
   .sub:hover {
-    color: var(--suisou-text-main);
+    color: var(--suisou-color-text);
   }
 </style>

@@ -19,26 +19,26 @@
   ];
 </script>
 
-<div data-suisou-layout="stack container gap-4" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
   <div data-suisou-layout="stack">
-    <h1 data-suisou-text="s24 w700">使い方</h1>
-    <p data-suisou-text="s16 doc" class="sub">
+    <h1 data-suisou-text="fs-24 fw-700">使い方</h1>
+    <p data-suisou-text="fs-16 doc" class="sub">
       Madoは「窓を開くオーナー」と「声を送る訪問者」の2つの役割があります。
     </p>
   </div>
 
   {#each sections as section}
     <section data-suisou-layout="stack gap-3" class="group">
-      <h2 data-suisou-text="s16 w700">{section.title}</h2>
+      <h2 data-suisou-text="fs-16 fw-700">{section.title}</h2>
       {#each section.steps as item}
-        <div data-suisou-surface="panel" data-suisou-media>
+        <div data-suisou-tray data-suisou-item="media">
           <span class="step">
-            <span data-suisou-tile><item.icon data-suisou-icon={item.tone} /></span>
-            <span data-suisou-text="s12 w700" class="num">{item.step}</span>
+            <span data-suisou-item="square"><item.icon data-suisou-icon={item.tone} /></span>
+            <span data-suisou-text="fs-12 fw-700" class="num">{item.step}</span>
           </span>
-          <div data-suisou-media-content>
-            <p data-suisou-text="s14 w700">{item.title}</p>
-            <p data-suisou-text="s14 doc" class="sub">{item.body}</p>
+          <div data-suisou-item="media-content">
+            <p data-suisou-text="fs-14 fw-700">{item.title}</p>
+            <p data-suisou-text="fs-14 doc" class="sub">{item.body}</p>
           </div>
         </div>
       {/each}
@@ -52,7 +52,7 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {
-    color: var(--suisou-text-sub);
+    color: var(--suisou-color-text-sub);
   }
 
   /* 手順の番号。タイルの角に小さく載せる */
@@ -69,8 +69,8 @@
     width: 1.125rem;
     height: 1.125rem;
     border-radius: var(--suisou-radius-pill);
-    background: var(--suisou-bg);
-    border: 1px solid var(--suisou-accent);
-    color: var(--suisou-accent);
+    background: var(--suisou-color-bg);
+    border: 1px solid var(--suisou-color-accent);
+    color: var(--suisou-color-accent);
   }
 </style>
