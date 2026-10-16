@@ -15,7 +15,7 @@ export interface QuestionBox {
   title: string;
   description?: string;
   isOpen: boolean;
-  publicKeyHex: string;
+  publicKeyHex?: string;
   createdAt: string;
   ownerDid: string;
   ownerHandle?: string;
@@ -27,7 +27,7 @@ export interface Question {
   cid: string;
   rkey: string;
   boxUri: string;        // AT-URI of the box: at://ownerDid/blue.mado.box/rkey
-  encryptedFrom: string; // base64 ECIES-encrypted sender DID
+  encryptedFrom?: string;
   body: string;          // plaintext question text (public on PDS)
   senderDid?: string;    // decrypted sender DID (only visible to box owner)
   senderHandle?: string;
@@ -53,13 +53,13 @@ export interface BlueMadoBox {
   title: string;
   description?: string;
   isOpen: boolean;
-  publicKeyHex: string;
+  publicKeyHex?: string;
   createdAt: string;
 }
 
 export interface BlueMadoKoe {
   $type: "blue.mado.koe";
-  encryptedFrom: string; // base64 ECIES-encrypted sender DID
+  encryptedFrom?: string;
   body: string;          // plaintext question text (public on PDS)
   box: string;           // AT-URI: at://ownerDid/blue.mado.box/rkey
   createdAt: string;

@@ -203,14 +203,12 @@ export async function writeQuestion(params: {
   sessionFetch: SessionFetch;
   ownerDid: string;
   boxUri: string;
-  encryptedFrom: string;
   body: string;
 }): Promise<{ uri: string; cid: string } | null> {
-  const { sessionFetch, ownerDid, boxUri, encryptedFrom, body } = params;
+  const { sessionFetch, ownerDid, boxUri, body } = params;
   try {
     const record: BlueMadoKoe = {
       $type: NSID.KOE,
-      encryptedFrom,
       body,
       box: boxUri,
       createdAt: new Date().toISOString(),
@@ -258,9 +256,8 @@ export async function createBoxRecord(params: {
   title: string;
   description?: string;
   isOpen: boolean;
-  publicKeyHex: string;
 }): Promise<{ uri: string; cid: string; rkey: string } | null> {
-  const { sessionFetch, did, slug, title, description, isOpen, publicKeyHex } = params;
+  const { sessionFetch, did, slug, title, description, isOpen } = params;
   try {
     const record: BlueMadoBox = {
       $type: NSID.BOX,
@@ -268,7 +265,6 @@ export async function createBoxRecord(params: {
       title,
       description,
       isOpen,
-      publicKeyHex,
       createdAt: new Date().toISOString(),
     };
     const res = await xrpc<{ uri: string; cid: string }>({
@@ -291,11 +287,10 @@ export async function updateBoxRecord(params: {
   title: string;
   description?: string;
   isOpen: boolean;
-  publicKeyHex: string;
   slug: string;
   createdAt: string;
 }): Promise<boolean> {
-  const { sessionFetch, did, rkey, title, description, isOpen, publicKeyHex, slug, createdAt } =
+  const { sessionFetch, did, rkey, title, description, isOpen, slug, createdAt } =
     params;
   try {
     const record: BlueMadoBox = {
@@ -304,7 +299,6 @@ export async function updateBoxRecord(params: {
       title,
       description,
       isOpen,
-      publicKeyHex,
       createdAt,
     };
     await xrpc({

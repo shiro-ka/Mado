@@ -2,7 +2,7 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { listQuestions, listBoxes, getProfiles } from "$lib/atproto/index.js";
-import { decryptDid } from "$lib/crypto.js";
+import { resolveSenders } from "$lib/senders.server.js";
 
 export const load: PageServerLoad = async ({ parent, platform, url }) => {
   const { session } = await parent();
@@ -26,32 +26,20 @@ export const load: PageServerLoad = async ({ parent, platform, url }) => {
 
       const readSet = new Set(readRkeys);
       const boxSlugMap = new Map(boxes.map((b) => [b.rkey, b.slug]));
-      const keys = new Map(
-        await Promise.all(
-          boxes.map(async (b) => [b.rkey, await store.getKeyPair(session.did, b.rkey)] as const),
-        ),
-      );
-      const senders = questionsRaw.map((q) => {
-        const key = keys.get(q.boxUri.split("/").pop() ?? "");
-        if (!key) return undefined;
-        try {
-          return decryptDid(key, q.encryptedFrom);
-        } catch {
-          return undefined;
-        }
-      });
-      const profiles = await getProfiles([...new Set(senders.filter((d): d is string => !!d))]);
-      const allQuestions = questionsRaw.map((q, i) => {
+      const senderMap = await resolveSenders(store, session.did, questionsRaw);
+      const profiles = await getProfiles([...new Set(senderMap.values())]);
+      const allQuestions = questionsRaw.map((q) => {
         const boxRkey = q.boxUri.split("/").pop() ?? "";
         const slug = boxSlugMap.get(boxRkey);
         const href = slug ? `/@${session.handle}/${slug}/${q.rkey}` : `/receive`;
         const { encryptedFrom: _, ...rest } = q;
-        const profile = senders[i] ? profiles.get(senders[i]) : undefined;
+        const senderDid = senderMap.get(q.rkey);
+        const profile = senderDid ? profiles.get(senderDid) : undefined;
         return {
           ...rest,
           isRead: readSet.has(q.rkey),
           href,
-          senderDid: senders[i],
+          senderDid,
           senderHandle: profile?.handle,
           senderDisplayName: profile?.displayName,
           senderAvatar: profile?.avatar,

@@ -75,7 +75,6 @@ export const PATCH: RequestHandler = async ({ params, request, cookies, platform
       title: title ?? box.title,
       description: description ?? box.description,
       isOpen: isOpen ?? box.isOpen,
-      publicKeyHex: box.publicKeyHex,
       slug: slug ?? box.slug,
       createdAt: box.createdAt,
     });

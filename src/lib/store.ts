@@ -261,11 +261,37 @@ export class CloudflareStore {
     return row !== null;
   }
 
-  // ── Read state (D1) ─────────────────────────────────────────────────────
+  async recordDelivery(d: { ownerDid: string; koeRkey: string; senderDid: string; sentAt: string; body: string }): Promise<void> {
+    await this.env.DB.prepare(
+      `INSERT INTO deliveries (owner_did, koe_rkey, sender_did, sent_at, body) VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET sender_did = excluded.sender_did, sent_at = excluded.sent_at, body = excluded.body`
+    )
+      .bind(d.ownerDid, d.koeRkey, d.senderDid, Math.floor(new Date(d.sentAt).getTime() / 1000), d.body)
+      .run();
+  }
+
+  async setSender(ownerDid: string, koeRkey: string, senderDid: string): Promise<void> {
+    await this.env.DB.prepare(
+      `INSERT INTO deliveries (owner_did, koe_rkey, sender_did) VALUES (?, ?, ?)
+       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET sender_did = excluded.sender_did`
+    )
+      .bind(ownerDid, koeRkey, senderDid)
+      .run();
+  }
+
+  async listSenders(ownerDid: string): Promise<Map<string, string>> {
+    const { results } = await this.env.DB.prepare(
+      "SELECT koe_rkey, sender_did FROM deliveries WHERE owner_did = ? AND sender_did IS NOT NULL"
+    )
+      .bind(ownerDid)
+      .all<{ koe_rkey: string; sender_did: string }>();
+    return new Map(results.map((r: { koe_rkey: string; sender_did: string }) => [r.koe_rkey, r.sender_did]));
+  }
 
   async markRead(ownerDid: string, rkey: string): Promise<void> {
     await this.env.DB.prepare(
-      "INSERT OR IGNORE INTO reads (owner_did, rkey, read_at) VALUES (?, ?, ?)"
+      `INSERT INTO deliveries (owner_did, koe_rkey, owner_read_at) VALUES (?, ?, ?)
+       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET owner_read_at = COALESCE(owner_read_at, excluded.owner_read_at)`
     )
       .bind(ownerDid, rkey, Math.floor(Date.now() / 1000))
       .run();
@@ -273,7 +299,7 @@ export class CloudflareStore {
 
   async unmarkRead(ownerDid: string, rkey: string): Promise<void> {
     await this.env.DB.prepare(
-      "DELETE FROM reads WHERE owner_did = ? AND rkey = ?"
+      "UPDATE deliveries SET owner_read_at = NULL WHERE owner_did = ? AND koe_rkey = ?"
     )
       .bind(ownerDid, rkey)
       .run();
@@ -281,73 +307,34 @@ export class CloudflareStore {
 
   async listRead(ownerDid: string): Promise<string[]> {
     const { results } = await this.env.DB.prepare(
-      "SELECT rkey FROM reads WHERE owner_did = ?"
+      "SELECT koe_rkey FROM deliveries WHERE owner_did = ? AND owner_read_at IS NOT NULL"
     )
       .bind(ownerDid)
-      .all<{ rkey: string }>();
-    return results.map((r: { rkey: string }) => r.rkey);
+      .all<{ koe_rkey: string }>();
+    return results.map((r: { koe_rkey: string }) => r.koe_rkey);
   }
 
-  // ── Sent history (D1, newest first, capped at `cap` entries) ────────────
-
-  async pushSent(senderDid: string, entry: SentRef, cap: number): Promise<void> {
-    const ts = Math.floor(new Date(entry.sentAt).getTime() / 1000);
-    await this.env.DB.prepare(
-      "INSERT OR REPLACE INTO sent (sender_did, owner_did, koe_rkey, sent_at, body) VALUES (?, ?, ?, ?, ?)"
-    )
-      .bind(senderDid, entry.ownerDid, entry.koeRkey, ts, entry.body)
-      .run();
-    // Trim oldest entries beyond cap
-    await this.env.DB.prepare(
-      `DELETE FROM sent WHERE sender_did = ? AND rowid NOT IN (
-        SELECT rowid FROM sent WHERE sender_did = ? ORDER BY sent_at DESC LIMIT ?
-      )`
-    )
-      .bind(senderDid, senderDid, cap)
-      .run();
-  }
-
-  async listSent(senderDid: string, limit: number): Promise<SentRef[]> {
+  async listSent(senderDid: string, limit: number): Promise<(SentRef & { isRead: boolean })[]> {
     const { results } = await this.env.DB.prepare(
-      "SELECT owner_did, koe_rkey, sent_at, body FROM sent WHERE sender_did = ? ORDER BY sent_at DESC LIMIT ?"
+      "SELECT owner_did, koe_rkey, sent_at, body, sender_read_at FROM deliveries WHERE sender_did = ? AND sent_at IS NOT NULL ORDER BY sent_at DESC LIMIT ?"
     )
       .bind(senderDid, limit)
-      .all<{ owner_did: string; koe_rkey: string; sent_at: number; body: string }>();
-    return results.map((r: { owner_did: string; koe_rkey: string; sent_at: number; body: string }) => ({
+      .all<{ owner_did: string; koe_rkey: string; sent_at: number; body: string; sender_read_at: number | null }>();
+    return results.map((r: { owner_did: string; koe_rkey: string; sent_at: number; body: string; sender_read_at: number | null }) => ({
       ownerDid: r.owner_did,
       koeRkey: r.koe_rkey,
       sentAt: new Date(r.sent_at * 1000).toISOString(),
       body: r.body,
+      isRead: r.sender_read_at !== null,
     }));
   }
 
-  // ── Sent-read state (D1) ─────────────────────────────────────────────────
-
-  async markSentRead(senderDid: string, token: string): Promise<void> {
+  async markSentRead(senderDid: string, ownerDid: string, koeRkey: string): Promise<void> {
     await this.env.DB.prepare(
-      "INSERT OR IGNORE INTO sent_reads (sender_did, token, read_at) VALUES (?, ?, ?)"
+      "UPDATE deliveries SET sender_read_at = COALESCE(sender_read_at, ?) WHERE sender_did = ? AND owner_did = ? AND koe_rkey = ?"
     )
-      .bind(senderDid, token, Math.floor(Date.now() / 1000))
+      .bind(Math.floor(Date.now() / 1000), senderDid, ownerDid, koeRkey)
       .run();
-  }
-
-  async isSentRead(senderDid: string, token: string): Promise<boolean> {
-    const row = await this.env.DB.prepare(
-      "SELECT 1 FROM sent_reads WHERE sender_did = ? AND token = ?"
-    )
-      .bind(senderDid, token)
-      .first();
-    return row !== null;
-  }
-
-  /** All read-tokens for a sender, in one query (avoids per-item lookups). */
-  async listSentReads(senderDid: string): Promise<string[]> {
-    const { results } = await this.env.DB.prepare(
-      "SELECT token FROM sent_reads WHERE sender_did = ?"
-    )
-      .bind(senderDid)
-      .all<{ token: string }>();
-    return results.map((r: { token: string }) => r.token);
   }
 
   // ── Notification prefs (D1) ─────────────────────────────────────────────

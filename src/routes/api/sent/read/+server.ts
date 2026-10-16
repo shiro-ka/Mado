@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     if (!parsed.success) return json({ error: "Invalid request" }, { status: 400 });
 
     const { ownerDid, koeRkey } = parsed.data;
-    await store.markSentRead(session.did, `${ownerDid}:${koeRkey}`);
+    await store.markSentRead(session.did, ownerDid, koeRkey);
     return json({ success: true });
   } catch {
     return json({ error: "Internal server error" }, { status: 500 });

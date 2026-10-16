@@ -8,7 +8,7 @@
       "key": "tid",
       "record": {
         "type": "object",
-        "required": ["slug", "title", "isOpen", "publicKeyHex", "createdAt"],
+        "required": ["slug", "title", "isOpen", "createdAt"],
         "properties": {
           "slug": {
             "type": "string",

@@ -10,11 +10,7 @@ export const load: PageServerLoad = async ({ parent, platform }) => {
   const env = platform!.env;
   const store = new CloudflareStore(env);
 
-  const [sentRefs, readTokens] = await Promise.all([
-    store.listSent(session.did, 200),
-    store.listSentReads(session.did),
-  ]);
-  const readSet = new Set(readTokens);
+  const sentRefs = await store.listSent(session.did, 200);
 
   const uniqueOwners = [...new Set(sentRefs.map((r) => r.ownerDid))];
   const answerMapEntries = await Promise.all(
@@ -27,10 +23,9 @@ export const load: PageServerLoad = async ({ parent, platform }) => {
     answerMapEntries.flatMap(({ map }) => [...map.entries()])
   );
 
-  const items = sentRefs.map((ref) => {
+  const items = sentRefs.map(({ isRead, ...ref }) => {
     const koeUri = `at://${ref.ownerDid}/blue.mado.koe/${ref.koeRkey}`;
     const answers = allAnswers.get(koeUri) ?? [];
-    const isRead = readSet.has(`${ref.ownerDid}:${ref.koeRkey}`);
     return { ref, koeUri, answers, isRead };
   });
 

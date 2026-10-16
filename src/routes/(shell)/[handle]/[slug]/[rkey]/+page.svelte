@@ -45,10 +45,10 @@
     <p data-suisou-text="fs-16" class="body doc">{data.question.body}</p>
 
     {#if data.isOwner}
-      {#if data.decryptError}
+      {#if data.senderUnknown}
         <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
           <Lock data-suisou-text="fs-16" />
-          送信者の特定に失敗しました。秘密鍵が見つかりません。
+          送り主を特定できませんでした。
         </p>
       {/if}
 

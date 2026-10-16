@@ -2,11 +2,9 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
-import type { SentRef } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreAnyOAuthSession } from "$lib/oauth.server.js";
-import { encryptDid } from "$lib/crypto.js";
-import { writeQuestion, getBoxRecord, getProfile, invalidateRecords, NSID } from "$lib/atproto/index.js";
+import { writeQuestion, getBoxRecord, getProfile, deleteRecord, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { notifyNewKoe } from "$lib/notify.server.js";
 import { didSchema, rkeySchema } from "$lib/validation.js";
 
@@ -158,8 +156,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const encryptedFrom = encryptDid(box.publicKeyHex, session.did);
-
     const ownerSessionFetch = await restoreAnyOAuthSession(env, store, boxOwnerDid);
     if (!ownerSessionFetch) {
       return json(
@@ -172,7 +168,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       sessionFetch: ownerSessionFetch,
       ownerDid: boxOwnerDid,
       boxUri: box.uri,
-      encryptedFrom,
       body,
     });
 
@@ -188,17 +183,24 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     invalidateRecords(boxOwnerDid, NSID.KOE);
 
     const koeRkey = result.uri.split("/").pop() ?? "";
-    const sentRef: SentRef = {
-      ownerDid: boxOwnerDid,
-      koeRkey,
-      sentAt: new Date().toISOString(),
-      body,
-    };
-    await store.pushSent(session.did, sentRef, 200);
+    try {
+      await store.recordDelivery({
+        ownerDid: boxOwnerDid,
+        koeRkey,
+        senderDid: session.did,
+        sentAt: new Date().toISOString(),
+        body,
+      });
+    } catch (recordErr) {
+      console.error("[/api/questions/send] delivery record failed — rolling back koe", recordErr);
+      await deleteRecord({ sessionFetch: ownerSessionFetch, did: boxOwnerDid, collection: NSID.KOE, rkey: koeRkey });
+      invalidateRecords(boxOwnerDid, NSID.KOE);
+      return json(
+        { error: "Write failed", message: "声の送信に失敗しました" },
+        { status: 500 }
+      );
+    }
 
-    // Opt-in DM notification to the owner. Runs after the response and never
-    // affects the send outcome — the koe is already in the owner's /receive
-    // inbox regardless of whether the DM lands.
     platform!.ctx.waitUntil(
       notifyNewKoe(env, store, {
         ownerDid: boxOwnerDid,

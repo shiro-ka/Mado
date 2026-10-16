@@ -2,7 +2,7 @@ import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { resolveHandle, findBoxBySlug, getKoeRecord, listAnswers, getProfile } from "$lib/atproto/index.js";
-import { decryptDid } from "$lib/crypto.js";
+import { resolveSenders } from "$lib/senders.server.js";
 
 export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
   const { session } = await parent();
@@ -29,21 +29,15 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   const isOwner = session?.did === ownerDid;
 
   let senderDid: string | null = null;
-  let decryptError = false;
+  let senderUnknown = false;
   let senderBlocked = false;
 
   if (isOwner) {
     const env = platform!.env;
     const store = new CloudflareStore(env);
     await store.markRead(ownerDid, params.rkey);
-    try {
-      const privateKeyHex = await store.getKeyPair(ownerDid, box.rkey);
-      if (privateKeyHex) {
-        senderDid = decryptDid(privateKeyHex, question.encryptedFrom);
-      }
-    } catch {
-      decryptError = true;
-    }
+    senderDid = (await resolveSenders(store, ownerDid, [question])).get(question.rkey) ?? null;
+    senderUnknown = !senderDid;
     if (senderDid) {
       senderBlocked = await store.isBlocked(ownerDid, senderDid);
     }
@@ -64,7 +58,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     senderDid,
     senderProfile,
     senderBlocked,
-    decryptError,
+    senderUnknown,
     origin: url.origin,
   };
 };

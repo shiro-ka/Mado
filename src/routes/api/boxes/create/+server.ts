@@ -5,8 +5,7 @@ import { nanoid } from "nanoid";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { generateKeyPair } from "$lib/crypto.js";
-import { createBoxRecord, deleteRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
+import { createBoxRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { slugSchema } from "$lib/validation.js";
 
 const createBoxSchema = z.object({
@@ -64,7 +63,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     } else {
       slug = nanoid(8);
     }
-    const { publicKey, privateKey } = generateKeyPair();
 
     const result = await createBoxRecord({
       sessionFetch,
@@ -73,38 +71,11 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       title,
       description,
       isOpen,
-      publicKeyHex: publicKey,
     });
 
     if (!result) {
       return json(
         { error: "Write failed", message: "窓の作成に失敗しました" },
-        { status: 500 }
-      );
-    }
-
-    try {
-      await store.setKeyPair(session.did, result.rkey, privateKey);
-    } catch (keyErr) {
-      // The box record already exists on the PDS, but we failed to persist its
-      // private key. Without the key the owner could never decrypt any sender
-      // DID for this box, so roll the record back rather than leave an
-      // undecryptable orphan (and let the user retry cleanly).
-      console.error(
-        "[/api/boxes/create] key persist failed — rolling back box record",
-        keyErr
-      );
-      await deleteRecord({
-        sessionFetch,
-        did: session.did,
-        collection: NSID.BOX,
-        rkey: result.rkey,
-      });
-      return json(
-        {
-          error: "Write failed",
-          message: "窓の作成に失敗しました。もう一度お試しください。",
-        },
         { status: 500 }
       );
     }
