@@ -39,7 +39,7 @@
     },
     {
       step: "2", icon: MessageCircle, tone: "success",
-      title: "窓を作る",
+      title: "窓を開ける",
       description: "タイトルと説明文を設定して窓を公開。URLをシェアして声を募集しましょう。",
     },
     {

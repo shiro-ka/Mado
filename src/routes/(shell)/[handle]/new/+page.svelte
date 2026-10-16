@@ -57,7 +57,7 @@
 </script>
 
 <svelte:head>
-  <title>窓を作る | Mado</title>
+  <title>窓を開ける | Mado</title>
 </svelte:head>
 
 <div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
@@ -66,7 +66,7 @@
       {#snippet leftIcon()}<ArrowLeft />{/snippet}
       戻る
     </Button>
-    <h1 data-suisou-text="fs-24 fw-700">窓を作る</h1>
+    <h1 data-suisou-text="fs-24 fw-700">窓を開ける</h1>
   </div>
 
   <div data-suisou-tray class="card">

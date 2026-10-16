@@ -22,7 +22,7 @@
     <a href={`/@${data.cleanHandle}/new`}>
       <Button variant="default">
         {#snippet leftIcon()}<Plus />{/snippet}
-        新しい窓を作る
+        新しい窓を開ける
       </Button>
     </a>
   </div>
@@ -80,7 +80,7 @@
           <a href={`/@${data.cleanHandle}/new`}>
             <Button variant="default">
               {#snippet leftIcon()}<Plus />{/snippet}
-              最初の窓を作る
+              最初の窓を開ける
             </Button>
           </a>
         </div>
