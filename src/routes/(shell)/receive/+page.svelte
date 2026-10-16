@@ -105,7 +105,7 @@
         <a
           data-suisou-button
           data-suisou-layout="grow"
-          href={`/receive?tab=${t.key}`}
+          href={`?tab=${t.key}`}
           aria-current={tab === t.key ? "page" : undefined}
         >
           {t.label}
