@@ -96,10 +96,12 @@
       {#snippet leftIcon()}<img src="/mado-logo.svg" alt="" class="logo" />{/snippet}
       返信する
     </Button>
-    <Button variant="ghost" loading={busy === "through"} onclick={() => run("through")}>
-      {#snippet leftIcon()}<Archive />{/snippet}
-      既読にする
-    </Button>
+    {#if !question.isRead}
+      <Button variant="ghost" loading={busy === "through"} onclick={() => run("through")}>
+        {#snippet leftIcon()}<Archive />{/snippet}
+        既読にする
+      </Button>
+    {/if}
     <Button
       variant="ghost"
       icon
