@@ -19,7 +19,6 @@
   let { question, href, showNewTag = false, onReplied, onThrough, onBlocked, onDeleted }: Props = $props();
 
   let replying = $state(false);
-  let menu = $state(false);
   let confirm = $state<"block" | "delete" | null>(null);
   let busy = $state<"through" | "block" | "delete" | null>(null);
   let failed = $state<string | null>(null);
@@ -105,30 +104,33 @@
       variant="ghost"
       icon
       aria-label="そのほかの操作"
-      aria-expanded={menu}
-      onclick={() => {
-        menu = !menu;
-        confirm = null;
-      }}
+      popovertarget={`more-${question.rkey}`}
+      style={`anchor-name: --more-${question.rkey}`}
+      onclick={() => (confirm = null)}
     >
       <EllipsisVertical />
     </Button>
   </div>
 
-  {#if menu}
-    <div data-suisou-layout="row end gap-1" class="actions">
-      {#if question.senderDid}
-        <Button variant="ghost" loading={busy === "block"} onclick={() => ask("block")}>
-          {#snippet leftIcon()}<Ban />{/snippet}
-          {confirm === "block" ? "本当にブロックする" : "ブロック"}
-        </Button>
-      {/if}
-      <Button variant="destructive" loading={busy === "delete"} onclick={() => ask("delete")}>
-        {#snippet leftIcon()}<Trash2 />{/snippet}
-        {confirm === "delete" ? "本当に削除する" : "削除"}
+  <div
+    popover="auto"
+    id={`more-${question.rkey}`}
+    data-suisou-tray
+    data-suisou-layout="stack gap-1"
+    class="menu"
+    style={`position-anchor: --more-${question.rkey}`}
+  >
+    {#if question.senderDid}
+      <Button variant="ghost" loading={busy === "block"} onclick={() => ask("block")}>
+        {#snippet leftIcon()}<Ban />{/snippet}
+        {confirm === "block" ? "本当にブロックする" : "ブロック"}
       </Button>
-    </div>
-  {/if}
+    {/if}
+    <Button variant="destructive" loading={busy === "delete"} onclick={() => ask("delete")}>
+      {#snippet leftIcon()}<Trash2 />{/snippet}
+      {confirm === "delete" ? "本当に削除する" : "削除"}
+    </Button>
+  </div>
 
   {#if failed}
     <p data-suisou-text="fs-12 end" class="error">{failed}</p>
@@ -163,6 +165,12 @@
   }
   .actions {
     padding: 0 var(--suisou-space-2) var(--suisou-space-2);
+  }
+  .menu {
+    inset: auto;
+    margin: 0;
+    position-area: top span-left;
+    margin-block-end: var(--suisou-space-1);
   }
   .logo {
     width: var(--suisou-size-icon);
