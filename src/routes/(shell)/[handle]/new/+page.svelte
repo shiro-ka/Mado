@@ -4,7 +4,6 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
-  import Toggle from "$lib/components/ui/Toggle.svelte";
   import { slugFormatError } from "$lib/validation.js";
   import type { PageData } from "./$types";
 
@@ -15,7 +14,6 @@
   let title = $state("");
   let description = $state("");
   let slug = $state("");
-  let isOpen = $state(true);
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
 
@@ -37,7 +35,6 @@
           title: title.trim(),
           description: description.trim() || undefined,
           slug: slug.trim() || undefined,
-          isOpen,
         }),
       });
 
@@ -96,13 +93,6 @@
         </p>
       </div>
 
-      <div data-suisou-layout="row between">
-        <div data-suisou-layout="stack gap-0" class="label">
-          <p data-suisou-text="fs-14 fw-500" class="sub">声の受付</p>
-          <p data-suisou-text="fs-12" class="sub">オフにすると新しい声を受け付けません</p>
-        </div>
-        <Toggle bind:checked={isOpen} label="声の受付" disabled={formState === "submitting"} />
-      </div>
 
       {#if errorMsg}
         <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
@@ -145,8 +135,5 @@
   }
   .accent {
     color: var(--suisou-color-accent);
-  }
-  .sub {
-    color: var(--suisou-color-text-sub);
   }
 </style>
