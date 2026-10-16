@@ -23,9 +23,9 @@
   const tab = $derived(data.tab as FilterTab);
 
   const tabs: { key: FilterTab; label: string }[] = [
-    { key: "all", label: "すべて" },
     { key: "unread", label: "未読" },
     { key: "read", label: "既読" },
+    { key: "all", label: "すべて" },
   ];
 </script>
 
