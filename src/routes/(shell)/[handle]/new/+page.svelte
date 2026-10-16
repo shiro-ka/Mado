@@ -66,7 +66,7 @@
   <div data-suisou-tray class="card">
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
       <Input
-        label="タイトル（必須）"
+        label="タイトル"
         placeholder="なんでも声を届けてください！"
         bind:value={title}
         helper="窓に表示されるタイトルです"
