@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { User, ChevronRight } from "lucide-svelte";
+  import { User, ChevronRight, Archive, EllipsisVertical, Ban, Trash2 } from "lucide-svelte";
   import { page } from "$app/state";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
@@ -12,36 +12,53 @@
     showNewTag?: boolean;
     onReplied?: () => void;
     onThrough?: () => void;
+    onBlocked?: (senderDid: string) => void;
+    onDeleted?: () => void;
   }
 
-  let { question, href, showNewTag = false, onReplied, onThrough }: Props = $props();
+  let { question, href, showNewTag = false, onReplied, onThrough, onBlocked, onDeleted }: Props = $props();
 
-  let open = $state(false);
-  let through = $state<"idle" | "busy" | "error">("idle");
+  let replying = $state(false);
+  let menu = $state(false);
+  let confirm = $state<"block" | "delete" | null>(null);
+  let busy = $state<"through" | "block" | "delete" | null>(null);
+  let failed = $state<string | null>(null);
 
   const name = $derived(question.senderDisplayName || question.senderHandle);
 
-  async function markThrough() {
-    through = "busy";
+  async function run(kind: "through" | "block" | "delete") {
+    busy = kind;
+    failed = null;
     try {
-      const res = await fetch(`/api/questions/${question.rkey}/handled`, { method: "POST" });
+      const res =
+        kind === "through"
+          ? await fetch(`/api/questions/${question.rkey}/handled`, { method: "POST" })
+          : kind === "block"
+            ? await fetch("/api/blocks/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ senderDid: question.senderDid }),
+              })
+            : await fetch(`/api/questions/${question.rkey}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
-      through = "idle";
-      onThrough?.();
+      if (kind === "through") onThrough?.();
+      else if (kind === "block") onBlocked?.(question.senderDid!);
+      else onDeleted?.();
     } catch {
-      through = "error";
+      failed = { through: "既読にできませんでした", block: "ブロックできませんでした", delete: "削除できませんでした" }[kind];
+    } finally {
+      busy = null;
     }
+  }
+
+  function ask(kind: "block" | "delete") {
+    if (confirm === kind) run(kind);
+    else confirm = kind;
   }
 </script>
 
 <div data-suisou-tray data-suisou-layout="stack gap-0" class="card">
-  <button
-    type="button"
-    data-suisou-item="media"
-    class="head"
-    aria-expanded={open}
-    onclick={() => (open = !open)}
-  >
+  <a {href} data-suisou-item="media" class="main">
     <span data-suisou-item="media-figure">
       {#if question.senderAvatar}
         <img src={question.senderAvatar} alt="" data-suisou-item="circle" />
@@ -69,28 +86,62 @@
           <span data-suisou-text="fs-12" class="sub">{formatDate(question.createdAt)}</span>
         </span>
       </span>
-      <span class="text" class:clamp={!open}>{open ? question.body : truncate(question.body, 120)}</span>
+      <span class="text clamp">{truncate(question.body, 120)}</span>
     </span>
-  </button>
 
-  {#if open}
-    <div data-suisou-layout="stack gap-3" data-suisou="bd-top" class="body">
+    <span data-suisou-item="media-tail" class="go"><ChevronRight data-suisou="sub" /></span>
+  </a>
+
+  <div data-suisou-layout="row end gap-1" class="actions">
+    <Button variant="ghost" onclick={() => (replying = !replying)} aria-expanded={replying}>
+      {#snippet leftIcon()}<img src="/mado-logo.svg" alt="" class="logo" />{/snippet}
+      返信する
+    </Button>
+    <Button variant="ghost" loading={busy === "through"} onclick={() => run("through")}>
+      {#snippet leftIcon()}<Archive />{/snippet}
+      既読にする
+    </Button>
+    <Button
+      variant="ghost"
+      icon
+      aria-label="そのほかの操作"
+      aria-expanded={menu}
+      onclick={() => {
+        menu = !menu;
+        confirm = null;
+      }}
+    >
+      <EllipsisVertical />
+    </Button>
+  </div>
+
+  {#if menu}
+    <div data-suisou-layout="row end gap-1" class="actions">
+      {#if question.senderDid}
+        <Button variant="ghost" loading={busy === "block"} onclick={() => ask("block")}>
+          {#snippet leftIcon()}<Ban />{/snippet}
+          {confirm === "block" ? "本当にブロックする" : "ブロック"}
+        </Button>
+      {/if}
+      <Button variant="destructive" loading={busy === "delete"} onclick={() => ask("delete")}>
+        {#snippet leftIcon()}<Trash2 />{/snippet}
+        {confirm === "delete" ? "本当に削除する" : "削除"}
+      </Button>
+    </div>
+  {/if}
+
+  {#if failed}
+    <p data-suisou-text="fs-12 end" class="error">{failed}</p>
+  {/if}
+
+  {#if replying}
+    <div data-suisou="bd-top" class="reply">
       <AnswerForm
         koeUri={question.uri}
         questionBody={question.body}
         pageUrl={`${page.url.origin}${href}`}
         onSuccess={() => onReplied?.()}
       />
-      <div data-suisou-layout="row between">
-        <Button variant="ghost" href={href}>
-          詳細を開く
-          {#snippet rightIcon()}<ChevronRight />{/snippet}
-        </Button>
-        <Button variant="outline" loading={through === "busy"} onclick={markThrough}>スルー</Button>
-      </div>
-      {#if through === "error"}
-        <p data-suisou-text="fs-12" class="error">スルーに失敗しました</p>
-      {/if}
     </div>
   {/if}
 </div>
@@ -99,14 +150,25 @@
   .card {
     padding: 0;
   }
-  .head {
-    width: 100%;
+  .main {
     padding: var(--suisou-space-2);
-    text-align: start;
     color: var(--suisou-color-text);
-    border-radius: 0;
+    text-decoration: none;
   }
-  .body {
+  .main:hover {
+    background: var(--suisou-color-hover);
+  }
+  .go {
+    align-self: center;
+  }
+  .actions {
+    padding: 0 var(--suisou-space-2) var(--suisou-space-2);
+  }
+  .logo {
+    width: var(--suisou-size-icon);
+    height: var(--suisou-size-icon);
+  }
+  .reply {
     padding: var(--suisou-space-2);
   }
   .who {
@@ -127,6 +189,7 @@
     color: var(--suisou-color-text-sub);
   }
   .error {
+    padding-inline: var(--suisou-space-2);
     color: var(--suisou-color-error);
   }
   .clamp {

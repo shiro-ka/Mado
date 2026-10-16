@@ -30,6 +30,8 @@
 
   let acted = $state(new Map<string, "replied" | "through">());
   let undoing = $state<string | null>(null);
+  let deleted = $state(new Set<string>());
+  let blocked = $state(new Set<string>());
 
   function setActed(rkey: string, kind: "replied" | "through" | null) {
     const next = new Map(acted);
@@ -88,7 +90,9 @@
       {/each}
     </div>
   {:then inbox}
-    {@const allQuestions = inbox.allQuestions}
+    {@const allQuestions = inbox.allQuestions.filter(
+      (q) => !deleted.has(q.rkey) && !(q.senderDid && blocked.has(q.senderDid)),
+    )}
     {@const newCount = allQuestions.filter((q) => !q.isRead && !acted.has(q.rkey)).length}
     {@const filtered = allQuestions.filter((q) => {
       if (tab === "new") return !q.isRead;
@@ -131,7 +135,7 @@
         {#each filtered as question (question.rkey)}
           {#if acted.get(question.rkey) === "through"}
             <div data-suisou-tray data-suisou-layout="row between" class="acted">
-              <span data-suisou-text="fs-14" class="sub">スルーしました</span>
+              <span data-suisou-text="fs-14" class="sub">既読にしました</span>
               <Button variant="ghost" loading={undoing === question.rkey} onclick={() => undoThrough(question.rkey)}>取り消す</Button>
             </div>
           {:else}
@@ -141,6 +145,8 @@
               showNewTag={tab === "all" && !question.isRead && !acted.has(question.rkey)}
               onReplied={() => setActed(question.rkey, "replied")}
               onThrough={() => setActed(question.rkey, "through")}
+              onBlocked={(did) => (blocked = new Set([...blocked, did]))}
+              onDeleted={() => (deleted = new Set([...deleted, question.rkey]))}
             />
           {/if}
         {/each}
