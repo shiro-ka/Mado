@@ -49,7 +49,7 @@
 
 <style>
   .label {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text);
   }
   .error {
     color: var(--suisou-color-error);

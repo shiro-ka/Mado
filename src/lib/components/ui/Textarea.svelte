@@ -65,7 +65,9 @@
 </div>
 
 <style>
-  .label,
+  .label {
+    color: var(--suisou-color-text);
+  }
   .count {
     color: var(--suisou-color-text-sub);
   }
