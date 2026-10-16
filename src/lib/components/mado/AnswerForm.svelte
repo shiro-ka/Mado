@@ -21,9 +21,9 @@
 
   function lastCrosspost(): boolean {
     try {
-      return localStorage.getItem(CROSSPOST_KEY) !== "0";
+      return localStorage.getItem(CROSSPOST_KEY) === "1";
     } catch {
-      return true;
+      return false;
     }
   }
 
@@ -36,7 +36,7 @@
   }
 
   let body = $state("");
-  let crosspost = $state(true);
+  let crosspost = $state(false);
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
   let crosspostFailed = $state(false);
