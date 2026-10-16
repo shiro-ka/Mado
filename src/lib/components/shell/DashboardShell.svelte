@@ -23,7 +23,7 @@
 </script>
 
 <div class="frame">
-  <aside data-suisou-layout="stack" data-suisou="bd-end scroll-y" class="side">
+  <aside data-suisou-layout="stack" data-suisou="bd-end" class="side">
     <Sidebar {session} />
   </aside>
 
@@ -40,14 +40,13 @@
     popover
     data-suisou-tray="drawer left"
     data-suisou-layout="stack"
-    data-suisou="scroll-y"
     aria-label="ナビゲーション"
     style="--suisou-size-drawer: 18rem"
   >
     <Sidebar {session} />
   </div>
 
-  <main bind:this={mainEl} data-suisou="scroll-y" class="body">
+  <main bind:this={mainEl} class="body">
     {#if children}
       {@render children()}
     {/if}
@@ -65,10 +64,12 @@
   }
   .body {
     grid-area: body;
+    overflow-y: auto;
   }
 
   .side {
     grid-area: side;
+    overflow-y: auto;
     width: 16rem;
     background: var(--suisou-color-panel);
   }
@@ -92,5 +93,6 @@
 
   #nav-drawer {
     padding: 0;
+    overflow-y: auto;
   }
 </style>

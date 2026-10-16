@@ -29,7 +29,7 @@
   </a>
 </div>
 
-<nav data-suisou-layout="stack grow" data-suisou="scroll-y" class="nav">
+<nav data-suisou-layout="stack grow" class="nav">
   <div data-suisou-layout="stack">
     {#each navItems as item}
       {@const active = currentPath === item.href}
@@ -57,5 +57,6 @@
   }
   .nav {
     padding: var(--suisou-space-2);
+    overflow-y: auto;
   }
 </style>

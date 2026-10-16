@@ -92,7 +92,7 @@
         <div data-suisou-layout="stack">
           {#each boxes.slice(0, 3) as box}
             <a data-suisou-button="block" data-suisou-layout="row between" href={`/@${session.handle}/${box.slug}`}>
-              <span data-suisou-text="fs-14 one-line" class="title">{box.title}</span>
+              <span data-suisou-layout="grow" data-suisou-text="fs-14 one-line" class="title">{box.title}</span>
               <span data-suisou-text="fs-12" class={box.isOpen ? "ok" : "sub"}>
                 {box.isOpen ? "受付中" : "停止中"}
               </span>
