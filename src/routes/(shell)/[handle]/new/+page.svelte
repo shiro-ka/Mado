@@ -66,7 +66,7 @@
   <div data-suisou-tray class="card">
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
       <Input
-        label="タイトル"
+        label="窓の名前"
         bind:value={title}
         maxlength={100}
         required
@@ -74,10 +74,8 @@
       />
 
       <Textarea
-        label="説明文"
-        placeholder="どんな声でも歓迎です。匿名で送ってね。"
+        label="窓の説明"
         bind:value={description}
-        helper="任意。窓のページに表示される説明文です。"
         maxlength={300}
         showCount
         rows={4}
