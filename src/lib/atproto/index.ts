@@ -4,7 +4,7 @@
      records.ts  blue.mado.box / koe / answer の読み書き
      bsky.ts     app.bsky.* への働きかけ（フォロー・投稿）
    現場はこの1本だけを見ればよい。 */
-export { invalidateRecords, getProfile, resolveHandle, getPdsUrl, deleteRecord } from "./client.js";
+export { invalidateRecords, getProfile, getProfiles, resolveHandle, getPdsUrl, deleteRecord } from "./client.js";
 export {
   NSID,
   getBoxRecord,

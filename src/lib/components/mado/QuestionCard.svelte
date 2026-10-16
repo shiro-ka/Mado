@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { MessageCircle, Lock, CheckCircle2 } from "lucide-svelte";
+  import { User } from "lucide-svelte";
   import { formatDate, truncate } from "$lib/utils.js";
   import type { Question } from "$lib/../types/index.js";
 
   interface Props {
-    question: Question;
+    question: Omit<Question, "encryptedFrom">;
     preview?: string;
     href?: string;
   }
@@ -12,47 +12,41 @@
   let { question, preview, href: hrefProp }: Props = $props();
 
   const href = $derived(hrefProp ?? `/receive`);
+  const name = $derived(question.senderDisplayName || question.senderHandle);
 </script>
 
 <a {href} class="link">
-  <div
-    data-suisou-tray
-    data-suisou-item="media"
-    class="card"
-    class:unread={!question.isRead}
-  >
-    <div data-suisou-item="media-figure" class="mark">
-      {#if question.isRead}
-        <CheckCircle2 data-suisou-text="fs-16" data-suisou="sub" />
+  <div data-suisou-tray data-suisou-item="media" class="card" class:unread={!question.isRead}>
+    <div data-suisou-item="media-figure">
+      {#if question.senderAvatar}
+        <img src={question.senderAvatar} alt="" data-suisou-item="circle" />
       {:else}
-        <span class="dot"></span>
+        <div data-suisou-item="circle"><User data-suisou-text="fs-16" /></div>
       {/if}
     </div>
 
     <div data-suisou-item="media-content">
       <div data-suisou-layout="row between">
-        {#if question.isRead}
-          <span></span>
-        {:else}
-          <span data-suisou-item="tag" data-suisou="accent">未読</span>
-        {/if}
-        <span data-suisou-text="fs-12" class="sub">{formatDate(question.createdAt)}</span>
+        <div data-suisou-layout="row gap-1 grow" class="who">
+          {#if name}
+            <span data-suisou-text="fs-14 fw-500 one-line" class="name">{name}</span>
+            {#if question.senderHandle && question.senderDisplayName}
+              <span data-suisou-text="fs-12 one-line" class="sub handle">@{question.senderHandle}</span>
+            {/if}
+          {:else}
+            <span data-suisou-text="fs-14" class="sub">送り主不明</span>
+          {/if}
+        </div>
+        <div data-suisou-layout="row gap-1">
+          {#if !question.isRead}
+            <span data-suisou-item="tag" data-suisou="accent">未読</span>
+          {/if}
+          <span data-suisou-text="fs-12" class="sub">{formatDate(question.createdAt)}</span>
+        </div>
       </div>
 
       {#if preview}
         <p class="clamp">{truncate(preview, 120)}</p>
-      {:else}
-        <div data-suisou-layout="row" class="sub">
-          <Lock data-suisou-text="fs-16" />
-          <span data-suisou-text="fs-14" class="italic">暗号化されたメッセージ</span>
-        </div>
-      {/if}
-
-      {#if question.senderHandle}
-        <div data-suisou-layout="row" class="sub">
-          <MessageCircle data-suisou-text="fs-16" />
-          <span data-suisou-text="fs-12">@{question.senderHandle}</span>
-        </div>
       {/if}
     </div>
   </div>
@@ -71,23 +65,19 @@
   .link:hover .card {
     border-color: var(--suisou-color-line-strong);
   }
-
-  .mark {
-    padding-block-start: var(--suisou-space-1);
+  .who {
+    min-width: 0;
   }
-  .dot {
-    display: block;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: var(--suisou-radius-pill);
-    background: var(--suisou-color-accent);
+  .name {
+    flex: 0 1 auto;
+    min-width: 0;
   }
-
+  .handle {
+    flex: 0 1000 auto;
+    min-width: 0;
+  }
   .sub {
     color: var(--suisou-color-text-sub);
-  }
-  .italic {
-    font-style: italic;
   }
   .clamp {
     display: -webkit-box;

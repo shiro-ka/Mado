@@ -138,6 +138,22 @@ export async function getProfile(handleOrDid: string) {
   }
 }
 
+export async function getProfiles(dids: string[]) {
+  const agent = appViewAgent();
+  const out = new Map<string, { handle: string; displayName?: string; avatar?: string }>();
+  for (let i = 0; i < dids.length; i += 25) {
+    try {
+      const res = await agent.getProfiles({ actors: dids.slice(i, i + 25) });
+      for (const p of res.data.profiles) {
+        out.set(p.did, { handle: p.handle, displayName: p.displayName, avatar: p.avatar });
+      }
+    } catch {
+      continue;
+    }
+  }
+  return out;
+}
+
 // handle→DID cache. Every page under /[handle]/* resolves the handle over the
 // network before it can read anything. Shorter TTL than the PDS cache because a
 // handle can be reassigned to a different DID (rename), and we don't want to
