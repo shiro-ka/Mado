@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { Send, AlertCircle, CheckCircle2, ExternalLink } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
@@ -16,17 +17,38 @@
   type FormState = "idle" | "submitting" | "success" | "error";
 
   const MAX_CHARS = 1000;
+  const CROSSPOST_KEY = "mado:crosspost";
+
+  function lastCrosspost(): boolean {
+    try {
+      return localStorage.getItem(CROSSPOST_KEY) !== "0";
+    } catch {
+      return true;
+    }
+  }
+
+  function rememberCrosspost(value: boolean) {
+    try {
+      localStorage.setItem(CROSSPOST_KEY, value ? "1" : "0");
+    } catch {
+      return;
+    }
+  }
 
   let body = $state("");
-  let crosspost = $state(false);
+  let crosspost = $state(true);
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
   let crosspostFailed = $state(false);
   let crosspostLink = $state<string | null>(null);
 
+  onMount(() => {
+    crosspost = lastCrosspost();
+  });
+
   function reset() {
     body = "";
-    crosspost = false;
+    crosspost = lastCrosspost();
     crosspostFailed = false;
     crosspostLink = null;
     errorMsg = "";
@@ -61,6 +83,7 @@
       };
       crosspostFailed = crosspost && data.crossposted === false;
       crosspostLink = data.crosspostUri ? bskyPostUrl(data.crosspostUri) : null;
+      rememberCrosspost(crosspost);
       formState = "success";
       onSuccess?.(data.uri);
     } catch (err) {
