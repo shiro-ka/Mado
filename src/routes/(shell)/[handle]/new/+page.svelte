@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto, invalidateAll } from "$app/navigation";
-  import { ArrowLeft, Plus, AlertCircle } from "lucide-svelte";
+  import { Plus, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
@@ -61,13 +61,7 @@
 </svelte:head>
 
 <div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
-  <div data-suisou-layout="row">
-    <Button variant="ghost" href={`/@${data.cleanHandle}`}>
-      {#snippet leftIcon()}<ArrowLeft />{/snippet}
-      戻る
-    </Button>
-    <h1 data-suisou-text="fs-24 fw-700">窓を開ける</h1>
-  </div>
+  <h1 data-suisou-text="fs-24 fw-700">窓を開ける</h1>
 
   <div data-suisou-tray class="card">
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
