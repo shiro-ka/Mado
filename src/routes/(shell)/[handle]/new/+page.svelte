@@ -84,8 +84,7 @@
 
       <div data-suisou-layout="stack gap-1" class="slug">
         <Input
-          label="URL（任意）"
-          placeholder="ask"
+          label="URL"
           bind:value={slug}
           error={slugErr ?? undefined}
           helper="英小文字・数字・ハイフンのみ。空欄なら自動生成されます。あとから変更もできます。"
