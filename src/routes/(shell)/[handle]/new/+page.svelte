@@ -62,12 +62,10 @@
 
 <div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
   <div data-suisou-layout="row">
-    <a href={`/@${data.cleanHandle}`}>
-      <Button variant="ghost">
-        {#snippet leftIcon()}<ArrowLeft />{/snippet}
-        戻る
-      </Button>
-    </a>
+    <Button variant="ghost" href={`/@${data.cleanHandle}`}>
+      {#snippet leftIcon()}<ArrowLeft />{/snippet}
+      戻る
+    </Button>
     <h1 data-suisou-text="fs-24 fw-700">窓を作る</h1>
   </div>
 
@@ -125,11 +123,8 @@
       {/if}
 
       <div data-suisou-layout="row end">
-        <a href={`/@${data.cleanHandle}`}>
-          <Button type="button" disabled={formState === "submitting"}>キャンセル</Button>
-        </a>
+        <Button variant="outline" href={`/@${data.cleanHandle}`} disabled={formState === "submitting"}>キャンセル</Button>
         <Button
-          variant="outline"
           type="submit"
           loading={formState === "submitting"}
           disabled={!title.trim() || !!slugErr}
