@@ -67,9 +67,7 @@
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
       <Input
         label="タイトル"
-        placeholder="なんでも声を届けてください！"
         bind:value={title}
-        helper="窓に表示されるタイトルです"
         maxlength={100}
         required
         disabled={formState === "submitting"}
