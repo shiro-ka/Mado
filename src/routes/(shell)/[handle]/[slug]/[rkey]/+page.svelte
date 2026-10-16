@@ -9,6 +9,17 @@
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
+
+  let unhearing = $state(false);
+  async function unhear() {
+    unhearing = true;
+    try {
+      const res = await fetch(`/api/questions/${data.question.rkey}/handled`, { method: "DELETE" });
+      if (res.ok) await invalidateAll();
+    } finally {
+      unhearing = false;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -36,9 +47,18 @@
 
   <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
     <div data-suisou-layout="row between">
-      <span data-suisou-item="tag" data-suisou={data.question.isRead ? undefined : "accent"}>
-        {data.question.isRead ? "既読" : "未読"}
-      </span>
+      {#if data.isOwner}
+        <span data-suisou-layout="row gap-1">
+          <span data-suisou-item="tag" data-suisou={data.question.isRead ? undefined : "accent"}>
+            {data.question.isRead ? "聞いた声" : "新しい声"}
+          </span>
+          {#if data.question.isRead}
+            <Button variant="ghost" loading={unhearing} onclick={unhear}>新しい声に戻す</Button>
+          {/if}
+        </span>
+      {:else}
+        <span></span>
+      {/if}
       <span data-suisou-text="fs-12" class="sub">{formatDateFull(data.question.createdAt)}</span>
     </div>
 

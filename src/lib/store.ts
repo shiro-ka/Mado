@@ -252,6 +252,15 @@ export class CloudflareStore {
       .run();
   }
 
+  async listBlocks(ownerDid: string): Promise<string[]> {
+    const { results } = await this.env.DB.prepare(
+      "SELECT target_did FROM blocks WHERE owner_did = ? ORDER BY blocked_at DESC"
+    )
+      .bind(ownerDid)
+      .all<{ target_did: string }>();
+    return results.map((r: { target_did: string }) => r.target_did);
+  }
+
   async isBlocked(ownerDid: string, targetDid: string): Promise<boolean> {
     const row = await this.env.DB.prepare(
       "SELECT 1 FROM blocks WHERE owner_did = ? AND target_did = ?"
@@ -288,26 +297,35 @@ export class CloudflareStore {
     return new Map(results.map((r: { koe_rkey: string; sender_did: string }) => [r.koe_rkey, r.sender_did]));
   }
 
-  async markRead(ownerDid: string, rkey: string): Promise<void> {
+  async markHandled(ownerDid: string, rkey: string): Promise<void> {
     await this.env.DB.prepare(
-      `INSERT INTO deliveries (owner_did, koe_rkey, owner_read_at) VALUES (?, ?, ?)
-       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET owner_read_at = COALESCE(owner_read_at, excluded.owner_read_at)`
+      `INSERT INTO deliveries (owner_did, koe_rkey, owner_handled_at) VALUES (?, ?, ?)
+       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET owner_handled_at = COALESCE(owner_handled_at, excluded.owner_handled_at)`
     )
       .bind(ownerDid, rkey, Math.floor(Date.now() / 1000))
       .run();
   }
 
-  async unmarkRead(ownerDid: string, rkey: string): Promise<void> {
+  async isHandled(ownerDid: string, rkey: string): Promise<boolean> {
+    const row = await this.env.DB.prepare(
+      "SELECT 1 FROM deliveries WHERE owner_did = ? AND koe_rkey = ? AND owner_handled_at IS NOT NULL"
+    )
+      .bind(ownerDid, rkey)
+      .first();
+    return row !== null;
+  }
+
+  async unmarkHandled(ownerDid: string, rkey: string): Promise<void> {
     await this.env.DB.prepare(
-      "UPDATE deliveries SET owner_read_at = NULL WHERE owner_did = ? AND koe_rkey = ?"
+      "UPDATE deliveries SET owner_handled_at = NULL WHERE owner_did = ? AND koe_rkey = ?"
     )
       .bind(ownerDid, rkey)
       .run();
   }
 
-  async listRead(ownerDid: string): Promise<string[]> {
+  async listHandled(ownerDid: string): Promise<string[]> {
     const { results } = await this.env.DB.prepare(
-      "SELECT koe_rkey FROM deliveries WHERE owner_did = ? AND owner_read_at IS NOT NULL"
+      "SELECT koe_rkey FROM deliveries WHERE owner_did = ? AND owner_handled_at IS NOT NULL"
     )
       .bind(ownerDid)
       .all<{ koe_rkey: string }>();

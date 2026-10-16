@@ -3,6 +3,8 @@
   import { invalidateAll } from "$app/navigation";
   import QuestionCard from "$lib/components/mado/QuestionCard.svelte";
   import Skeleton from "$lib/components/ui/Skeleton.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
+  import type { FilterTab } from "$lib/../types/index.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -18,15 +20,33 @@
     }
   }
 
-  type FilterTab = "all" | "unread" | "read";
-
   const tab = $derived(data.tab as FilterTab);
 
   const tabs: { key: FilterTab; label: string }[] = [
-    { key: "unread", label: "未読" },
-    { key: "read", label: "既読" },
+    { key: "new", label: "新しい声" },
+    { key: "heard", label: "聞いた声" },
     { key: "all", label: "すべて" },
   ];
+
+  let acted = $state(new Map<string, "replied" | "through">());
+  let undoing = $state<string | null>(null);
+
+  function setActed(rkey: string, kind: "replied" | "through" | null) {
+    const next = new Map(acted);
+    if (kind) next.set(rkey, kind);
+    else next.delete(rkey);
+    acted = next;
+  }
+
+  async function undoThrough(rkey: string) {
+    undoing = rkey;
+    try {
+      const res = await fetch(`/api/questions/${rkey}/handled`, { method: "DELETE" });
+      if (res.ok) setActed(rkey, null);
+    } finally {
+      undoing = null;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -69,10 +89,10 @@
     </div>
   {:then inbox}
     {@const allQuestions = inbox.allQuestions}
-    {@const unreadCount = allQuestions.filter((q) => !q.isRead).length}
+    {@const newCount = allQuestions.filter((q) => !q.isRead && !acted.has(q.rkey)).length}
     {@const filtered = allQuestions.filter((q) => {
-      if (tab === "unread") return !q.isRead;
-      if (tab === "read") return q.isRead;
+      if (tab === "new") return !q.isRead;
+      if (tab === "heard") return q.isRead;
       return true;
     })}
 
@@ -87,8 +107,8 @@
           {t.label}
           {#if t.key === "all"}
             <span data-suisou-item="tag">{allQuestions.length}</span>
-          {:else if t.key === "unread"}
-            <span data-suisou-item="tag">{unreadCount}</span>
+          {:else if t.key === "new"}
+            <span data-suisou-item="tag">{newCount}</span>
           {/if}
         </a>
       {/each}
@@ -99,7 +119,7 @@
         <Inbox data-suisou-text="fs-20" data-suisou="sub" class="big" />
         <div data-suisou-layout="stack gap-1 center">
           <p data-suisou-text="fs-16 fw-700">
-            {tab === "unread" ? "未読の声はありません" : "声がありません"}
+            {tab === "new" ? "新しい声はありません" : "声がありません"}
           </p>
           <p data-suisou-text="fs-14" class="sub">
             {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
@@ -108,8 +128,21 @@
       </div>
     {:else}
       <div data-suisou-layout="stack gap-3" class="items">
-        {#each filtered as question}
-          <QuestionCard {question} preview={question.body} href={question.href} />
+        {#each filtered as question (question.rkey)}
+          {#if acted.get(question.rkey) === "through"}
+            <div data-suisou-tray data-suisou-layout="row between" class="acted">
+              <span data-suisou-text="fs-14" class="sub">スルーしました</span>
+              <Button variant="ghost" loading={undoing === question.rkey} onclick={() => undoThrough(question.rkey)}>取り消す</Button>
+            </div>
+          {:else}
+            <QuestionCard
+              {question}
+              href={question.href}
+              showNewTag={tab === "all" && !question.isRead && !acted.has(question.rkey)}
+              onReplied={() => setActed(question.rkey, "replied")}
+              onThrough={() => setActed(question.rkey, "through")}
+            />
+          {/if}
         {/each}
       </div>
     {/if}
@@ -131,6 +164,9 @@
     color: var(--suisou-color-text-sub);
   }
 
+  .acted {
+    padding-block: var(--suisou-space-1);
+  }
   .empty {
     padding: var(--suisou-space-4);
   }

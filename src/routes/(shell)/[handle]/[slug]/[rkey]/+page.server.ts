@@ -2,7 +2,7 @@ import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { resolveHandle, findBoxBySlug, getKoeRecord, listAnswers, getProfile } from "$lib/atproto/index.js";
-import { resolveSenders } from "$lib/senders.server.js";
+import { resolveSenders } from "$lib/inbox.server.js";
 
 export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
   const { session } = await parent();
@@ -31,11 +31,12 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   let senderDid: string | null = null;
   let senderUnknown = false;
   let senderBlocked = false;
+  let isHandled = false;
 
   if (isOwner) {
     const env = platform!.env;
     const store = new CloudflareStore(env);
-    await store.markRead(ownerDid, params.rkey);
+    isHandled = await store.isHandled(ownerDid, params.rkey);
     senderDid = (await resolveSenders(store, ownerDid, [question])).get(question.rkey) ?? null;
     senderUnknown = !senderDid;
     if (senderDid) {
@@ -52,7 +53,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     ownerName,
     box,
     isOwner,
-    question: { ...questionPublic, isRead: isOwner },
+    question: { ...questionPublic, isRead: isHandled },
     answers,
     koeUri,
     senderDid,

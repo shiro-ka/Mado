@@ -1,5 +1,7 @@
 import type { CloudflareStore } from "./store.js";
+import type { Question } from "../types/index.js";
 import { decryptDid } from "./crypto.js";
+import { listQuestions } from "./atproto/index.js";
 
 const BACKFILL_PER_REQUEST = 5;
 
@@ -24,4 +26,22 @@ export async function resolveSenders(
     }
   }
   return senders;
+}
+
+export async function loadInbox(store: CloudflareStore, ownerDid: string) {
+  const [questions, handled, blocks] = await Promise.all([
+    listQuestions(ownerDid),
+    store.listHandled(ownerDid),
+    store.listBlocks(ownerDid),
+  ]);
+  const senders = await resolveSenders(store, ownerDid, questions);
+  const handledSet = new Set(handled);
+  const blockSet = new Set(blocks);
+  return questions
+    .map(({ encryptedFrom: _, ...q }): Omit<Question, "encryptedFrom"> => ({
+      ...q,
+      isRead: handledSet.has(q.rkey),
+      senderDid: senders.get(q.rkey),
+    }))
+    .filter((q) => !q.senderDid || !blockSet.has(q.senderDid));
 }

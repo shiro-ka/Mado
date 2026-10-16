@@ -24,6 +24,6 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
   if (!ok) return json({ error: "failed to delete record" }, { status: 500 });
 
   invalidateRecords(session.did, NSID.KOE);
-  await store.unmarkRead(session.did, params.rkey);
+  await store.markHandled(session.did, params.rkey);
   return json({ ok: true });
 };

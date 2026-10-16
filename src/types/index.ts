@@ -86,4 +86,4 @@ export interface ApiError {
 }
 
 // UI state types
-export type FilterTab = "unread" | "read" | "all";
+export type FilterTab = "new" | "heard" | "all";

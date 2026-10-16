@@ -1,7 +1,8 @@
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
-import { listBoxes, listQuestions, getAnswersByOwner } from "$lib/atproto/index.js";
+import { listBoxes, getAnswersByOwner } from "$lib/atproto/index.js";
+import { loadInbox } from "$lib/inbox.server.js";
 
 export const load: PageServerLoad = async ({ parent, cookies, platform }) => {
   const { session } = await parent();
@@ -22,14 +23,11 @@ export const load: PageServerLoad = async ({ parent, cookies, platform }) => {
     session,
     sessionTtl,
     dashboard: (async () => {
-      const [boxes, questionsRaw, readRkeys, answersByKoe] = await Promise.all([
+      const [boxes, questions, answersByKoe] = await Promise.all([
         listBoxes(did),
-        listQuestions(did),
-        store.listRead(did),
+        loadInbox(store, did),
         getAnswersByOwner(did),
       ]);
-      const readSet = new Set(readRkeys);
-      const questions = questionsRaw.map((q) => ({ ...q, isRead: readSet.has(q.rkey) }));
       const replyCount = [...answersByKoe.values()].reduce((n, a) => n + a.length, 0);
       return { boxes, questions, replyCount };
     })(),

@@ -85,6 +85,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     // Drop the cached answer scan so home's reply count updates immediately.
     invalidateRecords(session.did, NSID.ANSWER);
+    await store.markHandled(session.did, koeUri.slice(expectedPrefix.length));
 
     // The answer is already saved; a failed crosspost shouldn't fail the
     // request — report it via a flag so the UI can warn non-fatally.

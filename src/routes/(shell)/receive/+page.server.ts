@@ -1,8 +1,8 @@
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
-import { listQuestions, listBoxes, getProfiles } from "$lib/atproto/index.js";
-import { resolveSenders } from "$lib/senders.server.js";
+import { listBoxes, getProfiles } from "$lib/atproto/index.js";
+import { loadInbox } from "$lib/inbox.server.js";
 
 export const load: PageServerLoad = async ({ parent, platform, url }) => {
   const { session } = await parent();
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ parent, platform, url }) => {
 
   const env = platform!.env;
   const store = new CloudflareStore(env);
-  const tab = url.searchParams.get("tab") ?? "unread";
+  const tab = url.searchParams.get("tab") ?? "new";
 
   // The PDS scans (questions + boxes) are the slow part; return them as an
   // un-awaited promise so SvelteKit streams the inbox and the page shell paints
@@ -18,28 +18,18 @@ export const load: PageServerLoad = async ({ parent, platform, url }) => {
   return {
     tab,
     inbox: (async () => {
-      const [questionsRaw, readRkeys, boxes] = await Promise.all([
-        listQuestions(session.did),
-        store.listRead(session.did),
-        listBoxes(session.did),
-      ]);
-
-      const readSet = new Set(readRkeys);
+      const [questions, boxes] = await Promise.all([loadInbox(store, session.did), listBoxes(session.did)]);
       const boxSlugMap = new Map(boxes.map((b) => [b.rkey, b.slug]));
-      const senderMap = await resolveSenders(store, session.did, questionsRaw);
-      const profiles = await getProfiles([...new Set(senderMap.values())]);
-      const allQuestions = questionsRaw.map((q) => {
-        const boxRkey = q.boxUri.split("/").pop() ?? "";
-        const slug = boxSlugMap.get(boxRkey);
+      const profiles = await getProfiles([
+        ...new Set(questions.map((q) => q.senderDid).filter((d): d is string => !!d)),
+      ]);
+      const allQuestions = questions.map((q) => {
+        const slug = boxSlugMap.get(q.boxUri.split("/").pop() ?? "");
         const href = slug ? `/@${session.handle}/${slug}/${q.rkey}` : `/receive`;
-        const { encryptedFrom: _, ...rest } = q;
-        const senderDid = senderMap.get(q.rkey);
-        const profile = senderDid ? profiles.get(senderDid) : undefined;
+        const profile = q.senderDid ? profiles.get(q.senderDid) : undefined;
         return {
-          ...rest,
-          isRead: readSet.has(q.rkey),
+          ...q,
           href,
-          senderDid,
           senderHandle: profile?.handle,
           senderDisplayName: profile?.displayName,
           senderAvatar: profile?.avatar,
