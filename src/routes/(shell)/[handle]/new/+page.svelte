@@ -61,7 +61,7 @@
 </svelte:head>
 
 <div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
-  <h1 data-suisou-text="fs-24 fw-700">窓を開ける</h1>
+  <h1 data-suisou-text="fs-24 fw-700" class="heading">窓を開ける</h1>
 
   <div data-suisou-tray class="card">
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
@@ -131,6 +131,10 @@
   .page {
     max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .heading {
+    cursor: default;
+    user-select: none;
   }
   .card {
     padding: var(--suisou-space-4);
