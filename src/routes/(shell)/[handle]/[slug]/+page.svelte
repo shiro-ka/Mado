@@ -220,7 +220,7 @@
     </div>
 
     <div data-suisou-tray data-suisou-item="media" class="strip">
-      <Lock data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
+      <Lock data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
       <div data-suisou-item="media-content">
         <p data-suisou-text="fs-12" class="sub">公開URL</p>
         <p data-suisou-text="fs-14" class="url">{publicUrlDisplay}</p>
@@ -241,7 +241,7 @@
     </div>
 
     <div data-suisou-tray data-suisou-item="media" class="strip">
-      <Pin data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
+      <Pin data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
       <div data-suisou-item="media-content">
         <p data-suisou-text="fs-14 fw-500">メインMado</p>
         <p data-suisou-text="fs-12" class="sub">
@@ -295,12 +295,12 @@
     word-break: break-all;
   }
   .preview {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .accent {
     color: var(--suisou-color-accent);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

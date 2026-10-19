@@ -37,6 +37,6 @@
     padding: var(--suisou-space-2);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

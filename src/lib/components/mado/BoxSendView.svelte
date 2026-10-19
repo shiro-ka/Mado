@@ -123,7 +123,7 @@
     width: 100%;
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .accent {
     color: var(--suisou-color-accent);

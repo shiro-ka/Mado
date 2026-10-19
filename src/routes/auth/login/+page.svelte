@@ -79,7 +79,7 @@
       </form>
 
       <div data-suisou-item="media" data-suisou="bd-top" class="note">
-        <Shield data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="sub" />
+        <Shield data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
         <p data-suisou-item="media-content" data-suisou-text="fs-12" class="sub doc">
           認証にはATProtocol OAuth 2.0を使用します。
           パスワードはMadoに送信されません。
@@ -109,6 +109,6 @@
     padding-block-start: var(--suisou-space-3);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

@@ -42,6 +42,6 @@
     max-width: 28rem;
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

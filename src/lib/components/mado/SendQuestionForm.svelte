@@ -106,7 +106,7 @@
     padding: var(--suisou-space-4);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .notice {
     border-color: var(--suisou-color-accent);

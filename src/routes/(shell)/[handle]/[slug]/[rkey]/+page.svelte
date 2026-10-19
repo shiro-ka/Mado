@@ -81,7 +81,7 @@
           />
         {:else}
           <div data-suisou-item="circle media-figure">
-            <User data-suisou-text="fs-16" data-suisou="sub" />
+            <User data-suisou-text="fs-16" data-suisou="note" />
           </div>
         {/if}
         <div data-suisou-item="media-content">
@@ -164,14 +164,14 @@
   }
   .did {
     font-family: var(--suisou-font-mono);
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
     word-break: break-all;
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .date {
     margin-inline-start: auto;
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

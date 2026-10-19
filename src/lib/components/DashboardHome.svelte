@@ -158,13 +158,13 @@
   }
 
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .ok {
     color: var(--suisou-color-success);
   }
   .date {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
     flex: none;
   }
   .dot {

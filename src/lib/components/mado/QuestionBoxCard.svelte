@@ -71,7 +71,7 @@
     border: 1px solid var(--suisou-color-line-weak);
   }
   .desc {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -79,7 +79,7 @@
     overflow: hidden;
   }
   .chev {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .link:hover .chev {
     color: var(--suisou-color-text);
@@ -87,6 +87,6 @@
 
   .count {
     margin-inline-start: auto;
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

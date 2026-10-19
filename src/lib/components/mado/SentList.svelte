@@ -98,9 +98,9 @@
     <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
       <span data-suisou-item="square">
         {#if tab === "unread"}
-          <MessageCircle data-suisou-text="fs-20" data-suisou="sub" />
+          <MessageCircle data-suisou-text="fs-20" data-suisou="note" />
         {:else}
-          <Send data-suisou-text="fs-20" data-suisou="sub" />
+          <Send data-suisou-text="fs-20" data-suisou="note" />
         {/if}
       </span>
       <p data-suisou-text="fs-14" class="sub">
@@ -128,7 +128,7 @@
             onclick={() => toggle(key, item.ref.ownerDid, item.ref.koeRkey, hasAnswer)}
           >
             <div data-suisou-layout="row">
-              <Clock data-suisou-text="fs-16" data-suisou="sub" />
+              <Clock data-suisou-text="fs-16" data-suisou="note" />
               <span data-suisou-text="fs-12" class="sub">{formatDateFull(item.ref.sentAt)}</span>
               <span data-suisou-layout="grow"></span>
               {#if hasAnswer}
@@ -137,9 +137,9 @@
                 </span>
               {/if}
               {#if isExpanded}
-                <ChevronUp data-suisou-text="fs-16" data-suisou="sub" />
+                <ChevronUp data-suisou-text="fs-16" data-suisou="note" />
               {:else}
-                <ChevronDown data-suisou-text="fs-16" data-suisou="sub" />
+                <ChevronDown data-suisou-text="fs-16" data-suisou="note" />
               {/if}
             </div>
 
@@ -205,6 +205,6 @@
     overflow: hidden;
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

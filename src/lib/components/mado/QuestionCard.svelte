@@ -88,7 +88,7 @@
       <span class="text clamp">{truncate(question.body, 120)}</span>
     </span>
 
-    <span data-suisou-item="media-tail" class="go"><ChevronRight data-suisou="sub" /></span>
+    <span data-suisou-item="media-tail" class="go"><ChevronRight data-suisou="note" /></span>
   </a>
 
   <div data-suisou-layout="row end gap-1" class="actions">
@@ -196,7 +196,7 @@
     display: block;
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .error {
     padding-inline: var(--suisou-space-2);

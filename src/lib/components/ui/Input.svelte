@@ -55,6 +55,6 @@
     color: var(--suisou-color-error);
   }
   .helper {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 </style>

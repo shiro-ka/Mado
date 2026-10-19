@@ -72,7 +72,7 @@
 
   {#if !data.configured}
     <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
-      <Bell data-suisou-text="fs-20" data-suisou="sub" class="big" />
+      <Bell data-suisou-text="fs-20" data-suisou="note" class="big" />
       <p data-suisou-text="fs-14" class="sub">
         DM通知は現在準備中です。もうしばらくお待ちください。
       </p>
@@ -107,7 +107,7 @@
       {#if !followed}
         <div data-suisou-layout="stack" data-suisou="bd-top" class="row foot">
           <div data-suisou-item="media">
-            <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="sub" />
+            <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="note" />
             <p data-suisou-item="media-content" data-suisou-text="fs-14" class="sub doc">
               通知を受け取るには、先に公式アカウントのフォローが必要です。
               <span class="sub">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
@@ -172,7 +172,7 @@
   }
 
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .err {
     color: var(--suisou-color-error);

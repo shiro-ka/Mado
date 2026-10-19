@@ -169,7 +169,7 @@
   }
   .lead {
     max-width: 36rem;
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 
   .band {
@@ -179,7 +179,7 @@
     padding: var(--suisou-space-4);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .warn {
     color: var(--suisou-color-warning);

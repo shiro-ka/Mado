@@ -75,7 +75,7 @@
   <a data-suisou-button="block" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
     <Bell data-suisou-text="fs-20" data-suisou="accent" />
     <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
-    <ChevronRight data-suisou-text="fs-20" data-suisou="sub" />
+    <ChevronRight data-suisou-text="fs-20" data-suisou="note" />
   </a>
 
   {#await data.inbox}
@@ -120,7 +120,7 @@
 
     {#if filtered.length === 0}
       <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash" class="empty">
-        <Inbox data-suisou-text="fs-20" data-suisou="sub" class="big" />
+        <Inbox data-suisou-text="fs-20" data-suisou="note" class="big" />
         <div data-suisou-layout="stack gap-1 center">
           <p data-suisou-text="fs-16 fw-700">
             {tab === "new" ? "新しい声はありません" : "声がありません"}
@@ -161,13 +161,13 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .link {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .link:hover {
     color: var(--suisou-color-text);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 
   .acted {

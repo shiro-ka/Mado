@@ -52,7 +52,7 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
 
   .step {

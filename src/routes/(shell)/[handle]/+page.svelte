@@ -16,7 +16,7 @@
 {#snippet listHead(count: string)}
   <div data-suisou-layout="row between">
     <div data-suisou-layout="row">
-      <MessageCircle data-suisou-text="fs-16" data-suisou="sub" />
+      <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
       <h2 data-suisou-text="fs-14 fw-700" class="sub">窓{count}</h2>
     </div>
     <a href={`/@${data.cleanHandle}/new`}>
@@ -130,7 +130,7 @@
       {#if detail.subBoxes.length > 0}
         <div data-suisou-layout="stack gap-3" class="others">
           <div data-suisou-layout="row">
-            <MessageCircle data-suisou-text="fs-16" data-suisou="sub" />
+            <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
             <h2 data-suisou-text="fs-14 fw-700" class="sub">
               その他のMado ({detail.subBoxes.length})
             </h2>
@@ -161,7 +161,7 @@
     padding: var(--suisou-space-4);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .accent {
     color: var(--suisou-color-accent);

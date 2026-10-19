@@ -78,7 +78,7 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .list {
     padding-inline-start: var(--suisou-space-4);
@@ -87,7 +87,7 @@
     margin-block-start: var(--suisou-space-1);
   }
   .list ::marker {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   strong {
     color: var(--suisou-color-text);

@@ -128,7 +128,7 @@
   }
   .preview {
     font-family: var(--suisou-font-mono);
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
     word-break: break-all;
   }
   .accent {

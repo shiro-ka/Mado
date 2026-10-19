@@ -73,7 +73,7 @@
   }
 
   .sub {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .sub:hover {
     color: var(--suisou-color-text);

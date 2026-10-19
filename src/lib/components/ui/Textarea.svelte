@@ -69,7 +69,7 @@
     color: var(--suisou-color-text);
   }
   .count {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   .count.near {
     color: var(--suisou-color-warning);
@@ -79,7 +79,7 @@
     color: var(--suisou-color-error);
   }
   .helper {
-    color: var(--suisou-color-text-sub);
+    color: var(--suisou-color-text-note);
   }
   textarea {
     min-height: 120px;
