@@ -223,6 +223,10 @@
   .text {
     display: block;
   }
+  .text,
+  .answer .clamp {
+    white-space: pre-line;
+  }
   .more {
     margin-block-start: var(--suisou-space-2);
   }
