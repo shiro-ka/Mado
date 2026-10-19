@@ -110,7 +110,6 @@
       icon
       aria-label="そのほかの操作"
       popovertarget={`more-${question.rkey}`}
-      style={`anchor-name: --more-${question.rkey}`}
       onclick={() => (confirm = null)}
     >
       <EllipsisVertical />
@@ -120,10 +119,8 @@
   <div
     popover="auto"
     id={`more-${question.rkey}`}
-    data-suisou-tray
+    data-suisou-tray="popup"
     data-suisou-layout="stack gap-1"
-    class="menu"
-    style={`position-anchor: --more-${question.rkey}`}
   >
     {#if question.senderDid}
       <Button variant="ghost" loading={busy === "block"} onclick={() => ask("block")}>
@@ -173,12 +170,6 @@
   }
   .actions {
     padding: 0 var(--suisou-space-2) var(--suisou-space-2);
-  }
-  .menu {
-    inset: auto;
-    margin: 0;
-    position-area: top span-left;
-    margin-block-end: var(--suisou-space-1);
   }
   .logo {
     width: var(--suisou-size-icon);
