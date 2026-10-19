@@ -7,7 +7,7 @@
   import type { Question } from "$lib/../types/index.js";
 
   interface Props {
-    question: Omit<Question, "encryptedFrom">;
+    question: Omit<Question, "encryptedFrom"> & { boxTitle?: string };
     href: string;
     showNewTag?: boolean;
     onReplied?: () => void;
@@ -57,6 +57,9 @@
 </script>
 
 <div data-suisou-tray data-suisou-layout="stack gap-0" class="card">
+  {#if question.boxTitle}
+    <span data-suisou="bd-bottom" data-suisou-text="fs-12 one-line" class="box sub">{question.boxTitle}</span>
+  {/if}
   <a {href} data-suisou-item="media" class="main">
     <span data-suisou-item="media-figure">
       {#if question.senderAvatar}
@@ -153,6 +156,9 @@
 <style>
   .card {
     padding: 0;
+  }
+  .box {
+    padding: var(--suisou-space-1) var(--suisou-space-2);
   }
   .main {
     padding: var(--suisou-space-2);
