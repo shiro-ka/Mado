@@ -123,12 +123,12 @@
       <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash" class="empty">
         <Inbox data-suisou-text="fs-20" data-suisou="note" class="big" />
         <div data-suisou-layout="stack gap-1 center">
-          <p data-suisou-text="fs-16 fw-700">
-            {tab === "new" ? "新しい声はありません" : "声がありません"}
-          </p>
-          <p data-suisou-text="fs-14" class="sub">
-            {tab === "all" ? "窓のURLをシェアして声を募りましょう" : "すべての声を確認しました！"}
-          </p>
+          {#if tab === "all"}
+            <p data-suisou-text="fs-16 fw-700">声がありません</p>
+            <p data-suisou-text="fs-14" class="sub">窓のURLをシェアして声を募りましょう</p>
+          {:else}
+            <p data-suisou-text="fs-16 fw-700">声が届くのを待っています...</p>
+          {/if}
         </div>
       </div>
     {:else}
