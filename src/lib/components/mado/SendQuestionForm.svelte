@@ -114,7 +114,7 @@
   .notice :global(svg) {
     margin-block-start: 0.15rem;
   }
-  :global(.big) {
+  .done :global(.big) {
     width: 2.5rem;
     height: 2.5rem;
     color: var(--suisou-color-success);

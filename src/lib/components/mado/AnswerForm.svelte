@@ -180,7 +180,7 @@
     height: 1rem;
     cursor: pointer;
   }
-  :global(.big) {
+  .done :global(.big) {
     width: 2.25rem;
     height: 2.25rem;
     color: var(--suisou-color-success);
