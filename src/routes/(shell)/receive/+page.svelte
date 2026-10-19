@@ -57,10 +57,7 @@
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
   <div data-suisou-layout="row between">
-    <div data-suisou-layout="stack gap-0" class="title">
-      <h1 data-suisou-text="fs-24 fw-700">受信トレイ</h1>
-      <p data-suisou-text="fs-14" class="sub">届いた声を確認しましょう</p>
-    </div>
+    <h1 data-suisou-text="fs-24 fw-700">受信トレイ</h1>
     <button
       data-suisou-button="icon"
       onclick={refresh}
