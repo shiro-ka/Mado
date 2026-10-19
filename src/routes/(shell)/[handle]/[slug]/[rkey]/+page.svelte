@@ -10,6 +10,7 @@
 
   let { data }: { data: PageData } = $props();
 
+
   let toggling = $state(false);
   async function toggleHeard() {
     toggling = true;
@@ -46,11 +47,24 @@
   </div>
 
   <div data-suisou-tray data-suisou-layout="stack gap-0" class="card">
-    <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-layout="stack gap-0" data-suisou="bd-bottom" class="box">
-      <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
-      {#if data.box.description}
-        <span data-suisou-text="fs-12" class="sub">{data.box.description}</span>
-      {/if}
+    <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom" class="box">
+      <span data-suisou-item="media-figure">
+        {#if data.ownerAvatar}
+          <img src={data.ownerAvatar} alt="" data-suisou-item="circle large" />
+        {:else}
+          <span data-suisou-item="circle large"><User data-suisou-text="fs-20" /></span>
+        {/if}
+      </span>
+      <span data-suisou-item="media-content">
+        <span data-suisou-layout="row gap-1">
+          <span data-suisou-text="fs-16 fw-700 one-line">{data.ownerName}</span>
+          <span data-suisou-text="fs-12 one-line" class="sub">@{data.cleanHandle}</span>
+        </span>
+        <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
+        {#if data.box.description}
+          <span data-suisou-text="fs-12" class="sub">{data.box.description}</span>
+        {/if}
+      </span>
     </a>
 
     <div data-suisou-layout="stack gap-3" class="inner">
@@ -159,7 +173,8 @@
     overflow: hidden;
   }
   .box {
-    padding: var(--suisou-space-2) var(--suisou-space-4);
+    align-items: center;
+    padding: var(--suisou-space-3) var(--suisou-space-4);
     color: var(--suisou-color-text);
     text-decoration: none;
   }

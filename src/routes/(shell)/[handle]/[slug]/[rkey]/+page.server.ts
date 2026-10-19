@@ -51,6 +51,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   return {
     cleanHandle,
     ownerName,
+    ownerAvatar: ownerProfile?.avatar,
     box,
     isOwner,
     question: { ...questionPublic, isRead: isHandled },
