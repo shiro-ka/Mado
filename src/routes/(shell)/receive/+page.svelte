@@ -78,9 +78,9 @@
   {/if}
 
   {#await data.inbox}
-    <div data-suisou-tray data-suisou-layout="row gap-0">
+    <div data-suisou-layout="row">
       {#each tabs as t}
-        <span data-suisou-button data-suisou-layout="grow">{t.label}</span>
+        <span data-suisou-button>{t.label}</span>
       {/each}
     </div>
     <div data-suisou-layout="stack gap-3" class="items">
@@ -99,11 +99,10 @@
       return true;
     })}
 
-    <div data-suisou-tray data-suisou-layout="row gap-0">
+    <div data-suisou-layout="row">
       {#each tabs as t}
         <a
           data-suisou-button
-          data-suisou-layout="grow"
           href={`?tab=${t.key}`}
           aria-current={tab === t.key ? "page" : undefined}
         >
