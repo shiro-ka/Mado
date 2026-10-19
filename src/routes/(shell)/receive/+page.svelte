@@ -70,7 +70,7 @@
   </div>
 
   {#if !data.dmTouched}
-    <a data-suisou-button="block" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
+    <a data-suisou-item="notice" data-suisou="accent" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
       <Bell data-suisou-text="fs-20" data-suisou="accent" />
       <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
       <ChevronRight data-suisou-text="fs-20" data-suisou="note" />
@@ -159,10 +159,7 @@
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .link {
-    color: var(--suisou-color-text-note);
-  }
-  .link:hover {
-    color: var(--suisou-color-text);
+    text-decoration: none;
   }
   .sub {
     color: var(--suisou-color-text-note);
