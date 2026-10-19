@@ -99,7 +99,6 @@
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="fs-16 fw-700">返信を投稿しました</p>
-      <p data-suisou-text="fs-14" class="sub">PDSに保存されました。</p>
       {#if crosspostFailed}
         <p data-suisou-layout="row" data-suisou-text="fs-14" class="warn">
           <AlertCircle />
