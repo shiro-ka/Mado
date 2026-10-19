@@ -95,7 +95,7 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-item="notice" data-suisou-layout="stack" data-suisou-text="center" data-suisou="success" role="status" class="done">
+  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="fs-16 fw-700">回答を投稿しました</p>
@@ -123,7 +123,7 @@
 {:else}
   <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
     <Textarea
-      placeholder="回答を入力してください..."
+      label="回答"
       bind:value={body}
       maxlength={MAX_CHARS}
       showCount={true}
@@ -149,7 +149,6 @@
         <span data-suisou-text="fs-12" class="sub">Bskyにもポスト</span>
       </label>
       <Button
-        variant="outline"
         type="submit"
         loading={formState === "submitting"}
         disabled={!isValid}

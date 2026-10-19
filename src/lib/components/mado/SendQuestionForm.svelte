@@ -52,7 +52,7 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-item="notice" data-suisou-layout="stack" data-suisou-text="center" data-suisou="success" role="status" class="done">
+  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="fs-16 fw-700">声を送信しました！</p>
