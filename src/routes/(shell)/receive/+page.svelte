@@ -69,11 +69,13 @@
     </button>
   </div>
 
-  <a data-suisou-button="block" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
-    <Bell data-suisou-text="fs-20" data-suisou="accent" />
-    <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
-    <ChevronRight data-suisou-text="fs-20" data-suisou="note" />
-  </a>
+  {#if !data.dmTouched}
+    <a data-suisou-button="block" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
+      <Bell data-suisou-text="fs-20" data-suisou="accent" />
+      <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
+      <ChevronRight data-suisou-text="fs-20" data-suisou="note" />
+    </a>
+  {/if}
 
   {#await data.inbox}
     <div data-suisou-tray data-suisou-layout="row gap-0">

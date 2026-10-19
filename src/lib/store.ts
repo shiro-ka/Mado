@@ -355,26 +355,20 @@ export class CloudflareStore {
       .run();
   }
 
-  // ── Notification prefs (D1) ─────────────────────────────────────────────
-  //
-  // Opt-in only: no row → disabled. The DM notification is a supplement to the
-  // /receive inbox, never the source of truth, so a missing table (migration
-  // 0004 not yet applied) degrades to "disabled" rather than 500-ing the send.
-
-  async getNotificationPrefs(did: string): Promise<{ dmEnabled: boolean }> {
+  async getNotificationPrefs(did: string): Promise<{ dmEnabled: boolean; touched: boolean }> {
     try {
       const row = await this.env.DB.prepare(
         "SELECT dm_enabled FROM notification_prefs WHERE did = ?"
       )
         .bind(did)
         .first<{ dm_enabled: number }>();
-      return { dmEnabled: (row?.dm_enabled ?? 0) === 1 };
+      return { dmEnabled: (row?.dm_enabled ?? 0) === 1, touched: row !== null };
     } catch (err) {
       console.warn(
         "[getNotificationPrefs] falling back to disabled (run migration 0004?)",
         err
       );
-      return { dmEnabled: false };
+      return { dmEnabled: false, touched: true };
     }
   }
 
