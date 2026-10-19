@@ -9,17 +9,15 @@ function answerBodies(list: Answer[] = []) {
   return [...list].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((a) => a.body);
 }
 
-export const load: PageServerLoad = async ({ parent, platform, url }) => {
+export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();
   if (!session) throw redirect(303, "/auth/login");
 
   const env = platform!.env;
   const store = new CloudflareStore(env);
-  const tab = url.searchParams.get("tab") ?? "new";
   const prefs = await store.getNotificationPrefs(session.did);
 
   return {
-    tab,
     dmTouched: prefs.touched,
     inbox: (async () => {
       const [questions, boxes, answers] = await Promise.all([

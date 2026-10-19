@@ -1,6 +1,8 @@
 <script lang="ts">
   import { Inbox, RefreshCw, Bell, ChevronRight } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
+  import { page } from "$app/state";
+  import { untrack } from "svelte";
   import QuestionCard from "$lib/components/mado/QuestionCard.svelte";
   import Skeleton from "$lib/components/ui/Skeleton.svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -20,7 +22,7 @@
     }
   }
 
-  const tab = $derived(data.tab as FilterTab);
+  const tab = $derived((page.url.searchParams.get("tab") ?? "new") as FilterTab);
 
   const tabs: { key: FilterTab; label: string }[] = [
     { key: "new", label: "新しい声" },
@@ -42,6 +44,19 @@
     const kind = handled.get(q.rkey);
     return kind ? kind !== "unheard" : q.isRead;
   }
+
+  let settled = $state(new Map<string, boolean>());
+
+  function inHeardTab(q: { rkey: string; isRead: boolean }) {
+    return settled.get(q.rkey) ?? q.isRead;
+  }
+
+  $effect(() => {
+    tab;
+    untrack(() => {
+      settled = new Map([...handled].map(([rkey, kind]) => [rkey, kind !== "unheard"]));
+    });
+  });
 
   async function undoThrough(rkey: string) {
     undoing = rkey;
@@ -83,7 +98,12 @@
   {#await data.inbox}
     <div data-suisou-layout="row">
       {#each tabs as t}
-        <span data-suisou-button>{t.label}</span>
+        <span data-suisou-button aria-current={tab === t.key ? "page" : undefined}>
+          {t.label}
+          {#if t.key !== "heard"}
+            <span data-suisou-item="tag" class="ghost">0</span>
+          {/if}
+        </span>
       {/each}
     </div>
     <div data-suisou-layout="stack gap-3" class="items">
@@ -97,8 +117,8 @@
     )}
     {@const newCount = allQuestions.filter((q) => !isHeard(q)).length}
     {@const filtered = allQuestions.filter((q) => {
-      if (tab === "new") return !q.isRead;
-      if (tab === "heard") return q.isRead;
+      if (tab === "new") return !inHeardTab(q);
+      if (tab === "heard") return inHeardTab(q);
       return true;
     })}
 
@@ -145,7 +165,7 @@
               href={question.href}
               heard={isHeard(question)}
               ownerAvatar={data.session?.avatar}
-              showNewTag={tab === "all" && !isHeard(question)}
+              showNewTag={tab !== "new" && !isHeard(question)}
               onReplied={() => setHandled(question.rkey, "replied")}
               onThrough={() => setHandled(question.rkey, "through")}
               onUnheard={() => setHandled(question.rkey, "unheard")}
@@ -165,6 +185,12 @@
   }
   .link {
     text-decoration: none;
+  }
+  .link:hover {
+    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
+  }
+  .ghost {
+    visibility: hidden;
   }
   .sub {
     color: var(--suisou-color-text-note);
