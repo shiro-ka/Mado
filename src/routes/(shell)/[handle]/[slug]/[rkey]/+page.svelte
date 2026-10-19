@@ -136,12 +136,12 @@
 
   {#if data.answers.length > 0}
     <div data-suisou-layout="stack gap-3" class="group">
-      <h2 data-suisou-text="fs-14 fw-700">回答済み（{data.answers.length}件）</h2>
+      <h2 data-suisou-text="fs-14 fw-700">返信済み（{data.answers.length}件）</h2>
       {#each data.answers as answer}
         <div data-suisou-tray data-suisou-layout="stack">
           <div data-suisou-layout="row">
             <MessageCircle data-suisou-text="fs-16" data-suisou="accent" />
-            <span data-suisou-text="fs-12 fw-500" class="sub">回答</span>
+            <span data-suisou-text="fs-12 fw-500" class="sub">返信</span>
             <span data-suisou-text="fs-12" class="date">{formatDateFull(answer.createdAt)}</span>
           </div>
           <p data-suisou-text="fs-14" class="body doc">{answer.body}</p>

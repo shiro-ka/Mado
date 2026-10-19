@@ -4,7 +4,7 @@
   const ownerSteps = [
     { step: "1", icon: UserCheck, tone: "accent", title: "Blueskyでログイン", body: "右上の「ログイン」からBlueskyアカウントで認証します。OAuthを使うためパスワードは不要です。" },
     { step: "2", icon: MessageCircle, tone: "success", title: "窓を開ける", body: "ホーム → 窓 → 新しく作成。タイトルと説明を入力して公開します。URLをSNSでシェアして声を募集しましょう。" },
-    { step: "3", icon: Inbox, tone: "accent", title: "声を受け取る・回答する", body: "受信トレイに届いた声を確認できます。送り主のハンドルも表示されます。回答はBluesky上にそのまま投稿することもできます。" },
+    { step: "3", icon: Inbox, tone: "accent", title: "声を受け取る・返信する", body: "受信トレイに届いた声を確認できます。送り主のハンドルも表示されます。返信はBluesky上にそのまま投稿することもできます。" },
   ];
 
   const senderSteps = [

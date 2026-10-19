@@ -42,7 +42,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     const expectedPrefix = `at://${session.did}/${NSID.KOE}/`;
     if (!koeUri.startsWith(expectedPrefix)) {
       return json(
-        { error: "Forbidden", message: "この声に回答する権限がありません" },
+        { error: "Forbidden", message: "この声に返信する権限がありません" },
         { status: 403 }
       );
     }
@@ -78,7 +78,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     if (!result) {
       return json(
-        { error: "Write failed", message: "回答の投稿に失敗しました" },
+        { error: "Write failed", message: "返信の投稿に失敗しました" },
         { status: 500 }
       );
     }

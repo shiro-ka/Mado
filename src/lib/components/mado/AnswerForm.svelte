@@ -74,7 +74,7 @@
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({})) as { message?: string };
-        throw new Error(data.message ?? "回答の投稿に失敗しました");
+        throw new Error(data.message ?? "返信の投稿に失敗しました");
       }
 
       const data = await res.json() as {
@@ -89,7 +89,7 @@
       onSuccess?.(data.uri, sent);
     } catch (err) {
       formState = "error";
-      errorMsg = err instanceof Error ? err.message : "回答の投稿に失敗しました";
+      errorMsg = err instanceof Error ? err.message : "返信の投稿に失敗しました";
     }
   }
 </script>
@@ -98,7 +98,7 @@
   <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
-      <p data-suisou-text="fs-16 fw-700">回答を投稿しました</p>
+      <p data-suisou-text="fs-16 fw-700">返信を投稿しました</p>
       <p data-suisou-text="fs-14" class="sub">PDSに保存されました。</p>
       {#if crosspostFailed}
         <p data-suisou-layout="row" data-suisou-text="fs-14" class="warn">
@@ -118,12 +118,12 @@
         </a>
       {/if}
     </div>
-    <Button variant="ghost" onclick={reset}>続けて回答する</Button>
+    <Button variant="ghost" onclick={reset}>続けて返信する</Button>
   </div>
 {:else}
   <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
     <Textarea
-      label="回答"
+      label="返信"
       bind:value={body}
       maxlength={MAX_CHARS}
       showCount={true}
@@ -154,7 +154,7 @@
         disabled={!isValid}
       >
         {#snippet rightIcon()}<Send />{/snippet}
-        回答を投稿
+        返信を投稿
       </Button>
     </div>
   </form>

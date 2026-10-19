@@ -15,7 +15,7 @@
     {
       icon: Globe, tone: "accent",
       title: "ATProtocol基盤",
-      body: "声・回答データはあなたのBluesky PDS（Personal Data Server）に保存されます。Mado独自のデータベースには頼らず、オープンな分散型プロトコルで動作します。",
+      body: "声・返信データはあなたのBluesky PDS（Personal Data Server）に保存されます。Mado独自のデータベースには頼らず、オープンな分散型プロトコルで動作します。",
     },
   ];
 </script>
