@@ -7,7 +7,7 @@
   import type { Question } from "$lib/../types/index.js";
 
   interface Props {
-    question: Omit<Question, "encryptedFrom"> & { boxTitle?: string };
+    question: Omit<Question, "encryptedFrom"> & { boxTitle?: string; lastAnswer?: string };
     href: string;
     heard: boolean;
     showNewTag?: boolean;
@@ -21,6 +21,8 @@
   let { question, href, heard, showNewTag = false, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
 
   let replying = $state(false);
+  let sentAnswer = $state<string | null>(null);
+  const lastAnswer = $derived(sentAnswer ?? question.lastAnswer);
   let confirm = $state<"block" | "delete" | null>(null);
   let busy = $state<"through" | "unheard" | "block" | "delete" | null>(null);
   let failed = $state<string | null>(null);
@@ -92,6 +94,9 @@
         </span>
       </span>
       <span class="text clamp">{truncate(question.body, 120)}</span>
+      {#if lastAnswer}
+        <span data-suisou="bd-start" data-suisou-text="fs-14" class="answer clamp sub">{lastAnswer}</span>
+      {/if}
     </span>
 
     <span data-suisou-item="media-tail" class="go"><ChevronRight data-suisou="note" /></span>
@@ -152,7 +157,10 @@
         koeUri={question.uri}
         questionBody={question.body}
         pageUrl={`${page.url.origin}${href}`}
-        onSuccess={() => onReplied?.()}
+        onSuccess={(_, answerBody) => {
+          sentAnswer = answerBody;
+          onReplied?.();
+        }}
       />
     </div>
   {/if}
@@ -199,6 +207,10 @@
   }
   .text {
     display: block;
+  }
+  .answer {
+    margin-block-start: var(--suisou-space-1);
+    padding-inline-start: var(--suisou-space-2);
   }
   .sub {
     color: var(--suisou-color-text-note);

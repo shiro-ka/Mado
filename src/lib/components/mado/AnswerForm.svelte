@@ -9,7 +9,7 @@
     koeUri: string;
     questionBody?: string;
     pageUrl?: string;
-    onSuccess?: (answerUri: string) => void;
+    onSuccess?: (answerUri: string, answerBody: string) => void;
   }
 
   let { koeUri, questionBody, pageUrl, onSuccess }: Props = $props();
@@ -63,12 +63,13 @@
 
     formState = "submitting";
     errorMsg = "";
+    const sent = body.trim();
 
     try {
       const res = await fetch("/api/answers/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ koeUri, body: body.trim(), crosspost, pageUrl, questionBody }),
+        body: JSON.stringify({ koeUri, body: sent, crosspost, pageUrl, questionBody }),
       });
 
       if (!res.ok) {
@@ -85,7 +86,7 @@
       crosspostLink = data.crosspostUri ? bskyPostUrl(data.crosspostUri) : null;
       rememberCrosspost(crosspost);
       formState = "success";
-      onSuccess?.(data.uri);
+      onSuccess?.(data.uri, sent);
     } catch (err) {
       formState = "error";
       errorMsg = err instanceof Error ? err.message : "回答の投稿に失敗しました";
