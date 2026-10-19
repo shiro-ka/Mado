@@ -183,7 +183,11 @@
 
 <style>
   .card {
+    position: relative;
     padding: 0;
+  }
+  .card:hover:not(:has(.reply:hover)) {
+    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
   }
   .box {
     padding: var(--suisou-space-1) var(--suisou-space-2);
@@ -193,8 +197,20 @@
     color: var(--suisou-color-text);
     text-decoration: none;
   }
-  .main:hover {
-    background: var(--suisou-color-hover);
+  .main::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .actions,
+  .reply {
+    position: relative;
+  }
+  .actions {
+    pointer-events: none;
+  }
+  .actions > :global(*) {
+    pointer-events: auto;
   }
   .go {
     align-self: center;
