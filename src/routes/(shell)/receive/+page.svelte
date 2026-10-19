@@ -28,23 +28,26 @@
     { key: "all", label: "すべて" },
   ];
 
-  let acted = $state(new Map<string, "replied" | "through">());
+  type Handled = "replied" | "through" | "unheard";
+  let handled = $state(new Map<string, Handled>());
   let undoing = $state<string | null>(null);
   let deleted = $state(new Set<string>());
   let blocked = $state(new Set<string>());
 
-  function setActed(rkey: string, kind: "replied" | "through" | null) {
-    const next = new Map(acted);
-    if (kind) next.set(rkey, kind);
-    else next.delete(rkey);
-    acted = next;
+  function setHandled(rkey: string, kind: Handled) {
+    handled = new Map(handled).set(rkey, kind);
+  }
+
+  function isHeard(q: { rkey: string; isRead: boolean }) {
+    const kind = handled.get(q.rkey);
+    return kind ? kind !== "unheard" : q.isRead;
   }
 
   async function undoThrough(rkey: string) {
     undoing = rkey;
     try {
       const res = await fetch(`/api/questions/${rkey}/handled`, { method: "DELETE" });
-      if (res.ok) setActed(rkey, null);
+      if (res.ok) setHandled(rkey, "unheard");
     } finally {
       undoing = null;
     }
@@ -92,7 +95,7 @@
     {@const allQuestions = inbox.allQuestions.filter(
       (q) => !deleted.has(q.rkey) && !(q.senderDid && blocked.has(q.senderDid)),
     )}
-    {@const newCount = allQuestions.filter((q) => !q.isRead && !acted.has(q.rkey)).length}
+    {@const newCount = allQuestions.filter((q) => !isHeard(q)).length}
     {@const filtered = allQuestions.filter((q) => {
       if (tab === "new") return !q.isRead;
       if (tab === "heard") return q.isRead;
@@ -131,7 +134,7 @@
     {:else}
       <div data-suisou-layout="stack gap-3" class="items">
         {#each filtered as question (question.rkey)}
-          {#if acted.get(question.rkey) === "through"}
+          {#if tab === "new" && handled.get(question.rkey) === "through"}
             <div data-suisou-tray data-suisou-layout="row between" class="acted">
               <span data-suisou-text="fs-14" class="sub">既読にしました</span>
               <Button variant="ghost" loading={undoing === question.rkey} onclick={() => undoThrough(question.rkey)}>取り消す</Button>
@@ -140,9 +143,11 @@
             <QuestionCard
               {question}
               href={question.href}
-              showNewTag={tab === "all" && !question.isRead && !acted.has(question.rkey)}
-              onReplied={() => setActed(question.rkey, "replied")}
-              onThrough={() => setActed(question.rkey, "through")}
+              heard={isHeard(question)}
+              showNewTag={tab === "all" && !isHeard(question)}
+              onReplied={() => setHandled(question.rkey, "replied")}
+              onThrough={() => setHandled(question.rkey, "through")}
+              onUnheard={() => setHandled(question.rkey, "unheard")}
               onBlocked={(did) => (blocked = new Set([...blocked, did]))}
               onDeleted={() => (deleted = new Set([...deleted, question.rkey]))}
             />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { User, ChevronRight, Archive, EllipsisVertical, Ban, Trash2 } from "lucide-svelte";
+  import { User, ChevronRight, Archive, ArchiveRestore, EllipsisVertical, Ban, Trash2 } from "lucide-svelte";
   import { page } from "$app/state";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
@@ -9,29 +9,31 @@
   interface Props {
     question: Omit<Question, "encryptedFrom"> & { boxTitle?: string };
     href: string;
+    heard: boolean;
     showNewTag?: boolean;
     onReplied?: () => void;
     onThrough?: () => void;
+    onUnheard?: () => void;
     onBlocked?: (senderDid: string) => void;
     onDeleted?: () => void;
   }
 
-  let { question, href, showNewTag = false, onReplied, onThrough, onBlocked, onDeleted }: Props = $props();
+  let { question, href, heard, showNewTag = false, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
 
   let replying = $state(false);
   let confirm = $state<"block" | "delete" | null>(null);
-  let busy = $state<"through" | "block" | "delete" | null>(null);
+  let busy = $state<"through" | "unheard" | "block" | "delete" | null>(null);
   let failed = $state<string | null>(null);
 
   const name = $derived(question.senderDisplayName || question.senderHandle);
 
-  async function run(kind: "through" | "block" | "delete") {
+  async function run(kind: "through" | "unheard" | "block" | "delete") {
     busy = kind;
     failed = null;
     try {
       const res =
-        kind === "through"
-          ? await fetch(`/api/questions/${question.rkey}/handled`, { method: "POST" })
+        kind === "through" || kind === "unheard"
+          ? await fetch(`/api/questions/${question.rkey}/handled`, { method: kind === "through" ? "POST" : "DELETE" })
           : kind === "block"
             ? await fetch("/api/blocks/create", {
                 method: "POST",
@@ -41,10 +43,11 @@
             : await fetch(`/api/questions/${question.rkey}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       if (kind === "through") onThrough?.();
+      else if (kind === "unheard") onUnheard?.();
       else if (kind === "block") onBlocked?.(question.senderDid!);
       else onDeleted?.();
     } catch {
-      failed = { through: "既読にできませんでした", block: "ブロックできませんでした", delete: "削除できませんでした" }[kind];
+      failed = { through: "既読にできませんでした", unheard: "未読に戻せませんでした", block: "ブロックできませんでした", delete: "削除できませんでした" }[kind];
     } finally {
       busy = null;
     }
@@ -99,7 +102,12 @@
       {#snippet leftIcon()}<img src="/mado-logo.svg" alt="" class="logo" />{/snippet}
       返信する
     </Button>
-    {#if !question.isRead}
+    {#if heard}
+      <Button variant="ghost" loading={busy === "unheard"} onclick={() => run("unheard")}>
+        {#snippet leftIcon()}<ArchiveRestore />{/snippet}
+        未読に戻す
+      </Button>
+    {:else}
       <Button variant="ghost" loading={busy === "through"} onclick={() => run("through")}>
         {#snippet leftIcon()}<Archive />{/snippet}
         既読にする
