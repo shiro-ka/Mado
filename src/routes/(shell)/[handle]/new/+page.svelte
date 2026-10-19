@@ -17,7 +17,7 @@
   let formState = $state<FormState>("idle");
   let errorMsg = $state("");
 
-  const slugPreview = $derived(slug.trim().toLowerCase() || "（自動生成）");
+  const slugPreview = $derived(slug.trim().toLowerCase() || "(空欄だと自動で決まるよ)");
   const slugErr = $derived(slugFormatError(slug));
 
   async function handleSubmit(e: SubmitEvent) {
@@ -57,7 +57,7 @@
   <title>窓を開ける | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container-s" class="page">
   <h1 data-suisou-text="fs-24 fw-700" class="heading">窓を開ける</h1>
 
   <div data-suisou-tray class="card">
@@ -84,7 +84,6 @@
           label="URL"
           bind:value={slug}
           error={slugErr ?? undefined}
-          helper="英小文字・数字・ハイフンのみ。空欄なら自動生成されます。あとから変更もできます。"
           maxlength={30}
           disabled={formState === "submitting"}
         />
@@ -118,7 +117,6 @@
 
 <style>
   .page {
-    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .heading {
