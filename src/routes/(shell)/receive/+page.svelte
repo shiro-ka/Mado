@@ -100,7 +100,7 @@
       {#each tabs as t}
         <span data-suisou-button aria-current={tab === t.key ? "page" : undefined}>
           {t.label}
-          {#if t.key !== "heard"}
+          {#if t.key !== "all"}
             <span data-suisou-item="tag" class="ghost">0</span>
           {/if}
         </span>
@@ -116,6 +116,7 @@
       (q) => !deleted.has(q.rkey) && !(q.senderDid && blocked.has(q.senderDid)),
     )}
     {@const newCount = allQuestions.filter((q) => !isHeard(q)).length}
+    {@const heardCount = allQuestions.length - newCount}
     {@const filtered = allQuestions.filter((q) => {
       if (tab === "new") return !inHeardTab(q);
       if (tab === "heard") return inHeardTab(q);
@@ -130,10 +131,10 @@
           aria-current={tab === t.key ? "page" : undefined}
         >
           {t.label}
-          {#if t.key === "all"}
-            <span data-suisou-item="tag">{allQuestions.length}</span>
-          {:else if t.key === "new"}
-            <span data-suisou-item="tag">{newCount}</span>
+          {#if t.key === "new"}
+            <span data-suisou-item="tag" data-suisou="accent">{newCount}</span>
+          {:else if t.key === "heard"}
+            <span data-suisou-item="tag">{heardCount}</span>
           {/if}
         </a>
       {/each}
