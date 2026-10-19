@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft, User, ExternalLink, Lock, MessageCircle } from "lucide-svelte";
+  import { ArrowLeft, User, ExternalLink, Lock, MessageCircle, Archive, ArchiveRestore } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
@@ -10,14 +10,16 @@
 
   let { data }: { data: PageData } = $props();
 
-  let unhearing = $state(false);
-  async function unhear() {
-    unhearing = true;
+  let toggling = $state(false);
+  async function toggleHeard() {
+    toggling = true;
     try {
-      const res = await fetch(`/api/questions/${data.question.rkey}/handled`, { method: "DELETE" });
+      const res = await fetch(`/api/questions/${data.question.rkey}/handled`, {
+        method: data.question.isRead ? "DELETE" : "POST",
+      });
       if (res.ok) await invalidateAll();
     } finally {
-      unhearing = false;
+      toggling = false;
     }
   }
 </script>
@@ -35,79 +37,78 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
   <div>
-    <a href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
-      <Button variant="ghost">
-        {#snippet leftIcon()}<ArrowLeft />{/snippet}
-        {data.isOwner ? "受信トレイに戻る" : "窓に戻る"}
-      </Button>
-    </a>
+    <Button variant="ghost" href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
+      {#snippet leftIcon()}<ArrowLeft />{/snippet}
+      {data.isOwner ? "受信トレイに戻る" : "窓に戻る"}
+    </Button>
   </div>
 
-  <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
-    <div data-suisou-layout="row between">
+  <div data-suisou-tray data-suisou-layout="stack gap-0" class="card">
+    <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-layout="stack gap-0" data-suisou="bd-bottom" class="box">
+      <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
+      {#if data.box.description}
+        <span data-suisou-text="fs-12" class="sub">{data.box.description}</span>
+      {/if}
+    </a>
+
+    <div data-suisou-layout="stack gap-3" class="inner">
       {#if data.isOwner}
-        <span data-suisou-layout="row gap-1">
+        {#if data.senderUnknown}
+          <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+            <Lock data-suisou-text="fs-16" />
+            送り主を特定できませんでした。
+          </p>
+        {/if}
+
+        <div data-suisou-item="media" class="sender">
+          {#if data.senderProfile?.avatar}
+            <img data-suisou-item="circle media-figure" src={data.senderProfile.avatar} alt="" />
+          {:else}
+            <div data-suisou-item="circle media-figure">
+              <User data-suisou-text="fs-16" data-suisou="note" />
+            </div>
+          {/if}
+          <div data-suisou-item="media-content">
+            {#if data.senderProfile}
+              <p data-suisou-text="fs-14 fw-500 one-line">
+                {data.senderProfile.displayName ?? data.senderProfile.handle}
+              </p>
+              <p data-suisou-text="fs-12 one-line" class="sub">@{data.senderProfile.handle}</p>
+            {:else if data.senderDid}
+              <p data-suisou-text="fs-12" class="did">{data.senderDid}</p>
+            {:else}
+              <p data-suisou-text="fs-14" class="sub">送信者情報なし</p>
+            {/if}
+          </div>
+          {#if data.senderProfile}
+            <Button
+              data-suisou-item="media-tail"
+              icon
+              variant="ghost"
+              href={`https://bsky.app/profile/${data.senderProfile.handle}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Bluesky のプロフィールを開く"
+            >
+              <ExternalLink />
+            </Button>
+          {/if}
+        </div>
+      {/if}
+
+      <p data-suisou-text="fs-16" class="body doc">{data.question.body}</p>
+
+      <div data-suisou-layout="row gap-1">
+        {#if data.isOwner}
           <span data-suisou-item="tag" data-suisou={data.question.isRead ? undefined : "accent"}>
             {data.question.isRead ? "聞いた声" : "新しい声"}
           </span>
-          {#if data.question.isRead}
-            <Button variant="ghost" loading={unhearing} onclick={unhear}>新しい声に戻す</Button>
-          {/if}
-        </span>
-      {:else}
-        <span></span>
-      {/if}
-      <span data-suisou-text="fs-12" class="sub">{formatDateFull(data.question.createdAt)}</span>
-    </div>
-
-    <p data-suisou-text="fs-16" class="body doc">{data.question.body}</p>
-
-    {#if data.isOwner}
-      {#if data.senderUnknown}
-        <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
-          <Lock data-suisou-text="fs-16" />
-          送り主を特定できませんでした。
-        </p>
-      {/if}
-
-      <div data-suisou-item="media" data-suisou="bd-top" class="sender">
-        {#if data.senderProfile?.avatar}
-          <img
-            data-suisou-item="circle media-figure"
-            src={data.senderProfile.avatar}
-            alt={data.senderProfile.handle}
-          />
-        {:else}
-          <div data-suisou-item="circle media-figure">
-            <User data-suisou-text="fs-16" data-suisou="note" />
-          </div>
         {/if}
-        <div data-suisou-item="media-content">
-          {#if data.senderProfile}
-            <p data-suisou-text="fs-14 fw-500">
-              {data.senderProfile.displayName ?? data.senderProfile.handle}
-            </p>
-            <p data-suisou-text="fs-12" class="sub">@{data.senderProfile.handle}</p>
-          {:else if data.senderDid}
-            <p data-suisou-text="fs-12" class="did">{data.senderDid}</p>
-          {:else}
-            <p data-suisou-text="fs-14" class="sub">送信者情報なし</p>
-          {/if}
-        </div>
-        {#if data.senderProfile}
-          <a
-            data-suisou-item="media-tail"
-            href={`https://bsky.app/profile/${data.senderProfile.handle}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button icon><ExternalLink /></Button>
-          </a>
-        {/if}
+        <span data-suisou-text="fs-12" class="sub">{formatDateFull(data.question.createdAt)}</span>
       </div>
-    {/if}
+    </div>
   </div>
 
   {#if data.answers.length > 0}
@@ -127,8 +128,7 @@
   {/if}
 
   {#if data.isOwner}
-    <div data-suisou-tray data-suisou-layout="stack gap-3" class="card">
-      <h2 data-suisou-text="fs-14 fw-700">回答を書く</h2>
+    <div data-suisou-tray class="card reply">
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}
@@ -137,28 +137,42 @@
       />
     </div>
 
-    <div data-suisou-item="notice" data-suisou-layout="stack s:row" data-suisou="error" class="danger">
-      <DeleteQuestionButton rkey={data.question.rkey} />
+    <div data-suisou-layout="row end wrap">
+      <Button variant="ghost" loading={toggling} onclick={toggleHeard}>
+        {#snippet leftIcon()}{#if data.question.isRead}<ArchiveRestore />{:else}<Archive />{/if}{/snippet}
+        {data.question.isRead ? "未読に戻す" : "既読にする"}
+      </Button>
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />
       {/if}
+      <DeleteQuestionButton rkey={data.question.rkey} />
     </div>
   {/if}
 </div>
 
 <style>
   .page {
-    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .card {
+    padding: 0;
+    overflow: hidden;
+  }
+  .box {
+    padding: var(--suisou-space-2) var(--suisou-space-4);
+    color: var(--suisou-color-text);
+    text-decoration: none;
+  }
+  .box:hover {
+    background: var(--suisou-color-hover);
+  }
+  .inner,
+  .reply {
     padding: var(--suisou-space-4);
   }
   .sender {
     align-items: center;
-    padding-block-start: var(--suisou-space-3);
   }
-
   .body {
     white-space: pre-wrap;
   }
