@@ -144,6 +144,7 @@
               {question}
               href={question.href}
               heard={isHeard(question)}
+              ownerAvatar={data.session?.avatar}
               showNewTag={tab === "all" && !isHeard(question)}
               onReplied={() => setHandled(question.rkey, "replied")}
               onThrough={() => setHandled(question.rkey, "through")}

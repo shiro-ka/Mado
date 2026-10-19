@@ -5,8 +5,8 @@ import { listBoxes, getProfiles, getAnswersByOwner } from "$lib/atproto/index.js
 import { loadInbox } from "$lib/inbox.server.js";
 import type { Answer } from "$lib/../types/index.js";
 
-function latestAnswer(list: Answer[] = []) {
-  return list.reduce<Answer | undefined>((last, a) => (!last || a.createdAt > last.createdAt ? a : last), undefined);
+function answerBodies(list: Answer[] = []) {
+  return [...list].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((a) => a.body);
 }
 
 export const load: PageServerLoad = async ({ parent, platform, url }) => {
@@ -39,7 +39,7 @@ export const load: PageServerLoad = async ({ parent, platform, url }) => {
           ...q,
           href,
           boxTitle: box?.title,
-          lastAnswer: latestAnswer(answers.get(q.uri))?.body,
+          answers: answerBodies(answers.get(q.uri)),
           senderHandle: profile?.handle,
           senderDisplayName: profile?.displayName,
           senderAvatar: profile?.avatar,

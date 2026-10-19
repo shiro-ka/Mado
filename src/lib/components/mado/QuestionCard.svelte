@@ -7,9 +7,10 @@
   import type { Question } from "$lib/../types/index.js";
 
   interface Props {
-    question: Omit<Question, "encryptedFrom"> & { boxTitle?: string; lastAnswer?: string };
+    question: Omit<Question, "encryptedFrom"> & { boxTitle?: string; answers?: string[] };
     href: string;
     heard: boolean;
+    ownerAvatar?: string;
     showNewTag?: boolean;
     onReplied?: () => void;
     onThrough?: () => void;
@@ -18,11 +19,13 @@
     onDeleted?: () => void;
   }
 
-  let { question, href, heard, showNewTag = false, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
+  let { question, href, heard, ownerAvatar, showNewTag = false, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
 
   let replying = $state(false);
-  let sentAnswer = $state<string | null>(null);
-  const lastAnswer = $derived(sentAnswer ?? question.lastAnswer);
+  let sentAnswers = $state<string[]>([]);
+  const answers = $derived([...(question.answers ?? []), ...sentAnswers]);
+  const shownAnswers = $derived(answers.slice(-2));
+  const hiddenAnswers = $derived(answers.length - shownAnswers.length);
   let confirm = $state<"block" | "delete" | null>(null);
   let busy = $state<"through" | "unheard" | "block" | "delete" | null>(null);
   let failed = $state<string | null>(null);
@@ -74,7 +77,7 @@
       {/if}
     </span>
 
-    <span data-suisou-item="media-content">
+    <div data-suisou-item="media-content">
       <span data-suisou-layout="row between">
         <span data-suisou-layout="row gap-1 grow" class="who">
           {#if name}
@@ -94,10 +97,22 @@
         </span>
       </span>
       <span class="text clamp">{truncate(question.body, 120)}</span>
-      {#if lastAnswer}
-        <span data-suisou="bd-start" data-suisou-text="fs-14" class="answer clamp sub">{lastAnswer}</span>
+      {#if hiddenAnswers > 0}
+        <span data-suisou-text="fs-12" class="more sub">ほか {hiddenAnswers} 件の返信</span>
       {/if}
-    </span>
+      {#each shownAnswers as a}
+        <div data-suisou-item="media" class="answer">
+          <span data-suisou-item="media-figure">
+            {#if ownerAvatar}
+              <img src={ownerAvatar} alt="" data-suisou-item="circle small" />
+            {:else}
+              <span data-suisou-item="circle small"><User data-suisou-text="fs-12" /></span>
+            {/if}
+          </span>
+          <span data-suisou-item="media-content"><span data-suisou-text="fs-14" class="clamp">{a}</span></span>
+        </div>
+      {/each}
+    </div>
 
     <span data-suisou-item="media-tail" class="go"><ChevronRight data-suisou="note" /></span>
   </a>
@@ -158,7 +173,7 @@
         questionBody={question.body}
         pageUrl={`${page.url.origin}${href}`}
         onSuccess={(_, answerBody) => {
-          sentAnswer = answerBody;
+          sentAnswers = [...sentAnswers, answerBody];
           onReplied?.();
         }}
       />
@@ -208,9 +223,12 @@
   .text {
     display: block;
   }
+  .more {
+    margin-block-start: var(--suisou-space-2);
+  }
   .answer {
-    margin-block-start: var(--suisou-space-1);
-    padding-inline-start: var(--suisou-space-2);
+    margin-block-start: var(--suisou-space-2);
+    gap: var(--suisou-space-2);
   }
   .sub {
     color: var(--suisou-color-text-note);
