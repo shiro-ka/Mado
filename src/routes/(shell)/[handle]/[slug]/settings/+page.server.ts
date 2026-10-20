@@ -1,4 +1,5 @@
 import { error, redirect } from "@sveltejs/kit";
+import { resolveMainBoxRkey } from "$lib/mainBox.js";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { resolveHandle, findBoxBySlug, getProfile, listBoxes } from "$lib/atproto/index.js";
@@ -26,12 +27,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     store.getMainBoxRkey(did),
     listBoxes(did),
   ]);
-  const oldestRkey =
-    [...boxes].sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? ""))[0]?.rkey ??
-    null;
-  const mainRkey =
-    overrideRkey && boxes.some((b) => b.rkey === overrideRkey) ? overrideRkey : oldestRkey;
-  const isMain = box.rkey === mainRkey;
+  const isMain = box.rkey === resolveMainBoxRkey(boxes, overrideRkey);
 
   return {
     cleanHandle,

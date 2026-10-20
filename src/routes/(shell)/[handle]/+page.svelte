@@ -117,7 +117,7 @@
           ownerRegistered={detail.ownerRegistered}
           session={data.session}
         />
-      {:else}
+      {:else if detail.subBoxes.length === 0}
         <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
           <p data-suisou-text="fs-14" class="sub">現在受付中の窓はありません</p>
         </div>
@@ -128,7 +128,7 @@
           <div data-suisou-layout="row">
             <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
             <h2 data-suisou-text="fs-14 fw-700" class="sub">
-              その他のMado ({detail.subBoxes.length})
+              {detail.box ? "その他の窓" : "窓"} ({detail.subBoxes.length})
             </h2>
           </div>
           <div data-suisou-layout="stack gap-3" class="items">

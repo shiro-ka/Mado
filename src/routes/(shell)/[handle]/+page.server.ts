@@ -2,6 +2,7 @@ import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { resolveHandle, getProfile, listBoxes } from "$lib/atproto/index.js";
+import { resolveMainBoxRkey } from "$lib/mainBox.js";
 
 export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
   const { session } = await parent();
@@ -31,13 +32,8 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     detail: (async () => {
       const [profile, boxes] = await Promise.all([getProfile(did), listBoxes(did)]);
 
-      // Main box = the owner's override if it still points at a live box, else
-      // the oldest box by createdAt.
       const byAge = [...boxes].sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? ""));
-      const oldestRkey = byAge[0]?.rkey ?? null;
-      const overrideRkey = store ? await store.getMainBoxRkey(did) : null;
-      const mainBoxRkey =
-        overrideRkey && boxes.some((b) => b.rkey === overrideRkey) ? overrideRkey : oldestRkey;
+      const mainBoxRkey = resolveMainBoxRkey(boxes, store ? await store.getMainBoxRkey(did) : null);
 
       if (isOwner) {
         // Owner: manage view — the full box list with the main box pinned on top.
@@ -59,9 +55,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
       // Visitor: send view — the main box's send form up top, sub boxes below.
       const openList = byAge.filter((b) => b.isOpen);
       const mainBox = boxes.find((b) => b.rkey === mainBoxRkey) ?? null;
-      // Feature the main box if it's open; otherwise fall back to the oldest open
-      // box so a visitor still lands on a usable send form when one exists.
-      const featured = mainBox && mainBox.isOpen ? mainBox : openList[0] ?? null;
+      const featured = mainBoxRkey === null ? null : mainBox && mainBox.isOpen ? mainBox : openList[0] ?? null;
       const subBoxes = openList.filter((b) => b.rkey !== featured?.rkey);
       const ownerRegistered = store ? await store.ownerHasAnyDevice(did) : false;
 

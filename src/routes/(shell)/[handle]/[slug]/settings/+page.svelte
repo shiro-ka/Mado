@@ -101,12 +101,12 @@
   }
 
   let settingMain = $state(false);
-  async function handleSetMain() {
-    if (settingMain || data.isMain) return;
+  async function toggleMain() {
+    if (settingMain) return;
     settingMain = true;
     errorMsg = "";
     try {
-      const res = await fetch(`/api/boxes/${data.box.rkey}/main`, { method: "POST" });
+      const res = await fetch(`/api/boxes/${data.box.rkey}/main`, { method: data.isMain ? "DELETE" : "POST" });
       if (!res.ok) {
         const d = (await res.json()) as { message?: string };
         throw new Error(d.message ?? "設定に失敗しました");
@@ -224,11 +224,9 @@
       </p>
     </div>
     <div data-suisou-item="media-tail">
-      {#if !data.isMain}
-        <Button variant="secondary" loading={settingMain} onclick={handleSetMain}>
-          メインにする
-        </Button>
-      {/if}
+      <Button variant="secondary" loading={settingMain} onclick={toggleMain}>
+        {data.isMain ? "メインを解除" : "メインにする"}
+      </Button>
     </div>
   </div>
 
