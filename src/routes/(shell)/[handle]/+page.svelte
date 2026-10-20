@@ -74,7 +74,7 @@
     {:then detail}
       {@render profileCard(detail.profile)}
 
-      {@render listHead(` (${detail.openBoxes.length}件)`)}
+      {@render listHead(` (${detail.openBoxes.length})`)}
 
       {#if detail.openBoxes.length === 0}
         <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
