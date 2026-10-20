@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { Home, Inbox, Send, User } from "lucide-svelte";
+  import { Home, Inbox, Send, User, Settings } from "lucide-svelte";
   import InfoNav from "./InfoNav.svelte";
   import UserCard from "./UserCard.svelte";
   import Brand from "./Brand.svelte";
@@ -18,6 +18,7 @@
     { href: `/@${session.handle}`, icon: User, label: "マイページ" },
     { href: "/receive", icon: Inbox, label: "受信トレイ" },
     { href: "/sent", icon: Send, label: "送信トレイ" },
+    { href: "/settings", icon: Settings, label: "設定" },
   ]);
 
   const currentPath = $derived(page.url.pathname);
@@ -32,7 +33,7 @@
 <nav data-suisou-layout="stack grow" class="nav">
   <div data-suisou-layout="stack">
     {#each navItems as item}
-      {@const active = currentPath === item.href}
+      {@const active = currentPath === item.href || currentPath.startsWith(`${item.href}/`)}
       <a
         href={item.href}
         onclick={onNavigate}
