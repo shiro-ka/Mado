@@ -64,7 +64,7 @@
   }
 </script>
 
-<div data-suisou-tray data-suisou-layout="stack gap-0" class="card">
+<div data-suisou-tray="link" data-suisou-layout="stack gap-0" class="card">
   {#if question.boxTitle}
     <span data-suisou="bd-bottom" data-suisou-text="fs-12 clamp-1" class="box sub">{question.boxTitle}</span>
   {/if}
@@ -186,8 +186,8 @@
     position: relative;
     padding: 0;
   }
-  .card:hover:not(:has(.reply:hover)) {
-    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
+  .card:has(.reply:hover) {
+    background-image: none;
   }
   .box {
     padding: var(--suisou-space-1) var(--suisou-space-2);

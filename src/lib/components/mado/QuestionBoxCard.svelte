@@ -15,48 +15,39 @@
   const href = $derived(boxUrl(ownerHandle, box.slug));
 </script>
 
-<a {href} class="link">
-  <div data-suisou-tray data-suisou-layout="stack" class="card">
-    <div data-suisou-item="media">
-      <div data-suisou-item="media-figure" class="glyph">
-        <MessageCircle data-suisou-text="fs-20" data-suisou="accent" />
-      </div>
-      <div data-suisou-item="media-content">
-        <h3 data-suisou-text="fs-14 fw-700" class="title">{box.title}</h3>
-        {#if box.description}
-          <p data-suisou-text="fs-12 clamp-2" class="desc">{box.description}</p>
-        {/if}
-      </div>
-      <div data-suisou-item="media-tail" class="chev">
-        <ChevronRight data-suisou-text="fs-20" />
-      </div>
+<a {href} data-suisou-tray="link" data-suisou-layout="stack" class="link">
+  <div data-suisou-item="media">
+    <div data-suisou-item="media-figure" class="glyph">
+      <MessageCircle data-suisou-text="fs-20" data-suisou="accent" />
     </div>
+    <div data-suisou-item="media-content">
+      <h3 data-suisou-text="fs-14 fw-700" class="title">{box.title}</h3>
+      {#if box.description}
+        <p data-suisou-text="fs-12 clamp-2" class="desc">{box.description}</p>
+      {/if}
+    </div>
+    <div data-suisou-item="media-tail" class="chev">
+      <ChevronRight data-suisou-text="fs-20" />
+    </div>
+  </div>
 
-    <div data-suisou-layout="row wrap">
-      {#if isMain}
-        <span data-suisou-item="tag" data-suisou="accent">
-          <Pin />
-          メイン
-        </span>
-      {/if}
-      <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
-        {box.isOpen ? "受付中" : "受付停止"}
+  <div data-suisou-layout="row wrap">
+    {#if isMain}
+      <span data-suisou-item="tag" data-suisou="accent">
+        <Pin />
+        メイン
       </span>
-      {#if questionCount !== undefined}
-        <span data-suisou-text="fs-12" class="count">声 {questionCount}件</span>
-      {/if}
-    </div>
+    {/if}
+    <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
+      {box.isOpen ? "受付中" : "受付停止"}
+    </span>
+    {#if questionCount !== undefined}
+      <span data-suisou-text="fs-12" class="count">声 {questionCount}件</span>
+    {/if}
   </div>
 </a>
 
 <style>
-  .link {
-    display: block;
-  }
-  .link:hover .card {
-    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
-  }
-
   .glyph {
     display: grid;
     place-items: center;
