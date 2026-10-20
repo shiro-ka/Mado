@@ -92,7 +92,7 @@
               <a
                 data-suisou-button="icon"
                 class="gear"
-                href={`/@${data.cleanHandle}/${box.slug}`}
+                href={`/@${data.cleanHandle}/${box.slug}/settings`}
                 title="設定"
                 aria-label="設定"
               >
