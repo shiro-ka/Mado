@@ -22,7 +22,7 @@
         <MessageCircle data-suisou-text="fs-20" data-suisou="accent" />
       </div>
       <div data-suisou-item="media-content">
-        <h3 data-suisou-text="fs-14 fw-700 clamp-1" class="title">{box.title}</h3>
+        <h3 data-suisou-text="fs-14 fw-700" class="title">{box.title}</h3>
         {#if box.description}
           <p data-suisou-text="fs-12 clamp-2" class="desc">{box.description}</p>
         {/if}
@@ -69,6 +69,9 @@
     border-radius: var(--suisou-radius);
     background: var(--suisou-color-item);
     border: 1px solid var(--suisou-color-line-weak);
+  }
+  .title {
+    overflow-wrap: anywhere;
   }
   .desc {
     color: var(--suisou-color-text-note);
