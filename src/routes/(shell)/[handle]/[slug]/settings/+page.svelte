@@ -224,12 +224,7 @@
       </p>
     </div>
     <div data-suisou-item="media-tail">
-      {#if data.isMain}
-        <span data-suisou-item="tag" data-suisou="accent">
-          <Pin />
-          メイン
-        </span>
-      {:else}
+      {#if !data.isMain}
         <Button variant="secondary" loading={settingMain} onclick={handleSetMain}>
           メインにする
         </Button>
