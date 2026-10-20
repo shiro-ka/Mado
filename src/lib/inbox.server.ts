@@ -3,7 +3,7 @@ import type { Answer, Question } from "../types/index.js";
 import { decryptDid } from "./crypto.js";
 import { listQuestions, listBoxes, getProfiles, getAnswersByOwner } from "./atproto/index.js";
 
-const BACKFILL_PER_REQUEST = 5;
+const BACKFILL_PER_REQUEST = 1;
 
 export async function resolveSenders(
   store: CloudflareStore,
