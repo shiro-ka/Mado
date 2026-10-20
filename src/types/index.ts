@@ -87,3 +87,12 @@ export interface ApiError {
 
 // UI state types
 export type FilterTab = "new" | "heard" | "all";
+
+export type InboxItem = Omit<Question, "encryptedFrom"> & {
+  href: string;
+  boxTitle?: string;
+  answers: string[];
+  senderHandle?: string;
+  senderDisplayName?: string;
+  senderAvatar?: string;
+};

@@ -1,50 +1,17 @@
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
-import { listBoxes, getProfiles, getAnswersByOwner } from "$lib/atproto/index.js";
-import { loadInbox } from "$lib/inbox.server.js";
-import type { Answer } from "$lib/../types/index.js";
-
-function answerBodies(list: Answer[] = []) {
-  return [...list].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((a) => a.body);
-}
+import { buildInbox } from "$lib/inbox.server.js";
 
 export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();
   if (!session) throw redirect(303, "/auth/login");
 
-  const env = platform!.env;
-  const store = new CloudflareStore(env);
+  const store = new CloudflareStore(platform!.env);
   const prefs = await store.getNotificationPrefs(session.did);
 
   return {
     dmTouched: prefs.touched,
-    inbox: (async () => {
-      const [questions, boxes, answers] = await Promise.all([
-        loadInbox(store, session.did),
-        listBoxes(session.did),
-        getAnswersByOwner(session.did),
-      ]);
-      const boxMap = new Map(boxes.map((b) => [b.rkey, b]));
-      const profiles = await getProfiles([
-        ...new Set(questions.map((q) => q.senderDid).filter((d): d is string => !!d)),
-      ]);
-      const allQuestions = questions.map((q) => {
-        const box = boxMap.get(q.boxUri.split("/").pop() ?? "");
-        const href = box ? `/@${session.handle}/${box.slug}/${q.rkey}` : `/receive`;
-        const profile = q.senderDid ? profiles.get(q.senderDid) : undefined;
-        return {
-          ...q,
-          href,
-          boxTitle: box?.title,
-          answers: answerBodies(answers.get(q.uri)),
-          senderHandle: profile?.handle,
-          senderDisplayName: profile?.displayName,
-          senderAvatar: profile?.avatar,
-        };
-      });
-
-      return { allQuestions };
-    })(),
+    inbox: buildInbox(store, session),
   };
 };
