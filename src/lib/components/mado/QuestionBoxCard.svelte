@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageCircle, ChevronRight, Lock, Unlock, Pin } from "lucide-svelte";
+  import { MessageCircle, ChevronRight, Pin } from "lucide-svelte";
   import { boxUrl } from "$lib/utils.js";
   import type { QuestionBox } from "$lib/../types/index.js";
 
@@ -40,7 +40,6 @@
         </span>
       {/if}
       <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
-        {#if box.isOpen}<Unlock />{:else}<Lock />{/if}
         {box.isOpen ? "受付中" : "受付停止"}
       </span>
       {#if questionCount !== undefined}
