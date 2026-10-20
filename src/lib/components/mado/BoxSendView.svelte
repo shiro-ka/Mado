@@ -26,15 +26,64 @@
   );
 </script>
 
-<div data-suisou-layout="stack gap-3" class="view">
-  {#if embedded}
-    <h2 data-suisou-text="fs-20 fw-700">声を送る</h2>
-  {:else}
-    <h1 data-suisou-text="fs-24 fw-700">声を送る</h1>
+{#snippet summary()}
+<div data-suisou-layout="stack" class="summary">
+  <div data-suisou-layout="row wrap">
+    <p data-suisou-text="fs-20 fw-700" class="title">{box.title}</p>
+    <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
+      {box.isOpen ? "受付中" : "受付停止"}
+    </span>
+  </div>
+  {#if box.description}
+    <p data-suisou-text="fs-14" class="sub doc">{box.description}</p>
   {/if}
+</div>
+{/snippet}
 
+{#snippet sendArea()}
+  {#if !ownerRegistered}
+    <div data-suisou-layout="stack center" data-suisou-text="center">
+      <p data-suisou-text="fs-14 fw-700">このユーザーはMadoに登録されていません</p>
+      <p data-suisou-text="fs-12" class="sub">声を送るには、オーナーがMadoにログインしている必要があります。</p>
+    </div>
+  {:else if !box.isOpen}
+    <div data-suisou-layout="stack center" data-suisou-text="center">
+      <p data-suisou-text="fs-14 fw-700">現在この窓は受付停止中です</p>
+      <p data-suisou-text="fs-12" class="sub">オーナーが受付を再開するまでお待ちください。</p>
+    </div>
+  {:else if !session}
+    <div data-suisou-layout="stack center" data-suisou-text="center">
+      <span data-suisou-item="square"><LogIn data-suisou-text="fs-20" data-suisou="accent" /></span>
+      <div data-suisou-layout="stack gap-1 center">
+        <p data-suisou-text="fs-14 fw-700">声を送るにはログインが必要です</p>
+        <p data-suisou-text="fs-12" class="sub doc">
+          Blueskyアカウントでログインして声を送りましょう。
+          送り主はオーナーのみに開示されます。
+        </p>
+      </div>
+      <Button href={`/auth/login?next=/@${cleanHandle}/${box.slug}`} variant="default" wide>ログインして声を送る</Button>
+    </div>
+  {:else}
+    <SendQuestionForm
+      boxOwnerDid={box.ownerDid}
+      boxRkey={box.rkey}
+      senderHandle={session.handle}
+    />
+  {/if}
+{/snippet}
+
+{#if embedded}
   <div data-suisou-tray data-suisou-layout="stack gap-0" class="panel">
-    {#if !embedded}
+    {@render summary()}
+    <div data-suisou="bd-top" class="notice">
+      {@render sendArea()}
+    </div>
+  </div>
+{:else}
+  <div data-suisou-layout="stack gap-3" class="view">
+    <h1 data-suisou-text="fs-24 fw-700">声を送る</h1>
+
+    <div data-suisou-tray data-suisou-layout="stack gap-0" class="panel">
       <div data-suisou-item="media" data-suisou="bd-bottom" class="owner">
         {#if ownerProfile?.avatar}
           <img
@@ -62,53 +111,15 @@
           </a>
         </div>
       </div>
-    {/if}
 
-    <div data-suisou-layout="stack" class="summary">
-      <div data-suisou-layout="row wrap">
-        <p data-suisou-text="fs-20 fw-700" class="title">{box.title}</p>
-        <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
-          {box.isOpen ? "受付中" : "受付停止"}
-        </span>
-      </div>
-      {#if box.description}
-        <p data-suisou-text="fs-14" class="sub doc">{box.description}</p>
-      {/if}
+      {@render summary()}
+    </div>
+
+    <div data-suisou-tray class="notice">
+      {@render sendArea()}
     </div>
   </div>
-
-  {#if !ownerRegistered}
-    <div data-suisou-tray data-suisou-layout="stack center" data-suisou-text="center" class="notice">
-      <p data-suisou-text="fs-14 fw-700">このユーザーはMadoに登録されていません</p>
-      <p data-suisou-text="fs-12" class="sub">声を送るには、オーナーがMadoにログインしている必要があります。</p>
-    </div>
-  {:else if !box.isOpen}
-    <div data-suisou-tray data-suisou-layout="stack center" data-suisou-text="center" class="notice">
-      <p data-suisou-text="fs-14 fw-700">現在この窓は受付停止中です</p>
-      <p data-suisou-text="fs-12" class="sub">オーナーが受付を再開するまでお待ちください。</p>
-    </div>
-  {:else if !session}
-    <div data-suisou-tray data-suisou-layout="stack center" data-suisou-text="center" class="notice">
-      <span data-suisou-item="square"><LogIn data-suisou-text="fs-20" data-suisou="accent" /></span>
-      <div data-suisou-layout="stack gap-1 center">
-        <p data-suisou-text="fs-14 fw-700">声を送るにはログインが必要です</p>
-        <p data-suisou-text="fs-12" class="sub doc">
-          Blueskyアカウントでログインして声を送りましょう。
-          送り主はオーナーのみに開示されます。
-        </p>
-      </div>
-      <Button href={`/auth/login?next=/@${cleanHandle}/${box.slug}`} variant="default" wide>ログインして声を送る</Button>
-    </div>
-  {:else}
-    <div data-suisou-tray class="notice">
-      <SendQuestionForm
-        boxOwnerDid={box.ownerDid}
-        boxRkey={box.rkey}
-        senderHandle={session.handle}
-      />
-    </div>
-  {/if}
-</div>
+{/if}
 
 <style>
   .panel {
