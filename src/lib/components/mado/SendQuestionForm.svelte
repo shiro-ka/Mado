@@ -68,7 +68,7 @@
       maxlength={MAX_CHARS}
       showCount={true}
       rows={5}
-      helper={`この声は @${senderHandle} として相手に届きます。送り主は窓のオーナーのみに開示されます。`}
+      helper={`この声は @${senderHandle} からの声として窓のオーナーに届きます。`}
       disabled={formState === "submitting"}
       error={body.length > MAX_CHARS ? `${MAX_CHARS}文字以内で入力してください` : undefined}
     />
