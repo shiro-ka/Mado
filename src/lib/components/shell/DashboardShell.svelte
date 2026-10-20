@@ -46,7 +46,7 @@
     <Sidebar {session} />
   </div>
 
-  <main bind:this={mainEl} class="body">
+  <main bind:this={mainEl} data-suisou="scroll-y" class="body">
     {#if children}
       {@render children()}
     {/if}
@@ -64,7 +64,6 @@
   }
   .body {
     grid-area: body;
-    overflow-y: auto;
   }
 
   .side {
