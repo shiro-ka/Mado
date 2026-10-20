@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Globe, MessageCircle, Plus, Settings2 } from "lucide-svelte";
+  import { Globe, MessageCircle, Plus } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import QuestionBoxCard from "$lib/components/mado/QuestionBoxCard.svelte";
   import BoxSendView from "$lib/components/mado/BoxSendView.svelte";
@@ -87,22 +87,11 @@
       {:else}
         <div data-suisou-layout="stack gap-3" class="items">
           {#each detail.openBoxes as box}
-            <div class="slot">
-              <QuestionBoxCard
-                {box}
-                ownerHandle={detail.profile?.handle ?? data.cleanHandle}
-                isMain={box.rkey === detail.mainBoxRkey}
-              />
-              <a
-                data-suisou-button="icon"
-                class="gear"
-                href={`/@${data.cleanHandle}/${box.slug}/settings`}
-                title="設定"
-                aria-label="設定"
-              >
-                <Settings2 data-suisou-text="fs-16" />
-              </a>
-            </div>
+            <QuestionBoxCard
+              {box}
+              ownerHandle={detail.profile?.handle ?? data.cleanHandle}
+              isMain={box.rkey === detail.mainBoxRkey}
+            />
           {/each}
         </div>
       {/if}
@@ -170,20 +159,5 @@
   }
   .accent {
     color: var(--suisou-color-accent);
-  }
-
-  .slot {
-    position: relative;
-  }
-  .gear {
-    position: absolute;
-    top: var(--suisou-space-2);
-    inset-inline-end: var(--suisou-space-2);
-    opacity: 0;
-    transition: opacity var(--suisou-duration-fast) var(--suisou-ease);
-  }
-  .slot:hover .gear,
-  .gear:focus-visible {
-    opacity: 1;
   }
 </style>
