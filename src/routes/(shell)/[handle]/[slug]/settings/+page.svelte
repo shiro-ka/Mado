@@ -19,6 +19,8 @@
   let slug = $state(untrack(() => data.box.slug));
   let isOpen = $state(untrack(() => data.box.isOpen));
   let formState = $state<FormState>("idle");
+  let saved = $state(false);
+  let savedTimer: ReturnType<typeof setTimeout> | undefined;
   let errorMsg = $state("");
 
   let seededRkey = $state(untrack(() => data.box.rkey));
@@ -57,6 +59,9 @@
         throw new Error(d.message ?? "更新に失敗しました");
       }
       formState = "idle";
+      saved = true;
+      clearTimeout(savedTimer);
+      savedTimer = setTimeout(() => (saved = false), 3000);
       if (slugChanged) {
         await goto(`/@${data.cleanHandle}/${nextSlug}/settings`);
       }
@@ -180,6 +185,9 @@
       {/if}
 
       <div data-suisou-layout="row end">
+        {#if saved}
+          <span data-suisou-text="fs-14" role="status" class="saved">保存しました</span>
+        {/if}
         <Button
           type="submit"
           loading={formState === "submitting"}
@@ -244,6 +252,9 @@
 </div>
 
 <style>
+  .saved {
+    color: var(--suisou-color-success);
+  }
   .page {
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
