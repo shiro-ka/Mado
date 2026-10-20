@@ -65,7 +65,7 @@
       <Input
         label="窓の名前"
         bind:value={title}
-        maxlength={100}
+        maxlength={30}
         required
         disabled={formState === "submitting"}
       />

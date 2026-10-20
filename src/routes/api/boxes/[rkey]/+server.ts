@@ -8,7 +8,7 @@ import { getBoxRecord, updateBoxRecord, deleteRecord, listBoxes, invalidateRecor
 import { slugSchema } from "$lib/validation.js";
 
 const updateSchema = z.object({
-  title: z.string().min(1).max(100).optional(),
+  title: z.string().min(1).max(30).optional(),
   description: z.string().max(300).optional(),
   isOpen: z.boolean().optional(),
   slug: slugSchema.optional(),

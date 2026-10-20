@@ -9,7 +9,7 @@ import { createBoxRecord, listBoxes, invalidateRecords, NSID } from "$lib/atprot
 import { slugSchema } from "$lib/validation.js";
 
 const createBoxSchema = z.object({
-  title: z.string().min(1).max(100),
+  title: z.string().min(1).max(30),
   description: z.string().max(300).optional(),
   isOpen: z.boolean().default(true),
   slug: slugSchema.optional(),
