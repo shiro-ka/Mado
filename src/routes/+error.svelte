@@ -13,7 +13,7 @@
 </svelte:head>
 
 <div data-suisou-layout="stack center middle" data-suisou="min-screen" class="wrap">
-  <div data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="box">
+  <div data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="container-s">
     <span data-suisou-item="square"><AlertCircle data-suisou-text="fs-20" data-suisou="error" /></span>
     <div data-suisou-layout="stack center">
       <p data-suisou-text="fs-32 fw-700">{status}</p>
@@ -35,9 +35,6 @@
 <style>
   .wrap {
     padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .box {
-    max-width: 28rem;
   }
   .sub {
     color: var(--suisou-color-text-note);

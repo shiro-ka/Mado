@@ -62,7 +62,7 @@
   <title>通知設定 | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
   <div data-suisou-layout="stack gap-1" class="head">
     <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
     <p data-suisou-text="fs-14" class="sub">
@@ -156,7 +156,6 @@
 
 <style>
   .page {
-    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .empty {

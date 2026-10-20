@@ -42,7 +42,7 @@
 </svelte:head>
 
 <div data-suisou-layout="stack center middle" data-suisou="min-screen" class="wrap">
-  <div data-suisou-layout="stack gap-4" class="col">
+  <div data-suisou-layout="stack gap-4" data-suisou="container-s">
     <div data-suisou-layout="stack center">
       <a data-suisou-layout="row" href="/">
         <span data-suisou-item="square"><MessageCircle data-suisou-text="fs-20" data-suisou="accent" /></span>
@@ -97,10 +97,6 @@
 <style>
   .wrap {
     padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .col {
-    width: 100%;
-    max-width: 28rem;
   }
   .card {
     padding: var(--suisou-space-4);

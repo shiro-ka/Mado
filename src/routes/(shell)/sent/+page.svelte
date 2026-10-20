@@ -10,7 +10,7 @@
   <title>送信トレイ | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container-s" class="page">
   <div data-suisou-item="media">
     <span data-suisou-item="square"><Send data-suisou-text="fs-20" data-suisou="accent" /></span>
     <div data-suisou-item="media-content">
@@ -24,7 +24,6 @@
 
 <style>
   .page {
-    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {

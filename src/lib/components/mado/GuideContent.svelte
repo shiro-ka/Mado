@@ -19,7 +19,7 @@
   ];
 </script>
 
-<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container-s" class="page">
   <div data-suisou-layout="stack">
     <h1 data-suisou-text="fs-24 fw-700">使い方</h1>
     <p data-suisou-text="fs-16" class="sub doc">
@@ -48,7 +48,6 @@
 
 <style>
   .page {
-    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {

@@ -20,7 +20,7 @@
   ];
 </script>
 
-<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container-s" class="page">
   <div data-suisou-layout="stack">
     <div data-suisou-layout="row">
       <span data-suisou-item="square"><MessageCircle data-suisou-text="fs-20" data-suisou="accent" /></span>
@@ -53,7 +53,6 @@
 
 <style>
   .page {
-    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .sub {

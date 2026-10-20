@@ -27,7 +27,7 @@
 {/snippet}
 
 {#if data.isOwner}
-  <div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
+  <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
     {#await data.detail}
       <Skeleton height="7rem" />
       {@render listHead("")}
@@ -105,7 +105,7 @@
     {/await}
   </div>
 {:else}
-  <div data-suisou-layout="stack gap-3" data-suisou="container" class="page narrow">
+  <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
     {#await data.detail}
       <Skeleton height="16rem" />
     {:then detail}
@@ -144,11 +144,7 @@
 
 <style>
   .page {
-    max-width: 42rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .narrow {
-    max-width: 32rem;
   }
   .others {
     margin-block-start: var(--suisou-space-4);

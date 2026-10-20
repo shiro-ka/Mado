@@ -31,7 +31,7 @@
   }
 </script>
 
-<div data-suisou-layout="stack gap-4" data-suisou="container" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container-m" class="page">
   <div data-suisou-layout="row" class="head">
     <Home data-suisou-text="fs-20" data-suisou="accent" />
     <h1 data-suisou-text="fs-24 fw-700">ホーム</h1>
@@ -137,7 +137,6 @@
 
 <style>
   .page {
-    max-width: 56rem;
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .empty {
