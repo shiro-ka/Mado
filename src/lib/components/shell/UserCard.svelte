@@ -17,10 +17,10 @@
       <div data-suisou-item="circle">{session.handle[0]?.toUpperCase() ?? "?"}</div>
     {/if}
     <div data-suisou-layout="grow stack gap-0" class="who">
-      <p data-suisou-text="fs-14 fw-500 one-line" class="ellipsis">
+      <p data-suisou-text="fs-14 fw-500 clamp-1" class="ellipsis">
         {session.displayName ?? session.handle}
       </p>
-      <p data-suisou-text="fs-12 one-line" class="ellipsis sub">@{session.handle}</p>
+      <p data-suisou-text="fs-12 clamp-1" class="ellipsis sub">@{session.handle}</p>
     </div>
   </div>
   <form action="/api/auth/logout" method="POST">

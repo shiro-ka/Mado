@@ -46,9 +46,9 @@
             {/if}
           </span>
           <span data-suisou-item="media-content">
-            <span data-suisou-text="fs-14 fw-500 one-line">{b.displayName || b.handle || b.did}</span>
+            <span data-suisou-text="fs-14 fw-500 clamp-1">{b.displayName || b.handle || b.did}</span>
             {#if b.handle}
-              <span data-suisou-text="fs-12 one-line" class="sub">@{b.handle}</span>
+              <span data-suisou-text="fs-12 clamp-1" class="sub">@{b.handle}</span>
             {/if}
           </span>
           <span data-suisou-item="media-tail">

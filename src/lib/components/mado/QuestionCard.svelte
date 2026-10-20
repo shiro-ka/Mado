@@ -66,7 +66,7 @@
 
 <div data-suisou-tray data-suisou-layout="stack gap-0" class="card">
   {#if question.boxTitle}
-    <span data-suisou="bd-bottom" data-suisou-text="fs-12 one-line" class="box sub">{question.boxTitle}</span>
+    <span data-suisou="bd-bottom" data-suisou-text="fs-12 clamp-1" class="box sub">{question.boxTitle}</span>
   {/if}
   <a {href} data-suisou-item="media" class="main">
     <span data-suisou-item="media-figure">
@@ -81,9 +81,9 @@
       <span data-suisou-layout="row between">
         <span data-suisou-layout="row gap-1 grow" class="who">
           {#if name}
-            <span data-suisou-text="fs-14 fw-500 one-line" class="name">{name}</span>
+            <span data-suisou-text="fs-14 fw-500 clamp-1" class="name">{name}</span>
             {#if question.senderHandle && question.senderDisplayName}
-              <span data-suisou-text="fs-12 one-line" class="sub handle">@{question.senderHandle}</span>
+              <span data-suisou-text="fs-12 clamp-1" class="sub handle">@{question.senderHandle}</span>
             {/if}
           {:else}
             <span data-suisou-text="fs-14" class="sub">送り主不明</span>
@@ -96,7 +96,7 @@
           <span data-suisou-text="fs-12" class="sub">{formatDate(question.createdAt)}</span>
         </span>
       </span>
-      <span class="text clamp">{truncate(question.body, 120)}</span>
+      <span data-suisou-text="clamp-2" class="text">{truncate(question.body, 120)}</span>
       {#if hiddenAnswers > 0}
         <span data-suisou-text="fs-12" class="more sub">ほか {hiddenAnswers} 件の返信</span>
       {/if}
@@ -109,7 +109,7 @@
               <span data-suisou-item="circle small"><User data-suisou-text="fs-12" /></span>
             {/if}
           </span>
-          <span data-suisou-item="media-content"><span data-suisou-text="fs-14" class="clamp">{a}</span></span>
+          <span data-suisou-item="media-content"><span data-suisou-text="fs-14 clamp-2" class="text">{a}</span></span>
         </div>
       {/each}
     </div>
@@ -237,10 +237,6 @@
     min-width: 0;
   }
   .text {
-    display: block;
-  }
-  .text,
-  .answer .clamp {
     white-space: pre-line;
   }
   .more {
@@ -256,12 +252,5 @@
   .error {
     padding-inline: var(--suisou-space-2);
     color: var(--suisou-color-error);
-  }
-  .clamp {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
   }
 </style>

@@ -65,8 +65,8 @@
         </span>
         <span data-suisou-item="media-content">
           <span data-suisou-layout="row gap-1">
-            <span data-suisou-text="fs-16 fw-700 one-line">{data.ownerName}</span>
-            <span data-suisou-text="fs-12 one-line" class="sub">@{data.cleanHandle}</span>
+            <span data-suisou-text="fs-16 fw-700 clamp-1" class="name">{data.ownerName}</span>
+            <span data-suisou-text="fs-12 clamp-1" class="sub handle">@{data.cleanHandle}</span>
           </span>
           <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
           {#if data.box.description}
@@ -95,10 +95,10 @@
           {/if}
           <div data-suisou-item="media-content">
             {#if data.senderProfile}
-              <p data-suisou-text="fs-14 fw-500 one-line">
+              <p data-suisou-text="fs-14 fw-500 clamp-1">
                 {data.senderProfile.displayName ?? data.senderProfile.handle}
               </p>
-              <p data-suisou-text="fs-12 one-line" class="sub">@{data.senderProfile.handle}</p>
+              <p data-suisou-text="fs-12 clamp-1" class="sub">@{data.senderProfile.handle}</p>
             {:else if data.senderDid}
               <p data-suisou-text="fs-12" class="did">{data.senderDid}</p>
             {:else}
@@ -189,6 +189,14 @@
   .owner {
     align-items: center;
     padding-block: var(--suisou-space-3);
+  }
+  .name {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  .handle {
+    flex: 0 1000 auto;
+    min-width: 0;
   }
   .box:hover {
     background: var(--suisou-color-hover);

@@ -143,7 +143,7 @@
               {/if}
             </div>
 
-            <p data-suisou-text="fs-14" class="body doc" class:clamp={!isExpanded}>
+            <p data-suisou-text={isExpanded ? "fs-14" : "fs-14 clamp-2"} class="body doc">
               {item.ref.body}
             </p>
           </button>
@@ -196,13 +196,6 @@
 
   .body {
     white-space: pre-wrap;
-  }
-  .clamp {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
   }
   .sub {
     color: var(--suisou-color-text-note);

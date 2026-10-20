@@ -22,9 +22,9 @@
         <MessageCircle data-suisou-text="fs-20" data-suisou="accent" />
       </div>
       <div data-suisou-item="media-content">
-        <h3 data-suisou-text="fs-14 fw-700 one-line" class="title">{box.title}</h3>
+        <h3 data-suisou-text="fs-14 fw-700 clamp-1" class="title">{box.title}</h3>
         {#if box.description}
-          <p data-suisou-text="fs-12" class="desc">{box.description}</p>
+          <p data-suisou-text="fs-12 clamp-2" class="desc">{box.description}</p>
         {/if}
       </div>
       <div data-suisou-item="media-tail" class="chev">
@@ -72,11 +72,6 @@
   }
   .desc {
     color: var(--suisou-color-text-note);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
   }
   .chev {
     color: var(--suisou-color-text-note);
