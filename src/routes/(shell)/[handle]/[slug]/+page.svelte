@@ -262,6 +262,13 @@
       </div>
     </div>
   {:else}
+    <div>
+      <Button variant="ghost" href={`/@${data.cleanHandle}`}>
+        {#snippet leftIcon()}<ArrowLeft />{/snippet}
+        プロフィールに戻る
+      </Button>
+    </div>
+
     <BoxSendView
       box={data.box}
       ownerProfile={data.ownerProfile}
@@ -269,10 +276,6 @@
       ownerRegistered={data.ownerRegistered}
       session={data.session}
     />
-
-    <p data-suisou-text="fs-12 center" class="sub back">
-      <a href={`/@${data.cleanHandle}`}>← @{data.cleanHandle} のプロフィールに戻る</a>
-    </p>
   {/if}
 </div>
 

@@ -64,7 +64,6 @@
   <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
     <Textarea
       label="声の内容"
-      placeholder="声を入力してください..."
       bind:value={body}
       maxlength={MAX_CHARS}
       showCount={true}

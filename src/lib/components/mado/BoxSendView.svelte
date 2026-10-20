@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LogIn, Lock, Globe } from "lucide-svelte";
+  import { LogIn, Globe } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
@@ -26,47 +26,47 @@
 </script>
 
 <div data-suisou-layout="stack gap-3" class="view">
-  <div data-suisou-item="media">
-    {#if ownerProfile?.avatar}
-      <img
-        data-suisou-item="circle large media-figure"
-        src={ownerProfile.avatar}
-        alt={ownerProfile.handle}
-      />
-    {:else}
-      <div data-suisou-item="circle large media-figure">
-        {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
-      </div>
-    {/if}
-    <div data-suisou-item="media-content">
-      <p data-suisou-text="fs-14 fw-700">{ownerDisplayName}</p>
-      <a
-        data-suisou-layout="row"
-        data-suisou-text="fs-12 link"
-        class="accent"
-        href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Globe data-suisou-text="fs-16" />
-        @{ownerProfile?.handle ?? cleanHandle}
-      </a>
-    </div>
-  </div>
+  <h1 data-suisou-text="fs-24 fw-700">声を送る</h1>
 
-  <div data-suisou-tray data-suisou-layout="stack" class="box">
-    <div data-suisou-layout="row wrap">
-      <h1 data-suisou-text="fs-20 fw-700">{box.title}</h1>
-      <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
-        {box.isOpen ? "受付中" : "受付停止"}
-      </span>
+  <div data-suisou-tray data-suisou-layout="stack gap-0" class="panel">
+    <div data-suisou-item="media" data-suisou="bd-bottom" class="owner">
+      {#if ownerProfile?.avatar}
+        <img
+          data-suisou-item="circle large media-figure"
+          src={ownerProfile.avatar}
+          alt={ownerProfile.handle}
+        />
+      {:else}
+        <div data-suisou-item="circle large media-figure">
+          {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
+        </div>
+      {/if}
+      <div data-suisou-item="media-content">
+        <p data-suisou-text="fs-14 fw-700">{ownerDisplayName}</p>
+        <a
+          data-suisou-layout="row"
+          data-suisou-text="fs-12 link"
+          class="accent"
+          href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Globe data-suisou-text="fs-16" />
+          @{ownerProfile?.handle ?? cleanHandle}
+        </a>
+      </div>
     </div>
-    {#if box.description}
-      <p data-suisou-text="fs-14" class="sub doc">{box.description}</p>
-    {/if}
-    <div data-suisou-layout="row" data-suisou-text="fs-12" class="sub">
-      <Lock data-suisou-text="fs-16" />
-      ECIES暗号化で保護されています
+
+    <div data-suisou-layout="stack" class="summary">
+      <div data-suisou-layout="row wrap">
+        <h2 data-suisou-text="fs-20 fw-700" class="title">{box.title}</h2>
+        <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
+          {box.isOpen ? "受付中" : "受付停止"}
+        </span>
+      </div>
+      {#if box.description}
+        <p data-suisou-text="fs-14" class="sub doc">{box.description}</p>
+      {/if}
     </div>
   </div>
 
@@ -93,7 +93,7 @@
       <Button href={`/auth/login?next=/@${cleanHandle}/${box.slug}`} variant="default" wide>ログインして声を送る</Button>
     </div>
   {:else}
-    <div data-suisou-tray>
+    <div data-suisou-tray class="notice">
       <SendQuestionForm
         boxOwnerDid={box.ownerDid}
         boxRkey={box.rkey}
@@ -104,6 +104,21 @@
 </div>
 
 <style>
+  .panel {
+    padding: 0;
+  }
+  .owner {
+    align-items: center;
+    padding: var(--suisou-space-3) var(--suisou-space-4);
+  }
+  .summary {
+    padding: var(--suisou-space-3) var(--suisou-space-4) var(--suisou-space-4);
+  }
+  .title {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
   .notice {
     padding: var(--suisou-space-4);
   }
