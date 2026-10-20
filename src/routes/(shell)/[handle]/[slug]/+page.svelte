@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from "svelte";
   import { goto, invalidateAll } from "$app/navigation";
-  import { Lock, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check, Pin } from "lucide-svelte";
+  import { Link, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check, Pin } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
@@ -167,7 +167,7 @@
             label="URL"
             bind:value={slug}
             error={slugErr ?? undefined}
-            helper="英小文字・数字・ハイフンのみ。変更すると以前に共有したURLは開けなくなります。"
+            helper="変更すると以前のURLは開けなくなります。"
             maxlength={30}
             disabled={isBusy}
           />
@@ -191,16 +191,7 @@
           </p>
         {/if}
 
-        <div data-suisou-layout="row between">
-          <Button
-            type="button"
-            variant="destructive"
-            loading={formState === "deleting"}
-            onclick={handleDelete}
-          >
-            {#snippet leftIcon()}<Trash2 />{/snippet}
-            削除
-          </Button>
+        <div data-suisou-layout="row end">
           <Button
             type="submit"
             loading={formState === "submitting"}
@@ -214,7 +205,7 @@
     </div>
 
     <div data-suisou-tray data-suisou-item="media" class="strip">
-      <Lock data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
+      <Link data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
       <div data-suisou-item="media-content">
         <p data-suisou-text="fs-12" class="sub">公開URL</p>
         <p data-suisou-text="fs-14" class="url">{publicUrlDisplay}</p>
@@ -256,6 +247,18 @@
           </Button>
         {/if}
       </div>
+    </div>
+
+    <div data-suisou-layout="row end">
+      <Button
+        type="button"
+        variant="destructive"
+        loading={formState === "deleting"}
+        onclick={handleDelete}
+      >
+        {#snippet leftIcon()}<Trash2 />{/snippet}
+        削除
+      </Button>
     </div>
   {:else}
     <div>
