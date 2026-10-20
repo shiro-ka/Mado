@@ -45,7 +45,7 @@
     {
       step: "3", icon: Inbox, tone: "accent",
       title: "声を受け取る",
-      description: "ホームから届いた声を確認・返答。送り主の情報も安全に確認できます。",
+      description: "ホームから届いた声を確認・返信。送り主の情報も安全に確認できます。",
     },
   ];
 </script>
