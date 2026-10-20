@@ -16,9 +16,10 @@
     cleanHandle: string;
     ownerRegistered: boolean;
     session: { handle: string } | null;
+    embedded?: boolean;
   }
 
-  let { box, ownerProfile, cleanHandle, ownerRegistered, session }: Props = $props();
+  let { box, ownerProfile, cleanHandle, ownerRegistered, session, embedded = false }: Props = $props();
 
   const ownerDisplayName = $derived(
     ownerProfile?.displayName ?? `@${ownerProfile?.handle ?? cleanHandle}`
@@ -26,40 +27,46 @@
 </script>
 
 <div data-suisou-layout="stack gap-3" class="view">
-  <h1 data-suisou-text="fs-24 fw-700">声を送る</h1>
+  {#if embedded}
+    <h2 data-suisou-text="fs-20 fw-700">声を送る</h2>
+  {:else}
+    <h1 data-suisou-text="fs-24 fw-700">声を送る</h1>
+  {/if}
 
   <div data-suisou-tray data-suisou-layout="stack gap-0" class="panel">
-    <div data-suisou-item="media" data-suisou="bd-bottom" class="owner">
-      {#if ownerProfile?.avatar}
-        <img
-          data-suisou-item="circle large media-figure"
-          src={ownerProfile.avatar}
-          alt={ownerProfile.handle}
-        />
-      {:else}
-        <div data-suisou-item="circle large media-figure">
-          {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
+    {#if !embedded}
+      <div data-suisou-item="media" data-suisou="bd-bottom" class="owner">
+        {#if ownerProfile?.avatar}
+          <img
+            data-suisou-item="circle large media-figure"
+            src={ownerProfile.avatar}
+            alt={ownerProfile.handle}
+          />
+        {:else}
+          <div data-suisou-item="circle large media-figure">
+            {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
+          </div>
+        {/if}
+        <div data-suisou-item="media-content">
+          <p data-suisou-text="fs-14 fw-700">{ownerDisplayName}</p>
+          <a
+            data-suisou-layout="row"
+            data-suisou-text="fs-12 link"
+            class="accent"
+            href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Globe data-suisou-text="fs-16" />
+            @{ownerProfile?.handle ?? cleanHandle}
+          </a>
         </div>
-      {/if}
-      <div data-suisou-item="media-content">
-        <p data-suisou-text="fs-14 fw-700">{ownerDisplayName}</p>
-        <a
-          data-suisou-layout="row"
-          data-suisou-text="fs-12 link"
-          class="accent"
-          href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Globe data-suisou-text="fs-16" />
-          @{ownerProfile?.handle ?? cleanHandle}
-        </a>
       </div>
-    </div>
+    {/if}
 
     <div data-suisou-layout="stack" class="summary">
       <div data-suisou-layout="row wrap">
-        <h2 data-suisou-text="fs-20 fw-700" class="title">{box.title}</h2>
+        <p data-suisou-text="fs-20 fw-700" class="title">{box.title}</p>
         <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
           {box.isOpen ? "受付中" : "受付停止"}
         </span>

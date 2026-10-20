@@ -26,6 +26,41 @@
   </div>
 {/snippet}
 
+{#snippet profileCard(profile: { handle?: string; displayName?: string; avatar?: string; description?: string } | null)}
+  {@const displayName = profile?.displayName ?? `@${profile?.handle ?? data.cleanHandle}`}
+  <div data-suisou-tray data-suisou-item="media">
+    {#if profile?.avatar}
+      <img
+        data-suisou-item="circle large media-figure"
+        src={profile.avatar}
+        alt={profile.handle}
+      />
+    {:else}
+      <div data-suisou-item="circle large media-figure">
+        {(profile?.handle ?? data.cleanHandle)[0]?.toUpperCase() ?? "?"}
+      </div>
+    {/if}
+    <div data-suisou-item="media-content">
+      <h1 data-suisou-text="fs-20 fw-700">{displayName}</h1>
+      <p data-suisou-text="fs-14" class="sub">@{profile?.handle ?? data.cleanHandle}</p>
+      {#if profile?.description}
+        <p data-suisou-text="fs-14" class="sub doc">{profile.description}</p>
+      {/if}
+      <a
+        data-suisou-layout="row"
+        data-suisou-text="fs-12 link"
+        class="accent"
+        href={`https://bsky.app/profile/${profile?.handle ?? data.cleanHandle}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Globe data-suisou-text="fs-16" />
+        Blueskyで見る
+      </a>
+    </div>
+  </div>
+{/snippet}
+
 {#if data.isOwner}
   <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
     {#await data.detail}
@@ -37,38 +72,7 @@
         {/each}
       </div>
     {:then detail}
-      {@const displayName = detail.profile?.displayName ?? `@${detail.profile?.handle ?? data.cleanHandle}`}
-      <div data-suisou-tray data-suisou-item="media">
-        {#if detail.profile?.avatar}
-          <img
-            data-suisou-item="circle large media-figure"
-            src={detail.profile.avatar}
-            alt={detail.profile.handle}
-          />
-        {:else}
-          <div data-suisou-item="circle large media-figure">
-            {(detail.profile?.handle ?? data.cleanHandle)[0]?.toUpperCase() ?? "?"}
-          </div>
-        {/if}
-        <div data-suisou-item="media-content">
-          <h1 data-suisou-text="fs-20 fw-700">{displayName}</h1>
-          <p data-suisou-text="fs-14" class="sub">@{detail.profile?.handle ?? data.cleanHandle}</p>
-          {#if detail.profile?.description}
-            <p data-suisou-text="fs-14" class="sub doc">{detail.profile.description}</p>
-          {/if}
-          <a
-            data-suisou-layout="row"
-            data-suisou-text="fs-12 link"
-            class="accent"
-            href={`https://bsky.app/profile/${detail.profile?.handle ?? data.cleanHandle}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Globe data-suisou-text="fs-16" />
-            Blueskyで見る
-          </a>
-        </div>
-      </div>
+      {@render profileCard(detail.profile)}
 
       {@render listHead(` (${detail.openBoxes.length}件)`)}
 
@@ -109,8 +113,11 @@
     {#await data.detail}
       <Skeleton height="16rem" />
     {:then detail}
+      {@render profileCard(detail.profile)}
+
       {#if detail.box}
         <BoxSendView
+          embedded
           box={detail.box}
           ownerProfile={detail.profile}
           cleanHandle={data.cleanHandle}
