@@ -12,17 +12,17 @@
     heard: boolean;
     ownerAvatar?: string;
     showNewTag?: boolean;
-    onReplied?: () => void;
+    sentAnswers?: string[];
+    onReplied?: (answerBody: string) => void;
     onThrough?: () => void;
     onUnheard?: () => void;
     onBlocked?: (senderDid: string) => void;
     onDeleted?: () => void;
   }
 
-  let { question, href, heard, ownerAvatar, showNewTag = false, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
+  let { question, href, heard, ownerAvatar, sentAnswers = [], showNewTag = false, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
 
   let replying = $state(false);
-  let sentAnswers = $state<string[]>([]);
   const answers = $derived([...(question.answers ?? []), ...sentAnswers]);
   const shownAnswers = $derived(answers.slice(-2));
   const hiddenAnswers = $derived(answers.length - shownAnswers.length);
@@ -172,10 +172,7 @@
         koeUri={question.uri}
         questionBody={question.body}
         pageUrl={`${page.url.origin}${href}`}
-        onSuccess={(_, answerBody) => {
-          sentAnswers = [...sentAnswers, answerBody];
-          onReplied?.();
-        }}
+        onSuccess={(_, answerBody) => onReplied?.(answerBody)}
       />
     </div>
   {/if}

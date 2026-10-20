@@ -25,6 +25,7 @@
   type Handled = "replied" | "through" | "unheard";
   let handled = $state(new Map<string, Handled>());
   let undoing = $state<string | null>(null);
+  let sentAnswers = $state(new Map<string, string[]>());
   let deleted = $state(new Set<string>());
   let blocked = $state(new Set<string>());
 
@@ -37,18 +38,15 @@
     return kind ? kind !== "unheard" : q.isRead;
   }
 
-  let settled = $state(new Map<string, boolean>());
+  const settled = $derived.by(() => {
+    tab;
+    return untrack(() => new Map([...handled].map(([rkey, kind]) => [rkey, kind !== "unheard"])));
+  });
 
   function inHeardTab(q: { rkey: string; isRead: boolean }) {
     return settled.get(q.rkey) ?? q.isRead;
   }
 
-  $effect(() => {
-    tab;
-    untrack(() => {
-      settled = new Map([...handled].map(([rkey, kind]) => [rkey, kind !== "unheard"]));
-    });
-  });
 
   async function undoThrough(rkey: string) {
     undoing = rkey;
@@ -133,7 +131,11 @@
             heard={isHeard(question)}
             {ownerAvatar}
             showNewTag={tab !== "new" && !isHeard(question)}
-            onReplied={() => setHandled(question.rkey, "replied")}
+            sentAnswers={sentAnswers.get(question.rkey)}
+            onReplied={(answerBody) => {
+              setHandled(question.rkey, "replied");
+              sentAnswers = new Map(sentAnswers).set(question.rkey, [...(sentAnswers.get(question.rkey) ?? []), answerBody]);
+            }}
             onThrough={() => setHandled(question.rkey, "through")}
             onUnheard={() => setHandled(question.rkey, "unheard")}
             onBlocked={(did) => (blocked = new Set([...blocked, did]))}
