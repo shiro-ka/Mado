@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Shield, LogIn, Lock, Globe } from "lucide-svelte";
+  import { LogIn, Lock, Globe } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
@@ -70,16 +70,6 @@
     </div>
   </div>
 
-  <div data-suisou-item="notice media" data-suisou="warning">
-    <Shield data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="warning" />
-    <p data-suisou-item="media-content" data-suisou-text="fs-12" class="doc">
-      <strong class="warn">半匿名のご注意：</strong>
-      このサービスは完全匿名ではありません。あなたのBlueskyアカウント情報は
-      <strong>窓のオーナーにのみ</strong>
-      開示されます。第三者には公開されません。
-    </p>
-  </div>
-
   {#if !ownerRegistered}
     <div data-suisou-tray data-suisou-layout="stack center" data-suisou-text="center" class="notice">
       <p data-suisou-text="fs-14 fw-700">このユーザーはMadoに登録されていません</p>
@@ -122,8 +112,5 @@
   }
   .accent {
     color: var(--suisou-color-accent);
-  }
-  .warn {
-    color: var(--suisou-color-warning);
   }
 </style>

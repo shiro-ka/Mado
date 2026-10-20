@@ -62,14 +62,6 @@
   </div>
 {:else}
   <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
-    <div data-suisou-item="media" class="notice">
-      <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />
-      <p data-suisou-item="media-content" data-suisou-text="fs-14">
-        この声は <strong>@{senderHandle}</strong> として相手に届きます。
-        送り主は窓のオーナーのみに開示されます。
-      </p>
-    </div>
-
     <Textarea
       label="声の内容"
       placeholder="声を入力してください..."
@@ -77,6 +69,7 @@
       maxlength={MAX_CHARS}
       showCount={true}
       rows={5}
+      helper={`この声は @${senderHandle} として相手に届きます。送り主は窓のオーナーのみに開示されます。`}
       disabled={formState === "submitting"}
       error={body.length > MAX_CHARS ? `${MAX_CHARS}文字以内で入力してください` : undefined}
     />
@@ -107,12 +100,6 @@
   }
   .sub {
     color: var(--suisou-color-text-note);
-  }
-  .notice {
-    border-color: var(--suisou-color-accent);
-  }
-  .notice :global(svg) {
-    margin-block-start: 0.15rem;
   }
   .done :global(.big) {
     width: 2.5rem;
