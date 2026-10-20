@@ -17,12 +17,7 @@
     {
       icon: Eye, tone: "accent",
       title: "半匿名性",
-      description: "送り主は窓のオーナーにのみ開示。声の内容と送信者情報は暗号化されて保存されるため、第三者には一切見えません。",
-    },
-    {
-      icon: Lock, tone: "success",
-      title: "暗号化保護",
-      description: "ECIES (楕円曲線統合暗号化スキーム) を使用。窓のオーナーの公開鍵で暗号化し、秘密鍵がなければ誰も読めません。",
+      description: "送り主は窓のオーナーにのみ開示。",
     },
     {
       icon: Globe, tone: "accent",
@@ -64,7 +59,7 @@
 
     <p data-suisou-text="fs-16 s:fs-20" class="lead doc">
       Madoは、Blueskyアカウントを使った半匿名の窓です。
-      送り主は窓のオーナーだけに届き、暗号化によって守られます。
+      送り主は窓のオーナーだけに届きます。
     </p>
 
     <div data-suisou-layout="stack s:row s:middle center">
@@ -85,9 +80,6 @@
       <p data-suisou-text="fs-14" class="doc">
         このサービスは<strong>完全匿名ではありません</strong>。
         声を送信するにはBlueskyアカウントでのログインが必要です。
-        あなたのDIDとハンドルは声に暗号化された形で含まれ、
-        <strong>窓のオーナーのみ</strong>が復号して確認できます。
-        第三者には開示されません。
       </p>
     </div>
   </div>
@@ -97,7 +89,7 @@
   <div data-suisou-layout="stack gap-4" data-suisou="container" class="block">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">Madoの特徴</h2>
-      <p data-suisou-text="fs-14 s:fs-16" class="sub">安全で信頼できる窓を実現する3つの柱</p>
+      <p data-suisou-text="fs-14 s:fs-16" class="sub">安全で信頼できる窓を実現する2つの柱</p>
     </div>
 
     <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cards">

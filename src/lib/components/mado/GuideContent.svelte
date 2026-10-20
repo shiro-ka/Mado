@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { UserCheck, MessageCircle, Inbox, Send, Eye } from "lucide-svelte";
+  import { UserCheck, MessageCircle, Inbox, Send } from "lucide-svelte";
 
   const ownerSteps = [
     { step: "1", icon: UserCheck, tone: "accent", title: "Blueskyでログイン", body: "右上の「ログイン」からBlueskyアカウントで認証します。OAuthを使うためパスワードは不要です。" },
@@ -9,8 +9,7 @@
 
   const senderSteps = [
     { step: "1", icon: UserCheck, tone: "accent", title: "Blueskyでログイン", body: "声を送るにもログインが必要です。これによりスパムを防ぎ、半匿名性を担保します。" },
-    { step: "2", icon: Send, tone: "success", title: "窓のURLにアクセスして送信", body: "オーナーが共有したURLを開き、声を入力して送信します。あなたのDIDは暗号化されてオーナーにのみ届きます。" },
-    { step: "3", icon: Eye, tone: "accent", title: "送り主はオーナーのみ確認できる", body: "送信した声の内容と送り主情報は、窓のオーナーだけが確認できます。第三者には一切見えません。" },
+    { step: "2", icon: Send, tone: "success", title: "窓のURLにアクセスして送信", body: "オーナーが共有したURLを開き、声を入力して送信します。" },
   ];
 
   const sections = [

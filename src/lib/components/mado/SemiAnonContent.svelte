@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Shield, Lock, Eye, EyeOff, User } from "lucide-svelte";
+  import { Shield, Eye, User } from "lucide-svelte";
 
   const visibility = [
     {
@@ -10,12 +10,7 @@
     {
       icon: Eye, tone: "accent",
       title: "第三者（一般の閲覧者）",
-      items: ["声の本文（オーナーが返信・公開した場合）", "送り主の情報：一切見えない"],
-    },
-    {
-      icon: EyeOff, tone: "success",
-      title: "Mado（このサービス）",
-      items: ["暗号化されたDID（復号鍵なし）", "声の本文（平文）"],
+      items: ["送り主の情報：一切見えない"],
     },
   ];
 </script>
@@ -25,8 +20,7 @@
     <h1 data-suisou-text="fs-24 fw-700">半匿名の仕組み</h1>
     <p data-suisou-text="fs-16" class="sub doc">
       Madoは<strong>完全匿名ではありません</strong>。
-      声を送るにはBlueskyアカウントでのログインが必要で、あなたのDIDは暗号化された形で記録されます。
-      ただしその情報は窓のオーナーだけが復号でき、第三者には一切開示されません。
+      声を送るにはBlueskyアカウントでのログインが必要です。
     </p>
   </div>
 
@@ -54,21 +48,6 @@
         </div>
       </div>
     {/each}
-  </section>
-
-  <section data-suisou-layout="stack gap-3" class="group">
-    <h2 data-suisou-text="fs-16 fw-700">暗号化の仕組み</h2>
-    <div data-suisou-tray data-suisou-item="media">
-      <Lock data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="success" />
-      <div data-suisou-item="media-content" data-suisou-layout="stack" data-suisou-text="fs-14" class="doc">
-        <p class="sub">
-          送り主のDIDは<strong>ECIES（楕円曲線統合暗号化スキーム）</strong>によって暗号化されます。窓ごとに公開鍵・秘密鍵のペアが生成され、公開鍵で暗号化されたDIDは対応する秘密鍵がなければ復号できません。
-        </p>
-        <p class="sub">
-          秘密鍵はオーナーのブラウザ内（またはMadoのサーバー上の安全なストレージ）にのみ保存されます。Madoのデータベースには暗号化済みのDIDしか存在しないため、サービス側からも送り主を特定することはできません。
-        </p>
-      </div>
-    </div>
   </section>
 </div>
 
