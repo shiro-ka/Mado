@@ -137,27 +137,25 @@
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
   {#if data.isOwner}
-    <div data-suisou-layout="row">
+    <div>
       <Button href={`/@${data.cleanHandle}`} variant="ghost">
         {#snippet leftIcon()}<ArrowLeft />{/snippet}
         プロフィールに戻る
       </Button>
-      <h1 data-suisou-text="fs-20 fw-700">窓の設定</h1>
     </div>
+    <h1 data-suisou-text="fs-24 fw-700">窓の設定</h1>
 
     <div data-suisou-tray class="card">
       <form onsubmit={handleSave} data-suisou-layout="stack gap-4" class="form">
         <Input
-          label="タイトル（必須）"
-          placeholder="なんでも声を届けてください！"
+          label="窓の名前"
           bind:value={title}
           maxlength={100}
           required
           disabled={isBusy}
         />
         <Textarea
-          label="説明文"
-          placeholder="どんな声でも歓迎です。"
+          label="窓の説明"
           bind:value={description}
           maxlength={300}
           showCount
@@ -167,7 +165,6 @@
         <div data-suisou-layout="stack gap-1" class="slug">
           <Input
             label="URL"
-            placeholder="ask"
             bind:value={slug}
             error={slugErr ?? undefined}
             helper="英小文字・数字・ハイフンのみ。変更すると以前に共有したURLは開けなくなります。"
@@ -181,7 +178,7 @@
 
         <div data-suisou-layout="row between">
           <div data-suisou-layout="stack gap-0" class="label">
-            <p data-suisou-text="fs-14 fw-500" class="sub">声の受付</p>
+            <p data-suisou-text="fs-14 fw-500">声の受付</p>
             <p data-suisou-text="fs-12" class="sub">オフにすると新しい声を受け付けません</p>
           </div>
           <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
@@ -205,7 +202,6 @@
             削除
           </Button>
           <Button
-            variant="outline"
             type="submit"
             loading={formState === "submitting"}
             disabled={!title.trim() || !!slugErr}
@@ -241,7 +237,7 @@
     <div data-suisou-tray data-suisou-item="media" class="strip">
       <Pin data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
       <div data-suisou-item="media-content">
-        <p data-suisou-text="fs-14 fw-500">メインMado</p>
+        <p data-suisou-text="fs-14 fw-500">メインの窓</p>
         <p data-suisou-text="fs-12" class="sub">
           {data.isMain
             ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"
