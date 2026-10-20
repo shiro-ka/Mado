@@ -25,21 +25,15 @@
 
     <nav data-suisou-layout="row" class="links">
       {#each navLinks as link}
-        <a href={link.href}>
-          <Button variant="ghost">{link.label}</Button>
-        </a>
+        <Button href={link.href} variant="ghost">{link.label}</Button>
       {/each}
     </nav>
 
     <div data-suisou-layout="row">
       {#if session}
-        <a href="/home">
-          <Button variant="default">ホーム</Button>
-        </a>
+        <Button href="/home" variant="default">ホーム</Button>
       {:else}
-        <a href="/auth/login">
-          <Button variant="default">ログイン</Button>
-        </a>
+        <Button href="/auth/login" variant="default">ログイン</Button>
       {/if}
       <button
         data-suisou-button="icon"

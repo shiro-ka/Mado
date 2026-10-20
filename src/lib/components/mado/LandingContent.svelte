@@ -68,15 +68,11 @@
     </p>
 
     <div data-suisou-layout="stack s:row s:middle center">
-      <a href="/auth/login">
-        <Button variant="default">
-          窓を開く
-          {#snippet rightIcon()}<ChevronRight />{/snippet}
-        </Button>
-      </a>
-      <a href="#how-it-works">
-        <Button variant="secondary">使い方を見る</Button>
-      </a>
+      <Button href="/auth/login" variant="default">
+        窓を開く
+        {#snippet rightIcon()}<ChevronRight />{/snippet}
+      </Button>
+      <Button href="#how-it-works" variant="secondary">使い方を見る</Button>
     </div>
   </div>
 </section>
@@ -145,12 +141,10 @@
     <Send data-suisou-text="fs-20" data-suisou="accent" class="cta-icon" />
     <h2 data-suisou-text="fs-24 s:fs-28 fw-700">今すぐ始めよう</h2>
     <p data-suisou-text="fs-16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
-    <a href="/auth/login">
-      <Button variant="default">
-        窓を開く
-        {#snippet rightIcon()}<ChevronRight />{/snippet}
-      </Button>
-    </a>
+    <Button href="/auth/login" variant="default">
+      窓を開く
+      {#snippet rightIcon()}<ChevronRight />{/snippet}
+    </Button>
   </div>
 </section>
 

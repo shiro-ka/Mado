@@ -19,12 +19,10 @@
       <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
       <h2 data-suisou-text="fs-14 fw-700" class="sub">窓{count}</h2>
     </div>
-    <a href={`/@${data.cleanHandle}/new`}>
-      <Button variant="default">
-        {#snippet leftIcon()}<Plus />{/snippet}
-        新しい窓を開ける
-      </Button>
-    </a>
+    <Button href={`/@${data.cleanHandle}/new`} variant="default">
+      {#snippet leftIcon()}<Plus />{/snippet}
+      新しい窓を開ける
+    </Button>
   </div>
 {/snippet}
 
@@ -77,12 +75,10 @@
       {#if detail.openBoxes.length === 0}
         <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
           <p data-suisou-text="fs-14" class="sub">まだ窓がありません</p>
-          <a href={`/@${data.cleanHandle}/new`}>
-            <Button variant="default">
-              {#snippet leftIcon()}<Plus />{/snippet}
-              最初の窓を開ける
-            </Button>
-          </a>
+          <Button href={`/@${data.cleanHandle}/new`} variant="default">
+            {#snippet leftIcon()}<Plus />{/snippet}
+            最初の窓を開ける
+          </Button>
         </div>
       {:else}
         <div data-suisou-layout="stack gap-3" class="items">

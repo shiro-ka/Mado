@@ -25,12 +25,10 @@
         {/if}
       </p>
     </div>
-    <a href="/">
-      <Button variant="default">
-        {#snippet leftIcon()}<Home />{/snippet}
-        ホームに戻る
-      </Button>
-    </a>
+    <Button href="/" variant="default">
+      {#snippet leftIcon()}<Home />{/snippet}
+      ホームに戻る
+    </Button>
   </div>
 </div>
 

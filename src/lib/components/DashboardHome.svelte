@@ -70,23 +70,19 @@
           <MessageSquare data-suisou-text="fs-16" data-suisou="accent" />
           <h2 data-suisou-text="fs-14 fw-700">窓</h2>
         </div>
-        <a href={`/@${session.handle}`}>
-          <Button variant="ghost">
-            すべて見る
-            {#snippet rightIcon()}<ChevronRight />{/snippet}
-          </Button>
-        </a>
+        <Button href={`/@${session.handle}`} variant="ghost">
+          すべて見る
+          {#snippet rightIcon()}<ChevronRight />{/snippet}
+        </Button>
       </div>
 
       {#if boxes.length === 0}
         <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
           <p data-suisou-text="fs-14" class="sub">まだ窓がありません</p>
-          <a href={`/@${session.handle}/new`}>
-            <Button variant="default">
-              {#snippet leftIcon()}<Plus />{/snippet}
-              作成する
-            </Button>
-          </a>
+          <Button href={`/@${session.handle}/new`} variant="default">
+            {#snippet leftIcon()}<Plus />{/snippet}
+            作成する
+          </Button>
         </div>
       {:else}
         <div data-suisou-layout="stack">
@@ -111,12 +107,10 @@
             <span data-suisou-item="tag" data-suisou="accent">{unreadCount}</span>
           {/if}
         </div>
-        <a href="/receive">
-          <Button variant="ghost">
-            すべて見る
-            {#snippet rightIcon()}<ChevronRight />{/snippet}
-          </Button>
-        </a>
+        <Button href="/receive" variant="ghost">
+          すべて見る
+          {#snippet rightIcon()}<ChevronRight />{/snippet}
+        </Button>
       </div>
 
       {#if questions.length === 0}

@@ -100,9 +100,7 @@
           送り主はオーナーのみに開示されます。
         </p>
       </div>
-      <a class="full" href={`/auth/login?next=/@${cleanHandle}/${box.slug}`}>
-        <Button variant="default" wide>ログインして声を送る</Button>
-      </a>
+      <Button href={`/auth/login?next=/@${cleanHandle}/${box.slug}`} variant="default" wide>ログインして声を送る</Button>
     </div>
   {:else}
     <div data-suisou-tray>
@@ -118,9 +116,6 @@
 <style>
   .notice {
     padding: var(--suisou-space-4);
-  }
-  .full {
-    width: 100%;
   }
   .sub {
     color: var(--suisou-color-text-note);

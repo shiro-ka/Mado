@@ -138,12 +138,10 @@
 <div data-suisou-layout="stack gap-3" data-suisou="container" class="page">
   {#if data.isOwner}
     <div data-suisou-layout="row">
-      <a href={`/@${data.cleanHandle}`}>
-        <Button variant="ghost">
-          {#snippet leftIcon()}<ArrowLeft />{/snippet}
-          プロフィールに戻る
-        </Button>
-      </a>
+      <Button href={`/@${data.cleanHandle}`} variant="ghost">
+        {#snippet leftIcon()}<ArrowLeft />{/snippet}
+        プロフィールに戻る
+      </Button>
       <h1 data-suisou-text="fs-20 fw-700">窓の設定</h1>
     </div>
 
