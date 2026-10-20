@@ -80,16 +80,17 @@
       </p>
     {/if}
 
-    <Button
-      type="submit"
-      variant="default"
-      wide
-      loading={formState === "submitting"}
-      disabled={!isValid}
-    >
-      {#snippet rightIcon()}<Send />{/snippet}
-      声を送る
-    </Button>
+    <div data-suisou-layout="row end">
+      <Button
+        type="submit"
+        variant="default"
+        loading={formState === "submitting"}
+        disabled={!isValid}
+      >
+        {#snippet rightIcon()}<Send />{/snippet}
+        声を送る
+      </Button>
+    </div>
   </form>
 {/if}
 
