@@ -199,7 +199,7 @@
     min-width: 0;
   }
   .box:hover {
-    background: var(--suisou-color-hover);
+    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
   }
   .inner,
   .reply {
