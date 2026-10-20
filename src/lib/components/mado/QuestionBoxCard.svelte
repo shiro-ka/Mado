@@ -54,11 +54,8 @@
   .link {
     display: block;
   }
-  .card {
-    transition: border-color var(--suisou-duration-fast) var(--suisou-ease);
-  }
   .link:hover .card {
-    border-color: var(--suisou-color-line-strong);
+    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
   }
 
   .glyph {
@@ -72,6 +69,10 @@
   }
   .title {
     overflow-wrap: anywhere;
+    transition: color var(--suisou-duration-fast) var(--suisou-ease);
+  }
+  .link:hover .title {
+    color: var(--suisou-color-accent);
   }
   .desc {
     color: var(--suisou-color-text-note);
