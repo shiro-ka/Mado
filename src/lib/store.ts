@@ -209,13 +209,13 @@ export class CloudflareStore {
 
   // ── ECIES keypairs (D1) ─────────────────────────────────────────────────
 
-  async getKeyPair(did: string, boxRkey: string): Promise<string | undefined> {
-    const row = await this.env.DB.prepare(
-      "SELECT private_hex FROM keypairs WHERE owner_did = ? AND box_rkey = ?"
+  async listKeyPairs(did: string): Promise<Map<string, string>> {
+    const { results } = await this.env.DB.prepare(
+      "SELECT box_rkey, private_hex FROM keypairs WHERE owner_did = ?"
     )
-      .bind(did, boxRkey)
-      .first<{ private_hex: string }>();
-    return row?.private_hex;
+      .bind(did)
+      .all<{ box_rkey: string; private_hex: string }>();
+    return new Map(results.map((r: { box_rkey: string; private_hex: string }) => [r.box_rkey, r.private_hex]));
   }
 
   async setKeyPair(did: string, boxRkey: string, privHex: string): Promise<void> {

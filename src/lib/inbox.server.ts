@@ -11,12 +11,13 @@ export async function resolveSenders(
   questions: { rkey: string; boxUri: string; encryptedFrom?: string }[],
 ): Promise<Map<string, string>> {
   const senders = await store.listSenders(ownerDid);
-  const missing = questions
-    .filter((q) => !senders.has(q.rkey) && q.encryptedFrom)
-    .slice(0, BACKFILL_PER_REQUEST);
+  const unresolved = questions.filter((q) => !senders.has(q.rkey) && q.encryptedFrom);
+  if (unresolved.length === 0) return senders;
+  const keys = await store.listKeyPairs(ownerDid);
+  const keyOf = (q: { boxUri: string }) => keys.get(q.boxUri.split("/").pop() ?? "");
+  const missing = unresolved.filter((q) => keyOf(q)).slice(0, BACKFILL_PER_REQUEST);
   for (const q of missing) {
-    const key = await store.getKeyPair(ownerDid, q.boxUri.split("/").pop() ?? "");
-    if (!key) continue;
+    const key = keyOf(q)!;
     try {
       const did = decryptDid(key, q.encryptedFrom!);
       await store.setSender(ownerDid, q.rkey, did);
