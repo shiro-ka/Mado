@@ -1,23 +1,17 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { afterNavigate } from "$app/navigation";
-  import { Menu, AlertTriangle } from "lucide-svelte";
+  import { Menu } from "lucide-svelte";
   import Sidebar from "./Sidebar.svelte";
   import Brand from "./Brand.svelte";
   import type { AppSession } from "$lib/store.js";
 
   interface Props {
     session: AppSession;
-    sessionExpiresAt?: number | null;
     children?: Snippet;
   }
 
-  let { session, sessionExpiresAt = null, children }: Props = $props();
-
-  const DAY = 24 * 60 * 60;
-  const daysLeft = $derived(
-    sessionExpiresAt === null ? null : Math.ceil((sessionExpiresAt - Date.now() / 1000) / DAY)
-  );
+  let { session, children }: Props = $props();
 
   let drawer = $state<HTMLElement>();
   let mainEl = $state<HTMLElement>();
@@ -53,17 +47,6 @@
   </div>
 
   <main bind:this={mainEl} data-suisou="scroll-y" class="body">
-    {#if daysLeft !== null && daysLeft <= 7}
-      <div data-suisou="container-s" class="expiry">
-        <div data-suisou-item="notice" data-suisou-layout="row" data-suisou="warning" role="status">
-          <AlertTriangle data-suisou-text="fs-20" data-suisou="warning" />
-          <p data-suisou-layout="grow" data-suisou-text="fs-14">
-            セッションがあと{daysLeft}日で期限切れになります。
-          </p>
-          <a data-suisou-text="link fs-12" href="/auth/login">再ログイン</a>
-        </div>
-      </div>
-    {/if}
     {#if children}
       {@render children()}
     {/if}
@@ -81,9 +64,6 @@
   }
   .body {
     grid-area: body;
-  }
-  .expiry {
-    padding: var(--suisou-space-4) var(--suisou-space-3) 0;
   }
 
   .side {

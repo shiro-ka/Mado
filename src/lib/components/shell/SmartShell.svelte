@@ -7,15 +7,14 @@
 
   interface Props {
     session: AppSession | null;
-    sessionExpiresAt?: number | null;
     children: Snippet;
   }
 
-  let { session, sessionExpiresAt = null, children }: Props = $props();
+  let { session, children }: Props = $props();
 </script>
 
 {#if session}
-  <DashboardShell {session} {sessionExpiresAt}>
+  <DashboardShell {session}>
     {@render children()}
   </DashboardShell>
 {:else}

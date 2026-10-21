@@ -11,6 +11,6 @@
   let { data, children }: Props = $props();
 </script>
 
-<SmartShell session={data.session} sessionExpiresAt={data.sessionExpiresAt}>
+<SmartShell session={data.session}>
   {@render children()}
 </SmartShell>

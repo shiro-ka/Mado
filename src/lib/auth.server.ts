@@ -65,19 +65,36 @@ export async function createSession(
   const sessionId = nanoid();
 
   await store.setSession(sessionId, session, SESSION_TTL);
+  setSessionCookie(cookies, env, sessionId);
 
+  return sessionId;
+}
+
+function setSessionCookie(cookies: Cookies, env: App.Platform["env"], sessionId: string): void {
   const appUrl = env.APP_URL ?? "https://mado.blue";
-  const isSecure = appUrl.startsWith("https://");
-
   cookies.set(SESSION_COOKIE, sessionId, {
     httpOnly: true,
-    secure: isSecure,
+    secure: appUrl.startsWith("https://"),
     sameSite: "lax",
     maxAge: SESSION_TTL,
     path: "/",
   });
+}
 
-  return sessionId;
+const SESSION_RENEW_AFTER = 24 * 60 * 60;
+
+export async function extendSession(
+  cookies: Cookies,
+  env: App.Platform["env"],
+  store: CloudflareStore,
+  entry: { session: AppSession; expiresAt: number | null }
+): Promise<void> {
+  const sessionId = cookies.get(SESSION_COOKIE);
+  if (!sessionId) return;
+  const remaining = entry.expiresAt === null ? 0 : entry.expiresAt - Math.floor(Date.now() / 1000);
+  if (remaining > SESSION_TTL - SESSION_RENEW_AFTER) return;
+  await store.setSession(sessionId, entry.session, SESSION_TTL);
+  setSessionCookie(cookies, env, sessionId);
 }
 
 /**
