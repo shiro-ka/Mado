@@ -15,7 +15,6 @@ export interface QuestionBox {
   title: string;
   description?: string;
   isOpen: boolean;
-  publicKeyHex?: string;
   createdAt: string;
   ownerDid: string;
   ownerHandle?: string;
@@ -26,10 +25,9 @@ export interface Question {
   uri: string;
   cid: string;
   rkey: string;
-  boxUri: string;        // AT-URI of the box: at://ownerDid/blue.mado.box/rkey
-  encryptedFrom?: string;
-  body: string;          // plaintext question text (public on PDS)
-  senderDid?: string;    // decrypted sender DID (only visible to box owner)
+  boxUri: string;
+  body: string;
+  senderDid?: string;
   senderHandle?: string;
   senderDisplayName?: string;
   senderAvatar?: string;
@@ -88,7 +86,7 @@ export interface ApiError {
 // UI state types
 export type FilterTab = "new" | "heard" | "all";
 
-export type InboxItem = Omit<Question, "encryptedFrom"> & {
+export type InboxItem = Question & {
   href: string;
   boxTitle?: string;
   answers: string[];

@@ -1,45 +1,18 @@
 import type { CloudflareStore } from "./store.js";
 import type { Answer, Question } from "../types/index.js";
-import { decryptDid } from "./crypto.js";
 import { listQuestions, listBoxes, getProfiles, getAnswersByOwner } from "./atproto/index.js";
 
-const BACKFILL_PER_REQUEST = 1;
-
-export async function resolveSenders(
-  store: CloudflareStore,
-  ownerDid: string,
-  questions: { rkey: string; boxUri: string; encryptedFrom?: string }[],
-): Promise<Map<string, string>> {
-  const senders = await store.listSenders(ownerDid);
-  const unresolved = questions.filter((q) => !senders.has(q.rkey) && q.encryptedFrom);
-  if (unresolved.length === 0) return senders;
-  const keys = await store.listKeyPairs(ownerDid);
-  const keyOf = (q: { boxUri: string }) => keys.get(q.boxUri.split("/").pop() ?? "");
-  const missing = unresolved.filter((q) => keyOf(q)).slice(0, BACKFILL_PER_REQUEST);
-  for (const q of missing) {
-    const key = keyOf(q)!;
-    try {
-      const did = decryptDid(key, q.encryptedFrom!);
-      await store.setSender(ownerDid, q.rkey, did);
-      senders.set(q.rkey, did);
-    } catch {
-      continue;
-    }
-  }
-  return senders;
-}
-
 export async function loadInbox(store: CloudflareStore, ownerDid: string) {
-  const [questions, handled, blocks] = await Promise.all([
+  const [questions, handled, blocks, senders] = await Promise.all([
     listQuestions(ownerDid),
     store.listHandled(ownerDid),
     store.listBlocks(ownerDid),
+    store.listSenders(ownerDid),
   ]);
-  const senders = await resolveSenders(store, ownerDid, questions);
   const handledSet = new Set(handled);
   const blockSet = new Set(blocks);
   return questions
-    .map(({ encryptedFrom: _, ...q }): Omit<Question, "encryptedFrom"> => ({
+    .map((q): Question => ({
       ...q,
       isRead: handledSet.has(q.rkey),
       senderDid: senders.get(q.rkey),

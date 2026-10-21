@@ -23,12 +23,6 @@ interface SessionMeta {
   expiresAt: number; // Unix timestamp (seconds)
 }
 
-/**
- * Cloudflare KV + D1 implementation of Mado's storage layer.
- *
- * KV: OAuth state/session, app session, rate limits
- * D1: User registry, ECIES keypairs, blocklist, reads, sent history
- */
 export class CloudflareStore {
   constructor(private env: App.Platform["env"]) {}
 
@@ -207,33 +201,6 @@ export class CloudflareStore {
     return row?.n ?? 0;
   }
 
-  // ── ECIES keypairs (D1) ─────────────────────────────────────────────────
-
-  async listKeyPairs(did: string): Promise<Map<string, string>> {
-    const { results } = await this.env.DB.prepare(
-      "SELECT box_rkey, private_hex FROM keypairs WHERE owner_did = ?"
-    )
-      .bind(did)
-      .all<{ box_rkey: string; private_hex: string }>();
-    return new Map(results.map((r: { box_rkey: string; private_hex: string }) => [r.box_rkey, r.private_hex]));
-  }
-
-  async setKeyPair(did: string, boxRkey: string, privHex: string): Promise<void> {
-    await this.env.DB.prepare(
-      "INSERT OR REPLACE INTO keypairs (owner_did, box_rkey, private_hex, created_at) VALUES (?, ?, ?, ?)"
-    )
-      .bind(did, boxRkey, privHex, Math.floor(Date.now() / 1000))
-      .run();
-  }
-
-  async delKeyPair(did: string, boxRkey: string): Promise<void> {
-    await this.env.DB.prepare(
-      "DELETE FROM keypairs WHERE owner_did = ? AND box_rkey = ?"
-    )
-      .bind(did, boxRkey)
-      .run();
-  }
-
   // ── Blocklist (D1) ──────────────────────────────────────────────────────
 
   async addBlock(ownerDid: string, targetDid: string): Promise<void> {
@@ -279,13 +246,13 @@ export class CloudflareStore {
       .run();
   }
 
-  async setSender(ownerDid: string, koeRkey: string, senderDid: string): Promise<void> {
-    await this.env.DB.prepare(
-      `INSERT INTO deliveries (owner_did, koe_rkey, sender_did) VALUES (?, ?, ?)
-       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET sender_did = excluded.sender_did`
+  async getSender(ownerDid: string, koeRkey: string): Promise<string | null> {
+    const row = await this.env.DB.prepare(
+      "SELECT sender_did FROM deliveries WHERE owner_did = ? AND koe_rkey = ?"
     )
-      .bind(ownerDid, koeRkey, senderDid)
-      .run();
+      .bind(ownerDid, koeRkey)
+      .first<{ sender_did: string | null }>();
+    return row?.sender_did ?? null;
   }
 
   async listSenders(ownerDid: string): Promise<Map<string, string>> {

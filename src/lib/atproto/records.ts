@@ -45,7 +45,6 @@ export async function getBoxRecord(
       title: record.title,
       description: record.description,
       isOpen: record.isOpen,
-      publicKeyHex: record.publicKeyHex,
       createdAt: record.createdAt,
       ownerDid: did,
     };
@@ -69,7 +68,6 @@ export async function listBoxes(did: string): Promise<QuestionBox[]> {
         title: record.title,
         description: record.description,
         isOpen: record.isOpen,
-        publicKeyHex: record.publicKeyHex,
         createdAt: record.createdAt,
         ownerDid: did,
       };
@@ -104,7 +102,6 @@ export async function getKoeRecord(
       cid: res.data.cid ?? "",
       rkey,
       boxUri: record.box,
-      encryptedFrom: record.encryptedFrom,
       body: record.body,
       isRead: false,
       createdAt: record.createdAt,
@@ -126,7 +123,6 @@ export async function listQuestions(did: string): Promise<Question[]> {
         cid: r.cid,
         rkey,
         boxUri: record.box,
-        encryptedFrom: record.encryptedFrom,
         body: record.body,
         isRead: false,
         createdAt: record.createdAt,

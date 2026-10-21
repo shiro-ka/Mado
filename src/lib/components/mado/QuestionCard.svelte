@@ -7,7 +7,7 @@
   import type { Question } from "$lib/../types/index.js";
 
   interface Props {
-    question: Omit<Question, "encryptedFrom"> & { boxTitle?: string; answers?: string[] };
+    question: Question & { boxTitle?: string; answers?: string[] };
     href: string;
     heard: boolean;
     ownerAvatar?: string;

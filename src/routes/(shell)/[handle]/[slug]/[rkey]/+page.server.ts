@@ -2,7 +2,6 @@ import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { resolveHandle, findBoxBySlug, getKoeRecord, listAnswers, getProfile } from "$lib/atproto/index.js";
-import { resolveSenders } from "$lib/inbox.server.js";
 
 export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
   const { session } = await parent();
@@ -37,7 +36,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     const env = platform!.env;
     const store = new CloudflareStore(env);
     isHandled = await store.isHandled(ownerDid, params.rkey);
-    senderDid = (await resolveSenders(store, ownerDid, [question])).get(question.rkey) ?? null;
+    senderDid = await store.getSender(ownerDid, params.rkey);
     senderUnknown = !senderDid;
     if (senderDid) {
       senderBlocked = await store.isBlocked(ownerDid, senderDid);
@@ -46,15 +45,13 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
 
   const senderProfile = senderDid ? await getProfile(senderDid) : null;
 
-  const { encryptedFrom: _, ...questionPublic } = question;
-
   return {
     cleanHandle,
     ownerName,
     ownerAvatar: ownerProfile?.avatar,
     box,
     isOwner,
-    question: { ...questionPublic, isRead: isHandled },
+    question: { ...question, isRead: isHandled },
     answers,
     koeUri,
     senderDid,
