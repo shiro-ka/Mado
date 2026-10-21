@@ -31,7 +31,7 @@
     <button data-suisou-button="icon" popovertarget="nav-drawer" aria-label="メニューを開く">
       <Menu size={20} />
     </button>
-    <a href="/home"><Brand size="sm" /></a>
+    <a href="/receive"><Brand size="sm" /></a>
   </div>
 
   <div

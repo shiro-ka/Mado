@@ -65,7 +65,7 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
 
     return new Response(null, {
       status: 302,
-      headers: { Location: `${appUrl}/home` },
+      headers: { Location: `${appUrl}/receive` },
     });
   } catch (err) {
     console.error("[/api/auth/callback]", err);

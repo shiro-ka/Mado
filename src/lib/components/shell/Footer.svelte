@@ -16,7 +16,7 @@
       <div data-suisou-layout="stack">
         <h4 data-suisou-text="fs-14 fw-700">リンク</h4>
         <div data-suisou-layout="stack">
-          {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/home", label: "ホーム" }] as link}
+          {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/receive", label: "受信トレイ" }] as link}
             <a href={link.href} data-suisou-text="link fs-14" class="sub">
               {link.label}
             </a>

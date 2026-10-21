@@ -31,7 +31,7 @@
 
     <div data-suisou-layout="row">
       {#if session}
-        <Button href="/home" variant="default">ホーム</Button>
+        <Button href="/receive" variant="default">受信トレイ</Button>
       {:else}
         <Button href="/auth/login" variant="default">ログイン</Button>
       {/if}
