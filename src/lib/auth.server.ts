@@ -13,10 +13,18 @@ export async function getSession(
   cookies: Cookies,
   store: CloudflareStore
 ): Promise<AppSession | undefined> {
+  return (await getSessionEntry(cookies, store))?.session;
+}
+
+export async function getSessionEntry(
+  cookies: Cookies,
+  store: CloudflareStore
+): Promise<{ session: AppSession; expiresAt: number | null } | undefined> {
   const sessionId = cookies.get(SESSION_COOKIE);
   if (!sessionId) return undefined;
-  const session = await store.getSession(sessionId);
-  if (!session) return undefined;
+  const entry = await store.getSessionEntry(sessionId);
+  if (!entry) return undefined;
+  const { session } = entry;
   // The app session (30-day cookie) is decoupled from the atproto OAuth session
   // (keyed by DID, deleted on logout / revocation / cron cleanup). If the OAuth
   // session is gone the user can't actually do anything — every atproto call
@@ -37,7 +45,7 @@ export async function getSession(
     cookies.delete(SESSION_COOKIE, { path: "/" });
     return undefined;
   }
-  return session;
+  return entry;
 }
 
 /**

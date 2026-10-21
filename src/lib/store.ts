@@ -68,8 +68,17 @@ export class CloudflareStore {
   // ── App session (KV with TTL + metadata for remaining-TTL queries) ──────
 
   async getSession(sessionId: string): Promise<AppSession | undefined> {
-    const val = await this.env.MADO_SESSION.get<AppSession>(sessionId, "json");
-    return val ?? undefined;
+    return (await this.getSessionEntry(sessionId))?.session;
+  }
+
+  async getSessionEntry(
+    sessionId: string
+  ): Promise<{ session: AppSession; expiresAt: number | null } | undefined> {
+    const { value, metadata } = await this.env.MADO_SESSION.getWithMetadata<AppSession, SessionMeta>(
+      sessionId,
+      "json"
+    );
+    return value ? { session: value, expiresAt: metadata?.expiresAt ?? null } : undefined;
   }
 
   async setSession(sessionId: string, value: AppSession, ttlSeconds: number): Promise<void> {

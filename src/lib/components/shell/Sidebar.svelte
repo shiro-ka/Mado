@@ -14,8 +14,8 @@
   let { session, onNavigate }: Props = $props();
 
   const navItems = $derived([
-    { href: `/@${session.handle}`, icon: User, label: "マイページ" },
     { href: "/receive", icon: Inbox, label: "受信トレイ" },
+    { href: `/@${session.handle}`, icon: User, label: "マイページ" },
     { href: "/sent", icon: Send, label: "送信トレイ" },
     { href: "/settings", icon: Settings, label: "設定" },
   ]);
