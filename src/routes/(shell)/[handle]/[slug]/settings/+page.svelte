@@ -73,7 +73,7 @@
   }
 
   async function handleDelete() {
-    if (!confirm("この窓を削除しますか？この操作は取り消せません。")) return;
+    if (!confirm("この窓を削除しますか？届いた声と返信もすべて削除されます。この操作は取り消せません。")) return;
     formState = "deleting";
     errorMsg = "";
     try {

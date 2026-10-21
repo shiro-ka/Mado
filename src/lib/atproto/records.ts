@@ -312,3 +312,49 @@ export async function updateBoxRecord(params: {
     return false;
   }
 }
+
+const DELETES_PER_BATCH = 100;
+
+export async function deleteBoxWithContents(params: {
+  sessionFetch: SessionFetch;
+  did: string;
+  boxRkey: string;
+}): Promise<boolean> {
+  const { sessionFetch, did, boxRkey } = params;
+  const boxUri = `at://${did}/${NSID.BOX}/${boxRkey}`;
+  invalidateRecords(did, NSID.KOE);
+  invalidateRecords(did, NSID.ANSWER);
+  try {
+    const agent = await repoAgent(did);
+    const [koes, answers] = await Promise.all([
+      listAllRecords(agent, did, NSID.KOE),
+      listAllRecords(agent, did, NSID.ANSWER),
+    ]);
+    const rkeyOf = (uri: string) => uri.split("/").pop() ?? "";
+    const koeRkeys = new Set(
+      koes.filter((r) => (r.value as BlueMadoKoe).box === boxUri).map((r) => rkeyOf(r.uri)),
+    );
+    const writes = [
+      ...answers
+        .filter((r) => koeRkeys.has(rkeyOf((r.value as BlueMadoAnswer).koe)))
+        .map((r) => ({ collection: NSID.ANSWER, rkey: rkeyOf(r.uri) })),
+      ...[...koeRkeys].map((rkey) => ({ collection: NSID.KOE, rkey })),
+      { collection: NSID.BOX, rkey: boxRkey },
+    ].map((w) => ({ $type: "com.atproto.repo.applyWrites#delete", ...w }));
+    for (let i = 0; i < writes.length; i += DELETES_PER_BATCH) {
+      await xrpc({
+        sessionFetch,
+        method: "POST",
+        lexicon: "com.atproto.repo.applyWrites",
+        body: { repo: did, writes: writes.slice(i, i + DELETES_PER_BATCH) },
+      });
+    }
+    return true;
+  } catch {
+    return false;
+  } finally {
+    invalidateRecords(did, NSID.BOX);
+    invalidateRecords(did, NSID.KOE);
+    invalidateRecords(did, NSID.ANSWER);
+  }
+}

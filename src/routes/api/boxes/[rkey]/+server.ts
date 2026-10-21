@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { getBoxRecord, updateBoxRecord, deleteRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
+import { getBoxRecord, updateBoxRecord, deleteBoxWithContents, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { slugSchema } from "$lib/validation.js";
 
 const updateSchema = z.object({
@@ -109,11 +109,10 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
       );
     }
 
-    const success = await deleteRecord({
+    const success = await deleteBoxWithContents({
       sessionFetch,
       did: session.did,
-      collection: NSID.BOX,
-      rkey: params.rkey,
+      boxRkey: params.rkey,
     });
 
     if (!success) {
@@ -124,7 +123,6 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
     }
 
     await store.delKeyPair(session.did, params.rkey);
-    invalidateRecords(session.did, NSID.BOX);
     return json({ success: true });
   } catch (err) {
     console.error("[DELETE /api/boxes/[rkey]]", err);
