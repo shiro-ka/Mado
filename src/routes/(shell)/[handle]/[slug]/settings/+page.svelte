@@ -253,8 +253,9 @@
   data-suisou-layout="stack gap-3"
   class="dialog"
 >
-  <h2 data-suisou-text="fs-20 fw-700">この窓を削除しますか？</h2>
-  <p data-suisou-text="fs-14">届いた声と返信もすべて削除されます。この操作は取り消せません。</p>
+  <p data-suisou-text="fs-14">
+    窓を削除すると、届いた声とあなたの返信も消えます。<br />この操作は元に戻せませんが、削除しますか？
+  </p>
   {#if deleteError}
     <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
       <AlertCircle data-suisou-text="fs-16" />
@@ -275,7 +276,8 @@
 <style>
   .dialog {
     margin: auto;
-    width: min(calc(100vw - 2 * var(--suisou-space-3)), 24rem);
+    width: min(calc(100vw - 2 * var(--suisou-space-3)), 28rem);
+    padding: var(--suisou-space-4);
   }
   .saved {
     color: var(--suisou-color-success);
