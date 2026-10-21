@@ -72,10 +72,10 @@
     }
   }
 
+  let deleteError = $state("");
   async function handleDelete() {
-    if (!confirm("この窓を削除しますか？届いた声と返信もすべて削除されます。この操作は取り消せません。")) return;
     formState = "deleting";
-    errorMsg = "";
+    deleteError = "";
     try {
       const res = await fetch(`/api/boxes/${data.box.rkey}`, { method: "DELETE" });
       if (!res.ok) {
@@ -86,7 +86,7 @@
       await invalidateAll();
     } catch (err) {
       formState = "idle";
-      errorMsg = err instanceof Error ? err.message : "削除に失敗しました";
+      deleteError = err instanceof Error ? err.message : "削除に失敗しました";
     }
   }
 
@@ -239,19 +239,44 @@
   </div>
 
   <div data-suisou-layout="row end">
-    <Button
-      type="button"
-      variant="destructive"
-      loading={formState === "deleting"}
-      onclick={handleDelete}
-    >
+    <Button type="button" variant="destructive" commandfor="delete-box" command="show-modal">
       {#snippet leftIcon()}<Trash2 />{/snippet}
       削除
     </Button>
   </div>
 </div>
 
+<dialog
+  id="delete-box"
+  closedby={formState === "deleting" ? "none" : "any"}
+  data-suisou-tray
+  data-suisou-layout="stack gap-3"
+  class="dialog"
+>
+  <h2 data-suisou-text="fs-20 fw-700">この窓を削除しますか？</h2>
+  <p data-suisou-text="fs-14">届いた声と返信もすべて削除されます。この操作は取り消せません。</p>
+  {#if deleteError}
+    <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+      <AlertCircle data-suisou-text="fs-16" />
+      {deleteError}
+    </p>
+  {/if}
+  <div data-suisou-layout="row end">
+    <Button type="button" variant="secondary" commandfor="delete-box" command="close" disabled={formState === "deleting"}>
+      キャンセル
+    </Button>
+    <Button type="button" variant="destructive" loading={formState === "deleting"} onclick={handleDelete}>
+      {#snippet leftIcon()}<Trash2 />{/snippet}
+      削除する
+    </Button>
+  </div>
+</dialog>
+
 <style>
+  .dialog {
+    margin: auto;
+    width: min(calc(100vw - 2 * var(--suisou-space-3)), 24rem);
+  }
   .saved {
     color: var(--suisou-color-success);
   }
