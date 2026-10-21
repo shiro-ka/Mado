@@ -1,10 +1,4 @@
-
-export interface SentRef {
-  ownerDid: string;
-  koeRkey: string;
-  sentAt: string;
-  body: string;
-}
+import type { SentRef } from "../types/index.js";
 
 export interface AppSession {
   did: string;
@@ -246,12 +240,18 @@ export class CloudflareStore {
     return row !== null;
   }
 
-  async recordDelivery(d: { ownerDid: string; koeRkey: string; senderDid: string; sentAt: string; body: string }): Promise<void> {
+  async recordDelivery(d: { ownerDid: string; koeRkey: string; boxRkey: string; senderDid: string; sentAt: string; body: string }): Promise<void> {
     await this.env.DB.prepare(
-      `INSERT INTO deliveries (owner_did, koe_rkey, sender_did, sent_at, body) VALUES (?, ?, ?, ?, ?)
-       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET sender_did = excluded.sender_did, sent_at = excluded.sent_at, body = excluded.body`
+      `INSERT INTO deliveries (owner_did, koe_rkey, box_rkey, sender_did, sent_at, body) VALUES (?, ?, ?, ?, ?, ?)
+       ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET box_rkey = excluded.box_rkey, sender_did = excluded.sender_did, sent_at = excluded.sent_at, body = excluded.body`
     )
-      .bind(d.ownerDid, d.koeRkey, d.senderDid, Math.floor(new Date(d.sentAt).getTime() / 1000), d.body)
+      .bind(d.ownerDid, d.koeRkey, d.boxRkey, d.senderDid, Math.floor(new Date(d.sentAt).getTime() / 1000), d.body)
+      .run();
+  }
+
+  async setDeliveryBox(ownerDid: string, koeRkey: string, boxRkey: string): Promise<void> {
+    await this.env.DB.prepare("UPDATE deliveries SET box_rkey = ? WHERE owner_did = ? AND koe_rkey = ?")
+      .bind(boxRkey, ownerDid, koeRkey)
       .run();
   }
 
@@ -315,24 +315,26 @@ export class CloudflareStore {
     return results.map((r: { koe_rkey: string }) => r.koe_rkey);
   }
 
-  async listSent(senderDid: string, limit: number): Promise<(SentRef & { isRead: boolean })[]> {
+  async listSent(senderDid: string, limit: number): Promise<SentRef[]> {
+    type Row = { owner_did: string; koe_rkey: string; box_rkey: string | null; sent_at: number; body: string; sender_read_at: number | null };
     const { results } = await this.env.DB.prepare(
-      "SELECT owner_did, koe_rkey, sent_at, body, sender_read_at FROM deliveries WHERE sender_did = ? AND sent_at IS NOT NULL ORDER BY sent_at DESC LIMIT ?"
+      "SELECT owner_did, koe_rkey, box_rkey, sent_at, body, sender_read_at FROM deliveries WHERE sender_did = ? AND sent_at IS NOT NULL ORDER BY sent_at DESC LIMIT ?"
     )
       .bind(senderDid, limit)
-      .all<{ owner_did: string; koe_rkey: string; sent_at: number; body: string; sender_read_at: number | null }>();
-    return results.map((r: { owner_did: string; koe_rkey: string; sent_at: number; body: string; sender_read_at: number | null }) => ({
+      .all<Row>();
+    return results.map((r: Row) => ({
       ownerDid: r.owner_did,
       koeRkey: r.koe_rkey,
+      boxRkey: r.box_rkey,
       sentAt: new Date(r.sent_at * 1000).toISOString(),
       body: r.body,
-      isRead: r.sender_read_at !== null,
+      readAt: r.sender_read_at === null ? null : new Date(r.sender_read_at * 1000).toISOString(),
     }));
   }
 
   async markSentRead(senderDid: string, ownerDid: string, koeRkey: string): Promise<void> {
     await this.env.DB.prepare(
-      "UPDATE deliveries SET sender_read_at = COALESCE(sender_read_at, ?) WHERE sender_did = ? AND owner_did = ? AND koe_rkey = ?"
+      "UPDATE deliveries SET sender_read_at = ? WHERE sender_did = ? AND owner_did = ? AND koe_rkey = ?"
     )
       .bind(Math.floor(Date.now() / 1000), senderDid, ownerDid, koeRkey)
       .run();

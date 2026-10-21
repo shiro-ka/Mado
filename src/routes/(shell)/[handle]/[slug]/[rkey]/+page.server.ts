@@ -41,6 +41,8 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     if (senderDid) {
       senderBlocked = await store.isBlocked(ownerDid, senderDid);
     }
+  } else if (session) {
+    await new CloudflareStore(platform!.env).markSentRead(session.did, ownerDid, params.rkey);
   }
 
   const senderProfile = senderDid ? await getProfile(senderDid) : null;

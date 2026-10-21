@@ -187,6 +187,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       await store.recordDelivery({
         ownerDid: boxOwnerDid,
         koeRkey,
+        boxRkey,
         senderDid: session.did,
         sentAt: new Date().toISOString(),
         body,

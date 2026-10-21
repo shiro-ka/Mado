@@ -73,9 +73,25 @@ export interface BlueMadoAnswer {
 export interface SentRef {
   ownerDid: string;
   koeRkey: string;
+  boxRkey: string | null;
   sentAt: string;
   body: string;
+  readAt: string | null;
 }
+
+export type SentItem = {
+  ownerDid: string;
+  koeRkey: string;
+  body: string;
+  sentAt: string;
+  href?: string;
+  boxTitle?: string;
+  ownerHandle?: string;
+  ownerDisplayName?: string;
+  ownerAvatar?: string;
+  answers: string[];
+  hasNewAnswer: boolean;
+};
 
 // API response types
 export interface ApiError {
