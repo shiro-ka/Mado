@@ -36,7 +36,7 @@
     </button>
   </div>
 
-  <SentList sent={data.sent} />
+  <SentList sent={data.sent} selfAvatar={data.session?.avatar} />
 </div>
 
 <style>

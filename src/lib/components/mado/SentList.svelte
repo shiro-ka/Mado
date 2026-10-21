@@ -7,9 +7,10 @@
 
   interface Props {
     sent: Promise<SentItem[]>;
+    selfAvatar?: string;
   }
 
-  let { sent }: Props = $props();
+  let { sent, selfAvatar }: Props = $props();
 
   type Tab = "new" | "all";
   const tab = $derived((page.url.searchParams.get("tab") ?? "new") as Tab);
@@ -64,7 +65,7 @@
   {:else}
     <div data-suisou-layout="stack gap-3">
       {#each filtered as item (`${item.ownerDid}:${item.koeRkey}`)}
-        <SentCard {item} showNewTag={tab !== "new" && item.hasNewAnswer} />
+        <SentCard {item} {selfAvatar} showNewTag={tab !== "new" && item.hasNewAnswer} />
       {/each}
     </div>
   {/if}
