@@ -323,6 +323,13 @@ export class CloudflareStore {
       .run();
   }
 
+  async deleteDeliveries(ownerDid: string, koeRkeys: string[]): Promise<void> {
+    const stmts = koeRkeys.map((rkey) =>
+      this.env.DB.prepare("DELETE FROM deliveries WHERE owner_did = ? AND koe_rkey = ?").bind(ownerDid, rkey)
+    );
+    if (stmts.length > 0) await this.env.DB.batch(stmts);
+  }
+
   async listHandled(ownerDid: string): Promise<string[]> {
     const { results } = await this.env.DB.prepare(
       "SELECT koe_rkey FROM deliveries WHERE owner_did = ? AND owner_handled_at IS NOT NULL"

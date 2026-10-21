@@ -315,13 +315,12 @@ export async function updateBoxRecord(params: {
 
 const DELETES_PER_BATCH = 100;
 
-export async function deleteBoxWithContents(params: {
-  sessionFetch: SessionFetch;
-  did: string;
-  boxRkey: string;
-}): Promise<boolean> {
-  const { sessionFetch, did, boxRkey } = params;
-  const boxUri = `at://${did}/${NSID.BOX}/${boxRkey}`;
+async function deleteKoesWithAnswers(
+  sessionFetch: SessionFetch,
+  did: string,
+  pick: (koe: { rkey: string; box: string }) => boolean,
+  last: { collection: string; rkey: string }[] = [],
+): Promise<string[] | null> {
   invalidateRecords(did, NSID.KOE);
   invalidateRecords(did, NSID.ANSWER);
   try {
@@ -331,15 +330,17 @@ export async function deleteBoxWithContents(params: {
       listAllRecords(agent, did, NSID.ANSWER),
     ]);
     const rkeyOf = (uri: string) => uri.split("/").pop() ?? "";
-    const koeRkeys = new Set(
-      koes.filter((r) => (r.value as BlueMadoKoe).box === boxUri).map((r) => rkeyOf(r.uri)),
-    );
+    const koeRkeys = koes
+      .map((r) => ({ rkey: rkeyOf(r.uri), box: (r.value as BlueMadoKoe).box }))
+      .filter(pick)
+      .map((k) => k.rkey);
+    const picked = new Set(koeRkeys);
     const writes = [
       ...answers
-        .filter((r) => koeRkeys.has(rkeyOf((r.value as BlueMadoAnswer).koe)))
+        .filter((r) => picked.has(rkeyOf((r.value as BlueMadoAnswer).koe)))
         .map((r) => ({ collection: NSID.ANSWER, rkey: rkeyOf(r.uri) })),
-      ...[...koeRkeys].map((rkey) => ({ collection: NSID.KOE, rkey })),
-      { collection: NSID.BOX, rkey: boxRkey },
+      ...koeRkeys.map((rkey) => ({ collection: NSID.KOE, rkey })),
+      ...last,
     ].map((w) => ({ $type: "com.atproto.repo.applyWrites#delete", ...w }));
     for (let i = 0; i < writes.length; i += DELETES_PER_BATCH) {
       await xrpc({
@@ -349,12 +350,33 @@ export async function deleteBoxWithContents(params: {
         body: { repo: did, writes: writes.slice(i, i + DELETES_PER_BATCH) },
       });
     }
-    return true;
+    return koeRkeys;
   } catch {
-    return false;
+    return null;
   } finally {
     invalidateRecords(did, NSID.BOX);
     invalidateRecords(did, NSID.KOE);
     invalidateRecords(did, NSID.ANSWER);
   }
+}
+
+export async function deleteBoxWithContents(params: {
+  sessionFetch: SessionFetch;
+  did: string;
+  boxRkey: string;
+}): Promise<string[] | null> {
+  const { sessionFetch, did, boxRkey } = params;
+  const boxUri = `at://${did}/${NSID.BOX}/${boxRkey}`;
+  return deleteKoesWithAnswers(sessionFetch, did, (k) => k.box === boxUri, [
+    { collection: NSID.BOX, rkey: boxRkey },
+  ]);
+}
+
+export async function deleteKoeWithAnswers(params: {
+  sessionFetch: SessionFetch;
+  did: string;
+  koeRkey: string;
+}): Promise<boolean> {
+  const { sessionFetch, did, koeRkey } = params;
+  return (await deleteKoesWithAnswers(sessionFetch, did, (k) => k.rkey === koeRkey)) !== null;
 }

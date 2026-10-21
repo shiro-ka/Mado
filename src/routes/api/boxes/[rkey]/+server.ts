@@ -109,13 +109,13 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
       );
     }
 
-    const success = await deleteBoxWithContents({
+    const deleted = await deleteBoxWithContents({
       sessionFetch,
       did: session.did,
       boxRkey: params.rkey,
     });
 
-    if (!success) {
+    if (!deleted) {
       return json(
         { error: "Delete failed", message: "削除に失敗しました" },
         { status: 500 }
@@ -123,6 +123,7 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
     }
 
     await store.delKeyPair(session.did, params.rkey);
+    await store.deleteDeliveries(session.did, deleted);
     return json({ success: true });
   } catch (err) {
     console.error("[DELETE /api/boxes/[rkey]]", err);

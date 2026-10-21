@@ -19,5 +19,6 @@ export {
   createBoxRecord,
   updateBoxRecord,
   deleteBoxWithContents,
+  deleteKoeWithAnswers,
 } from "./records.js";
 export { getViewerFollowsActor, writeFollow, createBskyPost } from "./bsky.js";
