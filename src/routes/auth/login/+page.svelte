@@ -42,14 +42,14 @@
   <title>ログイン | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack center middle" data-suisou="min-screen" class="wrap">
-  <div data-suisou-layout="stack gap-4" data-suisou="container-s">
-    <div>
-      <Button href="/" variant="ghost">
-        {#snippet leftIcon()}<ArrowLeft />{/snippet}
-        トップに戻る
-      </Button>
-    </div>
+<div data-suisou="min-screen" class="wrap">
+  <div data-suisou="container-s" class="back">
+    <Button href="/" variant="ghost">
+      {#snippet leftIcon()}<ArrowLeft />{/snippet}
+      トップに戻る
+    </Button>
+  </div>
+  <div data-suisou-layout="stack gap-4" data-suisou="container-s" class="main">
     <div data-suisou-layout="stack center">
       <a href="/"><Brand size="lg" /></a>
       <h1 data-suisou-text="fs-24 fw-700 center" class="center">Blueskyアカウントでログイン</h1>
@@ -97,7 +97,15 @@
 
 <style>
   .wrap {
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
     padding: var(--suisou-space-4) var(--suisou-space-3);
+  }
+  .back {
+    align-self: start;
+  }
+  .main {
+    padding-block: var(--suisou-space-4);
   }
   .card {
     padding: var(--suisou-space-4);
