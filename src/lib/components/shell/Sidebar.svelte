@@ -51,9 +51,7 @@
 
 <UserCard {session} />
 
-<div data-suisou="bd-top">
-  <Credits {officialHandle} />
-</div>
+<Credits {officialHandle} />
 
 <style>
   .brandbar {
