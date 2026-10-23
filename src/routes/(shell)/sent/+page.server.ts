@@ -1,21 +1,8 @@
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
-import { getAnswersByOwner, getKoeRecord, getProfiles, listBoxes } from "$lib/atproto/index.js";
-import type { SentItem, SentRef } from "../../../types/index.js";
-
-const BOX_BACKFILL_PER_REQUEST = 10;
-
-async function fillBoxes(store: CloudflareStore, refs: SentRef[]) {
-  const missing = refs.filter((r) => r.boxRkey === null).slice(0, BOX_BACKFILL_PER_REQUEST);
-  await Promise.all(
-    missing.map(async (r) => {
-      const koe = await getKoeRecord(r.ownerDid, r.koeRkey);
-      r.boxRkey = koe?.boxUri.split("/").pop() ?? "";
-      await store.setDeliveryBox(r.ownerDid, r.koeRkey, r.boxRkey);
-    }),
-  );
-}
+import { getAnswersByOwner, getProfiles, listBoxes } from "$lib/atproto/index.js";
+import type { SentItem } from "../../../types/index.js";
 
 export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();
@@ -26,7 +13,6 @@ export const load: PageServerLoad = async ({ parent, platform }) => {
   return {
     sent: (async () => {
       const refs = await store.listSent(session.did, 200);
-      await fillBoxes(store, refs);
 
       const owners = [...new Set(refs.map((r) => r.ownerDid))];
       const [perOwner, profiles] = await Promise.all([

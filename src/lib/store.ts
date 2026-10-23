@@ -249,12 +249,6 @@ export class CloudflareStore {
       .run();
   }
 
-  async setDeliveryBox(ownerDid: string, koeRkey: string, boxRkey: string): Promise<void> {
-    await this.env.DB.prepare("UPDATE deliveries SET box_rkey = ? WHERE owner_did = ? AND koe_rkey = ?")
-      .bind(boxRkey, ownerDid, koeRkey)
-      .run();
-  }
-
   async getSender(ownerDid: string, koeRkey: string): Promise<string | null> {
     const row = await this.env.DB.prepare(
       "SELECT sender_did FROM deliveries WHERE owner_did = ? AND koe_rkey = ?"
