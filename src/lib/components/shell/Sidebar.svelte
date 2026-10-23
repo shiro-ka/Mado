@@ -25,7 +25,7 @@
   const currentPath = $derived(page.url.pathname);
 </script>
 
-<div data-suisou-layout="row" data-suisou="bd-bottom" class="brandbar">
+<div data-suisou-layout="row" class="brandbar">
   <a href="/receive" onclick={onNavigate}>
     <Brand size="md" />
   </a>
