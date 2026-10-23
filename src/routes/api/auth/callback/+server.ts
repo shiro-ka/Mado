@@ -4,6 +4,7 @@ import { createOAuthClient } from "$lib/oauth.server.js";
 import { createSession } from "$lib/auth.server.js";
 import { getProfile } from "$lib/atproto/index.js";
 import { customAlphabet } from "nanoid";
+import { safeNext } from "$lib/loginNext.js";
 
 export const GET: RequestHandler = async ({ url, cookies, platform }) => {
   const env = platform!.env;
@@ -13,13 +14,10 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
   const errorDescription = url.searchParams.get("error_description");
 
   if (error) {
-    const params = new URLSearchParams({
-      error: "oauth_error",
-      message: errorDescription ?? error,
-    });
+    console.error("[/api/auth/callback]", error, errorDescription);
     return new Response(null, {
       status: 302,
-      headers: { Location: `${appUrl}/auth/login?${params}` },
+      headers: { Location: `${appUrl}/?login_error=1` },
     });
   }
 
@@ -32,7 +30,7 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
       32
     )();
     const client = await createOAuthClient(env, store, deviceKey);
-    const { session } = await client.callback(url.searchParams);
+    const { session, state } = await client.callback(url.searchParams);
     const did = session.did;
 
     const profile = await getProfile(did);
@@ -65,13 +63,13 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
 
     return new Response(null, {
       status: 302,
-      headers: { Location: `${appUrl}/receive` },
+      headers: { Location: `${appUrl}${safeNext(state) ?? "/receive"}` },
     });
   } catch (err) {
     console.error("[/api/auth/callback]", err);
     return new Response(null, {
       status: 302,
-      headers: { Location: `${appUrl}/auth/login?error=oauth_failed` },
+      headers: { Location: `${appUrl}/?login_error=1` },
     });
   }
 };

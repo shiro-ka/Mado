@@ -7,7 +7,7 @@ import { getOfficialAccount } from "$lib/notify.server.js";
 
 export const load: PageServerLoad = async ({ parent, platform, cookies }) => {
   const { session } = await parent();
-  if (!session) throw redirect(303, "/auth/login");
+  if (!session) throw redirect(303, "/?next=/settings/notifications");
 
   const env = platform!.env;
   const store = new CloudflareStore(env);

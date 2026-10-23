@@ -5,7 +5,7 @@ import { getProfiles } from "$lib/atproto/index.js";
 
 export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();
-  if (!session) throw redirect(303, "/auth/login");
+  if (!session) throw redirect(303, "/?next=/settings/blocks");
 
   const store = new CloudflareStore(platform!.env);
   const dids = await store.listBlocks(session.did);

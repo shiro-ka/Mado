@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Globe } from "lucide-svelte";
   import Brand from "./Brand.svelte";
+  import LoginButton from "./LoginButton.svelte";
 </script>
 
 <footer data-suisou="bd-top" class="foot">
@@ -16,11 +17,8 @@
       <div data-suisou-layout="stack">
         <h4 data-suisou-text="fs-14 fw-700">リンク</h4>
         <div data-suisou-layout="stack">
-          {#each [{ href: "/", label: "トップ" }, { href: "/auth/login", label: "ログイン" }, { href: "/receive", label: "受信トレイ" }] as link}
-            <a href={link.href} data-suisou-text="link fs-14" class="sub">
-              {link.label}
-            </a>
-          {/each}
+          <a href="/" data-suisou-text="link fs-14" class="sub">トップ</a>
+          <LoginButton label="ログイン" look="link" />
         </div>
       </div>
 

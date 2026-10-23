@@ -1,7 +1,7 @@
 <script lang="ts">
   import { LogIn, Globe } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
+  import LoginButton from "$lib/components/shell/LoginButton.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
 
   interface OwnerProfile {
@@ -61,7 +61,10 @@
           送り主はオーナーのみに開示されます。
         </p>
       </div>
-      <Button href={`/auth/login?next=/@${cleanHandle}/${box.slug}`} variant="default" wide>ログインして声を送る</Button>
+      <div data-suisou-layout="stack gap-1 center">
+        <LoginButton label="ログインして声を送る" />
+        <LoginButton look="other" />
+      </div>
     </div>
   {:else}
     <SendQuestionForm

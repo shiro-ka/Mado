@@ -5,7 +5,7 @@ import { buildInbox } from "$lib/inbox.server.js";
 
 export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();
-  if (!session) throw redirect(303, "/auth/login");
+  if (!session) throw redirect(303, "/?next=/receive");
 
   const store = new CloudflareStore(platform!.env);
   const prefs = await store.getNotificationPrefs(session.did);

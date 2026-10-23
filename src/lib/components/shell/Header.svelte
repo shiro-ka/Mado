@@ -2,6 +2,7 @@
   import { Menu } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Brand from "./Brand.svelte";
+  import LoginButton from "./LoginButton.svelte";
   import type { AppSession } from "$lib/store.js";
 
   interface Props {
@@ -33,7 +34,7 @@
       {#if session}
         <Button href="/receive" variant="default">受信トレイ</Button>
       {:else}
-        <Button href="/auth/login" variant="default">ログイン</Button>
+        <LoginButton label="ログイン" />
       {/if}
       <button
         data-suisou-button="icon"
