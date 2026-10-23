@@ -69,12 +69,7 @@
       設定に戻る
     </Button>
   </div>
-  <div data-suisou-layout="stack gap-1" class="head">
-    <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
-    <p data-suisou-text="fs-14" class="sub">
-      新しい声が届いたときのお知らせ方法を設定します
-    </p>
-  </div>
+  <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
 
   {#if !data.configured}
     <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
