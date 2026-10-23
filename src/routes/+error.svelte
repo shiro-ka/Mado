@@ -27,7 +27,7 @@
     </div>
     <Button href="/" variant="default">
       {#snippet leftIcon()}<Home />{/snippet}
-      ホームに戻る
+      トップに戻る
     </Button>
   </div>
 </div>
