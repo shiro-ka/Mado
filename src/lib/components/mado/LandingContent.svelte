@@ -11,6 +11,8 @@
   import Button from "$lib/components/ui/Button.svelte";
   import LoginButton from "$lib/components/shell/LoginButton.svelte";
 
+  let { loggedIn = false }: { loggedIn?: boolean } = $props();
+
   const features = [
     {
       icon: Eye, tone: "accent",
@@ -57,10 +59,14 @@
 
     <div data-suisou-layout="stack gap-1 center">
       <div data-suisou-layout="stack s:row s:middle center">
-        <LoginButton label="窓を開く" />
+        {#if !loggedIn}
+          <LoginButton label="窓を開く" />
+        {/if}
         <Button href="#how-it-works" variant="secondary">使い方を見る</Button>
       </div>
-      <LoginButton look="other" />
+      {#if !loggedIn}
+        <LoginButton look="other" />
+      {/if}
     </div>
 
     <p data-suisou-text="fs-12" class="sub doc">
@@ -108,12 +114,14 @@
     </div>
   </div>
 
-  <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="cta-box">
-    <Send data-suisou-text="fs-20" data-suisou="accent" class="cta-icon" />
-    <h2 data-suisou-text="fs-24 s:fs-28 fw-700">今すぐ始めよう</h2>
-    <p data-suisou-text="fs-16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
-    <LoginButton label="窓を開く" />
-  </div>
+  {#if !loggedIn}
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="cta-box">
+      <Send data-suisou-text="fs-20" data-suisou="accent" class="cta-icon" />
+      <h2 data-suisou-text="fs-24 s:fs-28 fw-700">今すぐ始めよう</h2>
+      <p data-suisou-text="fs-16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
+      <LoginButton label="窓を開く" />
+    </div>
+  {/if}
 </div>
 
 <style>

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { Inbox, Send, User, Settings } from "lucide-svelte";
-  import InfoNav from "./InfoNav.svelte";
+  import { Inbox, Send, User, Settings, Info } from "lucide-svelte";
   import UserCard from "./UserCard.svelte";
   import Brand from "./Brand.svelte";
   import Credits from "./Credits.svelte";
@@ -20,6 +19,7 @@
     { href: `/@${session.handle}`, icon: User, label: "マイページ" },
     { href: "/sent", icon: Send, label: "送信トレイ" },
     { href: "/settings", icon: Settings, label: "設定" },
+    { href: "/about", icon: Info, label: "Madoについて" },
   ]);
 
   const currentPath = $derived(page.url.pathname);
@@ -45,7 +45,6 @@
         {item.label}
       </a>
     {/each}
-    <InfoNav {onNavigate} />
   </div>
 </nav>
 

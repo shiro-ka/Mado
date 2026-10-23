@@ -20,7 +20,7 @@
   </DashboardShell>
 {:else}
   <div data-suisou-layout="stack gap-0" data-suisou="min-screen">
-    <Header {session} />
+    <Header />
     <main data-suisou-layout="stack" class="main">
       {@render children()}
     </main>
