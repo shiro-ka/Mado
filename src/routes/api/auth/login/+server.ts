@@ -4,8 +4,10 @@ import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { createOAuthClient } from "$lib/oauth.server.js";
 
+const BSKY_ENTRYWAY = "https://bsky.social";
+
 const loginSchema = z.object({
-  handle: z.string().min(1).max(255),
+  handle: z.string().min(1).max(255).optional(),
 });
 
 export const POST: RequestHandler = async ({ request, platform }) => {
@@ -23,7 +25,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const { handle } = parsed.data;
     const store = new CloudflareStore(env);
     const client = await createOAuthClient(env, store);
-    const url = await client.authorize(handle, { scope: "atproto transition:generic" });
+    const url = await client.authorize(handle ?? BSKY_ENTRYWAY, { scope: "atproto transition:generic" });
 
     return json({ redirectUrl: url.toString() });
   } catch (err) {
