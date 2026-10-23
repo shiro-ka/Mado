@@ -4,14 +4,16 @@
   import InfoNav from "./InfoNav.svelte";
   import UserCard from "./UserCard.svelte";
   import Brand from "./Brand.svelte";
+  import Credits from "./Credits.svelte";
   import type { AppSession } from "$lib/store.js";
 
   interface Props {
     session: AppSession;
+    officialHandle?: string | null;
     onNavigate?: () => void;
   }
 
-  let { session, onNavigate }: Props = $props();
+  let { session, officialHandle = null, onNavigate }: Props = $props();
 
   const navItems = $derived([
     { href: "/receive", icon: Inbox, label: "受信トレイ" },
@@ -48,6 +50,10 @@
 </nav>
 
 <UserCard {session} />
+
+<div data-suisou="bd-top">
+  <Credits {officialHandle} />
+</div>
 
 <style>
   .brandbar {

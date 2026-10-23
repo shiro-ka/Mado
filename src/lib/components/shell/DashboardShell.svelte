@@ -8,10 +8,11 @@
 
   interface Props {
     session: AppSession;
+    officialHandle?: string | null;
     children?: Snippet;
   }
 
-  let { session, children }: Props = $props();
+  let { session, officialHandle = null, children }: Props = $props();
 
   let drawer = $state<HTMLElement>();
   let mainEl = $state<HTMLElement>();
@@ -24,7 +25,7 @@
 
 <div class="frame">
   <aside data-suisou-layout="stack" data-suisou="bd-end" class="side">
-    <Sidebar {session} />
+    <Sidebar {session} {officialHandle} />
   </aside>
 
   <div data-suisou-layout="row" data-suisou="bd-bottom" class="topbar">
@@ -43,7 +44,7 @@
     aria-label="ナビゲーション"
     style="--suisou-size-drawer: 18rem"
   >
-    <Sidebar {session} />
+    <Sidebar {session} {officialHandle} />
   </div>
 
   <main bind:this={mainEl} data-suisou="scroll-y" class="body">

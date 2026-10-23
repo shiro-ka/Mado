@@ -15,7 +15,7 @@
 </script>
 
 {#if session}
-  <DashboardShell {session}>
+  <DashboardShell {session} {officialHandle}>
     {@render children()}
   </DashboardShell>
 {:else}
