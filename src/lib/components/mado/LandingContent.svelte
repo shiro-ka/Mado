@@ -43,8 +43,8 @@
   ];
 </script>
 
-<section data-suisou-layout="stack" class="hero">
-  <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container" class="hero-inner">
+<div data-suisou-layout="stack" data-suisou="container-m" class="landing">
+  <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" class="hero">
     <h1 data-suisou-text="fs-28 s:fs-32 fw-700" class="title">
       窓越しに、<br />
       <span class="accent">想いを届けよう</span>
@@ -68,18 +68,16 @@
       声を送信するにはBlueskyアカウントでのログインが必要です。
     </p>
   </div>
-</section>
 
-<section id="features" class="band">
-  <div data-suisou-layout="stack gap-4" data-suisou="container" class="block">
+  <div data-suisou-layout="stack gap-4">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">Madoの特徴</h2>
       <p data-suisou-text="fs-14 s:fs-16" class="sub">安全で信頼できる窓を実現する2つの柱</p>
     </div>
 
-    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))" class="cards">
+    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))">
       {#each features as feat}
-        <div data-suisou-tray data-suisou-layout="stack" class="card">
+        <div data-suisou-tray data-suisou-layout="stack">
           <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
           <h3 data-suisou-text="fs-16 fw-700">{feat.title}</h3>
           <p data-suisou-text="fs-14" class="sub doc">{feat.description}</p>
@@ -87,16 +85,14 @@
       {/each}
     </div>
   </div>
-</section>
 
-<section id="how-it-works" class="band">
-  <div data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="container" class="block pad">
+  <div id="how-it-works" data-suisou-tray data-suisou-layout="stack gap-4" class="pad">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">使い方</h2>
       <p data-suisou-text="fs-14 s:fs-16" class="sub">3ステップで始められます</p>
     </div>
 
-    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cards">
+    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))">
       {#each steps as step}
         <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
           <span class="tile">
@@ -111,23 +107,24 @@
       {/each}
     </div>
   </div>
-</section>
 
-<section class="band">
-  <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="container" class="cta-box">
+  <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="cta-box">
     <Send data-suisou-text="fs-20" data-suisou="accent" class="cta-icon" />
     <h2 data-suisou-text="fs-24 s:fs-28 fw-700">今すぐ始めよう</h2>
     <p data-suisou-text="fs-16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
     <LoginButton label="窓を開く" />
   </div>
-</section>
+</div>
 
 <style>
-  .hero {
+  .landing {
+    gap: var(--suisou-space-5);
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
-  .hero-inner {
+  .hero {
+    width: 100%;
     max-width: 48rem;
+    margin-inline: auto;
   }
   .title {
     letter-spacing: -0.01em;
@@ -138,10 +135,6 @@
   .lead {
     max-width: 36rem;
     color: var(--suisou-color-text-note);
-  }
-
-  .band {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .pad {
     padding: var(--suisou-space-4);
@@ -168,7 +161,9 @@
   }
 
   .cta-box {
+    width: 100%;
     max-width: 36rem;
+    margin-inline: auto;
     padding: var(--suisou-space-4);
     border-color: var(--suisou-color-accent);
   }
