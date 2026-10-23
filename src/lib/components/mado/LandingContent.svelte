@@ -3,8 +3,6 @@
     MessageCircle,
     Lock,
     Globe,
-    Shield,
-    Sparkles,
     Eye,
     UserCheck,
     Send,
@@ -33,7 +31,7 @@
       description: "Blueskyアカウントで認証します。窓を開くにはログインが必要です。",
     },
     {
-      step: "2", icon: MessageCircle, tone: "success",
+      step: "2", icon: MessageCircle, tone: "accent",
       title: "窓を開ける",
       description: "タイトルと説明文を設定して窓を公開。URLをシェアして声を募集しましょう。",
     },
@@ -47,11 +45,6 @@
 
 <section data-suisou-layout="stack" class="hero">
   <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container" class="hero-inner">
-    <span data-suisou-item="tag" data-suisou="accent">
-      <Sparkles />
-      ATProtocol基盤
-    </span>
-
     <h1 data-suisou-text="fs-28 s:fs-32 fw-700" class="title">
       窓越しに、<br />
       <span class="accent">想いを届けよう</span>
@@ -69,19 +62,11 @@
       </div>
       <LoginButton look="other" />
     </div>
-  </div>
-</section>
 
-<section class="band">
-  <div data-suisou-item="notice media" data-suisou="warning container">
-    <Shield data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="warning" />
-    <div data-suisou-item="media-content">
-      <p data-suisou-text="fs-14 fw-700" class="warn">半匿名性についてのご説明</p>
-      <p data-suisou-text="fs-14" class="doc">
-        このサービスは<strong>完全匿名ではありません</strong>。
-        声を送信するにはBlueskyアカウントでのログインが必要です。
-      </p>
-    </div>
+    <p data-suisou-text="fs-12" class="sub doc">
+      このサービスは<strong>完全匿名ではありません</strong>。
+      声を送信するにはBlueskyアカウントでのログインが必要です。
+    </p>
   </div>
 </section>
 
@@ -92,7 +77,7 @@
       <p data-suisou-text="fs-14 s:fs-16" class="sub">安全で信頼できる窓を実現する2つの柱</p>
     </div>
 
-    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cards">
+    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))" class="cards">
       {#each features as feat}
         <div data-suisou-tray data-suisou-layout="stack" class="card">
           <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
@@ -163,9 +148,6 @@
   }
   .sub {
     color: var(--suisou-color-text-note);
-  }
-  .warn {
-    color: var(--suisou-color-warning);
   }
   .tile {
     position: relative;
