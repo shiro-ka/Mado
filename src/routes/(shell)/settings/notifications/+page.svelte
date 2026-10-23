@@ -110,8 +110,7 @@
           <div data-suisou-item="media">
             <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="note" />
             <p data-suisou-item="media-content" data-suisou-text="fs-14" class="sub doc">
-              通知を受け取るには、先に公式アカウントのフォローが必要です。
-              <span class="sub">（Blueskyの仕様上、フォローしていないアカウントにはDMが届きません）</span>
+              DMで通知を受け取るには、公式アカウントのフォローが必要です。
             </p>
           </div>
           <div data-suisou-layout="row wrap">
