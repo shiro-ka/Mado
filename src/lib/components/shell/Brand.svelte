@@ -6,7 +6,7 @@
 
   let { size = "md", beta = false }: Props = $props();
 
-  const text = $derived({ sm: "s14", md: "s16", lg: "s20" }[size]);
+  const text = $derived({ sm: "fs-14", md: "fs-16", lg: "fs-20" }[size]);
 </script>
 
 <span data-suisou-layout="row" class="brand" class:sm={size === "sm"}>

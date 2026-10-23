@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { MessageCircle, AlertCircle, Shield } from "lucide-svelte";
+  import { AlertCircle, Shield, ArrowLeft } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
+  import Brand from "$lib/components/shell/Brand.svelte";
 
   let handle = $state("");
   let loading = $state(false);
@@ -43,11 +44,14 @@
 
 <div data-suisou-layout="stack center middle" data-suisou="min-screen" class="wrap">
   <div data-suisou-layout="stack gap-4" data-suisou="container-s">
+    <div>
+      <Button href="/" variant="ghost">
+        {#snippet leftIcon()}<ArrowLeft />{/snippet}
+        トップに戻る
+      </Button>
+    </div>
     <div data-suisou-layout="stack center">
-      <a data-suisou-layout="row" href="/">
-        <span data-suisou-item="square"><MessageCircle data-suisou-text="fs-20" data-suisou="accent" /></span>
-        <span data-suisou-text="fs-20 fw-700">Mado</span>
-      </a>
+      <a href="/"><Brand size="lg" /></a>
       <h1 data-suisou-text="fs-24 fw-700 center" class="center">Blueskyアカウントでログイン</h1>
       <p data-suisou-text="fs-14 center" class="sub center">あなたのハンドルを入力して認証します</p>
     </div>
@@ -58,7 +62,6 @@
           label="Blueskyハンドル"
           placeholder="yourname.bsky.social"
           bind:value={handle}
-          helper="例：alice.bsky.social または alice.com"
           disabled={loading}
           autofocus={true}
           autocomplete="username"
@@ -73,9 +76,11 @@
           </p>
         {/if}
 
-        <Button variant="default" wide type="submit" {loading} disabled={!handle.trim()}>
-          {loading ? "認証中..." : "ログインする"}
-        </Button>
+        <div data-suisou-layout="row end">
+          <Button variant="default" type="submit" {loading} disabled={!handle.trim()}>
+            {loading ? "認証中..." : "ログインする"}
+          </Button>
+        </div>
       </form>
 
       <div data-suisou-item="media" data-suisou="bd-top" class="note">
@@ -87,10 +92,6 @@
         </p>
       </div>
     </div>
-
-    <p data-suisou-text="fs-12 center" class="sub center">
-      <a href="/">← トップページに戻る</a>
-    </p>
   </div>
 </div>
 
