@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { User } from "lucide-svelte";
+  import { User, Ban, ArrowLeft } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import type { PageData } from "./$types";
 
@@ -30,10 +30,19 @@
 </svelte:head>
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+  <div>
+    <Button href="/settings" variant="ghost">
+      {#snippet leftIcon()}<ArrowLeft />{/snippet}
+      設定に戻る
+    </Button>
+  </div>
   <h1 data-suisou-text="fs-24 fw-700">ブロック中の人</h1>
 
   {#if list.length === 0}
-    <p data-suisou-text="fs-14" class="sub">ブロック中の人はいません</p>
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash" class="empty">
+      <Ban data-suisou-text="fs-20" data-suisou="note" class="big" />
+      <p data-suisou-text="fs-16 fw-700">ブロック中の人はいません</p>
+    </div>
   {:else}
     <div data-suisou-layout="stack gap-2">
       {#each list as b (b.did)}
@@ -47,7 +56,7 @@
           </span>
           <span data-suisou-item="media-content">
             <span data-suisou-text="fs-14 fw-500 clamp-1">{b.displayName || b.handle || b.did}</span>
-            {#if b.handle}
+            {#if b.handle && b.displayName}
               <span data-suisou-text="fs-12 clamp-1" class="sub">@{b.handle}</span>
             {/if}
           </span>
@@ -66,5 +75,12 @@
   }
   .sub {
     color: var(--suisou-color-text-note);
+  }
+  .empty {
+    padding: var(--suisou-space-4);
+  }
+  .empty :global(.big) {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 </style>

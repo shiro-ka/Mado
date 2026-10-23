@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from "svelte";
-  import { Bell, Check, ExternalLink, AlertCircle, UserPlus } from "lucide-svelte";
+  import { Bell, Check, ExternalLink, AlertCircle, UserPlus, ArrowLeft } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import Toggle from "$lib/components/ui/Toggle.svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -63,6 +63,12 @@
 </svelte:head>
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+  <div>
+    <Button href="/settings" variant="ghost">
+      {#snippet leftIcon()}<ArrowLeft />{/snippet}
+      設定に戻る
+    </Button>
+  </div>
   <div data-suisou-layout="stack gap-1" class="head">
     <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
     <p data-suisou-text="fs-14" class="sub">
@@ -84,7 +90,7 @@
         <div data-suisou-item="media-content">
           <p data-suisou-text="fs-16 fw-700">新着をDMで受け取る</p>
           <p data-suisou-text="fs-14" class="sub doc">
-            mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
+            Mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
           </p>
         </div>
         <div data-suisou-item="media-tail">
@@ -142,7 +148,7 @@
           <Check data-suisou-text="fs-16" data-suisou="success" />
           {#if enabled}
             <span>
-              新着はmado公式からDMで届きます。
+              新着はMado公式からDMで届きます。
               <span class="sub">（公式のフォローを外すと届かなくなります）</span>
             </span>
           {:else}

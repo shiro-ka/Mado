@@ -16,7 +16,7 @@
 
   <div data-suisou-tray data-suisou-layout="stack gap-0" class="list">
     {#each items as item}
-      <a href={item.href} data-suisou-button="block" data-suisou-layout="row">
+      <a href={item.href} data-suisou-button="block" data-suisou-layout="row" class="item">
         <item.icon data-suisou-text="fs-20" />
         <span data-suisou-layout="grow">{item.label}</span>
         <ChevronRight data-suisou-text="fs-20" data-suisou="note" />
@@ -31,5 +31,8 @@
   }
   .list {
     padding: var(--suisou-space-1);
+  }
+  .item {
+    padding-block: var(--suisou-space-3);
   }
 </style>
