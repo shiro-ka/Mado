@@ -7,10 +7,11 @@
 
   interface Props {
     session: AppSession | null;
+    officialHandle?: string | null;
     children: Snippet;
   }
 
-  let { session, children }: Props = $props();
+  let { session, officialHandle = null, children }: Props = $props();
 </script>
 
 {#if session}
@@ -23,7 +24,7 @@
     <main data-suisou-layout="stack" class="main">
       {@render children()}
     </main>
-    <Footer />
+    <Footer {officialHandle} />
   </div>
 {/if}
 

@@ -1,57 +1,29 @@
 <script lang="ts">
-  import { Globe } from "lucide-svelte";
-  import Brand from "./Brand.svelte";
-  import LoginButton from "./LoginButton.svelte";
+  import { onMount } from "svelte";
+
+  interface Props {
+    officialHandle?: string | null;
+  }
+
+  let { officialHandle = null }: Props = $props();
+
+  let themeLabel = $state("");
+  onMount(() => {
+    themeLabel = (document.documentElement.dataset.suisouTheme ?? "").split(" ").join(" x ");
+  });
 </script>
 
 <footer data-suisou="bd-top" class="foot">
-  <div data-suisou-layout="stack gap-4" data-suisou="container" class="inner">
-    <div data-suisou-layout="stack s:grid gap-4" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))" class="cols">
-      <div data-suisou-layout="stack">
-        <Brand size="lg" />
-        <p data-suisou-text="fs-14" class="sub">
-          ATProtocol基盤の半匿名メッセージ。<br />窓越しに、想いを届けよう。
-        </p>
-      </div>
-
-      <div data-suisou-layout="stack">
-        <h4 data-suisou-text="fs-14 fw-700">リンク</h4>
-        <div data-suisou-layout="stack">
-          <a href="/" data-suisou-text="link fs-14" class="sub">トップ</a>
-          <LoginButton label="ログイン" look="link" />
-        </div>
-      </div>
-
-      <div data-suisou-layout="stack">
-        <h4 data-suisou-text="fs-14 fw-700">情報</h4>
-        <div data-suisou-layout="stack">
-          {#each [{ href: "/privacy", label: "プライバシーポリシー" }, { href: "/terms", label: "利用規約" }] as link}
-            <a href={link.href} data-suisou-text="link fs-14" class="sub">
-              {link.label}
-            </a>
-          {/each}
-          <a
-            href="https://atproto.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-suisou-layout="row"
-            data-suisou-text="link fs-14" class="sub"
-          >
-            <Globe data-suisou-text="fs-16" />
-            ATProtocol
-          </a>
-        </div>
-      </div>
+  <div data-suisou-layout="stack gap-2 center" data-suisou-text="fs-12 center" class="inner">
+    <div data-suisou-layout="row gap-3 center">
+      {#if officialHandle}
+        <a href={`https://bsky.app/profile/${officialHandle}`} target="_blank" rel="noopener noreferrer" data-suisou-text="link" class="sub">Bluesky</a>
+      {/if}
+      <a href="https://github.com/shiro-ka/Mado" target="_blank" rel="noopener noreferrer" data-suisou-text="link" class="sub">GitHub</a>
     </div>
-
-    <div data-suisou-layout="stack s:row between" data-suisou="bd-top" class="bottom">
-      <p data-suisou-text="fs-12" class="sub">
-        &copy; {new Date().getFullYear()} Mado. All rights reserved.
-      </p>
-      <div data-suisou-layout="row" data-suisou-text="fs-12" class="sub">
-        <Globe data-suisou-text="fs-16" />
-        <span>Powered by ATProtocol</span>
-      </div>
+    <div data-suisou-layout="stack gap-0 center" class="sub">
+      <span>Suisou</span>
+      <span>{themeLabel}</span>
     </div>
   </div>
 </footer>
@@ -65,15 +37,10 @@
   .inner {
     padding: var(--suisou-space-4) var(--suisou-space-3);
   }
-  .bottom {
-    margin-block-start: var(--suisou-space-4);
-    padding-block-start: var(--suisou-space-3);
-  }
-
   .sub {
     color: var(--suisou-color-text-note);
   }
-  .sub:hover {
+  a.sub:hover {
     color: var(--suisou-color-text);
   }
 </style>
