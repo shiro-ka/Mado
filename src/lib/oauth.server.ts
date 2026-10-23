@@ -55,10 +55,16 @@ function wrapDpopStore<T>(store: {
 // (changed env) reparses instead of serving a stale set.
 let keysetCache: { raw: string; keyset: JoseKey[] } | null = null;
 
+function withKeyOps(jwk: Record<string, unknown>): Record<string, unknown> {
+  if (!("use" in jwk)) return jwk;
+  const { use, ...rest } = jwk;
+  return use === "sig" && !rest.key_ops ? { ...rest, key_ops: ["sign"] } : rest;
+}
+
 async function getKeyset(rawKeys: string): Promise<JoseKey[]> {
   if (keysetCache && keysetCache.raw === rawKeys) return keysetCache.keyset;
   const keyset = await Promise.all(
-    (JSON.parse(rawKeys) as Record<string, unknown>[]).map((k) => JoseKey.fromJWK(k))
+    (JSON.parse(rawKeys) as Record<string, unknown>[]).map((k) => JoseKey.fromJWK(withKeyOps(k)))
   );
   keysetCache = { raw: rawKeys, keyset };
   return keyset;
