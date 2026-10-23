@@ -169,13 +169,13 @@
         </p>
       </div>
 
-      <div data-suisou-layout="row between">
-        <div data-suisou-layout="stack gap-0" class="label">
-          <p data-suisou-text="fs-14 fw-500">声の受付</p>
-          <p data-suisou-text="fs-12" class="sub">オフにすると新しい声を受け付けません</p>
-        </div>
-        <Toggle bind:checked={isOpen} label="声の受付" disabled={isBusy} />
-      </div>
+      <label data-suisou-layout="row between">
+        <span data-suisou-layout="stack gap-0" class="label">
+          <span data-suisou-text="fs-14 fw-500">声の受付</span>
+          <span data-suisou-text="fs-12" class="sub">オフにすると新しい声を受け付けません</span>
+        </span>
+        <Toggle bind:checked={isOpen} disabled={isBusy} />
+      </label>
 
       {#if errorMsg}
         <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">

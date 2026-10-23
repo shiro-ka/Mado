@@ -80,23 +80,22 @@
     </div>
   {:else}
     <div data-suisou-tray data-suisou="p-0" class="card">
-      <div data-suisou-item="media" class="row">
+      <label data-suisou-item="media" class="row">
         <Bell data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />
-        <div data-suisou-item="media-content">
-          <p data-suisou-text="fs-16 fw-700">新着をDMで受け取る</p>
-          <p data-suisou-text="fs-14" class="sub doc">
+        <span data-suisou-item="media-content">
+          <span data-suisou-text="fs-16 fw-700">新着をDMで受け取る</span>
+          <span data-suisou-text="fs-14" class="sub doc">
             Mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
-          </p>
-        </div>
-        <div data-suisou-item="media-tail">
+          </span>
+        </span>
+        <span data-suisou-item="media-tail">
           <Toggle
             bind:checked={enabled}
             disabled={!followed || saving}
             onCheckedChange={persistToggle}
-            label="新着をDMで受け取る"
           />
-        </div>
-      </div>
+        </span>
+      </label>
 
       {#if toggleError}
         <p data-suisou-layout="row" data-suisou-text="fs-12" class="err row" role="alert">
