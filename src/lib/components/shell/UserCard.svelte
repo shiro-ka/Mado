@@ -9,7 +9,7 @@
   let { session }: Props = $props();
 </script>
 
-<div data-suisou-layout="stack" data-suisou="bd-top" class="card">
+<div data-suisou-layout="stack" class="card">
   <div data-suisou-layout="row">
     {#if session.avatar}
       <img src={session.avatar} alt={session.handle} data-suisou-item="circle" />
