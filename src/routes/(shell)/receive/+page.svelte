@@ -37,7 +37,7 @@
   </div>
 
   {#if !data.dmTouched}
-    <a data-suisou-item="notice" data-suisou="accent" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications" class="link">
+    <a data-suisou-item="notice" data-suisou="accent" data-suisou-layout="row" data-suisou-text="fs-14" href="/settings/notifications">
       <Bell data-suisou-text="fs-20" data-suisou="accent" />
       <span data-suisou-layout="grow">新着をDMで受け取る設定</span>
       <ChevronRight data-suisou-text="fs-20" data-suisou="note" />
@@ -48,10 +48,6 @@
 </div>
 
 <style>
-  .link:hover {
-    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
-  }
-
   :global(.spin) {
     animation: spin 800ms linear infinite;
   }

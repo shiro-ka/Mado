@@ -45,11 +45,11 @@
   ];
 </script>
 
-<div data-suisou-layout="stack" data-suisou="container-m py-4 px-3" class="landing">
+<div data-suisou-layout="stack gap-5" data-suisou="container-m py-4 px-3">
   <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container-s">
     <h1 data-suisou-text="fs-28 s:fs-32 fw-700" class="title">
-      窓越しに、<br />
-      <span data-suisou="accent">想いを届けよう</span>
+      窓で、<br />
+      <span data-suisou="accent">声を届けよう</span>
     </h1>
 
     <p data-suisou-text="fs-16 s:fs-20" data-suisou="note" class="lead doc">
@@ -125,9 +125,6 @@
 </div>
 
 <style>
-  .landing {
-    gap: var(--suisou-space-5);
-  }
   .title {
     letter-spacing: -0.01em;
   }
