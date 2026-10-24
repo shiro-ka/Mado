@@ -8,14 +8,7 @@
   let { officialHandle = null }: Props = $props();
 </script>
 
-<footer data-suisou="bd-top" class="foot">
+<footer>
   <Credits {officialHandle} />
 </footer>
 
-<style>
-  .foot {
-    width: 100%;
-    margin-block-start: auto;
-    background: var(--suisou-color-panel);
-  }
-</style>
