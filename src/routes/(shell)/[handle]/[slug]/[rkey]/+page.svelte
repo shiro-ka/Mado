@@ -48,14 +48,16 @@
 
   <div data-suisou-tray data-suisou-layout="stack gap-0" data-suisou="p-0" class="card">
     {#if data.isOwner}
-      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-layout="stack gap-0" data-suisou="bd-bottom py-2 px-4" class="box">
-        <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
-        {#if data.box.description}
-          <span data-suisou-text="fs-12" data-suisou="note">{data.box.description}</span>
-        {/if}
+      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom py-2 px-4">
+        <span data-suisou-item="media-content">
+          <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
+          {#if data.box.description}
+            <span data-suisou-text="fs-12" data-suisou="note">{data.box.description}</span>
+          {/if}
+        </span>
       </a>
     {:else}
-      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom px-4 py-3" class="box owner">
+      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom px-4 py-3" class="owner">
         <span data-suisou-item="media-figure">
           {#if data.ownerAvatar}
             <img src={data.ownerAvatar} alt="" data-suisou-item="circle large" />
@@ -177,9 +179,6 @@
   .card {
     overflow: hidden;
   }
-  .box {
-    color: var(--suisou-color-text);
-  }
   .owner {
     align-items: center;
   }
@@ -190,9 +189,6 @@
   .handle {
     flex: 0 1000 auto;
     min-width: 0;
-  }
-  .box:hover {
-    background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
   }
   .inner,
   .reply {
