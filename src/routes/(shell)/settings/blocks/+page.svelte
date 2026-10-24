@@ -39,8 +39,8 @@
   <h1 data-suisou-text="fs-24 fw-700">ブロック中の人</h1>
 
   {#if list.length === 0}
-    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash p-4" class="empty">
-      <Ban data-suisou-text="fs-20" data-suisou="note" class="big" />
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash p-4">
+      <Ban data-suisou-text="fs-32" data-suisou="note" />
       <p data-suisou-text="fs-16 fw-700">ブロック中の人はいません</p>
     </div>
   {:else}
@@ -68,10 +68,3 @@
     </div>
   {/if}
 </div>
-
-<style>
-  .empty :global(.big) {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-</style>

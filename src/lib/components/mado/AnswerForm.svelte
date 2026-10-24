@@ -95,8 +95,8 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success p-4" role="status" class="done">
-    <CheckCircle2 class="big" />
+  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success p-4" role="status">
+    <CheckCircle2 data-suisou-text="fs-32" data-suisou="success" />
     <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="fs-16 fw-700">返信を投稿しました</p>
       {#if crosspostFailed}
@@ -163,10 +163,5 @@
   .check {
     cursor: pointer;
     user-select: none;
-  }
-  .done :global(.big) {
-    width: 2.25rem;
-    height: 2.25rem;
-    color: var(--suisou-color-success);
   }
 </style>

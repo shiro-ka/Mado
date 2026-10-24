@@ -116,7 +116,7 @@
 
   {#if !loggedIn}
     <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="w-full p-4" class="cta-box">
-      <Send data-suisou-text="fs-20" data-suisou="accent" class="cta-icon" />
+      <Send data-suisou-text="fs-32" data-suisou="accent" />
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">今すぐ始めよう</h2>
       <p data-suisou-text="fs-16" data-suisou="note">Blueskyアカウントがあれば、無料で窓を開けます。</p>
       <LoginButton label="窓を開く" />
@@ -155,9 +155,5 @@
     max-width: 36rem;
     margin-inline: auto;
     border-color: var(--suisou-color-accent);
-  }
-  .cta-box :global(.cta-icon) {
-    width: 2.25rem;
-    height: 2.25rem;
   }
 </style>

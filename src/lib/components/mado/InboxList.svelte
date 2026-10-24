@@ -105,8 +105,8 @@
   </div>
 
   {#if filtered.length === 0}
-    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash p-4" class="empty">
-      <Inbox data-suisou-text="fs-20" data-suisou="note" class="big" />
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash p-4">
+      <Inbox data-suisou-text="fs-32" data-suisou="note" />
       <div data-suisou-layout="stack gap-1 center">
         {#if tab === "all"}
           <p data-suisou-text="fs-16 fw-700">声がありません</p>
@@ -146,10 +146,3 @@
     </div>
   {/if}
 {/await}
-
-<style>
-  .empty :global(.big) {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-</style>
