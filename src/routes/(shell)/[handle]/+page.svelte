@@ -17,7 +17,7 @@
   <div data-suisou-layout="row between">
     <div data-suisou-layout="row">
       <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
-      <h2 data-suisou-text="fs-14 fw-700" class="sub">窓{count}</h2>
+      <h2 data-suisou-text="fs-14 fw-700" data-suisou="note">窓{count}</h2>
     </div>
     <Button href={`/@${data.cleanHandle}/new`} variant="default">
       {#snippet leftIcon()}<Plus />{/snippet}
@@ -42,14 +42,14 @@
     {/if}
     <div data-suisou-item="media-content">
       <h1 data-suisou-text="fs-20 fw-700">{displayName}</h1>
-      <p data-suisou-text="fs-14" class="sub">@{profile?.handle ?? data.cleanHandle}</p>
+      <p data-suisou-text="fs-14" data-suisou="note">@{profile?.handle ?? data.cleanHandle}</p>
       {#if profile?.description}
-        <p data-suisou-text="fs-14" class="sub doc">{profile.description}</p>
+        <p data-suisou-text="fs-14" data-suisou="note" class="doc">{profile.description}</p>
       {/if}
       <a
         data-suisou-layout="row"
         data-suisou-text="fs-12 link"
-        class="accent"
+        data-suisou="accent"
         href={`https://bsky.app/profile/${profile?.handle ?? data.cleanHandle}`}
         target="_blank"
         rel="noopener noreferrer"
@@ -62,7 +62,7 @@
 {/snippet}
 
 {#if data.isOwner}
-  <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+  <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
     {#await data.detail}
       <Skeleton height="7rem" />
       {@render listHead("")}
@@ -77,8 +77,8 @@
       {@render listHead(` (${detail.openBoxes.length})`)}
 
       {#if detail.openBoxes.length === 0}
-        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
-          <p data-suisou-text="fs-14" class="sub">まだ窓がありません</p>
+        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4">
+          <p data-suisou-text="fs-14" data-suisou="note">まだ窓がありません</p>
           <Button href={`/@${data.cleanHandle}/new`} variant="default">
             {#snippet leftIcon()}<Plus />{/snippet}
             最初の窓を開ける
@@ -98,17 +98,17 @@
     {/await}
   </div>
 {:else}
-  <div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+  <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
     {#await data.detail}
       <Skeleton height="16rem" />
     {:then detail}
       {@render profileCard(detail.profile)}
 
       {#if detail.box}
-        <div data-suisou-layout="stack gap-3" class="others">
+        <div data-suisou-layout="stack gap-3" data-suisou="mt-4">
           <div data-suisou-layout="row">
             <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
-            <h2 data-suisou-text="fs-14 fw-700" class="sub">メインの窓</h2>
+            <h2 data-suisou-text="fs-14 fw-700" data-suisou="note">メインの窓</h2>
           </div>
           <BoxSendView
             embedded
@@ -120,16 +120,16 @@
           />
         </div>
       {:else if detail.subBoxes.length === 0}
-        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
-          <p data-suisou-text="fs-14" class="sub">現在受付中の窓はありません</p>
+        <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4">
+          <p data-suisou-text="fs-14" data-suisou="note">現在受付中の窓はありません</p>
         </div>
       {/if}
 
       {#if detail.subBoxes.length > 0}
-        <div data-suisou-layout="stack gap-3" class="others">
+        <div data-suisou-layout="stack gap-3" data-suisou="mt-4">
           <div data-suisou-layout="row">
             <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
-            <h2 data-suisou-text="fs-14 fw-700" class="sub">
+            <h2 data-suisou-text="fs-14 fw-700" data-suisou="note">
               {detail.box ? "その他の窓" : "窓"} ({detail.subBoxes.length})
             </h2>
           </div>
@@ -143,21 +143,3 @@
     {/await}
   </div>
 {/if}
-
-<style>
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .others {
-    margin-block-start: var(--suisou-space-4);
-  }
-  .empty {
-    padding: var(--suisou-space-4);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
-  .accent {
-    color: var(--suisou-color-accent);
-  }
-</style>

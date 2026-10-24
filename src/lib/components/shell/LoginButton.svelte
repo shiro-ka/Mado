@@ -53,7 +53,7 @@
 </script>
 
 {#if look === "link"}
-  <button type="button" data-suisou-text="link fs-14" class="plain" onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</button>
+  <button type="button" data-suisou-text="link fs-14" data-suisou="p-0 note" class="plain" onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</button>
 {:else if look === "button"}
   <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</Button>
 {:else}
@@ -63,7 +63,7 @@
     id={dialogId}
     closedby={loading === "handle" ? "none" : "any"}
     data-suisou-tray
-    class="dialog"
+    data-suisou="p-4" class="dialog"
   >
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3">
       <p data-suisou-text="fs-14">Bluesky 以外のサーバーにアカウントがある場合は、ハンドルを入力してください。</p>
@@ -97,16 +97,13 @@
 <style>
   .plain {
     border: 0;
-    padding: 0;
     background: none;
     font: inherit;
-    color: var(--suisou-color-text-note);
     cursor: pointer;
   }
   .dialog {
     margin: auto;
     width: min(calc(100vw - 2 * var(--suisou-space-3)), 28rem);
-    padding: var(--suisou-space-4);
     text-align: start;
   }
 </style>

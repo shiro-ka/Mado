@@ -60,7 +60,7 @@
   {#if error}
     <p data-suisou-text="fs-12" class="error">{error}</p>
   {:else if helper}
-    <p data-suisou-text="fs-12" class="helper">{helper}</p>
+    <p data-suisou-text="fs-12" data-suisou="note">{helper}</p>
   {/if}
 </div>
 
@@ -77,9 +77,6 @@
   .count.over,
   .error {
     color: var(--suisou-color-error);
-  }
-  .helper {
-    color: var(--suisou-color-text-note);
   }
   textarea {
     min-height: 120px;

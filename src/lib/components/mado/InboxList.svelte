@@ -105,12 +105,12 @@
   </div>
 
   {#if filtered.length === 0}
-    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash" class="empty">
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash p-4" class="empty">
       <Inbox data-suisou-text="fs-20" data-suisou="note" class="big" />
       <div data-suisou-layout="stack gap-1 center">
         {#if tab === "all"}
           <p data-suisou-text="fs-16 fw-700">声がありません</p>
-          <p data-suisou-text="fs-14" class="sub">窓のURLをシェアして声を募りましょう</p>
+          <p data-suisou-text="fs-14" data-suisou="note">窓のURLをシェアして声を募りましょう</p>
         {:else}
           <p data-suisou-text="fs-16 fw-700">声が届くのを待っています...</p>
         {/if}
@@ -120,8 +120,8 @@
     <div data-suisou-layout="stack gap-3" class="items">
       {#each filtered as question (question.rkey)}
         {#if tab === "new" && handled.get(question.rkey) === "through"}
-          <div data-suisou-tray data-suisou-layout="row between" class="acted">
-            <span data-suisou-text="fs-14" class="sub">既読にしました</span>
+          <div data-suisou-tray data-suisou-layout="row between" data-suisou="py-1">
+            <span data-suisou-text="fs-14" data-suisou="note">既読にしました</span>
             <Button variant="ghost" loading={undoing === question.rkey} onclick={() => undoThrough(question.rkey)}>取り消す</Button>
           </div>
         {:else}
@@ -150,15 +150,6 @@
 <style>
   .ghost {
     visibility: hidden;
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
-  .acted {
-    padding-block: var(--suisou-space-1);
-  }
-  .empty {
-    padding: var(--suisou-space-4);
   }
   .empty :global(.big) {
     width: 2.25rem;

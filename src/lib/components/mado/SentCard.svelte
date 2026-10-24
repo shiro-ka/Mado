@@ -29,14 +29,14 @@
     <div data-suisou-item="media" class="mine">
       <span data-suisou-item="media-figure">{@render circle(selfAvatar, "small")}</span>
       <span data-suisou-item="media-content">
-        <span data-suisou-text="fs-14 clamp-2" class="text sub">{truncate(item.body, 120)}</span>
+        <span data-suisou-text="fs-14 clamp-2" data-suisou="note" class="text">{truncate(item.body, 120)}</span>
       </span>
     </div>
     {#if hiddenAnswers > 0}
-      <span data-suisou-text="fs-12" class="more sub">ほか {hiddenAnswers} 件の返信</span>
+      <span data-suisou-text="fs-12" data-suisou="mt-2 note">ほか {hiddenAnswers} 件の返信</span>
     {/if}
     {#each shownAnswers as a}
-      <div data-suisou-item="media" class="answer">
+      <div data-suisou-item="media" data-suisou="mt-2">
         <span data-suisou-item="media-figure">{@render circle(item.ownerAvatar, "")}</span>
         <div data-suisou-item="media-content">
           <span data-suisou-text="fs-14 fw-500 clamp-1">{name ?? "窓の持ち主"}</span>
@@ -47,48 +47,41 @@
   </div>
 {/snippet}
 
-<div data-suisou-tray={item.href ? "link" : ""} data-suisou-layout="stack gap-0" class="card">
-  <div data-suisou="bd-bottom" data-suisou-layout="row between" class="box">
+<div data-suisou-tray={item.href ? "link" : ""} data-suisou-layout="stack gap-0" data-suisou="p-0">
+  <div data-suisou="bd-bottom py-1 px-2" data-suisou-layout="row between">
     <span data-suisou-layout="row gap-1 grow" class="who">
       {@render circle(item.ownerAvatar, "small")}
       {#if name}
         <span data-suisou-text="fs-12 fw-500 clamp-1" class="name">{name}</span>
       {:else}
-        <span data-suisou-text="fs-12" class="sub">窓の持ち主不明</span>
+        <span data-suisou-text="fs-12" data-suisou="note">窓の持ち主不明</span>
       {/if}
       {#if item.boxTitle}
-        <span data-suisou-text="fs-12" class="sub">·</span>
-        <span data-suisou-text="fs-12 clamp-1" class="sub title">{item.boxTitle}</span>
+        <span data-suisou-text="fs-12" data-suisou="note">·</span>
+        <span data-suisou-text="fs-12 clamp-1" data-suisou="note" class="title">{item.boxTitle}</span>
       {/if}
     </span>
     <span data-suisou-layout="row gap-1">
       {#if showNewTag}
         <span data-suisou-item="tag" data-suisou="accent">新しい返信</span>
       {/if}
-      <span data-suisou-text="fs-12" class="sub">{formatDate(item.sentAt)}</span>
+      <span data-suisou-text="fs-12" data-suisou="note">{formatDate(item.sentAt)}</span>
     </span>
   </div>
   {#if item.href}
-    <a href={item.href} data-suisou-item="media" class="main">
+    <a href={item.href} data-suisou-item="media" data-suisou="p-2" class="main">
       {@render content()}
       <span data-suisou-item="media-tail" class="go"><ChevronRight data-suisou="note" /></span>
     </a>
   {:else}
-    <div data-suisou-item="media" class="main">
+    <div data-suisou-item="media" data-suisou="p-2" class="main">
       {@render content()}
     </div>
   {/if}
 </div>
 
 <style>
-  .card {
-    padding: 0;
-  }
-  .box {
-    padding: var(--suisou-space-1) var(--suisou-space-2);
-  }
   .main {
-    padding: var(--suisou-space-2);
     color: var(--suisou-color-text);
     text-decoration: none;
   }
@@ -111,14 +104,5 @@
   }
   .mine {
     gap: var(--suisou-space-2);
-  }
-  .more {
-    margin-block-start: var(--suisou-space-2);
-  }
-  .answer {
-    margin-block-start: var(--suisou-space-2);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
   }
 </style>

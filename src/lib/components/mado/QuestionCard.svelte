@@ -64,11 +64,11 @@
   }
 </script>
 
-<div data-suisou-tray="link" data-suisou-layout="stack gap-0" class="card">
+<div data-suisou-tray="link" data-suisou-layout="stack gap-0" data-suisou="p-0" class="card">
   {#if question.boxTitle}
-    <span data-suisou="bd-bottom" data-suisou-text="fs-12 clamp-1" class="box sub">{question.boxTitle}</span>
+    <span data-suisou="bd-bottom py-1 px-2 note" data-suisou-text="fs-12 clamp-1">{question.boxTitle}</span>
   {/if}
-  <a {href} data-suisou-item="media" class="main">
+  <a {href} data-suisou-item="media" data-suisou="p-2" class="main">
     <span data-suisou-item="media-figure">
       {#if question.senderAvatar}
         <img src={question.senderAvatar} alt="" data-suisou-item="circle" />
@@ -83,25 +83,25 @@
           {#if name}
             <span data-suisou-text="fs-14 fw-500 clamp-1" class="name">{name}</span>
             {#if question.senderHandle && question.senderDisplayName}
-              <span data-suisou-text="fs-12 clamp-1" class="sub handle">@{question.senderHandle}</span>
+              <span data-suisou-text="fs-12 clamp-1" data-suisou="note" class="handle">@{question.senderHandle}</span>
             {/if}
           {:else}
-            <span data-suisou-text="fs-14" class="sub">送り主不明</span>
+            <span data-suisou-text="fs-14" data-suisou="note">送り主不明</span>
           {/if}
         </span>
         <span data-suisou-layout="row gap-1">
           {#if showNewTag}
             <span data-suisou-item="tag" data-suisou="accent">新しい声</span>
           {/if}
-          <span data-suisou-text="fs-12" class="sub">{formatDate(question.createdAt)}</span>
+          <span data-suisou-text="fs-12" data-suisou="note">{formatDate(question.createdAt)}</span>
         </span>
       </span>
       <span data-suisou-text="clamp-2" class="text">{truncate(question.body, 120)}</span>
       {#if hiddenAnswers > 0}
-        <span data-suisou-text="fs-12" class="more sub">ほか {hiddenAnswers} 件の返信</span>
+        <span data-suisou-text="fs-12" data-suisou="mt-2 note">ほか {hiddenAnswers} 件の返信</span>
       {/if}
       {#each shownAnswers as a}
-        <div data-suisou-item="media" class="answer">
+        <div data-suisou-item="media" data-suisou="mt-2" class="answer">
           <span data-suisou-item="media-figure">
             {#if ownerAvatar}
               <img src={ownerAvatar} alt="" data-suisou-item="circle small" />
@@ -163,11 +163,11 @@
   </div>
 
   {#if failed}
-    <p data-suisou-text="fs-12 end" class="error">{failed}</p>
+    <p data-suisou-text="fs-12 end" data-suisou="px-2 error">{failed}</p>
   {/if}
 
   {#if replying}
-    <div data-suisou="bd-top" class="reply">
+    <div data-suisou="bd-top p-2" class="reply">
       <AnswerForm
         koeUri={question.uri}
         questionBody={question.body}
@@ -181,16 +181,11 @@
 <style>
   .card {
     position: relative;
-    padding: 0;
   }
   .card:has(.reply:hover) {
     background-image: none;
   }
-  .box {
-    padding: var(--suisou-space-1) var(--suisou-space-2);
-  }
   .main {
-    padding: var(--suisou-space-2);
     color: var(--suisou-color-text);
     text-decoration: none;
   }
@@ -219,9 +214,6 @@
     width: var(--suisou-size-icon);
     height: var(--suisou-size-icon);
   }
-  .reply {
-    padding: var(--suisou-space-2);
-  }
   .who {
     min-width: 0;
   }
@@ -236,18 +228,7 @@
   .text {
     white-space: pre-line;
   }
-  .more {
-    margin-block-start: var(--suisou-space-2);
-  }
   .answer {
-    margin-block-start: var(--suisou-space-2);
     gap: var(--suisou-space-2);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
-  .error {
-    padding-inline: var(--suisou-space-2);
-    color: var(--suisou-color-error);
   }
 </style>

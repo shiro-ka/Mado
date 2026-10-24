@@ -29,7 +29,7 @@
   <title>ブロック中の人 | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div>
     <Button href="/settings" variant="ghost">
       {#snippet leftIcon()}<ArrowLeft />{/snippet}
@@ -39,7 +39,7 @@
   <h1 data-suisou-text="fs-24 fw-700">ブロック中の人</h1>
 
   {#if list.length === 0}
-    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash" class="empty">
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash p-4" class="empty">
       <Ban data-suisou-text="fs-20" data-suisou="note" class="big" />
       <p data-suisou-text="fs-16 fw-700">ブロック中の人はいません</p>
     </div>
@@ -57,7 +57,7 @@
           <span data-suisou-item="media-content">
             <span data-suisou-text="fs-14 fw-500 clamp-1">{b.displayName || b.handle || b.did}</span>
             {#if b.handle && b.displayName}
-              <span data-suisou-text="fs-12 clamp-1" class="sub">@{b.handle}</span>
+              <span data-suisou-text="fs-12 clamp-1" data-suisou="note">@{b.handle}</span>
             {/if}
           </span>
           <span data-suisou-item="media-tail">
@@ -70,15 +70,6 @@
 </div>
 
 <style>
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
-  .empty {
-    padding: var(--suisou-space-4);
-  }
   .empty :global(.big) {
     width: 2.25rem;
     height: 2.25rem;

@@ -24,7 +24,7 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   {#if data.inbox}
     <div>
       <Button href={`/@${data.cleanHandle}`} variant="ghost">
@@ -59,9 +59,6 @@
 </div>
 
 <style>
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
   .title {
     flex: 0 1 auto;
     min-width: 0;

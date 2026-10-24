@@ -45,14 +45,14 @@
   ];
 </script>
 
-<div data-suisou-layout="stack" data-suisou="container-m" class="landing">
-  <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" class="hero">
+<div data-suisou-layout="stack" data-suisou="container-m py-4 px-3" class="landing">
+  <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="w-full" class="hero">
     <h1 data-suisou-text="fs-28 s:fs-32 fw-700" class="title">
       窓越しに、<br />
-      <span class="accent">想いを届けよう</span>
+      <span data-suisou="accent">想いを届けよう</span>
     </h1>
 
-    <p data-suisou-text="fs-16 s:fs-20" class="lead doc">
+    <p data-suisou-text="fs-16 s:fs-20" data-suisou="note" class="lead doc">
       Madoは、Blueskyアカウントを使った半匿名の窓です。
       送り主は窓のオーナーだけに届きます。
     </p>
@@ -69,7 +69,7 @@
       {/if}
     </div>
 
-    <p data-suisou-text="fs-12" class="sub doc">
+    <p data-suisou-text="fs-12" data-suisou="note" class="doc">
       このサービスは<strong>完全匿名ではありません</strong>。
       声を送信するにはBlueskyアカウントでのログインが必要です。
     </p>
@@ -78,7 +78,7 @@
   <div data-suisou-layout="stack gap-4">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">Madoの特徴</h2>
-      <p data-suisou-text="fs-14 s:fs-16" class="sub">安全で信頼できる窓を実現する2つの柱</p>
+      <p data-suisou-text="fs-14 s:fs-16" data-suisou="note">安全で信頼できる窓を実現する2つの柱</p>
     </div>
 
     <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))">
@@ -86,16 +86,16 @@
         <div data-suisou-tray data-suisou-layout="stack">
           <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
           <h3 data-suisou-text="fs-16 fw-700">{feat.title}</h3>
-          <p data-suisou-text="fs-14" class="sub doc">{feat.description}</p>
+          <p data-suisou-text="fs-14" data-suisou="note" class="doc">{feat.description}</p>
         </div>
       {/each}
     </div>
   </div>
 
-  <div id="how-it-works" data-suisou-tray data-suisou-layout="stack gap-4" class="pad">
+  <div id="how-it-works" data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="p-4">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">使い方</h2>
-      <p data-suisou-text="fs-14 s:fs-16" class="sub">3ステップで始められます</p>
+      <p data-suisou-text="fs-14 s:fs-16" data-suisou="note">3ステップで始められます</p>
     </div>
 
     <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))">
@@ -103,11 +103,11 @@
         <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
           <span class="tile">
             <span data-suisou-item="square"><step.icon data-suisou-text="fs-20" data-suisou={step.tone} /></span>
-            <span data-suisou-text="fs-12 fw-700" class="num">{step.step}</span>
+            <span data-suisou-text="fs-12 fw-700" data-suisou="accent" class="num">{step.step}</span>
           </span>
           <div data-suisou-layout="stack gap-1 center">
             <h3 data-suisou-text="fs-16 fw-700">{step.title}</h3>
-            <p data-suisou-text="fs-14" class="sub doc">{step.description}</p>
+            <p data-suisou-text="fs-14" data-suisou="note" class="doc">{step.description}</p>
           </div>
         </div>
       {/each}
@@ -115,10 +115,10 @@
   </div>
 
   {#if !loggedIn}
-    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" class="cta-box">
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="w-full p-4" class="cta-box">
       <Send data-suisou-text="fs-20" data-suisou="accent" class="cta-icon" />
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">今すぐ始めよう</h2>
-      <p data-suisou-text="fs-16" class="sub">Blueskyアカウントがあれば、無料で窓を開けます。</p>
+      <p data-suisou-text="fs-16" data-suisou="note">Blueskyアカウントがあれば、無料で窓を開けます。</p>
       <LoginButton label="窓を開く" />
     </div>
   {/if}
@@ -127,28 +127,16 @@
 <style>
   .landing {
     gap: var(--suisou-space-5);
-    padding: var(--suisou-space-4) var(--suisou-space-3);
   }
   .hero {
-    width: 100%;
     max-width: 48rem;
     margin-inline: auto;
   }
   .title {
     letter-spacing: -0.01em;
   }
-  .accent {
-    color: var(--suisou-color-accent);
-  }
   .lead {
     max-width: 36rem;
-    color: var(--suisou-color-text-note);
-  }
-  .pad {
-    padding: var(--suisou-space-4);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
   }
   .tile {
     position: relative;
@@ -165,14 +153,11 @@
     border-radius: var(--suisou-radius-pill);
     background: var(--suisou-color-bg);
     border: 1px solid var(--suisou-color-accent);
-    color: var(--suisou-color-accent);
   }
 
   .cta-box {
-    width: 100%;
     max-width: 36rem;
     margin-inline: auto;
-    padding: var(--suisou-space-4);
     border-color: var(--suisou-color-accent);
   }
   .cta-box :global(.cta-icon) {

@@ -95,12 +95,12 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success" role="status" class="done">
+  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success p-4" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="fs-16 fw-700">返信を投稿しました</p>
       {#if crosspostFailed}
-        <p data-suisou-layout="row" data-suisou-text="fs-14" class="warn">
+        <p data-suisou-layout="row" data-suisou-text="fs-14" data-suisou="warning">
           <AlertCircle />
           Blueskyへの転載は失敗しました
         </p>
@@ -145,7 +145,7 @@
           bind:checked={crosspost}
           disabled={formState === "submitting"}
         />
-        <span data-suisou-text="fs-12" class="sub">Bskyにもポスト</span>
+        <span data-suisou-text="fs-12" data-suisou="note">Bskyにもポスト</span>
       </label>
       <Button
         type="submit"
@@ -160,15 +160,6 @@
 {/if}
 
 <style>
-  .done {
-    padding: var(--suisou-space-4);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
-  .warn {
-    color: var(--suisou-color-warning);
-  }
   .check {
     cursor: pointer;
     user-select: none;

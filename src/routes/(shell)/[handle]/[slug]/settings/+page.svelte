@@ -129,7 +129,7 @@
   <title>窓の設定 - {data.box.title} | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div>
     <Button href={`/@${data.cleanHandle}/${data.box.slug}`} variant="ghost">
       {#snippet leftIcon()}<ArrowLeft />{/snippet}
@@ -138,7 +138,7 @@
   </div>
   <h1 data-suisou-text="fs-24 fw-700">窓の設定</h1>
 
-  <div data-suisou-tray class="card">
+  <div data-suisou-tray data-suisou="p-4">
     <form onsubmit={handleSave} data-suisou-layout="stack gap-4" class="form">
       <Input
         label="窓の名前"
@@ -164,15 +164,15 @@
           maxlength={30}
           disabled={isBusy}
         />
-        <p data-suisou-text="fs-12" class="preview">
-          /@{data.cleanHandle}/<span class="accent">{slug.trim().toLowerCase() || data.box.slug}</span>
+        <p data-suisou-text="fs-12" data-suisou="note" class="preview">
+          /@{data.cleanHandle}/<span data-suisou="accent">{slug.trim().toLowerCase() || data.box.slug}</span>
         </p>
       </div>
 
       <label data-suisou-layout="row between">
         <span data-suisou-layout="stack gap-0" class="label">
           <span data-suisou-text="fs-14 fw-500">声の受付</span>
-          <span data-suisou-text="fs-12" class="sub">オフにすると新しい声を受け付けません</span>
+          <span data-suisou-text="fs-12" data-suisou="note">オフにすると新しい声を受け付けません</span>
         </span>
         <Toggle bind:checked={isOpen} disabled={isBusy} />
       </label>
@@ -186,7 +186,7 @@
 
       <div data-suisou-layout="row end">
         {#if saved}
-          <span data-suisou-text="fs-14" role="status" class="saved">保存しました</span>
+          <span data-suisou-text="fs-14" role="status" data-suisou="success">保存しました</span>
         {/if}
         <Button
           type="submit"
@@ -203,7 +203,7 @@
   <div data-suisou-tray data-suisou-item="media" class="strip">
     <Link data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
     <div data-suisou-item="media-content">
-      <p data-suisou-text="fs-12" class="sub">公開URL</p>
+      <p data-suisou-text="fs-12" data-suisou="note">公開URL</p>
       <p data-suisou-text="fs-14" class="url">{publicUrlDisplay}</p>
     </div>
     <div data-suisou-item="media-tail">
@@ -225,7 +225,7 @@
     <Pin data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
     <div data-suisou-item="media-content">
       <p data-suisou-text="fs-14 fw-500">メインの窓</p>
-      <p data-suisou-text="fs-12" class="sub">
+      <p data-suisou-text="fs-12" data-suisou="note">
         {data.isMain
           ? "この窓が /@ハンドル の先頭に表示され、訪問者の送信欄になります"
           : "メインにすると /@ハンドル の先頭に表示されます"}
@@ -251,7 +251,7 @@
   closedby={formState === "deleting" ? "none" : "any"}
   data-suisou-tray
   data-suisou-layout="stack gap-3"
-  class="dialog"
+  data-suisou="p-4" class="dialog"
 >
   <p data-suisou-text="fs-14">
     窓を削除すると、届いた声とあなたの返信も消えます。<br />この操作は元に戻せませんが、削除しますか？
@@ -277,16 +277,6 @@
   .dialog {
     margin: auto;
     width: min(calc(100vw - 2 * var(--suisou-space-3)), 28rem);
-    padding: var(--suisou-space-4);
-  }
-  .saved {
-    color: var(--suisou-color-success);
-  }
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .card {
-    padding: var(--suisou-space-4);
   }
   .strip {
     align-items: center;
@@ -295,14 +285,5 @@
   .url {
     font-family: var(--suisou-font-mono);
     word-break: break-all;
-  }
-  .preview {
-    color: var(--suisou-color-text-note);
-  }
-  .accent {
-    color: var(--suisou-color-accent);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
   }
 </style>

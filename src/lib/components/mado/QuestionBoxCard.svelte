@@ -23,10 +23,10 @@
     <div data-suisou-item="media-content">
       <h3 data-suisou-text="fs-14 fw-700" class="title">{box.title}</h3>
       {#if box.description}
-        <p data-suisou-text="fs-12 clamp-2" class="desc">{box.description}</p>
+        <p data-suisou-text="fs-12 clamp-2" data-suisou="note">{box.description}</p>
       {/if}
     </div>
-    <div data-suisou-item="media-tail" class="chev">
+    <div data-suisou-item="media-tail" data-suisou="note" class="chev">
       <ChevronRight data-suisou-text="fs-20" />
     </div>
   </div>
@@ -42,7 +42,7 @@
       {box.isOpen ? "受付中" : "受付停止"}
     </span>
     {#if questionCount !== undefined}
-      <span data-suisou-text="fs-12" class="count">声 {questionCount}件</span>
+      <span data-suisou-text="fs-12" data-suisou="note" class="count">声 {questionCount}件</span>
     {/if}
   </div>
 </a>
@@ -64,18 +64,9 @@
   .link:hover .title {
     color: var(--suisou-color-accent);
   }
-  .desc {
-    color: var(--suisou-color-text-note);
-  }
-  .chev {
-    color: var(--suisou-color-text-note);
-  }
-  .link:hover .chev {
-    color: var(--suisou-color-text);
-  }
+  .link:hover
 
   .count {
     margin-inline-start: auto;
-    color: var(--suisou-color-text-note);
   }
 </style>

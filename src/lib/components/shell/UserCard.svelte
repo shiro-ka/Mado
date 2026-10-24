@@ -9,7 +9,7 @@
   let { session }: Props = $props();
 </script>
 
-<div data-suisou-layout="stack" class="card">
+<div data-suisou-layout="stack" data-suisou="p-2" class="card">
   <div data-suisou-layout="row">
     {#if session.avatar}
       <img src={session.avatar} alt={session.handle} data-suisou-item="circle" />
@@ -20,7 +20,7 @@
       <p data-suisou-text="fs-14 fw-500 clamp-1" class="ellipsis">
         {session.displayName ?? session.handle}
       </p>
-      <p data-suisou-text="fs-12 clamp-1" class="ellipsis sub">@{session.handle}</p>
+      <p data-suisou-text="fs-12 clamp-1" data-suisou="note" class="ellipsis">@{session.handle}</p>
     </div>
   </div>
   <form action="/api/auth/logout" method="POST">
@@ -34,9 +34,5 @@
 <style>
   .card {
     flex: none;
-    padding: var(--suisou-space-2);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
   }
 </style>

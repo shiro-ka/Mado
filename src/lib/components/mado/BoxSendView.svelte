@@ -35,7 +35,7 @@
     </span>
   </div>
   {#if box.description}
-    <p data-suisou-text="fs-14" class="sub doc">{box.description}</p>
+    <p data-suisou-text="fs-14" data-suisou="note" class="doc">{box.description}</p>
   {/if}
 </div>
 {/snippet}
@@ -44,19 +44,19 @@
   {#if !ownerRegistered}
     <div data-suisou-layout="stack center" data-suisou-text="center">
       <p data-suisou-text="fs-14 fw-700">このユーザーはMadoに登録されていません</p>
-      <p data-suisou-text="fs-12" class="sub">声を送るには、オーナーがMadoにログインしている必要があります。</p>
+      <p data-suisou-text="fs-12" data-suisou="note">声を送るには、オーナーがMadoにログインしている必要があります。</p>
     </div>
   {:else if !box.isOpen}
     <div data-suisou-layout="stack center" data-suisou-text="center">
       <p data-suisou-text="fs-14 fw-700">現在この窓は受付停止中です</p>
-      <p data-suisou-text="fs-12" class="sub">オーナーが受付を再開するまでお待ちください。</p>
+      <p data-suisou-text="fs-12" data-suisou="note">オーナーが受付を再開するまでお待ちください。</p>
     </div>
   {:else if !session}
     <div data-suisou-layout="stack center" data-suisou-text="center">
       <span data-suisou-item="square"><LogIn data-suisou-text="fs-20" data-suisou="accent" /></span>
       <div data-suisou-layout="stack gap-1 center">
         <p data-suisou-text="fs-14 fw-700">声を送るにはログインが必要です</p>
-        <p data-suisou-text="fs-12" class="sub doc">
+        <p data-suisou-text="fs-12" data-suisou="note" class="doc">
           Blueskyアカウントでログインして声を送りましょう。
           送り主はオーナーのみに開示されます。
         </p>
@@ -76,9 +76,9 @@
 {/snippet}
 
 {#if embedded}
-  <div data-suisou-tray data-suisou-layout="stack gap-0" class="panel">
+  <div data-suisou-tray data-suisou-layout="stack gap-0" data-suisou="p-0">
     {@render summary()}
-    <div data-suisou="bd-top" class="notice">
+    <div data-suisou="bd-top p-4">
       {@render sendArea()}
     </div>
   </div>
@@ -86,8 +86,8 @@
   <div data-suisou-layout="stack gap-3" class="view">
     <h1 data-suisou-text="fs-24 fw-700">声を送る</h1>
 
-    <div data-suisou-tray data-suisou-layout="stack gap-0" class="panel">
-      <div data-suisou-item="media" data-suisou="bd-bottom" class="owner">
+    <div data-suisou-tray data-suisou-layout="stack gap-0" data-suisou="p-0">
+      <div data-suisou-item="media" data-suisou="bd-bottom py-3 px-4" class="owner">
         {#if ownerProfile?.avatar}
           <img
             data-suisou-item="circle large media-figure"
@@ -104,7 +104,7 @@
           <a
             data-suisou-layout="row"
             data-suisou-text="fs-12 link"
-            class="accent"
+            data-suisou="accent"
             href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -118,19 +118,15 @@
       {@render summary()}
     </div>
 
-    <div data-suisou-tray class="notice">
+    <div data-suisou-tray data-suisou="p-4">
       {@render sendArea()}
     </div>
   </div>
 {/if}
 
 <style>
-  .panel {
-    padding: 0;
-  }
   .owner {
     align-items: center;
-    padding: var(--suisou-space-3) var(--suisou-space-4);
   }
   .summary {
     padding: var(--suisou-space-3) var(--suisou-space-4) var(--suisou-space-4);
@@ -139,14 +135,5 @@
     flex: 0 1 auto;
     min-width: 0;
     overflow-wrap: anywhere;
-  }
-  .notice {
-    padding: var(--suisou-space-4);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
-  .accent {
-    color: var(--suisou-color-accent);
   }
 </style>

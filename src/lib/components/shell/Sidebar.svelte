@@ -25,13 +25,13 @@
   const currentPath = $derived(page.url.pathname);
 </script>
 
-<div data-suisou-layout="row" class="brandbar">
+<div data-suisou-layout="row" data-suisou="px-3" class="brandbar">
   <a href="/receive" onclick={onNavigate}>
     <Brand size="md" />
   </a>
 </div>
 
-<nav data-suisou-layout="stack grow" class="nav">
+<nav data-suisou-layout="stack grow" data-suisou="p-2" class="nav">
   <div data-suisou-layout="stack">
     {#each navItems as item}
       {@const active = currentPath === item.href || currentPath.startsWith(`${item.href}/`)}
@@ -56,10 +56,8 @@
   .brandbar {
     height: 4rem;
     flex: none;
-    padding-inline: var(--suisou-space-3);
   }
   .nav {
-    padding: var(--suisou-space-2);
     overflow-y: auto;
   }
 </style>

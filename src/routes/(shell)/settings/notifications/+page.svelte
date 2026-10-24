@@ -62,7 +62,7 @@
   <title>通知設定 | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div>
     <Button href="/settings" variant="ghost">
       {#snippet leftIcon()}<ArrowLeft />{/snippet}
@@ -72,19 +72,19 @@
   <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
 
   {#if !data.configured}
-    <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash" class="empty">
+    <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4" class="empty">
       <Bell data-suisou-text="fs-20" data-suisou="note" class="big" />
-      <p data-suisou-text="fs-14" class="sub">
+      <p data-suisou-text="fs-14" data-suisou="note">
         DM通知は現在準備中です。もうしばらくお待ちください。
       </p>
     </div>
   {:else}
     <div data-suisou-tray data-suisou="p-0" class="card">
-      <label data-suisou-item="media" class="row">
+      <label data-suisou-item="media" data-suisou="p-3">
         <Bell data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="accent" />
         <span data-suisou-item="media-content">
           <span data-suisou-text="fs-16 fw-700">新着をDMで受け取る</span>
-          <span data-suisou-text="fs-14" class="sub doc">
+          <span data-suisou-text="fs-14" data-suisou="note" class="doc">
             Mado公式（@{data.official?.handle}）から、新しい声が届いたときにDMでお知らせします。
           </span>
         </span>
@@ -98,17 +98,17 @@
       </label>
 
       {#if toggleError}
-        <p data-suisou-layout="row" data-suisou-text="fs-12" class="err row" role="alert">
+        <p data-suisou-layout="row" data-suisou-text="fs-12" data-suisou="error p-3" role="alert">
           <AlertCircle data-suisou-text="fs-16" />
           設定の保存に失敗しました。時間をおいて再試行してください。
         </p>
       {/if}
 
       {#if !followed}
-        <div data-suisou-layout="stack" data-suisou="bd-top" class="row foot">
+        <div data-suisou-layout="stack" data-suisou="bd-top p-3" class="foot">
           <div data-suisou-item="media">
             <AlertCircle data-suisou-item="media-figure" data-suisou-text="fs-20" data-suisou="note" />
-            <p data-suisou-item="media-content" data-suisou-text="fs-14" class="sub doc">
+            <p data-suisou-item="media-content" data-suisou-text="fs-14" data-suisou="note" class="doc">
               DMで通知を受け取るには、公式アカウントのフォローが必要です。
             </p>
           </div>
@@ -120,7 +120,7 @@
             <a
               data-suisou-layout="row"
               data-suisou-text="fs-14 link"
-              class="sub"
+              data-suisou="note"
               href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -130,19 +130,19 @@
             </a>
           </div>
           {#if followError}
-            <p data-suisou-layout="row" data-suisou-text="fs-12" class="err" role="alert">
+            <p data-suisou-layout="row" data-suisou-text="fs-12" data-suisou="error" role="alert">
               <AlertCircle data-suisou-text="fs-16" />
               フォローに失敗しました。時間をおいて再試行してください。
             </p>
           {/if}
         </div>
       {:else}
-        <div data-suisou-layout="row" data-suisou-text="fs-14" data-suisou="bd-top" class="row foot sub">
+        <div data-suisou-layout="row" data-suisou-text="fs-14" data-suisou="bd-top p-3 note" class="foot">
           <Check data-suisou-text="fs-16" data-suisou="success" />
           {#if enabled}
             <span>
               新着はMado公式からDMで届きます。
-              <span class="sub">（公式のフォローを外すと届かなくなります）</span>
+              <span data-suisou="note">（公式のフォローを外すと届かなくなります）</span>
             </span>
           {:else}
             <span>公式アカウントをフォロー中です。上のスイッチで通知をONにできます。</span>
@@ -154,25 +154,9 @@
 </div>
 
 <style>
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
-  .empty {
-    padding: var(--suisou-space-4);
-  }
   .empty :global(.big) {
     width: 2rem;
     height: 2rem;
   }
 
-  .row {
-    padding: var(--suisou-space-3);
-  }
-
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
-  .err {
-    color: var(--suisou-color-error);
-  }
 </style>

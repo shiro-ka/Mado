@@ -52,11 +52,11 @@
 </script>
 
 {#if formState === "success"}
-  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success" role="status" class="done">
+  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success p-4" role="status" class="done">
     <CheckCircle2 class="big" />
     <div data-suisou-layout="stack gap-1 center">
       <p data-suisou-text="fs-16 fw-700">声を送信しました！</p>
-      <p data-suisou-text="fs-14" class="sub">相手に届くまでしばらくお待ちください。</p>
+      <p data-suisou-text="fs-14" data-suisou="note">相手に届くまでしばらくお待ちください。</p>
     </div>
     <Button variant="ghost" onclick={() => (formState = "idle")}>別の声を送る</Button>
   </div>
@@ -95,12 +95,6 @@
 {/if}
 
 <style>
-  .done {
-    padding: var(--suisou-space-4);
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
-  }
   .done :global(.big) {
     width: 2.5rem;
     height: 2.5rem;

@@ -38,7 +38,7 @@
   <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div>
     <Button variant="ghost" href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
       {#snippet leftIcon()}<ArrowLeft />{/snippet}
@@ -46,16 +46,16 @@
     </Button>
   </div>
 
-  <div data-suisou-tray data-suisou-layout="stack gap-0" class="card">
+  <div data-suisou-tray data-suisou-layout="stack gap-0" data-suisou="p-0" class="card">
     {#if data.isOwner}
-      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-layout="stack gap-0" data-suisou="bd-bottom" class="box">
+      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-layout="stack gap-0" data-suisou="bd-bottom py-2 px-4" class="box">
         <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
         {#if data.box.description}
-          <span data-suisou-text="fs-12" class="sub">{data.box.description}</span>
+          <span data-suisou-text="fs-12" data-suisou="note">{data.box.description}</span>
         {/if}
       </a>
     {:else}
-      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom" class="box owner">
+      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom px-4 py-3" class="box owner">
         <span data-suisou-item="media-figure">
           {#if data.ownerAvatar}
             <img src={data.ownerAvatar} alt="" data-suisou-item="circle large" />
@@ -66,11 +66,11 @@
         <span data-suisou-item="media-content">
           <span data-suisou-layout="row gap-1">
             <span data-suisou-text="fs-16 fw-700 clamp-1" class="name">{data.ownerName}</span>
-            <span data-suisou-text="fs-12 clamp-1" class="sub handle">@{data.cleanHandle}</span>
+            <span data-suisou-text="fs-12 clamp-1" data-suisou="note" class="handle">@{data.cleanHandle}</span>
           </span>
           <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
           {#if data.box.description}
-            <span data-suisou-text="fs-12" class="sub">{data.box.description}</span>
+            <span data-suisou-text="fs-12" data-suisou="note">{data.box.description}</span>
           {/if}
         </span>
       </a>
@@ -98,11 +98,11 @@
               <p data-suisou-text="fs-14 fw-500 clamp-1">
                 {data.senderProfile.displayName ?? data.senderProfile.handle}
               </p>
-              <p data-suisou-text="fs-12 clamp-1" class="sub">@{data.senderProfile.handle}</p>
+              <p data-suisou-text="fs-12 clamp-1" data-suisou="note">@{data.senderProfile.handle}</p>
             {:else if data.senderDid}
-              <p data-suisou-text="fs-12" class="did">{data.senderDid}</p>
+              <p data-suisou-text="fs-12" data-suisou="note" class="did">{data.senderDid}</p>
             {:else}
-              <p data-suisou-text="fs-14" class="sub">送信者情報なし</p>
+              <p data-suisou-text="fs-14" data-suisou="note">送信者情報なし</p>
             {/if}
           </div>
           {#if data.senderProfile}
@@ -129,7 +129,7 @@
             {data.question.isRead ? "聞いた声" : "新しい声"}
           </span>
         {/if}
-        <span data-suisou-text="fs-12" class="sub">{formatDateFull(data.question.createdAt)}</span>
+        <span data-suisou-text="fs-12" data-suisou="note">{formatDateFull(data.question.createdAt)}</span>
       </div>
     </div>
   </div>
@@ -141,8 +141,8 @@
         <div data-suisou-tray data-suisou-layout="stack">
           <div data-suisou-layout="row">
             <MessageCircle data-suisou-text="fs-16" data-suisou="accent" />
-            <span data-suisou-text="fs-12 fw-500" class="sub">返信</span>
-            <span data-suisou-text="fs-12" class="date">{formatDateFull(answer.createdAt)}</span>
+            <span data-suisou-text="fs-12 fw-500" data-suisou="note">返信</span>
+            <span data-suisou-text="fs-12" data-suisou="note" class="date">{formatDateFull(answer.createdAt)}</span>
           </div>
           <p data-suisou-text="fs-14" class="body doc">{answer.body}</p>
         </div>
@@ -151,7 +151,7 @@
   {/if}
 
   {#if data.isOwner}
-    <div data-suisou-tray class="card reply">
+    <div data-suisou-tray data-suisou="p-0" class="card reply">
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}
@@ -174,21 +174,15 @@
 </div>
 
 <style>
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
   .card {
-    padding: 0;
     overflow: hidden;
   }
   .box {
-    padding: var(--suisou-space-2) var(--suisou-space-4);
     color: var(--suisou-color-text);
     text-decoration: none;
   }
   .owner {
     align-items: center;
-    padding-block: var(--suisou-space-3);
   }
   .name {
     flex: 0 1 auto;
@@ -213,14 +207,9 @@
   }
   .did {
     font-family: var(--suisou-font-mono);
-    color: var(--suisou-color-text-note);
     word-break: break-all;
-  }
-  .sub {
-    color: var(--suisou-color-text-note);
   }
   .date {
     margin-inline-start: auto;
-    color: var(--suisou-color-text-note);
   }
 </style>

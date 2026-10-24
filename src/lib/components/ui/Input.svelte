@@ -41,20 +41,14 @@
   {/if}
 
   {#if error}
-    <p data-suisou-text="fs-12" class="error">{error}</p>
+    <p data-suisou-text="fs-12" data-suisou="error">{error}</p>
   {:else if helper}
-    <p data-suisou-text="fs-12" class="helper">{helper}</p>
+    <p data-suisou-text="fs-12" data-suisou="note">{helper}</p>
   {/if}
 </div>
 
 <style>
   .label {
     color: var(--suisou-color-text);
-  }
-  .error {
-    color: var(--suisou-color-error);
-  }
-  .helper {
-    color: var(--suisou-color-text-note);
   }
 </style>

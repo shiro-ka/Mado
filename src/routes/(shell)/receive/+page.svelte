@@ -22,7 +22,7 @@
   <title>受信トレイ | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container-s" class="page">
+<div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div data-suisou-layout="row between">
     <h1 data-suisou-text="fs-24 fw-700">受信トレイ</h1>
     <button
@@ -48,9 +48,6 @@
 </div>
 
 <style>
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
   .link {
     text-decoration: none;
   }

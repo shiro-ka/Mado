@@ -28,7 +28,7 @@
     <Sidebar {session} {officialHandle} />
   </aside>
 
-  <div data-suisou-layout="row" data-suisou="bd-bottom" class="topbar">
+  <div data-suisou-layout="row" data-suisou="bd-bottom px-3" class="topbar">
     <button data-suisou-button="icon" popovertarget="nav-drawer" aria-label="メニューを開く">
       <Menu size={20} />
     </button>
@@ -75,7 +75,6 @@
   }
   .topbar {
     grid-area: head;
-    padding-inline: var(--suisou-space-3);
     height: 3.5rem;
     background: var(--suisou-color-panel);
   }

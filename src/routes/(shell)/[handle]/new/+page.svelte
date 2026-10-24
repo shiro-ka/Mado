@@ -57,10 +57,10 @@
   <title>窓を開ける | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-4" data-suisou="container-s" class="page">
+<div data-suisou-layout="stack gap-4" data-suisou="container-s py-4 px-3">
   <h1 data-suisou-text="fs-24 fw-700" class="heading">窓を開ける</h1>
 
-  <div data-suisou-tray class="card">
+  <div data-suisou-tray data-suisou="p-4">
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
       <Input
         label="窓の名前"
@@ -87,8 +87,8 @@
           maxlength={30}
           disabled={formState === "submitting"}
         />
-        <p data-suisou-text="fs-12" class="preview">
-          /@{data.cleanHandle}/<span class="accent">{slugPreview}</span>
+        <p data-suisou-text="fs-12" data-suisou="note" class="preview">
+          /@{data.cleanHandle}/<span data-suisou="accent">{slugPreview}</span>
         </p>
       </div>
 
@@ -116,22 +116,12 @@
 </div>
 
 <style>
-  .page {
-    padding: var(--suisou-space-4) var(--suisou-space-3);
-  }
   .heading {
     cursor: default;
     user-select: none;
   }
-  .card {
-    padding: var(--suisou-space-4);
-  }
   .preview {
     font-family: var(--suisou-font-mono);
-    color: var(--suisou-color-text-note);
     word-break: break-all;
-  }
-  .accent {
-    color: var(--suisou-color-accent);
   }
 </style>

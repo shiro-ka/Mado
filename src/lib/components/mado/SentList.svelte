@@ -52,7 +52,7 @@
   </div>
 
   {#if filtered.length === 0}
-    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash" class="empty">
+    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="bd-dash p-4" class="empty">
       <Send data-suisou-text="fs-20" data-suisou="note" class="big" />
       <div data-suisou-layout="stack gap-1 center">
         {#if tab === "all"}
@@ -74,9 +74,6 @@
 <style>
   .ghost {
     visibility: hidden;
-  }
-  .empty {
-    padding: var(--suisou-space-4);
   }
   .empty :global(.big) {
     width: 2.25rem;
