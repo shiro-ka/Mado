@@ -9,6 +9,7 @@
     Inbox,
   } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
+  import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import LoginButton from "$lib/components/shell/LoginButton.svelte";
 
   let { loggedIn = false }: { loggedIn?: boolean } = $props();
@@ -47,14 +48,15 @@
 
 <div data-suisou-layout="stack gap-5" data-suisou="container-m py-4 px-3">
   <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container-s">
-    <h1 data-suisou-text="fs-28 s:fs-32 fw-700" class="title">
-      窓で、<br />
-      <span data-suisou="accent">声を届けよう</span>
-    </h1>
 
-    <p data-suisou-text="fs-16 s:fs-20" data-suisou="note" class="lead doc">
-      Madoは、Blueskyアカウントを使った半匿名の窓です。
-      送り主は窓のオーナーだけに届きます。
+    <p data-suisou-text="fs-28 s:fs-32 fw-700">
+      <MadoIcon data-suisou-text="fs-32" data-suisou="accent" />
+      Mado
+    </p>
+
+    <p data-suisou-text="pre-line fs-16 s:fs-20" data-suisou="note" class="lead doc">
+      Blueskyを使った半匿名のメッセージ
+      窓から声を
     </p>
 
     <div data-suisou-layout="stack gap-1 center">
@@ -125,9 +127,6 @@
 </div>
 
 <style>
-  .title {
-    letter-spacing: -0.01em;
-  }
   .lead {
     max-width: 36rem;
   }

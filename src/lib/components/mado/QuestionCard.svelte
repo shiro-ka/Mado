@@ -1,6 +1,7 @@
 <script lang="ts">
   import { User, ChevronRight, Archive, ArchiveRestore, EllipsisVertical, Ban, Trash2 } from "lucide-svelte";
   import { page } from "$app/state";
+  import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import { formatDate, truncate } from "$lib/utils.js";
@@ -119,7 +120,7 @@
 
   <div data-suisou-layout="row end gap-1" class="actions">
     <Button variant="ghost" onclick={() => (replying = !replying)} aria-expanded={replying}>
-      {#snippet leftIcon()}<img src="/mado-logo.svg" alt="" class="logo" />{/snippet}
+      {#snippet leftIcon()}<MadoIcon data-suisou="accent" />{/snippet}
       返信する
     </Button>
     {#if heard}
@@ -208,10 +209,6 @@
   }
   .actions {
     padding: 0 var(--suisou-space-2) var(--suisou-space-2);
-  }
-  .logo {
-    width: var(--suisou-size-icon);
-    height: var(--suisou-size-icon);
   }
   .who {
     min-width: 0;
