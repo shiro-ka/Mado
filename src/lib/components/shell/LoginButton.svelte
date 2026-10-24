@@ -11,7 +11,7 @@
     look?: "button" | "link" | "other";
   }
 
-  let { label = "Bluesky でログイン", variant = "default", look = "button" }: Props = $props();
+  let { label, variant = "default", look = "button" }: Props = $props();
 
   const uid = $props.id();
   const dialogId = `login-${uid}`;
@@ -53,11 +53,11 @@
 </script>
 
 {#if look === "link"}
-  <button type="button" data-suisou-text="link fs-14" class="plain" onclick={() => login("bsky")}>{label}</button>
+  <button type="button" data-suisou-text="link fs-14" class="plain" onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</button>
 {:else if look === "button"}
-  <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")}>{label}</Button>
+  <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</Button>
 {:else}
-  <Button variant="ghost" commandfor={dialogId} command="show-modal">ほかのサーバーのアカウントでログイン</Button>
+  <Button variant="ghost" commandfor={dialogId} command="show-modal">{label ?? "ほかのサーバーのアカウントでログイン"}</Button>
 
   <dialog
     id={dialogId}

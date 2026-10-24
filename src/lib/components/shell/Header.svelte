@@ -7,7 +7,10 @@
   <a href="/">
     <Brand size="lg" beta />
   </a>
-  <LoginButton label="ログイン" />
+  <div data-suisou-layout="stack s:row">
+    <LoginButton label="ログイン" />
+    <LoginButton look="other" label="bsky.social以外のPDS" />  
+  </div>
 </header>
 
 <style>
