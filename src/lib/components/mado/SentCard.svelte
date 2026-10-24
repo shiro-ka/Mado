@@ -83,7 +83,6 @@
 <style>
   .main {
     color: var(--suisou-color-text);
-    text-decoration: none;
   }
   .go {
     align-self: center;

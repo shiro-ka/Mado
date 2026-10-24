@@ -72,8 +72,8 @@
   <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
 
   {#if !data.configured}
-    <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4" class="empty">
-      <Bell data-suisou-text="fs-20" data-suisou="note" class="big" />
+    <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4">
+      <Bell data-suisou-text="fs-32" data-suisou="note" />
       <p data-suisou-text="fs-14" data-suisou="note">
         DM通知は現在準備中です。もうしばらくお待ちください。
       </p>
@@ -152,11 +152,3 @@
     </div>
   {/if}
 </div>
-
-<style>
-  .empty :global(.big) {
-    width: 2rem;
-    height: 2rem;
-  }
-
-</style>

@@ -48,9 +48,6 @@
 </div>
 
 <style>
-  .link {
-    text-decoration: none;
-  }
   .link:hover {
     background-image: linear-gradient(var(--suisou-color-hover), var(--suisou-color-hover));
   }

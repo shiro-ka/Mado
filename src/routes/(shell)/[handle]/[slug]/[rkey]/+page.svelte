@@ -179,7 +179,6 @@
   }
   .box {
     color: var(--suisou-color-text);
-    text-decoration: none;
   }
   .owner {
     align-items: center;

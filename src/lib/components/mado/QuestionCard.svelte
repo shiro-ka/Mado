@@ -187,7 +187,6 @@
   }
   .main {
     color: var(--suisou-color-text);
-    text-decoration: none;
   }
   .main::after {
     content: "";
