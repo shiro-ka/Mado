@@ -49,14 +49,13 @@
 <div data-suisou-layout="stack gap-5" data-suisou="container-m py-4 px-3">
   <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container-s">
 
-    <p data-suisou-text="fs-28 s:fs-32 fw-700">
+    <div data-suisou-layout="row">
       <MadoIcon data-suisou-text="fs-32" data-suisou="accent" />
-      Mado
-    </p>
+      <p data-suisou-text="fs-28 fw-700">Mado</p>
+    </div>
 
-    <p data-suisou-text="pre-line fs-16 s:fs-20" data-suisou="note" class="lead doc">
-      Blueskyを使った半匿名のメッセージ
-      窓から声を
+    <p data-suisou-text="pre-line fs-16 s:fs-20" data-suisou="note">
+      Blueskyで届ける半匿名のメッセージ
     </p>
 
     <div data-suisou-layout="stack gap-1 center">
@@ -127,9 +126,6 @@
 </div>
 
 <style>
-  .lead {
-    max-width: 36rem;
-  }
   .tile {
     position: relative;
     flex: none;
