@@ -23,75 +23,30 @@
   });
 </script>
 
-<div class="frame">
-  <aside data-suisou-layout="stack" data-suisou="bd-end" class="side">
+<div data-suisou-body="shell">
+  <nav
+    bind:this={drawer}
+    id="nav-drawer"
+    popover
+    data-suisou-tray="drawer left s:dock"
+    data-suisou-layout="stack"
+    data-suisou="p-0"
+    aria-label="ナビゲーション"
+    style="--suisou-size-drawer: 16rem"
+  >
     <Sidebar {session} {officialHandle} />
-  </aside>
+  </nav>
 
-  <div data-suisou-layout="row" data-suisou="bd-bottom px-3 py-3" class="topbar">
+  <header data-suisou-layout="row" data-suisou="bd-bottom px-3 py-3 s:hidden">
     <button data-suisou-button="icon" popovertarget="nav-drawer" aria-label="メニューを開く">
       <Menu size={20} />
     </button>
     <a href="/receive"><Brand size="sm" /></a>
-  </div>
+  </header>
 
-  <div
-    bind:this={drawer}
-    id="nav-drawer"
-    popover
-    data-suisou-tray="drawer left"
-    data-suisou-layout="stack"
-    data-suisou="p-0"
-    aria-label="ナビゲーション"
-    style="--suisou-size-drawer: 18rem"
-    class="drawer"
-  >
-    <Sidebar {session} {officialHandle} />
-  </div>
-
-  <main bind:this={mainEl} data-suisou="scroll-y" class="body">
+  <main bind:this={mainEl} data-suisou="scroll-y p-0">
     {#if children}
       {@render children()}
     {/if}
   </main>
 </div>
-
-<style>
-  .frame {
-    display: grid;
-    grid-template-areas: "side head" "side body";
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    height: 100dvh;
-    overflow: hidden;
-  }
-  .body {
-    grid-area: body;
-  }
-
-  .side {
-    grid-area: side;
-    overflow-y: auto;
-    width: 16rem;
-    background: var(--suisou-color-panel);
-  }
-  .topbar {
-    grid-area: head;
-    background: var(--suisou-color-panel);
-  }
-
-  @media (max-width: 767px) {
-    .side {
-      display: none;
-    }
-  }
-  @media (min-width: 768px) {
-    .topbar {
-      display: none;
-    }
-  }
-
-  .drawer {
-    overflow-y: auto;
-  }
-</style>
