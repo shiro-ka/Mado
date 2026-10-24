@@ -25,7 +25,7 @@
   const currentPath = $derived(page.url.pathname);
 </script>
 
-<div data-suisou-layout="row" data-suisou="px-3" class="brandbar">
+<div data-suisou-layout="row" data-suisou="px-3 py-3" class="brandbar">
   <a href="/receive" onclick={onNavigate}>
     <Brand size="md" />
   </a>
@@ -54,7 +54,6 @@
 
 <style>
   .brandbar {
-    height: 4rem;
     flex: none;
   }
   .nav {

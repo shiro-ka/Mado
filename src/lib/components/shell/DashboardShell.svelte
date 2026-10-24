@@ -28,7 +28,7 @@
     <Sidebar {session} {officialHandle} />
   </aside>
 
-  <div data-suisou-layout="row" data-suisou="bd-bottom px-3" class="topbar">
+  <div data-suisou-layout="row" data-suisou="bd-bottom px-3 py-3" class="topbar">
     <button data-suisou-button="icon" popovertarget="nav-drawer" aria-label="メニューを開く">
       <Menu size={20} />
     </button>
@@ -41,8 +41,10 @@
     popover
     data-suisou-tray="drawer left"
     data-suisou-layout="stack"
+    data-suisou="p-0"
     aria-label="ナビゲーション"
     style="--suisou-size-drawer: 18rem"
+    class="drawer"
   >
     <Sidebar {session} {officialHandle} />
   </div>
@@ -75,7 +77,6 @@
   }
   .topbar {
     grid-area: head;
-    height: 3.5rem;
     background: var(--suisou-color-panel);
   }
 
@@ -90,8 +91,7 @@
     }
   }
 
-  #nav-drawer {
-    padding: 0;
+  .drawer {
     overflow-y: auto;
   }
 </style>
