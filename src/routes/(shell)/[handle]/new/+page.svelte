@@ -87,8 +87,8 @@
           maxlength={30}
           disabled={formState === "submitting"}
         />
-        <p data-suisou-text="fs-12" data-suisou="note" class="preview">
-          /@{data.cleanHandle}/<span data-suisou="accent">{slugPreview}</span>
+        <p data-suisou-text="fs-12" data-suisou="note">
+          <code>/@{data.cleanHandle}/<span data-suisou="accent">{slugPreview}</span></code>
         </p>
       </div>
 
@@ -119,9 +119,5 @@
   .heading {
     cursor: default;
     user-select: none;
-  }
-  .preview {
-    font-family: var(--suisou-font-mono);
-    word-break: break-all;
   }
 </style>

@@ -29,7 +29,7 @@
     <div data-suisou-item="media" class="mine">
       <span data-suisou-item="media-figure">{@render circle(selfAvatar, "small")}</span>
       <span data-suisou-item="media-content">
-        <span data-suisou-text="fs-14 clamp-2" data-suisou="note" class="text">{truncate(item.body, 120)}</span>
+        <span data-suisou-text="fs-14 clamp-2 pre-line" data-suisou="note">{truncate(item.body, 120)}</span>
       </span>
     </div>
     {#if hiddenAnswers > 0}
@@ -40,7 +40,7 @@
         <span data-suisou-item="media-figure">{@render circle(item.ownerAvatar, "")}</span>
         <div data-suisou-item="media-content">
           <span data-suisou-text="fs-14 fw-500 clamp-1">{name ?? "窓の持ち主"}</span>
-          <span data-suisou-text="clamp-2" class="text">{a}</span>
+          <span data-suisou-text="clamp-2 pre-line">{a}</span>
         </div>
       </div>
     {/each}
@@ -97,9 +97,6 @@
   .title {
     flex: 0 1000 auto;
     min-width: 0;
-  }
-  .text {
-    white-space: pre-line;
   }
   .mine {
     gap: var(--suisou-space-2);

@@ -96,7 +96,7 @@
           <span data-suisou-text="fs-12" data-suisou="note">{formatDate(question.createdAt)}</span>
         </span>
       </span>
-      <span data-suisou-text="clamp-2" class="text">{truncate(question.body, 120)}</span>
+      <span data-suisou-text="clamp-2 pre-line">{truncate(question.body, 120)}</span>
       {#if hiddenAnswers > 0}
         <span data-suisou-text="fs-12" data-suisou="mt-2 note">ほか {hiddenAnswers} 件の返信</span>
       {/if}
@@ -109,7 +109,7 @@
               <span data-suisou-item="circle small"><User data-suisou-text="fs-12" /></span>
             {/if}
           </span>
-          <span data-suisou-item="media-content"><span data-suisou-text="fs-14 clamp-2" class="text">{a}</span></span>
+          <span data-suisou-item="media-content"><span data-suisou-text="fs-14 clamp-2 pre-line">{a}</span></span>
         </div>
       {/each}
     </div>
@@ -223,9 +223,6 @@
   .handle {
     flex: 0 1000 auto;
     min-width: 0;
-  }
-  .text {
-    white-space: pre-line;
   }
   .answer {
     gap: var(--suisou-space-2);

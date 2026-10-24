@@ -29,7 +29,7 @@
 {#snippet summary()}
 <div data-suisou-layout="stack" class="summary">
   <div data-suisou-layout="row wrap">
-    <p data-suisou-text="fs-20 fw-700" class="title">{box.title}</p>
+    <p data-suisou-text="fs-20 fw-700 break" class="title">{box.title}</p>
     <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
       {box.isOpen ? "受付中" : "受付停止"}
     </span>
@@ -134,6 +134,5 @@
   .title {
     flex: 0 1 auto;
     min-width: 0;
-    overflow-wrap: anywhere;
   }
 </style>

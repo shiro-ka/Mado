@@ -33,7 +33,7 @@
       </Button>
     </div>
     <div data-suisou-layout="row between">
-      <h1 data-suisou-text="fs-24 fw-700" class="title">{data.box.title}</h1>
+      <h1 data-suisou-text="fs-24 fw-700 break" class="title">{data.box.title}</h1>
       <Button href={`/@${data.cleanHandle}/${data.box.slug}/settings`} variant="ghost">
         {#snippet leftIcon()}<Settings />{/snippet}
         設定
@@ -62,6 +62,5 @@
   .title {
     flex: 0 1 auto;
     min-width: 0;
-    overflow-wrap: anywhere;
   }
 </style>

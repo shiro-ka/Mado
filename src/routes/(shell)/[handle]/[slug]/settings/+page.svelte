@@ -164,8 +164,8 @@
           maxlength={30}
           disabled={isBusy}
         />
-        <p data-suisou-text="fs-12" data-suisou="note" class="preview">
-          /@{data.cleanHandle}/<span data-suisou="accent">{slug.trim().toLowerCase() || data.box.slug}</span>
+        <p data-suisou-text="fs-12" data-suisou="note">
+          <code>/@{data.cleanHandle}/<span data-suisou="accent">{slug.trim().toLowerCase() || data.box.slug}</span></code>
         </p>
       </div>
 
@@ -204,7 +204,7 @@
     <Link data-suisou-item="media-figure" data-suisou-text="fs-16" data-suisou="note" />
     <div data-suisou-item="media-content">
       <p data-suisou-text="fs-12" data-suisou="note">公開URL</p>
-      <p data-suisou-text="fs-14" class="url">{publicUrlDisplay}</p>
+      <p data-suisou-text="fs-14"><code>{publicUrlDisplay}</code></p>
     </div>
     <div data-suisou-item="media-tail">
       <Button
@@ -251,7 +251,7 @@
   closedby={formState === "deleting" ? "none" : "any"}
   data-suisou-tray
   data-suisou-layout="stack gap-3"
-  data-suisou="p-4" class="dialog"
+  data-suisou="p-4"
 >
   <p data-suisou-text="fs-14">
     窓を削除すると、届いた声とあなたの返信も消えます。<br />この操作は元に戻せませんが、削除しますか？
@@ -274,16 +274,7 @@
 </dialog>
 
 <style>
-  .dialog {
-    margin: auto;
-    width: min(calc(100vw - 2 * var(--suisou-space-3)), 28rem);
-  }
   .strip {
     align-items: center;
-  }
-  .preview,
-  .url {
-    font-family: var(--suisou-font-mono);
-    word-break: break-all;
   }
 </style>

@@ -94,8 +94,6 @@
 
 <style>
   .dialog {
-    margin: auto;
-    width: min(calc(100vw - 2 * var(--suisou-space-3)), 28rem);
     text-align: start;
   }
 </style>

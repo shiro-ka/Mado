@@ -100,7 +100,7 @@
               </p>
               <p data-suisou-text="fs-12 clamp-1" data-suisou="note">@{data.senderProfile.handle}</p>
             {:else if data.senderDid}
-              <p data-suisou-text="fs-12" data-suisou="note" class="did">{data.senderDid}</p>
+              <p data-suisou-text="fs-12" data-suisou="note"><code>{data.senderDid}</code></p>
             {:else}
               <p data-suisou-text="fs-14" data-suisou="note">送信者情報なし</p>
             {/if}
@@ -121,7 +121,7 @@
         </div>
       {/if}
 
-      <p data-suisou-text="fs-16" class="body doc">{data.question.body}</p>
+      <p data-suisou-text="fs-16 pre-line" class="doc">{data.question.body}</p>
 
       <div data-suisou-layout="row gap-1">
         {#if data.isOwner}
@@ -144,7 +144,7 @@
             <span data-suisou-text="fs-12 fw-500" data-suisou="note">返信</span>
             <span data-suisou-text="fs-12" data-suisou="note" class="date">{formatDateFull(answer.createdAt)}</span>
           </div>
-          <p data-suisou-text="fs-14" class="body doc">{answer.body}</p>
+          <p data-suisou-text="fs-14 pre-line" class="doc">{answer.body}</p>
         </div>
       {/each}
     </div>
@@ -200,13 +200,6 @@
   }
   .sender {
     align-items: center;
-  }
-  .body {
-    white-space: pre-wrap;
-  }
-  .did {
-    font-family: var(--suisou-font-mono);
-    word-break: break-all;
   }
   .date {
     margin-inline-start: auto;
