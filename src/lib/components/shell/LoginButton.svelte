@@ -8,7 +8,7 @@
   interface Props {
     label?: string;
     variant?: ButtonVariant;
-    look?: "button" | "link" | "other";
+    look?: "button" | "other";
   }
 
   let { label, variant = "default", look = "button" }: Props = $props();
@@ -52,9 +52,7 @@
   }
 </script>
 
-{#if look === "link"}
-  <button type="button" data-suisou-text="link fs-14" data-suisou="p-0 note" class="plain" onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</button>
-{:else if look === "button"}
+{#if look === "button"}
   <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</Button>
 {:else}
   <Button variant="ghost" commandfor={dialogId} command="show-modal">{label ?? "ほかのサーバーのアカウントでログイン"}</Button>
@@ -95,12 +93,6 @@
 {/if}
 
 <style>
-  .plain {
-    border: 0;
-    background: none;
-    font: inherit;
-    cursor: pointer;
-  }
   .dialog {
     margin: auto;
     width: min(calc(100vw - 2 * var(--suisou-space-3)), 28rem);

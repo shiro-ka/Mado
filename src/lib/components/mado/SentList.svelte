@@ -26,7 +26,7 @@
       <span data-suisou-button aria-current={tab === t.key ? "page" : undefined}>
         {t.label}
         {#if t.key === "new"}
-          <span data-suisou-item="tag" class="ghost">0</span>
+          <span data-suisou-item="tag" data-suisou="invisible">0</span>
         {/if}
       </span>
     {/each}
@@ -72,9 +72,6 @@
 {/await}
 
 <style>
-  .ghost {
-    visibility: hidden;
-  }
   .empty :global(.big) {
     width: 2.25rem;
     height: 2.25rem;

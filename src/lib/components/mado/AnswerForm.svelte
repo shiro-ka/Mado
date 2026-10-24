@@ -164,12 +164,6 @@
     cursor: pointer;
     user-select: none;
   }
-  .check input {
-    accent-color: var(--suisou-color-accent);
-    width: 1rem;
-    height: 1rem;
-    cursor: pointer;
-  }
   .done :global(.big) {
     width: 2.25rem;
     height: 2.25rem;
