@@ -27,7 +27,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const raw = await request.json();
+    const raw = await request.json().catch(() => null);
     const parsed = createAnswerSchema.safeParse(raw);
     if (!parsed.success) {
       return json(

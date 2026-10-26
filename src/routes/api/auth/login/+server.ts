@@ -15,7 +15,7 @@ const loginSchema = z.object({
 export const POST: RequestHandler = async ({ request, platform }) => {
   try {
     const env = platform!.env;
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
       return json(

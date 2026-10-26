@@ -27,7 +27,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
     const parsed = createBoxSchema.safeParse(body);
     if (!parsed.success) {
       return json(

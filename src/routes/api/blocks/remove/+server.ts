@@ -19,7 +19,7 @@ export const DELETE: RequestHandler = async ({ request, cookies, platform }) => 
       );
     }
 
-    const raw = await request.json();
+    const raw = await request.json().catch(() => null);
     const parsed = schema.safeParse(raw);
     if (!parsed.success) {
       return json(

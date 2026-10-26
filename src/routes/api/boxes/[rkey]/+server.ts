@@ -49,7 +49,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies, platform
     const box = await getBoxRecord(session.did, params.rkey);
     if (!box) return json({ error: "Not found" }, { status: 404 });
 
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) return json({ error: "Invalid request" }, { status: 400 });
 
