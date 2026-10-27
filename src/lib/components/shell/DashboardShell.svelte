@@ -37,7 +37,7 @@
     <Sidebar {session} {officialHandle} />
   </nav>
 
-  <header data-suisou-layout="row" data-suisou="bd-bottom px-3 py-3 s:hidden">
+  <header data-suisou-layout="row" data-suisou="px-3 py-3 s:hidden">
     <button data-suisou-button="icon" popovertarget="nav-drawer" aria-label="メニューを開く">
       <Menu size={20} />
     </button>
