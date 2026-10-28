@@ -101,33 +101,20 @@ export async function createOAuthClient(
         const name = algorithm.name.toUpperCase().replace(/^SHA/, "SHA-");
         return new Uint8Array(await crypto.subtle.digest(name, bytes as unknown as ArrayBuffer));
       },
-      // Serialize token refreshes for a given DID. atproto refresh tokens are
-      // one-time/rotating: without a lock, two concurrent requests for the same
-      // DID both refresh, the second reuses an already-rotated token, gets
-      // invalid_grant, and the client deletes the freshly-refreshed session —
-      // logging the user out. Best-effort KV lock (see store.getLock); a
-      // Durable Object would be needed for a strict cross-isolate mutex.
       requestLock: async <T>(name: string, fn: () => T | PromiseLike<T>): Promise<T> => {
         const lockKey = deviceKey ? `oauthlock:${deviceKey}:${name}` : `oauthlock:${name}`;
         const token = crypto.randomUUID();
         const deadline = Date.now() + 5000;
         while (Date.now() < deadline) {
-          if (!(await store.getLock(lockKey))) {
-            await store.setLock(lockKey, token, 60);
-            // Read back to catch a lost race; only proceed if we still hold it.
-            if ((await store.getLock(lockKey)) === token) {
-              try {
-                return await fn();
-              } finally {
-                if ((await store.getLock(lockKey)) === token) {
-                  await store.delLock(lockKey);
-                }
-              }
+          if (await store.acquireLock(lockKey, token, 60)) {
+            try {
+              return await fn();
+            } finally {
+              await store.releaseLock(lockKey, token);
             }
           }
           await new Promise((r) => setTimeout(r, 100 + Math.floor(Math.random() * 120)));
         }
-        // Couldn't acquire within the deadline — proceed rather than deadlock.
         return fn();
       },
     },

@@ -384,17 +384,22 @@ export class CloudflareStore {
       .run();
   }
 
-  async getLock(key: string): Promise<string | null> {
-    return this.env.RATE_LIMIT.get(key);
+  async acquireLock(key: string, token: string, ttlSeconds: number): Promise<boolean> {
+    const now = Math.floor(Date.now() / 1000);
+    const row = await this.env.DB.prepare(
+      `INSERT INTO oauth_locks (key, token, expires_at) VALUES (?1, ?2, ?3 + ?4)
+       ON CONFLICT (key) DO UPDATE SET token = excluded.token, expires_at = excluded.expires_at
+       WHERE oauth_locks.expires_at <= ?3
+       RETURNING token`
+    )
+      .bind(key, token, now, ttlSeconds)
+      .first<{ token: string }>();
+    return row?.token === token;
   }
 
-  async setLock(key: string, token: string, ttlSeconds: number): Promise<void> {
-    await this.env.RATE_LIMIT.put(key, token, {
-      expirationTtl: Math.max(60, ttlSeconds),
-    });
-  }
-
-  async delLock(key: string): Promise<void> {
-    await this.env.RATE_LIMIT.delete(key);
+  async releaseLock(key: string, token: string): Promise<void> {
+    await this.env.DB.prepare("DELETE FROM oauth_locks WHERE key = ? AND token = ?")
+      .bind(key, token)
+      .run();
   }
 }
