@@ -106,10 +106,11 @@
   }
 
   let settingMain = $state(false);
+  let mainError = $state("");
   async function toggleMain() {
     if (settingMain) return;
     settingMain = true;
-    errorMsg = "";
+    mainError = "";
     try {
       const res = await fetch(`/api/boxes/${data.box.rkey}/main`, { method: data.isMain ? "DELETE" : "POST" });
       if (!res.ok) {
@@ -118,7 +119,7 @@
       }
       await invalidateAll();
     } catch (err) {
-      errorMsg = err instanceof Error ? err.message : "設定に失敗しました";
+      mainError = err instanceof Error ? err.message : "設定に失敗しました";
     } finally {
       settingMain = false;
     }
@@ -237,6 +238,12 @@
       </Button>
     </div>
   </div>
+  {#if mainError}
+    <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+      <AlertCircle data-suisou-text="fs-16" />
+      {mainError}
+    </p>
+  {/if}
 
   <div data-suisou-layout="row end">
     <Button type="button" variant="destructive" commandfor="delete-box" command="show-modal">
