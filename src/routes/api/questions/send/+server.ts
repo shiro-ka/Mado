@@ -28,18 +28,10 @@ async function sha256Hex(input: string): Promise<string> {
 const SPAM_SCORE_THRESHOLD = 6;
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
-  const timing: string[] = [];
-  let last = Date.now();
-  const mark = (name: string, desc?: string) => {
-    const now = Date.now();
-    timing.push(`${name};dur=${now - last}${desc ? `;desc="${desc}"` : ""}`);
-    last = now;
-  };
   try {
     const env = platform!.env;
     const store = new CloudflareStore(env);
     const session = await getSession(cookies, store);
-    mark("session");
     if (!session) {
       return json(
         { error: "Unauthorized", message: "ログインが必要です" },
@@ -59,7 +51,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     const { body, boxOwnerDid, boxRkey } = parsed.data;
 
     const box = await getBoxRecord(boxOwnerDid, boxRkey);
-    mark("box");
     if (!box) {
       return json(
         { error: "Box not found", message: "窓が見つかりません" },
@@ -74,7 +65,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     }
 
     const isBlocked = await store.isBlocked(boxOwnerDid, session.did);
-    mark("blocked");
     if (isBlocked) {
       return json(
         { error: "Blocked", message: "この窓への送信が制限されています" },
@@ -89,7 +79,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     const bodyHash = await sha256Hex(`${boxOwnerDid}:${boxRkey}:${body}`);
     const dedupeKey = `dedupe:send:${session.did}:${bodyHash}`;
     const fresh = (await store.hitLimit(dedupeKey, RATE_BOX_TTL)) === 1;
-    mark("dedupe");
     if (!fresh) {
       return json(
         {
@@ -104,7 +93,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     const globalRateKey = `rate:global:${session.did}`;
 
     const boxCount = await store.hitLimit(boxRateKey, RATE_BOX_TTL);
-    mark("rateBox");
     if (boxCount > 1) {
       return json(
         {
@@ -116,7 +104,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     }
 
     const senderProfile = await profilePromise;
-    mark("profile");
     if (senderProfile) {
       const day = 24 * 60 * 60 * 1000;
       const createdAt = senderProfile.createdAt
@@ -147,9 +134,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     }
 
     const globalCount = await store.hitLimit(globalRateKey, RATE_GLOBAL_TTL);
-    mark("rateGlobal");
-    const ownerKeys = await store.listDeviceKeysForDid(boxOwnerDid);
-    mark("ownerKeys", `n=${ownerKeys.length}`);
     if (globalCount > 5) {
       return json(
         {
@@ -161,7 +145,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     }
 
     const ownerSessionFetch = await ownerSessionPromise;
-    mark("restore");
     if (!ownerSessionFetch) {
       return json(
         { error: "Box unavailable", message: "この窓は現在利用できません" },
@@ -175,7 +158,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       boxUri: box.uri,
       body,
     });
-    mark("write");
 
     if (!result) {
       return json(
@@ -196,7 +178,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
         sentAt: new Date().toISOString(),
         body,
       });
-      mark("delivery");
     } catch (recordErr) {
       console.error("[/api/questions/send] delivery record failed — rolling back koe", recordErr);
       await deleteRecord({ sessionFetch: ownerSessionFetch, did: boxOwnerDid, collection: NSID.KOE, rkey: koeRkey });
@@ -216,9 +197,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       })
     );
 
-    const res = json({ success: true, uri: result.uri });
-    res.headers.set("Server-Timing", timing.join(", "));
-    return res;
+    return json({ success: true, uri: result.uri });
   } catch (err) {
     console.error("[/api/questions/send]", err);
     return json(
