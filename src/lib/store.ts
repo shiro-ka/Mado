@@ -17,6 +17,16 @@ interface SessionMeta {
   expiresAt: number; // Unix timestamp (seconds)
 }
 
+export const kvTiming: string[] = [];
+async function timed<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  const t = Date.now();
+  try {
+    return await fn();
+  } finally {
+    kvTiming.push(`${name};dur=${Date.now() - t}`);
+  }
+}
+
 export class CloudflareStore {
   constructor(private env: App.Platform["env"]) {}
 
@@ -41,13 +51,13 @@ export class CloudflareStore {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getOAuthSession(did: string): Promise<any> {
-    const val = await this.env.OAUTH_SESSION.get(did, "json");
+    const val = await timed("oauthGet", () => this.env.OAUTH_SESSION.get(did, "json"));
     return val ?? undefined;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async setOAuthSession(did: string, value: any): Promise<void> {
-    await this.env.OAUTH_SESSION.put(did, JSON.stringify(value));
+    await timed("oauthPut", () => this.env.OAUTH_SESSION.put(did, JSON.stringify(value)));
   }
 
   async delOAuthSession(did: string): Promise<void> {
@@ -68,10 +78,10 @@ export class CloudflareStore {
   async getSessionEntry(
     sessionId: string
   ): Promise<{ session: AppSession; expiresAt: number | null } | undefined> {
-    const { value, metadata } = await this.env.MADO_SESSION.getWithMetadata<AppSession, SessionMeta>(
+    const { value, metadata } = await timed<{ value: AppSession | null; metadata: SessionMeta | null }>("madoGet", () => this.env.MADO_SESSION.getWithMetadata<AppSession, SessionMeta>(
       sessionId,
       "json"
-    );
+    ));
     return value ? { session: value, expiresAt: metadata?.expiresAt ?? null } : undefined;
   }
 
