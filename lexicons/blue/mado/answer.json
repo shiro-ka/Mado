@@ -4,7 +4,6 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "An answer to a blue.mado.koe question. Written to the box owner's repo.",
       "key": "tid",
       "record": {
         "type": "object",
@@ -12,8 +11,7 @@
         "properties": {
           "koe": {
             "type": "string",
-            "format": "at-uri",
-            "description": "AT-URI of the blue.mado.koe being answered."
+            "format": "at-uri"
           },
           "body": {
             "type": "string",

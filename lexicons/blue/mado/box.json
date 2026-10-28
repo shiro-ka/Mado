@@ -4,7 +4,6 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "A Mado question box. Lives in the owner's repo.",
       "key": "tid",
       "record": {
         "type": "object",
@@ -12,8 +11,7 @@
         "properties": {
           "slug": {
             "type": "string",
-            "maxLength": 64,
-            "description": "URL-safe identifier for the box, unique within the owner's repo."
+            "maxLength": 64
           },
           "title": {
             "type": "string",
@@ -26,12 +24,10 @@
             "maxGraphemes": 300
           },
           "isOpen": {
-            "type": "boolean",
-            "description": "Whether the box currently accepts new questions."
+            "type": "boolean"
           },
           "publicKeyHex": {
-            "type": "string",
-            "description": "Hex-encoded ECIES (secp256k1) public key. Senders encrypt their DID against this; only the owner holds the matching private key."
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
