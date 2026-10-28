@@ -82,6 +82,10 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
+    const profilePromise = getProfile(session.did);
+    const ownerSessionPromise = restoreAnyOAuthSession(env, store, boxOwnerDid);
+    platform!.ctx.waitUntil(ownerSessionPromise);
+
     const bodyHash = await sha256Hex(`${boxOwnerDid}:${boxRkey}:${body}`);
     const dedupeKey = `dedupe:send:${session.did}:${bodyHash}`;
     const fresh = (await store.hitLimit(dedupeKey, RATE_BOX_TTL)) === 1;
@@ -111,7 +115,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const senderProfile = await getProfile(session.did);
+    const senderProfile = await profilePromise;
     mark("profile");
     if (senderProfile) {
       const day = 24 * 60 * 60 * 1000;
@@ -156,7 +160,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    const ownerSessionFetch = await restoreAnyOAuthSession(env, store, boxOwnerDid);
+    const ownerSessionFetch = await ownerSessionPromise;
     mark("restore");
     if (!ownerSessionFetch) {
       return json(
