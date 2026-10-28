@@ -364,49 +364,25 @@ export class CloudflareStore {
       .run();
   }
 
-  // ── Rate limiting (KV, fixed window via time-bucketed keys) ─────────────
-  //
-  // The key is suffixed with a window bucket (floor(now / window)) so the
-  // window resets hard at bucket boundaries instead of sliding forward on
-  // every call. Still read-modify-write — KV has no atomic increment, so
-  // concurrent bursts can slightly overcount; that's acceptable for spam
-  // throttling. Use Durable Objects or the native Rate Limiting binding if
-  // strict guarantees are ever needed.
-
-  async incrRate(key: string, windowSeconds: number): Promise<number> {
-    const bucket = Math.floor(Date.now() / 1000 / windowSeconds);
-    const bucketKey = `${key}:${bucket}`;
-    const existing = await this.env.RATE_LIMIT.get<{ count: number }>(bucketKey, "json");
-    const count = (existing?.count ?? 0) + 1;
-    await this.env.RATE_LIMIT.put(bucketKey, JSON.stringify({ count }), {
-      // KV requires expirationTtl >= 60; both rate windows already satisfy this.
-      expirationTtl: Math.max(60, windowSeconds),
-    });
-    return count;
+  async hitLimit(key: string, windowSeconds: number): Promise<number> {
+    const now = Math.floor(Date.now() / 1000);
+    const row = await this.env.DB.prepare(
+      `INSERT INTO send_limits (key, count, expires_at) VALUES (?1, 1, ?2 + ?3)
+       ON CONFLICT (key) DO UPDATE SET
+         count = CASE WHEN expires_at <= ?2 THEN 1 ELSE count + 1 END,
+         expires_at = CASE WHEN expires_at <= ?2 THEN excluded.expires_at ELSE expires_at END
+       RETURNING count`
+    )
+      .bind(key, now, windowSeconds)
+      .first<{ count: number }>();
+    return row?.count ?? 1;
   }
 
-  // ── Idempotency claim (KV) ──────────────────────────────────────────────
-  //
-  // Best-effort single-use claim. Returns true if this call claimed the key,
-  // false if it was already claimed within the TTL window. KV has no atomic
-  // set-if-absent, so two *simultaneous* claims can both win (eventual
-  // consistency); this reliably stops sequential double-submits (double-click,
-  // retry) but is not a strict mutex. A Durable Object is required for strict
-  // guarantees.
-
-  async claimOnce(key: string, ttlSeconds: number): Promise<boolean> {
-    const existing = await this.env.RATE_LIMIT.get(key);
-    if (existing !== null) return false;
-    await this.env.RATE_LIMIT.put(key, "1", {
-      expirationTtl: Math.max(60, ttlSeconds),
-    });
-    return true;
+  async pruneLimits(): Promise<void> {
+    await this.env.DB.prepare("DELETE FROM send_limits WHERE expires_at <= ?")
+      .bind(Math.floor(Date.now() / 1000))
+      .run();
   }
-
-  // ── Best-effort lock (KV) — serializes OAuth token refresh per DID ───────
-  //
-  // Same eventual-consistency caveat as claimOnce: this narrows the
-  // concurrent-refresh window but is not a hard mutex.
 
   async getLock(key: string): Promise<string | null> {
     return this.env.RATE_LIMIT.get(key);

@@ -14,8 +14,8 @@ const sendSchema = z.object({
   boxRkey: rkeySchema,
 });
 
-const RATE_BOX_TTL = 60;    // 1 minute
-const RATE_GLOBAL_TTL = 300; // 5 minutes
+const RATE_BOX_TTL = 60;
+const RATE_GLOBAL_TTL = 300;
 
 async function sha256Hex(input: string): Promise<string> {
   const data = new TextEncoder().encode(input);
@@ -25,8 +25,6 @@ async function sha256Hex(input: string): Promise<string> {
     .join("");
 }
 
-// Block when the spam score reaches this. Higher = more lenient (fewer false
-// positives, but lets more throwaway accounts through). Tune to taste.
 const SPAM_SCORE_THRESHOLD = 6;
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
@@ -84,14 +82,9 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // Idempotency guard: block identical re-submissions (double-click, retry,
-    // or a concurrent request that slips past the non-atomic rate counter) from
-    // writing a duplicate koe. Keyed on sender+box+body so distinct questions
-    // are unaffected. Runs before the rate counters so a duplicate consumes no
-    // quota. Best-effort (KV isn't a strict mutex) but stops the common case.
     const bodyHash = await sha256Hex(`${boxOwnerDid}:${boxRkey}:${body}`);
     const dedupeKey = `dedupe:send:${session.did}:${bodyHash}`;
-    const fresh = await store.claimOnce(dedupeKey, RATE_BOX_TTL);
+    const fresh = (await store.hitLimit(dedupeKey, RATE_BOX_TTL)) === 1;
     mark("dedupe");
     if (!fresh) {
       return json(
@@ -103,14 +96,10 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // Rate limiting is split so a *rejected* send never burns the global quota
-    // (which would self-lock the user across all boxes). The per-box limit
-    // (1/min) is checked first; the global limit (5/5min) is only consumed once
-    // the send has cleared the per-box and spam checks, just before the write.
     const boxRateKey = `rate:box:${session.did}:${boxRkey}`;
     const globalRateKey = `rate:global:${session.did}`;
 
-    const boxCount = await store.incrRate(boxRateKey, RATE_BOX_TTL);
+    const boxCount = await store.hitLimit(boxRateKey, RATE_BOX_TTL);
     mark("rateBox");
     if (boxCount > 1) {
       return json(
@@ -122,9 +111,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // Spam heuristic — one profile fetch, scored from weak signals. Each adds
-    // points; we only block accounts that trip several at once, so a
-    // hesitant-but-real new user (who has set an avatar/name) still gets through.
     const senderProfile = await getProfile(session.did);
     mark("profile");
     if (senderProfile) {
@@ -138,15 +124,14 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       const posts = senderProfile.postsCount ?? 0;
 
       let score = 0;
-      if (ageDays < 7) score += 2;        // brand-new account
-      else if (ageDays < 30) score += 1;  // still young
+      if (ageDays < 7) score += 2;
+      else if (ageDays < 30) score += 1;
       if (followers === 0) score += 2;
       else if (followers < 3) score += 1;
       if (posts === 0) score += 2;
       else if (posts < 5) score += 1;
-      if (!senderProfile.avatar) score += 1;       // default egg icon
-      if (!senderProfile.displayName) score += 1;  // never set a name
-      // follow-spam pattern: follows many, almost nobody follows back
+      if (!senderProfile.avatar) score += 1;
+      if (!senderProfile.displayName) score += 1;
       if (follows > 50 && follows > followers * 10) score += 1;
 
       if (score >= SPAM_SCORE_THRESHOLD) {
@@ -157,8 +142,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       }
     }
 
-    // Cleared per-box + spam — now consume the global quota (5/5min).
-    const globalCount = await store.incrRate(globalRateKey, RATE_GLOBAL_TTL);
+    const globalCount = await store.hitLimit(globalRateKey, RATE_GLOBAL_TTL);
     mark("rateGlobal");
     const ownerKeys = await store.listDeviceKeysForDid(boxOwnerDid);
     mark("ownerKeys", `n=${ownerKeys.length}`);
@@ -196,8 +180,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // The koe now lives in the owner's repo — drop the cached scan so it shows
-    // up in their /receive inbox on the next read instead of after the TTL.
     invalidateRecords(boxOwnerDid, NSID.KOE);
 
     const koeRkey = result.uri.split("/").pop() ?? "";
@@ -221,6 +203,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
+    platform!.ctx.waitUntil(store.pruneLimits());
     platform!.ctx.waitUntil(
       notifyNewKoe(env, store, {
         ownerDid: boxOwnerDid,
