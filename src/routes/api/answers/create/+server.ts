@@ -5,11 +5,12 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { writeAnswer, createBskyPost, invalidateRecords, NSID } from "$lib/atproto/index.js";
-import { atUriSchema } from "$lib/validation.js";
+import { atUriSchema, limitedText } from "$lib/validation.js";
+import { POST_MAX_GRAPHEMES, POST_MAX_BYTES } from "$lib/text.js";
 
 const createAnswerSchema = z.object({
-  koeUri: atUriSchema, // AT-URI: at://ownerDid/blue.mado.koe/rkey
-  body: z.string().min(1).max(1000),
+  koeUri: atUriSchema,
+  body: limitedText(POST_MAX_GRAPHEMES, POST_MAX_BYTES).refine((s) => s.length > 0),
   crosspost: z.boolean().optional().default(false),
   pageUrl: z.string().url().optional(),
   questionBody: z.string().max(1000).optional(),
@@ -38,7 +39,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     const { koeUri, body, crosspost, pageUrl } = parsed.data;
 
-    // Security: verify koeUri belongs to the logged-in user's repo
     const expectedPrefix = `at://${session.did}/${NSID.KOE}/`;
     if (!koeUri.startsWith(expectedPrefix)) {
       return json(
@@ -47,9 +47,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // SSRF guard: pageUrl is used to build the crosspost embed AND is fetched
-    // server-side to generate the OG thumbnail (createBskyPost → uploadThumb).
-    // Only allow our own origin so the app can't be turned into an open proxy.
     const appUrl = env.APP_URL ?? "https://mado.blue";
     if (pageUrl && !pageUrl.startsWith(`${appUrl}/`)) {
       return json(
@@ -83,12 +80,9 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // Drop the cached answer scan so home's reply count updates immediately.
     invalidateRecords(session.did, NSID.ANSWER);
     await store.markHandled(session.did, koeUri.slice(expectedPrefix.length));
 
-    // The answer is already saved; a failed crosspost shouldn't fail the
-    // request — report it via a flag so the UI can warn non-fatally.
     let crossposted = false;
     let crosspostUri: string | null = null;
     if (crosspost) {

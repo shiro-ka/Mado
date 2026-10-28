@@ -5,6 +5,7 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
+  import { BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES, fitsLimit } from "$lib/text.js";
   import Toggle from "$lib/components/ui/Toggle.svelte";
   import { slugFormatError } from "$lib/validation.js";
   import type { PageData } from "./$types";
@@ -38,7 +39,7 @@
 
   async function handleSave(e: SubmitEvent) {
     e.preventDefault();
-    if (!title.trim() || slugErr || formState === "submitting") return;
+    if (!title.trim() || slugErr || !descriptionFits || formState === "submitting") return;
     formState = "submitting";
     errorMsg = "";
     const nextSlug = slug.trim().toLowerCase();
@@ -92,6 +93,7 @@
 
   const isBusy = $derived(formState === "submitting" || formState === "deleting");
   const slugErr = $derived(slugFormatError(slug));
+  const descriptionFits = $derived(fitsLimit(description, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES));
 
   const publicUrl = $derived(`${data.origin}/@${data.cleanHandle}/${data.box.slug}`);
   const publicUrlDisplay = $derived(publicUrl.replace(/^https?:\/\//, ""));
@@ -151,7 +153,7 @@
       <Textarea
         label="窓の説明"
         bind:value={description}
-        maxlength={300}
+        maxGraphemes={BOX_DESCRIPTION_MAX_GRAPHEMES}
         showCount
         rows={4}
         disabled={isBusy}
@@ -192,7 +194,7 @@
         <Button
           type="submit"
           loading={formState === "submitting"}
-          disabled={!title.trim() || !!slugErr}
+          disabled={!title.trim() || !!slugErr || !descriptionFits}
         >
           {#snippet leftIcon()}<Save />{/snippet}
           保存する

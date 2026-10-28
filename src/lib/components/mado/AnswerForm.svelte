@@ -3,6 +3,7 @@
   import { Send, AlertCircle, CheckCircle2, ExternalLink } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
+  import { POST_MAX_GRAPHEMES, POST_MAX_BYTES, fitsLimit } from "$lib/text.js";
   import { bskyPostUrl } from "$lib/utils.js";
 
   interface Props {
@@ -16,7 +17,6 @@
 
   type FormState = "idle" | "submitting" | "success" | "error";
 
-  const MAX_CHARS = 1000;
   const CROSSPOST_KEY = "mado:crosspost";
 
   function lastCrosspost(): boolean {
@@ -55,7 +55,7 @@
     formState = "idle";
   }
 
-  const isValid = $derived(body.trim().length > 0 && body.length <= MAX_CHARS);
+  const isValid = $derived(body.trim().length > 0 && fitsLimit(body, POST_MAX_GRAPHEMES, POST_MAX_BYTES));
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -124,11 +124,11 @@
     <Textarea
       label="返信"
       bind:value={body}
-      maxlength={MAX_CHARS}
+      maxGraphemes={POST_MAX_GRAPHEMES}
       showCount={true}
       rows={4}
       disabled={formState === "submitting"}
-      error={body.length > MAX_CHARS ? `${MAX_CHARS}文字以内で入力してください` : undefined}
+      error={!fitsLimit(body, POST_MAX_GRAPHEMES, POST_MAX_BYTES) ? `${POST_MAX_GRAPHEMES}文字以内で入力してください` : undefined}
     />
 
     {#if formState === "error"}

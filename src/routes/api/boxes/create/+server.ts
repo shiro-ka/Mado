@@ -6,11 +6,12 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { createBoxRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
-import { slugSchema } from "$lib/validation.js";
+import { slugSchema, limitedText } from "$lib/validation.js";
+import { BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES } from "$lib/text.js";
 
 const createBoxSchema = z.object({
   title: z.string().min(1).max(30),
-  description: z.string().max(300).optional(),
+  description: limitedText(BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES).optional(),
   isOpen: z.boolean().default(true),
   slug: slugSchema.optional(),
 });
@@ -49,8 +50,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // User-chosen slug must be unique among this owner's boxes; if omitted, fall
-    // back to a random one (collision-free by construction).
     let slug = parsed.data.slug;
     if (slug) {
       const existing = await listBoxes(session.did);
@@ -80,7 +79,6 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       );
     }
 
-    // Drop the cached box scan so マイページ / home reflect the new box at once.
     invalidateRecords(session.did, NSID.BOX);
 
     return json({ success: true, rkey: result.rkey, uri: result.uri, slug });

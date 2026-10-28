@@ -15,8 +15,8 @@
           },
           "body": {
             "type": "string",
-            "maxLength": 6000,
-            "maxGraphemes": 1000
+            "maxLength": 3000,
+            "maxGraphemes": 300
           },
           "createdAt": {
             "type": "string",

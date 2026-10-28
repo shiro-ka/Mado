@@ -5,11 +5,12 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { getBoxRecord, updateBoxRecord, deleteBoxWithContents, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
-import { slugSchema } from "$lib/validation.js";
+import { slugSchema, limitedText } from "$lib/validation.js";
+import { BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES } from "$lib/text.js";
 
 const updateSchema = z.object({
   title: z.string().min(1).max(30).optional(),
-  description: z.string().max(300).optional(),
+  description: limitedText(BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES).optional(),
   isOpen: z.boolean().optional(),
   slug: slugSchema.optional(),
 });
@@ -55,9 +56,6 @@ export const PATCH: RequestHandler = async ({ params, request, cookies, platform
 
     const { title, description, isOpen, slug } = parsed.data;
 
-    // Changing the slug changes the box's public URL (old shared links break —
-    // the caller warns about that). Enforce per-owner uniqueness against the
-    // *other* boxes before committing.
     if (slug && slug !== box.slug) {
       const existing = await listBoxes(session.did);
       if (existing.some((b) => b.rkey !== params.rkey && b.slug === slug)) {

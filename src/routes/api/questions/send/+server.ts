@@ -6,10 +6,11 @@ import { getSession } from "$lib/auth.server.js";
 import { restoreAnyOAuthSession } from "$lib/oauth.server.js";
 import { writeQuestion, getBoxRecord, getProfile, deleteRecord, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { notifyNewKoe } from "$lib/notify.server.js";
-import { didSchema, rkeySchema } from "$lib/validation.js";
+import { didSchema, rkeySchema, limitedText } from "$lib/validation.js";
+import { POST_MAX_GRAPHEMES, POST_MAX_BYTES } from "$lib/text.js";
 
 const sendSchema = z.object({
-  body: z.string().min(1).max(500),
+  body: limitedText(POST_MAX_GRAPHEMES, POST_MAX_BYTES).refine((s) => s.length > 0),
   boxOwnerDid: didSchema,
   boxRkey: rkeySchema,
 });

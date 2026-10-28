@@ -4,6 +4,7 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
+  import { BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES, fitsLimit } from "$lib/text.js";
   import { slugFormatError } from "$lib/validation.js";
   import type { PageData } from "./$types";
 
@@ -19,10 +20,11 @@
 
   const slugPreview = $derived(slug.trim().toLowerCase() || "(空欄だと自動で決まるよ)");
   const slugErr = $derived(slugFormatError(slug));
+  const descriptionFits = $derived(fitsLimit(description, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES));
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    if (!title.trim() || slugErr || formState === "submitting") return;
+    if (!title.trim() || slugErr || !descriptionFits || formState === "submitting") return;
 
     formState = "submitting";
     errorMsg = "";
@@ -73,7 +75,7 @@
       <Textarea
         label="窓の説明"
         bind:value={description}
-        maxlength={300}
+        maxGraphemes={BOX_DESCRIPTION_MAX_GRAPHEMES}
         showCount
         rows={4}
         disabled={formState === "submitting"}
@@ -105,7 +107,7 @@
         <Button
           type="submit"
           loading={formState === "submitting"}
-          disabled={!title.trim() || !!slugErr}
+          disabled={!title.trim() || !!slugErr || !descriptionFits}
         >
           {#snippet leftIcon()}<Plus />{/snippet}
           作成する

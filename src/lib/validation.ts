@@ -1,27 +1,19 @@
 import { z } from "zod";
+import { fitsLimit } from "./text.js";
 
-/**
- * Shared shape validators for atproto identifiers reaching D1/PDS writes.
- *
- * These are intentionally permissive on the identifier body but strict on the
- * *shape* — the goal is to reject handles, empty strings, and path-injection
- * attempts (e.g. a slashed value smuggled into an AT-URI), not to fully verify
- * that a DID resolves.
- */
+export const limitedText = (maxGraphemes: number, maxBytes: number) =>
+  z.string().max(maxBytes).refine((s) => fitsLimit(s, maxGraphemes, maxBytes));
 
-// did:plc:<base32> or did:web:<host> and similar method-specific ids.
 export const didSchema = z
   .string()
   .regex(/^did:(plc|web):[a-zA-Z0-9._%:-]+$/, "invalid DID");
 
-// A record key: no slashes / control chars (would break AT-URI construction).
 export const rkeySchema = z
   .string()
   .min(1)
   .max(512)
   .regex(/^[a-zA-Z0-9._~:-]+$/, "invalid record key");
 
-// at://<did>/<collection>/<rkey>
 export const atUriSchema = z
   .string()
   .regex(
@@ -29,14 +21,8 @@ export const atUriSchema = z
     "invalid AT-URI"
   );
 
-// Slugs that would collide with a sibling route under /@handle/. Keep in sync
-// with the route tree (currently only /@handle/new exists at that level).
 const RESERVED_SLUGS = new Set(["new"]);
 
-// User-chosen box slug — the human-readable tail of a box's public URL
-// (/@handle/<slug>). Lowercased + trimmed, then constrained to a memorable,
-// URL-safe shape: lowercase alnum groups joined by single hyphens, no leading/
-// trailing/double hyphens, and not a reserved route word.
 export const slugSchema = z
   .string()
   .trim()
@@ -49,13 +35,6 @@ export const slugSchema = z
   )
   .refine((s) => !RESERVED_SLUGS.has(s), "そのURLは予約済みのため使えません");
 
-/**
- * Client-friendly format check that reuses slugSchema (same rules, no drift).
- * Returns a Japanese error message, or null when the value is acceptable.
- * Empty input is treated as OK — creation auto-generates a slug, and editing
- * an empty field leaves the current slug unchanged. Uniqueness is NOT checked
- * here (that needs the server); the API's 409 remains the backstop.
- */
 export function slugFormatError(raw: string): string | null {
   const v = raw.trim();
   if (!v) return null;
