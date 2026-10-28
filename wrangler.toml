@@ -4,24 +4,17 @@ compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = ".svelte-kit/cloudflare"
 
-# ★OAUTH_STATE / OAUTH_SESSION / RATE_LIMIT は 2026-09-27 まで wixdex と同じ namespace を
-#   共有していた。キー書式がたまたま違うので衝突していなかっただけで、Mado が deviceKey を
-#   外すと同じ DID のキーで wixdex のセッションを上書きする。Mado 専用の MADO_* に分けた。
 [[kv_namespaces]]
 binding = "OAUTH_STATE"
-id = "d4753769cf1a4fa19c0752d841cb5d54"   # MADO_OAUTH_STATE
+id = "d4753769cf1a4fa19c0752d841cb5d54"
 
 [[kv_namespaces]]
 binding = "OAUTH_SESSION"
-id = "7ca15b3015334b979a955da014209e2e"   # MADO_OAUTH_SESSION
+id = "7ca15b3015334b979a955da014209e2e"
 
 [[kv_namespaces]]
 binding = "MADO_SESSION"
 id = "78246f681d304c87800b15fedb04d719"
-
-[[kv_namespaces]]
-binding = "RATE_LIMIT"
-id = "68841092f7b6485689d223a370c4fd34"   # MADO_RATE_LIMIT
 
 [[d1_databases]]
 binding = "DB"
@@ -29,30 +22,17 @@ database_name = "mado"
 database_id = "12daab01-6d09-4dce-afb7-3bff183e381c"
 migrations_dir = "migrations"
 
-# ============================================================
-# preview 環境（main 以外のブランチ / https://dev.mado-sveltekit.pages.dev）
-# ※ DB/KV は staging 専用リソース。本番データとは完全に分離（2026-09-02 作成）
-#
-# ★ここが無かった間、preview は本番 D1 `mado` と本番 KV をそのまま使っていた。
-#   「dev で気楽に開発して push」が本番データを触る操作になっていた。
-# ★KV は wixdex と共有している OAUTH_STATE / OAUTH_SESSION / RATE_LIMIT ではなく、
-#   Mado 専用の MADO_* を新規に作って充てている。
-# ============================================================
 [[env.preview.kv_namespaces]]
 binding = "OAUTH_STATE"
-id = "99e98a0182454915b4e8fdc5d3d0afcc"   # MADO_OAUTH_STATE_stg
+id = "99e98a0182454915b4e8fdc5d3d0afcc"
 
 [[env.preview.kv_namespaces]]
 binding = "OAUTH_SESSION"
-id = "01e3ed24c7504a23ac7ac2843bdb0fb4"   # MADO_OAUTH_SESSION_stg
+id = "01e3ed24c7504a23ac7ac2843bdb0fb4"
 
 [[env.preview.kv_namespaces]]
 binding = "MADO_SESSION"
-id = "ce15cb75c9cd442782574a72b246f7e4"   # MADO_SESSION_stg
-
-[[env.preview.kv_namespaces]]
-binding = "RATE_LIMIT"
-id = "5761cdea97bb45a2bc9838bb1a18b445"   # MADO_RATE_LIMIT_stg
+id = "ce15cb75c9cd442782574a72b246f7e4"
 
 [[env.preview.d1_databases]]
 binding = "DB"
