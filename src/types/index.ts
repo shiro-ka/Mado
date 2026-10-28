@@ -1,4 +1,3 @@
-// Session types
 export interface Session {
   did: string;
   handle: string;
@@ -6,7 +5,6 @@ export interface Session {
   avatar?: string;
 }
 
-// Question box types
 export interface QuestionBox {
   uri: string;
   cid: string;
@@ -20,7 +18,6 @@ export interface QuestionBox {
   ownerHandle?: string;
 }
 
-// Question (koe = 声) types
 export interface Question {
   uri: string;
   cid: string;
@@ -44,28 +41,25 @@ export interface Answer {
   createdAt: string;
 }
 
-// ATProtocol Lexicon record types
 export interface BlueMadoBox {
   $type: "blue.mado.box";
   slug: string;
   title: string;
   description?: string;
   isOpen: boolean;
-  publicKeyHex?: string;
   createdAt: string;
 }
 
 export interface BlueMadoKoe {
   $type: "blue.mado.koe";
-  encryptedFrom?: string;
-  body: string;          // plaintext question text (public on PDS)
-  box: string;           // AT-URI: at://ownerDid/blue.mado.box/rkey
+  body: string;
+  box: string;
   createdAt: string;
 }
 
 export interface BlueMadoAnswer {
   $type: "blue.mado.answer";
-  koe: string;   // AT-URI of the question (blue.mado.koe record)
+  koe: string;
   body: string;
   createdAt: string;
 }
@@ -93,13 +87,11 @@ export type SentItem = {
   hasNewAnswer: boolean;
 };
 
-// API response types
 export interface ApiError {
   error: string;
   message?: string;
 }
 
-// UI state types
 export type FilterTab = "new" | "heard" | "all";
 
 export type InboxItem = Question & {

@@ -9,9 +9,6 @@
         "type": "object",
         "required": ["body", "box", "createdAt"],
         "properties": {
-          "encryptedFrom": {
-            "type": "string"
-          },
           "body": {
             "type": "string",
             "maxLength": 3000,

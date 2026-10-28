@@ -26,9 +26,6 @@
           "isOpen": {
             "type": "boolean"
           },
-          "publicKeyHex": {
-            "type": "string"
-          },
           "createdAt": {
             "type": "string",
             "format": "datetime"
