@@ -1,4 +1,5 @@
 import { OAuthClient, AtprotoDohHandleResolver } from "@atproto/oauth-client-node";
+import type { AuthorizationServerMetadataCache, DpopNonceCache, ProtectedResourceMetadataCache } from "@atproto/oauth-client-node";
 import { JoseKey } from "@atproto/jwk-jose";
 import type { CloudflareStore } from "./store.js";
 
@@ -78,6 +79,35 @@ async function getKeyset(rawKeys: string): Promise<JoseKey[]> {
  *   - workerFetch: patches redirect:"error" → "manual"
  *   - Cloudflare-native crypto via Web Crypto API
  */
+function memoryCache<V>(ttlMs: number, max: number) {
+  const entries = new Map<string, { value: V; at: number }>();
+  return {
+    get(key: string): V | undefined {
+      const entry = entries.get(key);
+      if (!entry) return undefined;
+      if (Date.now() - entry.at > ttlMs) {
+        entries.delete(key);
+        return undefined;
+      }
+      return entry.value;
+    },
+    set(key: string, value: V): void {
+      entries.delete(key);
+      entries.set(key, { value, at: Date.now() });
+      if (entries.size > max) entries.delete(entries.keys().next().value as string);
+    },
+    del(key: string): void {
+      entries.delete(key);
+    },
+  };
+}
+
+const sharedCaches = {
+  dpopNonceCache: memoryCache(60e3, 100) as DpopNonceCache,
+  authorizationServerMetadataCache: memoryCache(600e3, 100) as AuthorizationServerMetadataCache,
+  protectedResourceMetadataCache: memoryCache(600e3, 100) as ProtectedResourceMetadataCache,
+};
+
 export async function createOAuthClient(
   env: App.Platform["env"],
   store: CloudflareStore,
@@ -94,6 +124,7 @@ export async function createOAuthClient(
       fetch: workerFetch,
     }),
     responseMode: "query",
+    ...sharedCaches,
     runtimeImplementation: {
       createKey: (algs) => JoseKey.generate(algs),
       getRandomValues: (n: number) => crypto.getRandomValues(new Uint8Array(n)) as Uint8Array,
