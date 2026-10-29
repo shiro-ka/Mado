@@ -121,8 +121,6 @@ export function profile(
   );
 }
 
-const FALLBACK_FAMILIES = ["Noto Sans JP", "Noto Sans SC", "Noto Sans Symbols 2", "Noto Sans Symbols", "Noto Sans"];
-
 export async function renderOg(html: string, text: string, ctx?: App.Platform["ctx"]): Promise<Response> {
   const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
   const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
@@ -136,24 +134,6 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
     height: 630,
     format: "png",
     fonts: [zenMaru(400), zenMaru(500), zenMaru(700)],
-    loadAdditionalAsset: async (code, segment, next) => {
-      if (code === "emoji") {
-        const emoji = await next().catch(() => undefined);
-        if (emoji) return emoji;
-      }
-      const loaded = await Promise.all(
-        FALLBACK_FAMILIES.map(async (family) => {
-          try {
-            const font = new GoogleFont(family, { name: family, weight: 400, text: segment });
-            return { name: font.name, weight: font.weight, style: font.style, data: await font.data };
-          } catch {
-            return null;
-          }
-        })
-      );
-      const fonts = loaded.filter((f) => f !== null);
-      return fonts.length ? fonts : undefined;
-    },
   });
   res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
   return res;
