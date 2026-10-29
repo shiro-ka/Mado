@@ -167,7 +167,7 @@ export async function createOAuthClient(
       client_name: "Mado",
       client_uri: appUrl,
       redirect_uris: [`${appUrl}/api/auth/callback`],
-      scope: `${OAUTH_SCOPE} ${LEGACY_OAUTH_SCOPE}`,
+      scope: [...new Set(`${OAUTH_SCOPE} ${LEGACY_OAUTH_SCOPE}`.split(" "))].join(" "),
       grant_types: ["authorization_code", "refresh_token"],
       response_types: ["code"],
       token_endpoint_auth_method: "private_key_jwt",
