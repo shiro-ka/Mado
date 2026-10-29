@@ -189,11 +189,14 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
   return res;
 }
 
+export function brand(t: Theme, logoSize: number, wordSize: number): string {
+  return `<div style="display:flex;align-items:center;gap:${Math.round(logoSize * 0.28)}px;">${logoImg(t.accent, logoSize)}${wordmark(t, wordSize)}</div>`;
+}
+
 export function footer(t: Theme, prof: string): string {
-  const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
   return (
     `<div style="position:absolute;left:74px;right:74px;bottom:44px;display:flex;align-items:center;justify-content:space-between;">` +
-    brand +
+    brand(t, 50, 22) +
     prof +
     `</div>`
   );
