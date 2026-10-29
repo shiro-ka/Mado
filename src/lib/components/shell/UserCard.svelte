@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LogOut, ChevronsUpDown } from "lucide-svelte";
+  import { LogOut, ChevronsUpDown, UserPlus, Server } from "lucide-svelte";
   import { page } from "$app/state";
   import type { AppSession } from "$lib/store.js";
   import { MAX_ACCOUNTS, type AccountSummary } from "$lib/accounts.js";
@@ -50,8 +50,12 @@
       </form>
     {/each}
     {#if accounts.length < MAX_ACCOUNTS}
-      <LoginButton variant="ghost" label="アカウントを追加" addAccount />
-      <LoginButton look="other" label="ほかのサーバーのアカウントを追加" addAccount />
+      <LoginButton block label="アカウントを追加" addAccount>
+        {#snippet leftIcon()}<UserPlus />{/snippet}
+      </LoginButton>
+      <LoginButton block look="other" label="ほかのサーバーで追加" addAccount>
+        {#snippet leftIcon()}<Server />{/snippet}
+      </LoginButton>
     {/if}
   {/if}
 

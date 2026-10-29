@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { page } from "$app/state";
   import { AlertCircle } from "lucide-svelte";
   import Button, { type ButtonVariant } from "$lib/components/ui/Button.svelte";
@@ -10,9 +11,11 @@
     variant?: ButtonVariant;
     look?: "button" | "other";
     addAccount?: boolean;
+    block?: boolean;
+    leftIcon?: Snippet;
   }
 
-  let { label, variant = "default", look = "button", addAccount = false }: Props = $props();
+  let { label, variant = "default", look = "button", addAccount = false, block = false, leftIcon }: Props = $props();
 
   const uid = $props.id();
   const dialogId = `login-${uid}`;
@@ -58,9 +61,23 @@
 </script>
 
 {#if look === "button"}
-  <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</Button>
+  {#if block}
+    <button type="button" data-suisou-button="block" disabled={loading !== null} onclick={() => login("bsky")}>
+      {@render leftIcon?.()}
+      {label ?? "Bluesky でログイン"}
+    </button>
+  {:else}
+    <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</Button>
+  {/if}
 {:else}
-  <Button variant="ghost" commandfor={dialogId} command="show-modal">{label ?? "ほかのサーバーのアカウントでログイン"}</Button>
+  {#if block}
+    <button type="button" data-suisou-button="block" commandfor={dialogId} command="show-modal">
+      {@render leftIcon?.()}
+      {label ?? "ほかのサーバーのアカウントでログイン"}
+    </button>
+  {:else}
+    <Button variant="ghost" commandfor={dialogId} command="show-modal">{label ?? "ほかのサーバーのアカウントでログイン"}</Button>
+  {/if}
 
   <dialog
     id={dialogId}
