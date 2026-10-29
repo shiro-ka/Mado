@@ -121,6 +121,8 @@ export function profile(
   );
 }
 
+const SYMBOL_FAMILIES = ["Noto Sans Symbols 2", "Noto Sans Symbols"];
+
 export async function renderOg(html: string, text: string, ctx?: App.Platform["ctx"]): Promise<Response> {
   const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
   const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
@@ -134,6 +136,19 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
     height: 630,
     format: "png",
     fonts: [zenMaru(400), zenMaru(500), zenMaru(700)],
+    loadAdditionalAsset: async (code, segment, next) => {
+      if (code !== "symbol" && code !== "emoji") return undefined;
+      if (code === "emoji") {
+        const emoji = await next().catch(() => undefined);
+        if (emoji) return emoji;
+      }
+      for (const family of SYMBOL_FAMILIES) {
+        const font = new GoogleFont(family, { name: family, weight: 400, text: segment });
+        const data = await font.data.catch(() => null);
+        if (data) return [{ name: font.name, weight: font.weight, style: font.style, data }];
+      }
+      return undefined;
+    },
   });
   res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
   return res;
