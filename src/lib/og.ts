@@ -1,10 +1,10 @@
+import { DEFAULT_STYLE } from "./cardStyle.js";
+
 export type CardStyle = {
   icon?: string | null;
   background?: string | null;
   bubble?: string | null;
 };
-
-export const DEFAULT_STYLE = { icon: "#78aef3", background: "#11172b", bubble: "#1a2135" };
 
 export type Theme = {
   bg: string;

@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { DEFAULT_STYLE, type CardStyle } from "./og.js";
+import type { CardStyle } from "./og.js";
+
+export const DEFAULT_STYLE = { icon: "#78aef3", background: "#11172b", bubble: "#1a2135" };
 
 export const CARD_SLOTS = ["background", "bubble", "icon"] as const;
 export type CardSlot = (typeof CARD_SLOTS)[number];

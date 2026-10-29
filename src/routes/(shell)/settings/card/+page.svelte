@@ -2,8 +2,7 @@
   import { untrack } from "svelte";
   import { ArrowLeft, Save, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
-  import { CARD_PALETTE, CARD_SLOTS, type CardSlot } from "$lib/cardStyle.js";
-  import { DEFAULT_STYLE } from "$lib/og.js";
+  import { CARD_PALETTE, CARD_SLOTS, DEFAULT_STYLE, type CardSlot } from "$lib/cardStyle.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
