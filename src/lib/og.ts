@@ -188,3 +188,13 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
   res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
   return res;
 }
+
+export function footer(t: Theme, prof: string): string {
+  const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
+  return (
+    `<div style="position:absolute;left:74px;right:74px;bottom:44px;display:flex;align-items:center;justify-content:space-between;">` +
+    brand +
+    prof +
+    `</div>`
+  );
+}

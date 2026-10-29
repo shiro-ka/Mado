@@ -8,8 +8,7 @@ import {
   truncate,
   fitVoice,
   fetchImageDataUri,
-  logoImg,
-  wordmark,
+  footer,
   profile,
   type Theme,
 } from "$lib/og";
@@ -20,22 +19,21 @@ function render(
   t: Theme,
   data: { body: string; boxTitle: string; name: string; handle: string; avatarUri: string | null }
 ): string {
-  const titleChip = data.boxTitle
-    ? `<div style="position:absolute;top:58px;left:74px;z-index:1;display:flex;">` +
-      `<div style="display:flex;align-items:center;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius}px;padding:9px 17px;">` +
-      `<span style="display:flex;font-size:27px;font-weight:400;color:${t.text};">${escapeHtml(data.boxTitle)}</span>` +
-      `</div></div>`
+  const header = data.boxTitle
+    ? `<div style="display:flex;padding:20px 32px;border-bottom:1.5px solid ${t.line};">` +
+      `<span style="display:flex;font-size:26px;color:${t.note};">${escapeHtml(data.boxTitle)}</span>` +
+      `</div>`
     : "";
-  const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
   const prof = profile(t, data.name, "への声", data.handle, data.avatarUri);
   return (
-    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;overflow:hidden;font-family:'ZenMaru';">` +
-    titleChip +
-    `<div style="position:absolute;top:124px;left:74px;right:74px;bottom:120px;display:flex;align-items:center;justify-content:center;z-index:1;">` +
-    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.text};max-width:1010px;">${phraseHtml(data.body)}</div>` +
+    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;font-family:'ZenMaru';">` +
+    `<div style="position:absolute;top:48px;left:56px;right:56px;bottom:132px;display:flex;flex-direction:column;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius}px;overflow:hidden;">` +
+    header +
+    `<div style="display:flex;flex:1;align-items:center;justify-content:center;padding:28px 56px;">` +
+    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.text};">${phraseHtml(data.body)}</div>` +
     `</div>` +
-    `<div style="position:absolute;left:74px;bottom:54px;z-index:1;display:flex;">${brand}</div>` +
-    `<div style="position:absolute;right:74px;bottom:54px;z-index:1;display:flex;">${prof}</div>` +
+    `</div>` +
+    footer(t, prof) +
     `</div>`
   );
 }
