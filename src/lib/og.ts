@@ -1,76 +1,28 @@
-/**
- * Shared building blocks for the dynamic OG images (窓OG / 声OG).
- *
- * Everything here emits HTML strings that `@cf-wasm/og`'s `htmlToReact` turns
- * into a satori element tree. Keep it to flex/absolute + inline styles (no CSS
- * vars, no color-mix — satori doesn't grok them), which is exactly what the
- * design lab (static/ogp-lab.html) was authored against so ports stay mechanical.
- *
- * Design decisions (see memory: mado-ogp-redesign):
- *  - 窓OG = フレーム×パネル, 声OG = ミニマル(配置A)
- *  - ブランド表記は「Mado」/「半匿名メッセージ」、オーナー行は「◯◯ のMado / への声」
- *  - アバターは角丸四角、取得失敗/webp時は頭文字フォールバック
- *  - テーマは dark/light/dawn（?theme= で切替、既定 dark）
- */
-
 export const BRAND_DESC = "半匿名メッセージ";
 
 export type Theme = {
   bg: string;
-  ink: string;
-  sub: string;
-  pane: string;
-  chip: string;
+  panel: string;
+  item: string;
+  text: string;
+  note: string;
   accent: string;
-  frameBorder: string;
-  chipBorder: string;
-  avaText: string;
+  line: string;
+  lineStrong: string;
+  radius: number;
 };
 
-function rgba(hex: string, a: number): string {
-  const h = hex.replace("#", "");
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  return `rgba(${r},${g},${b},${a})`;
-}
-
-function mkTheme(accent: string, rest: Omit<Theme, "accent" | "frameBorder" | "chipBorder">): Theme {
-  return { ...rest, accent, frameBorder: rgba(accent, 0.45), chipBorder: rgba(accent, 0.3) };
-}
-
-export const THEMES: Record<string, Theme> = {
-  dark: mkTheme("#3b82f6", {
-    bg: "linear-gradient(140deg,#152238 0%,#0c1424 100%)",
-    ink: "#eaf1fb",
-    sub: "#8fa6c4",
-    pane: "rgba(122,170,255,0.10)",
-    chip: "rgba(122,170,255,0.10)",
-    avaText: "#eaf1fb",
-  }),
-  light: mkTheme("#2f6fe0", {
-    bg: "linear-gradient(140deg,#f5f9ff 0%,#e6eefb 100%)",
-    ink: "#14233f",
-    sub: "#5b7096",
-    pane: "rgba(44,90,160,0.10)",
-    chip: "rgba(44,90,160,0.08)",
-    avaText: "#14233f",
-  }),
-  dawn: mkTheme("#f2a15c", {
-    bg: "linear-gradient(155deg,#141a30 0%,#3a2540 55%,#6b3a4a 100%)",
-    ink: "#fdeede",
-    sub: "#e6b9a8",
-    pane: "rgba(255,210,180,0.12)",
-    chip: "rgba(255,210,180,0.12)",
-    avaText: "#fdeede",
-  }),
+export const defaultTheme: Theme = {
+  bg: "#11172b",
+  panel: "#1a2135",
+  item: "#282f45",
+  text: "#e7ebf6",
+  note: "#b3b7c1",
+  accent: "#78aef3",
+  line: "rgba(255,255,255,0.15)",
+  lineStrong: "rgba(255,255,255,0.25)",
+  radius: 14,
 };
-
-export function resolveTheme(searchParams: URLSearchParams): { key: string; t: Theme } {
-  const q = searchParams.get("theme") ?? "";
-  const key = q in THEMES ? q : "dark";
-  return { key, t: THEMES[key] };
-}
 
 export function escapeHtml(s: string): string {
   return s.replace(
@@ -85,21 +37,13 @@ export function truncate(s: string, max: number): string {
   return [...s].slice(0, max - 1).join("") + "…";
 }
 
-/** 声本文の文字数 → フォントサイズ（satori互換の段階式。lab の fitVoice と同一）。 */
 export function fitVoice(s: string): number {
   const n = [...s].length;
   return n <= 28 ? 60 : n <= 44 ? 52 : n <= 64 ? 44 : n <= 88 ? 38 : 32;
 }
 
-/**
- * Fetch an avatar and inline it as a data URI. satori can't decode webp, so we
- * only accept png/jpeg; anything else (or a failure) returns null → caller falls
- * back to the initial tile.
- */
 export async function fetchImageDataUri(url?: string): Promise<string | null> {
   if (!url) return null;
-  // Bluesky's CDN serves avatars as webp by default (satori can't decode webp).
-  // The `@jpeg` variant forces a jpeg re-encode, so normalize bsky avatar URLs.
   let target = url;
   if (target.includes("cdn.bsky.app/") && !/@[a-z]+$/.test(target)) {
     target += "@jpeg";
@@ -116,10 +60,6 @@ export async function fetchImageDataUri(url?: string): Promise<string | null> {
   }
 }
 
-/**
- * The Mado mark (吹き出し窓＋取手) as a single-color line glyph, embedded as an
- * SVG data URI so satori rasterizes it reliably (inline <svg> support is spotty).
- */
 export function logoImg(color: string, size: number): string {
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" ` +
@@ -133,36 +73,30 @@ export function logoImg(color: string, size: number): string {
   return `<img src="${uri}" width="${size}" height="${size}" style="width:${size}px;height:${size}px;" />`;
 }
 
-/** ブランドロックアップ（インライン）: Mado ＋ 半匿名メッセージ。 */
 export function wordmark(t: Theme, size: number): string {
   return (
     `<div style="display:flex;align-items:baseline;">` +
-    `<span style="font-size:${size}px;font-weight:700;letter-spacing:-0.02em;color:${t.ink};">Mado</span>` +
-    `<span style="font-size:${Math.round(size * 0.5)}px;color:${t.sub};margin-left:10px;">${BRAND_DESC}</span>` +
+    `<span style="font-size:${size}px;font-weight:700;letter-spacing:-0.02em;color:${t.text};">Mado</span>` +
+    `<span style="font-size:${Math.round(size * 0.5)}px;color:${t.note};margin-left:10px;">${BRAND_DESC}</span>` +
     `</div>`
   );
 }
 
-/** 角丸四角アバター。avatarUri があれば画像、無ければ頭文字タイル。 */
 function avatarSquare(t: Theme, avatarUri: string | null, initial: string, size: number): string {
   const r = Math.round(size * 0.26);
   if (avatarUri) {
     return (
       `<img src="${avatarUri}" width="${size}" height="${size}" ` +
-      `style="width:${size}px;height:${size}px;border-radius:${r}px;object-fit:cover;border:2px solid ${t.accent};" />`
+      `style="width:${size}px;height:${size}px;border-radius:${r}px;object-fit:cover;" />`
     );
   }
   return (
     `<div style="display:flex;align-items:center;justify-content:center;width:${size}px;height:${size}px;` +
-    `border-radius:${r}px;background:${t.chip};border:2px solid ${t.accent};color:${t.avaText};` +
+    `border-radius:${r}px;background:${t.item};color:${t.text};` +
     `font-size:${Math.round(size * 0.42)}px;font-weight:700;">${escapeHtml(initial)}</div>`
   );
 }
 
-/**
- * 窓OG/声OG 共通プロフィール: [角丸四角アイコン | 上=名前␣ラベル / 下=@handle]。
- * name と suffix(のMado / への声) は余白で分離、どちらも ink 色。
- */
 export function profile(
   t: Theme,
   name: string,
@@ -178,11 +112,46 @@ export function profile(
     avatarSquare(t, avatarUri, initial, size) +
     `<div style="display:flex;flex-direction:column;gap:8px;">` +
     `<div style="display:flex;align-items:baseline;gap:13px;">` +
-    `<span style="display:flex;font-size:${nameSize}px;font-weight:700;line-height:1.05;color:${t.ink};">${escapeHtml(name)}</span>` +
-    `<span style="display:flex;font-size:${nameSize}px;line-height:1.05;color:${t.ink};">${suffix}</span>` +
+    `<span style="display:flex;font-size:${nameSize}px;font-weight:700;line-height:1.05;color:${t.text};">${escapeHtml(name)}</span>` +
+    `<span style="display:flex;font-size:${nameSize}px;line-height:1.05;color:${t.text};">${suffix}</span>` +
     `</div>` +
-    `<span style="display:flex;font-size:${Math.round(size * 0.3)}px;line-height:1.05;color:${t.sub};">@${escapeHtml(handle)}</span>` +
+    `<span style="display:flex;font-size:${Math.round(size * 0.3)}px;line-height:1.05;color:${t.note};">@${escapeHtml(handle)}</span>` +
     `</div>` +
     `</div>`
   );
+}
+
+const FALLBACK_FAMILIES = ["Noto Sans JP", "Noto Sans SC", "Noto Sans Symbols 2", "Noto Sans Symbols", "Noto Sans"];
+
+export async function renderOg(html: string, text: string, ctx?: App.Platform["ctx"]): Promise<Response> {
+  const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
+  const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
+  if (ctx) cache.setExecutionContext(ctx);
+
+  const zenMaru = (weight: 400 | 500 | 700) =>
+    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight, text });
+
+  const res = await ImageResponse.async(htmlToReact(html), {
+    width: 1200,
+    height: 630,
+    format: "png",
+    fonts: [zenMaru(400), zenMaru(500), zenMaru(700)],
+    loadAdditionalAsset: async (code, segment) => {
+      if (code === "emoji") return undefined;
+      const loaded = await Promise.all(
+        FALLBACK_FAMILIES.map(async (family) => {
+          try {
+            const font = new GoogleFont(family, { name: family, weight: 400, text: segment });
+            return { name: font.name, weight: font.weight, style: font.style, data: await font.data };
+          } catch {
+            return null;
+          }
+        })
+      );
+      const fonts = loaded.filter((f) => f !== null);
+      return fonts.length ? fonts : undefined;
+    },
+  });
+  res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
+  return res;
 }

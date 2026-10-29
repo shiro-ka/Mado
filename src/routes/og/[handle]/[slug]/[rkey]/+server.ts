@@ -1,7 +1,8 @@
 import type { RequestHandler } from "./$types";
 import { resolveHandle, getKoeRecord, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
 import {
-  resolveTheme,
+  defaultTheme,
+  renderOg,
   escapeHtml,
   truncate,
   fitVoice,
@@ -15,15 +16,14 @@ import {
 
 const FALLBACK_TEXT = "匿名の声が届きました";
 
-/** 声OG = 案C（配置A）。窓タイトル左上 / ロゴ左下 / プロフィール右下 / 本文中央。 */
 function render(
   t: Theme,
   data: { body: string; boxTitle: string; name: string; handle: string; avatarUri: string | null }
 ): string {
   const titleChip = data.boxTitle
     ? `<div style="position:absolute;top:58px;left:74px;z-index:1;display:flex;">` +
-      `<div style="display:flex;align-items:center;background:${t.chip};border:1.5px solid ${t.chipBorder};border-radius:12px;padding:9px 17px;">` +
-      `<span style="display:flex;font-size:27px;font-weight:500;color:${t.ink};">${escapeHtml(data.boxTitle)}</span>` +
+      `<div style="display:flex;align-items:center;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius}px;padding:9px 17px;">` +
+      `<span style="display:flex;font-size:27px;font-weight:500;color:${t.text};">${escapeHtml(data.boxTitle)}</span>` +
       `</div></div>`
     : "";
   const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
@@ -31,24 +31,19 @@ function render(
   return (
     `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;overflow:hidden;font-family:'ZenMaru';">` +
     titleChip +
-    // 中央: 本文（主役）
     `<div style="position:absolute;top:124px;left:74px;right:74px;bottom:120px;display:flex;align-items:center;justify-content:center;z-index:1;">` +
-    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.ink};max-width:1010px;">${escapeHtml(data.body)}</div>` +
+    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.text};max-width:1010px;">${escapeHtml(data.body)}</div>` +
     `</div>` +
-    // 左下ブランド / 右下プロフィール
     `<div style="position:absolute;left:74px;bottom:54px;z-index:1;display:flex;">${brand}</div>` +
     `<div style="position:absolute;right:74px;bottom:54px;z-index:1;display:flex;">${prof}</div>` +
     `</div>`
   );
 }
 
-export const GET: RequestHandler = async ({ params, url, platform }) => {
-  const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
-  const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
-  if (platform?.ctx) cache.setExecutionContext(platform.ctx);
+export const GET: RequestHandler = async ({ params, platform }) => {
 
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
-  const { t } = resolveTheme(url.searchParams);
+  const t = defaultTheme;
 
   let body = FALLBACK_TEXT;
   let boxTitle = "";
@@ -71,22 +66,10 @@ export const GET: RequestHandler = async ({ params, url, platform }) => {
       avatarUri = await fetchImageDataUri(prof?.avatar);
     }
   } catch {
-    // fall through to defaults
   }
 
   const display = truncate(body, 100);
   const displayBoxTitle = truncate(boxTitle, 32);
-  const element = htmlToReact(
-    render(t, { body: display, boxTitle: displayBoxTitle, name, handle, avatarUri })
-  );
-
   const allText = display + displayBoxTitle + name + "への声" + "@" + handle + "Mado" + BRAND_DESC;
-  // Web と揃える: Zen Maru Gothic。1ウェイト=1フォント＋font-family:'ZenMaru'でweightマッチ。
-  const F = (weight: 400 | 500 | 700) =>
-    new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight, text: allText });
-  const fonts = [F(400), F(500), F(700)];
-
-  const res = await ImageResponse.async(element, { width: 1200, height: 630, format: "png", fonts });
-  res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
-  return res;
+  return renderOg(render(t, { body: display, boxTitle: displayBoxTitle, name, handle, avatarUri }), allText, platform?.ctx);
 };
