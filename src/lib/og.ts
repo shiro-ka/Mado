@@ -75,7 +75,7 @@ export function truncate(s: string, max: number): string {
 
 export function fitVoice(s: string): number {
   const n = [...s].length;
-  return n <= 28 ? 60 : n <= 44 ? 52 : n <= 64 ? 44 : n <= 88 ? 38 : 32;
+  return n <= 20 ? 52 : n <= 40 ? 44 : n <= 60 ? 38 : n <= 80 ? 32 : 28;
 }
 
 export async function fetchImageDataUri(url?: string): Promise<string | null> {

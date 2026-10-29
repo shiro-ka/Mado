@@ -15,26 +15,33 @@ import {
 
 const FALLBACK_TEXT = "匿名の声が届きました";
 
+function tailImg(t: Theme): string {
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="40" viewBox="0 0 56 40">` +
+    `<path d="M0 0 L10 40 L56 0" fill="${t.panel}" stroke="${t.line}" stroke-width="1.5" stroke-linejoin="round"/>` +
+    `</svg>`;
+  return `<img src="data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}" width="56" height="40" style="width:56px;height:40px;" />`;
+}
+
 function render(
   t: Theme,
   data: { body: string; boxTitle: string; name: string; handle: string; avatarUri: string | null }
 ): string {
-  const header = data.boxTitle
-    ? `<div style="display:flex;padding:20px 32px;border-bottom:1.5px solid ${t.line};">` +
-      `<span style="display:flex;font-size:26px;color:${t.note};">${escapeHtml(data.boxTitle)}</span>` +
-      `</div>`
+  const tag = data.boxTitle
+    ? `<div style="display:flex;"><div style="display:flex;padding:6px 16px;background:${t.item};border-radius:999px;font-size:22px;color:${t.note};">${escapeHtml(data.boxTitle)}</div></div>`
     : "";
   const prof = profile(t, data.name, "への声", data.handle, data.avatarUri);
   return (
     `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;font-family:'ZenMaru';">` +
     `<div style="position:absolute;top:52px;left:66px;display:flex;">${brand(t, 72, 32)}</div>` +
-    `<div style="position:absolute;top:150px;left:56px;right:56px;bottom:44px;display:flex;flex-direction:column;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius}px;overflow:hidden;">` +
-    header +
-    `<div style="display:flex;flex:1;align-items:center;justify-content:center;padding:16px 56px;">` +
-    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.text};">${phraseHtml(data.body)}</div>` +
+    `<div style="position:absolute;top:168px;left:120px;right:120px;bottom:140px;display:flex;flex-direction:column;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius * 2}px;padding:28px 40px;">` +
+    tag +
+    `<div style="display:flex;flex:1;align-items:center;">` +
+    `<div style="display:flex;flex-wrap:wrap;font-size:${fitVoice(data.body)}px;line-height:1.5;font-weight:700;color:${t.text};">${phraseHtml(data.body)}</div>` +
     `</div>` +
-    `<div style="display:flex;justify-content:flex-end;padding:0 32px 24px;">${prof}</div>` +
     `</div>` +
+    `<div style="position:absolute;left:176px;bottom:101.5px;display:flex;">${tailImg(t)}</div>` +
+    `<div style="position:absolute;right:120px;bottom:40px;display:flex;">${prof}</div>` +
     `</div>`
   );
 }
