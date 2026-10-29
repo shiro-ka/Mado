@@ -10,6 +10,7 @@ const BSKY_ENTRYWAY = "https://bsky.social";
 const loginSchema = z.object({
   handle: z.string().min(1).max(255).optional(),
   next: z.string().max(512).optional(),
+  addAccount: z.boolean().optional(),
 });
 
 export const POST: RequestHandler = async ({ request, platform }) => {
@@ -24,11 +25,15 @@ export const POST: RequestHandler = async ({ request, platform }) => {
       );
     }
 
-    const { handle, next } = parsed.data;
+    const { handle, next, addAccount } = parsed.data;
     const store = new CloudflareStore(env);
     const client = await createOAuthClient(env, store);
     const authorize = (scope: string) =>
-      client.authorize(handle ?? BSKY_ENTRYWAY, { scope, state: safeNext(next) });
+      client.authorize(handle ?? BSKY_ENTRYWAY, {
+        scope,
+        state: safeNext(next),
+        prompt: addAccount ? "select_account" : undefined,
+      });
     const url = await authorize(OAUTH_SCOPE).catch((err) => {
       if (!(err instanceof Error && err.message.includes("invalid_scope"))) throw err;
       console.warn("[/api/auth/login] granular scope rejected, falling back", err.message);

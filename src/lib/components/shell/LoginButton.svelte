@@ -9,9 +9,10 @@
     label?: string;
     variant?: ButtonVariant;
     look?: "button" | "other";
+    addAccount?: boolean;
   }
 
-  let { label, variant = "default", look = "button" }: Props = $props();
+  let { label, variant = "default", look = "button", addAccount = false }: Props = $props();
 
   const uid = $props.id();
   const dialogId = `login-${uid}`;
@@ -31,7 +32,11 @@
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ next, ...(kind === "handle" ? { handle: handle.trim().replace(/^@/, "") } : {}) }),
+        body: JSON.stringify({
+          next,
+          addAccount,
+          ...(kind === "handle" ? { handle: handle.trim().replace(/^@/, "") } : {}),
+        }),
       });
       const data = (await res.json()) as { redirectUrl?: string; message?: string };
       if (!res.ok || !data.redirectUrl) throw new Error(data.message ?? "ログインできませんでした");

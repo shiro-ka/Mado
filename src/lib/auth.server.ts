@@ -1,14 +1,12 @@
 import type { Cookies } from "@sveltejs/kit";
 import type { CloudflareStore, AppSession } from "./store.js";
 import { customAlphabet } from "nanoid";
+import { MAX_ACCOUNTS, type AccountSummary } from "./accounts.js";
 
 const SESSION_COOKIE = "mado_session";
-const SESSION_TTL = 30 * 24 * 60 * 60; // 30 days in seconds
+const ACCOUNTS_COOKIE = "mado_accounts";
+const SESSION_TTL = 30 * 24 * 60 * 60;
 
-/**
- * Get the current session from the session cookie + KV.
- * Returns undefined if not authenticated.
- */
 export async function getSession(
   cookies: Cookies,
   store: CloudflareStore
@@ -25,14 +23,6 @@ export async function getSessionEntry(
   const entry = await store.getSessionEntry(sessionId);
   if (!entry) return undefined;
   const { session } = entry;
-  // The app session (30-day cookie) is decoupled from the atproto OAuth session
-  // (keyed by DID, deleted on logout / revocation / cron cleanup). If the OAuth
-  // session is gone the user can't actually do anything — every atproto call
-  // would 401 — so treat them as logged out and clear the stale app session
-  // instead of rendering a half-logged-in UI.
-  // Legacy sessions minted before per-device login carry no deviceKey; their
-  // OAuth tokens lived under the bare DID key which is no longer read. Treat
-  // them as logged out so the user re-logs in cleanly under the new scheme.
   if (!session.deviceKey) {
     await store.delSession(sessionId);
     cookies.delete(SESSION_COOKIE, { path: "/" });
@@ -48,10 +38,6 @@ export async function getSessionEntry(
   return entry;
 }
 
-/**
- * Store a new session in KV and set the session cookie.
- * Returns the session ID.
- */
 export async function createSession(
   cookies: Cookies,
   env: App.Platform["env"],
@@ -65,9 +51,87 @@ export async function createSession(
   const sessionId = nanoid();
 
   await store.setSession(sessionId, session, SESSION_TTL);
+
+  const others: string[] = [];
+  for (const id of knownAccountIds(cookies)) {
+    const existing = await store.getSession(id);
+    if (!existing) continue;
+    if (existing.did === session.did) {
+      await store.delSession(id);
+      continue;
+    }
+    others.push(id);
+  }
+  const kept = others.slice(0, MAX_ACCOUNTS - 1);
+  for (const id of others.slice(MAX_ACCOUNTS - 1)) await store.delSession(id);
+
   setSessionCookie(cookies, env, sessionId);
+  setAccountIds(cookies, env, [sessionId, ...kept]);
 
   return sessionId;
+}
+
+function knownAccountIds(cookies: Cookies): string[] {
+  const ids = (cookies.get(ACCOUNTS_COOKIE) ?? "").split(".").filter((id) => /^[A-Za-z0-9]{32}$/.test(id));
+  const active = cookies.get(SESSION_COOKIE);
+  if (active && !ids.includes(active)) ids.unshift(active);
+  return ids;
+}
+
+function setAccountIds(cookies: Cookies, env: App.Platform["env"], ids: string[]): void {
+  if (ids.length === 0) {
+    cookies.delete(ACCOUNTS_COOKIE, { path: "/" });
+    return;
+  }
+  const appUrl = env.APP_URL ?? "https://mado.blue";
+  cookies.set(ACCOUNTS_COOKIE, ids.join("."), {
+    httpOnly: true,
+    secure: appUrl.startsWith("https://"),
+    sameSite: "lax",
+    maxAge: SESSION_TTL,
+    path: "/",
+  });
+}
+
+export async function listAccounts(
+  cookies: Cookies,
+  env: App.Platform["env"],
+  store: CloudflareStore
+): Promise<AccountSummary[]> {
+  const active = cookies.get(SESSION_COOKIE);
+  const ids = knownAccountIds(cookies);
+  const accounts: AccountSummary[] = [];
+  const valid: string[] = [];
+  for (const id of ids) {
+    const session = await store.getSession(id);
+    if (!session) continue;
+    valid.push(id);
+    accounts.push({
+      did: session.did,
+      handle: session.handle,
+      displayName: session.displayName,
+      avatar: session.avatar,
+      active: id === active,
+    });
+  }
+  if (valid.length !== ids.length) setAccountIds(cookies, env, valid);
+  return accounts;
+}
+
+export async function switchAccount(
+  cookies: Cookies,
+  env: App.Platform["env"],
+  store: CloudflareStore,
+  did: string
+): Promise<boolean> {
+  for (const id of knownAccountIds(cookies)) {
+    const session = await store.getSession(id);
+    if (session?.did === did) {
+      setSessionCookie(cookies, env, id);
+      return true;
+    }
+  }
+  return false;
 }
 
 function setSessionCookie(cookies: Cookies, env: App.Platform["env"], sessionId: string): void {
@@ -95,25 +159,29 @@ export async function extendSession(
   if (remaining > SESSION_TTL - SESSION_RENEW_AFTER) return;
   await store.setSession(sessionId, entry.session, SESSION_TTL);
   setSessionCookie(cookies, env, sessionId);
+  setAccountIds(cookies, env, knownAccountIds(cookies));
 }
 
-/**
- * Clear the session cookie and delete from KV.
- */
 export async function destroySession(
   cookies: Cookies,
+  env: App.Platform["env"],
   store: CloudflareStore
-): Promise<void> {
+): Promise<boolean> {
   const sessionId = cookies.get(SESSION_COOKIE);
-  if (sessionId) {
-    await store.delSession(sessionId);
-    cookies.delete(SESSION_COOKIE, { path: "/" });
+  const rest = knownAccountIds(cookies).filter((id) => id !== sessionId);
+  if (sessionId) await store.delSession(sessionId);
+  for (const id of rest) {
+    if (await store.getSession(id)) {
+      setSessionCookie(cookies, env, id);
+      setAccountIds(cookies, env, rest);
+      return true;
+    }
   }
+  cookies.delete(SESSION_COOKIE, { path: "/" });
+  setAccountIds(cookies, env, []);
+  return false;
 }
 
-/**
- * Update profile fields in the current session without resetting the TTL.
- */
 export async function updateSessionProfile(
   cookies: Cookies,
   store: CloudflareStore,
