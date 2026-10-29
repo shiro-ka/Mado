@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
-import { createOAuthClient, OAUTH_SCOPE } from "$lib/oauth.server.js";
+import { createOAuthClient, OAUTH_SCOPE, LEGACY_OAUTH_SCOPE } from "$lib/oauth.server.js";
 import { safeNext } from "$lib/loginNext.js";
 
 const BSKY_ENTRYWAY = "https://bsky.social";
@@ -27,9 +27,12 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const { handle, next } = parsed.data;
     const store = new CloudflareStore(env);
     const client = await createOAuthClient(env, store);
-    const url = await client.authorize(handle ?? BSKY_ENTRYWAY, {
-      scope: OAUTH_SCOPE,
-      state: safeNext(next),
+    const authorize = (scope: string) =>
+      client.authorize(handle ?? BSKY_ENTRYWAY, { scope, state: safeNext(next) });
+    const url = await authorize(OAUTH_SCOPE).catch((err) => {
+      if (!(err instanceof Error && err.message.includes("invalid_scope"))) throw err;
+      console.warn("[/api/auth/login] granular scope rejected, falling back", err.message);
+      return authorize(LEGACY_OAUTH_SCOPE);
     });
 
     return json({ redirectUrl: url.toString() });

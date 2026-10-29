@@ -119,6 +119,8 @@ export const OAUTH_SCOPE = [
   "rpc:app.bsky.actor.getProfile?aud=*",
 ].join(" ");
 
+export const LEGACY_OAUTH_SCOPE = "atproto transition:generic";
+
 export async function createOAuthClient(
   env: App.Platform["env"],
   store: CloudflareStore,
@@ -165,7 +167,7 @@ export async function createOAuthClient(
       client_name: "Mado",
       client_uri: appUrl,
       redirect_uris: [`${appUrl}/api/auth/callback`],
-      scope: `${OAUTH_SCOPE} transition:generic`,
+      scope: `${OAUTH_SCOPE} ${LEGACY_OAUTH_SCOPE}`,
       grant_types: ["authorization_code", "refresh_token"],
       response_types: ["code"],
       token_endpoint_auth_method: "private_key_jwt",
