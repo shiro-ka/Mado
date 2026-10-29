@@ -3,6 +3,7 @@
   import { ArrowLeft, Save, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import { CARD_PALETTE, CARD_SLOTS, DEFAULT_STYLE, type CardSlot } from "$lib/cardStyle.js";
+  import { themeFor, truncate, boxCardHtml, koeCardHtml } from "$lib/ogHtml.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -20,12 +21,19 @@
   let saved = $state(false);
   let saveError = $state(false);
 
-  let previewQuery = $state(untrack(() => new URLSearchParams(colors).toString()));
-  $effect(() => {
-    const next = new URLSearchParams({ ...colors }).toString();
-    const timer = setTimeout(() => (previewQuery = next), 400);
-    return () => clearTimeout(timer);
+  const SAMPLE_VOICE = "ここに届いた声が入ります";
+  const theme = $derived(themeFor(colors));
+  const card = $derived({
+    name: data.sample.name,
+    handle: data.sample.handle,
+    avatarUri: data.sample.avatar,
   });
+  const boxPreview = $derived(boxCardHtml(theme, { ...card, title: truncate(data.sample.title, 44) }));
+  const koePreview = $derived(
+    koeCardHtml(theme, { ...card, body: SAMPLE_VOICE, boxTitle: truncate(data.sample.title, 32) })
+  );
+  let frameWidth = $state(0);
+  const scale = $derived(frameWidth / 1200);
 
   function pick(slot: CardSlot, value: string) {
     colors[slot] = value.toLowerCase();
@@ -66,8 +74,11 @@
   <h1 data-suisou-text="fs-24 fw-700">リンクカードの見た目</h1>
 
   <div data-suisou-tray data-suisou-layout="stack gap-2" data-suisou="p-3">
-    <img class="preview" src={`/og/preview?kind=box&${previewQuery}`} alt="窓のリンクカードの見本" width="1200" height="630" />
-    <img class="preview" src={`/og/preview?kind=koe&${previewQuery}`} alt="声のリンクカードの見本" width="1200" height="630" />
+    {#each [{ html: boxPreview, label: "窓のリンクカードの見本" }, { html: koePreview, label: "声のリンクカードの見本" }] as preview}
+      <div class="frame" bind:clientWidth={frameWidth} style={`height:${630 * scale}px`} role="img" aria-label={preview.label}>
+        <div class="card" style={`transform:scale(${scale})`}>{@html preview.html}</div>
+      </div>
+    {/each}
   </div>
 
   {#each CARD_SLOTS as slot}
@@ -111,10 +122,20 @@
 </div>
 
 <style>
-  .preview {
+  .frame {
+    position: relative;
     width: 100%;
-    height: auto;
+    overflow: hidden;
     border-radius: var(--suisou-radius);
+  }
+  .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 1200px;
+    height: 630px;
+    transform-origin: top left;
   }
   .swatch {
     position: relative;
