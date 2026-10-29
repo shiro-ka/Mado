@@ -12,7 +12,8 @@ export async function getViewerFollowsActor(
       lexicon: `app.bsky.actor.getProfile?actor=${encodeURIComponent(actorDid)}`,
     });
     return typeof data.viewer?.following === "string";
-  } catch {
+  } catch (err) {
+    console.warn("[getViewerFollowsActor]", err);
     return false;
   }
 }
