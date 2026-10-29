@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type {
   BlueMadoBox,
   BlueMadoKoe,
@@ -14,16 +15,41 @@ import {
   invalidateRecords,
   xrpc,
 } from "./client.js";
+import { byteLength } from "../text.js";
 
-/* Mado 自身のレコード（blue.mado.box / koe / answer）の読み書き。
-   繋ぎ方とキャッシュは client.ts が持つので、ここは「Mado のデータの形」だけを知る。 */
-
-// Lexicon NSIDs
 export const NSID = {
   BOX: "blue.mado.box",
   KOE: "blue.mado.koe",
   ANSWER: "blue.mado.answer",
 } as const;
+
+const textWithin = (maxBytes: number) => z.string().refine((v) => byteLength(v) <= maxBytes);
+const dateText = z.string().refine((v) => !Number.isNaN(Date.parse(v)));
+
+const boxRecord = z.object({
+  slug: textWithin(64),
+  title: textWithin(600),
+  description: textWithin(1800).optional(),
+  isOpen: z.boolean(),
+  createdAt: dateText,
+});
+
+const koeRecord = z.object({
+  box: textWithin(2048),
+  body: textWithin(3000),
+  createdAt: dateText,
+});
+
+const answerRecord = z.object({
+  koe: textWithin(2048),
+  body: textWithin(6000),
+  createdAt: dateText,
+});
+
+function refOf(value: unknown, key: "box" | "koe"): string {
+  const ref = (value as Record<string, unknown> | null)?.[key];
+  return typeof ref === "string" ? ref : "";
+}
 
 export async function getBoxRecord(
   did: string,
@@ -36,7 +62,9 @@ export async function getBoxRecord(
       collection: NSID.BOX,
       rkey,
     });
-    const record = res.data.value as BlueMadoBox;
+    const parsed = boxRecord.safeParse(res.data.value);
+    if (!parsed.success) return null;
+    const record = parsed.data;
     return {
       uri: res.data.uri,
       cid: res.data.cid ?? "",
@@ -57,8 +85,10 @@ export async function listBoxes(did: string): Promise<QuestionBox[]> {
   const agent = await repoAgent(did);
   try {
     const records = await listAllRecords(agent, did, NSID.BOX);
-    return records.map((r) => {
-      const record = r.value as BlueMadoBox;
+    return records.flatMap((r) => {
+      const parsed = boxRecord.safeParse(r.value);
+      if (!parsed.success) return [];
+      const record = parsed.data;
       const rkey = r.uri.split("/").pop() ?? "";
       return {
         uri: r.uri,
@@ -96,7 +126,9 @@ export async function getKoeRecord(
       collection: NSID.KOE,
       rkey,
     });
-    const record = res.data.value as BlueMadoKoe;
+    const parsed = koeRecord.safeParse(res.data.value);
+    if (!parsed.success) return null;
+    const record = parsed.data;
     return {
       uri: res.data.uri,
       cid: res.data.cid ?? "",
@@ -115,8 +147,10 @@ export async function listQuestions(did: string): Promise<Question[]> {
   const agent = await repoAgent(did);
   try {
     const records = await listAllRecords(agent, did, NSID.KOE);
-    return records.map((r) => {
-      const record = r.value as BlueMadoKoe;
+    return records.flatMap((r) => {
+      const parsed = koeRecord.safeParse(r.value);
+      if (!parsed.success) return [];
+      const record = parsed.data;
       const rkey = r.uri.split("/").pop() ?? "";
       return {
         uri: r.uri,
@@ -141,7 +175,9 @@ export async function getAnswersByOwner(
     const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
     const map = new Map<string, Answer[]>();
     for (const r of records) {
-      const record = r.value as BlueMadoAnswer;
+      const parsed = answerRecord.safeParse(r.value);
+      if (!parsed.success) continue;
+      const record = parsed.data;
       const rkey = r.uri.split("/").pop() ?? "";
       const answer: Answer = {
         uri: r.uri,
@@ -169,9 +205,11 @@ export async function listAnswers(
   try {
     const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
     return records
-      .filter((r) => (r.value as BlueMadoAnswer).koe === koeUri)
-      .map((r) => {
-        const record = r.value as BlueMadoAnswer;
+      .flatMap((r) => {
+        const parsed = answerRecord.safeParse(r.value);
+        return parsed.success && parsed.data.koe === koeUri ? [{ r, record: parsed.data }] : [];
+      })
+      .map(({ r, record }) => {
         const rkey = r.uri.split("/").pop() ?? "";
         return {
           uri: r.uri,
@@ -190,10 +228,6 @@ export async function listAnswers(
     return [];
   }
 }
-
-// ---------------------------------------------------------------------------
-// Authenticated writes
-// ---------------------------------------------------------------------------
 
 export async function writeQuestion(params: {
   sessionFetch: SessionFetch;
@@ -327,13 +361,13 @@ async function deleteKoesWithAnswers(
     ]);
     const rkeyOf = (uri: string) => uri.split("/").pop() ?? "";
     const koeRkeys = koes
-      .map((r) => ({ rkey: rkeyOf(r.uri), box: (r.value as BlueMadoKoe).box }))
+      .map((r) => ({ rkey: rkeyOf(r.uri), box: refOf(r.value, "box") }))
       .filter(pick)
       .map((k) => k.rkey);
     const picked = new Set(koeRkeys);
     const writes = [
       ...answers
-        .filter((r) => picked.has(rkeyOf((r.value as BlueMadoAnswer).koe)))
+        .filter((r) => picked.has(rkeyOf(refOf(r.value, "koe"))))
         .map((r) => ({ collection: NSID.ANSWER, rkey: rkeyOf(r.uri) })),
       ...koeRkeys.map((rkey) => ({ collection: NSID.KOE, rkey })),
       ...last,
