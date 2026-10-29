@@ -192,12 +192,3 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
 export function brand(t: Theme, logoSize: number, wordSize: number): string {
   return `<div style="display:flex;align-items:center;gap:${Math.round(logoSize * 0.28)}px;">${logoImg(t.accent, logoSize)}${wordmark(t, wordSize)}</div>`;
 }
-
-export function footer(t: Theme, prof: string): string {
-  return (
-    `<div style="position:absolute;left:74px;right:74px;bottom:44px;display:flex;align-items:center;justify-content:space-between;">` +
-    brand(t, 50, 22) +
-    prof +
-    `</div>`
-  );
-}

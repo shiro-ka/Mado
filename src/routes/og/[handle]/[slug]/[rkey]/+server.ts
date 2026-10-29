@@ -8,7 +8,7 @@ import {
   truncate,
   fitVoice,
   fetchImageDataUri,
-  footer,
+  brand,
   profile,
   type Theme,
 } from "$lib/og";
@@ -27,13 +27,14 @@ function render(
   const prof = profile(t, data.name, "への声", data.handle, data.avatarUri);
   return (
     `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;font-family:'ZenMaru';">` +
-    `<div style="position:absolute;top:48px;left:56px;right:56px;bottom:132px;display:flex;flex-direction:column;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius}px;overflow:hidden;">` +
+    `<div style="position:absolute;top:52px;left:66px;display:flex;">${brand(t, 72, 32)}</div>` +
+    `<div style="position:absolute;top:150px;left:56px;right:56px;bottom:44px;display:flex;flex-direction:column;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius}px;overflow:hidden;">` +
     header +
-    `<div style="display:flex;flex:1;align-items:center;justify-content:center;padding:28px 56px;">` +
+    `<div style="display:flex;flex:1;align-items:center;justify-content:center;padding:16px 56px;">` +
     `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.text};">${phraseHtml(data.body)}</div>` +
     `</div>` +
+    `<div style="display:flex;justify-content:flex-end;padding:0 32px 24px;">${prof}</div>` +
     `</div>` +
-    footer(t, prof) +
     `</div>`
   );
 }
