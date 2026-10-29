@@ -8,7 +8,6 @@ import {
   fetchImageDataUri,
   logoImg,
   profile,
-  BRAND_DESC,
   type Theme,
 } from "$lib/og";
 
@@ -26,7 +25,6 @@ function render(
     `<div style="display:flex;">${logo}</div>` +
     `<div style="display:flex;flex-direction:column;gap:10px;">` +
     `<span style="font-size:40px;font-weight:700;letter-spacing:-0.02em;color:${t.text};">Mado</span>` +
-    `<span style="font-size:23px;color:${t.note};">${BRAND_DESC}</span>` +
     `</div>` +
     `</div>` +
     `<div style="display:flex;flex-direction:column;justify-content:center;flex:1;padding:70px 62px 120px;">` +
@@ -61,6 +59,6 @@ export const GET: RequestHandler = async ({ params, platform }) => {
   }
 
   const displayTitle = truncate(title, 44);
-  const allText = displayTitle + name + "のMado" + "@" + handle + "Mado" + BRAND_DESC;
+  const allText = displayTitle + name + "のMado" + "@" + handle + "Mado";
   return renderOg(render(t, { title: displayTitle, name, handle, avatarUri }), allText, platform?.ctx);
 };

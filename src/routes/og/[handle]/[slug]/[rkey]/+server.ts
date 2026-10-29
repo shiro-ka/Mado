@@ -10,7 +10,6 @@ import {
   logoImg,
   wordmark,
   profile,
-  BRAND_DESC,
   type Theme,
 } from "$lib/og";
 
@@ -70,6 +69,6 @@ export const GET: RequestHandler = async ({ params, platform }) => {
 
   const display = truncate(body, 100);
   const displayBoxTitle = truncate(boxTitle, 32);
-  const allText = display + displayBoxTitle + name + "への声" + "@" + handle + "Mado" + BRAND_DESC;
+  const allText = display + displayBoxTitle + name + "への声" + "@" + handle + "Mado";
   return renderOg(render(t, { body: display, boxTitle: displayBoxTitle, name, handle, avatarUri }), allText, platform?.ctx);
 };

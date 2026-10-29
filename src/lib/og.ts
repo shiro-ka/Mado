@@ -1,5 +1,3 @@
-export const BRAND_DESC = "半匿名メッセージ";
-
 export type Theme = {
   bg: string;
   panel: string;
@@ -77,7 +75,6 @@ export function wordmark(t: Theme, size: number): string {
   return (
     `<div style="display:flex;align-items:baseline;">` +
     `<span style="font-size:${size}px;font-weight:700;letter-spacing:-0.02em;color:${t.text};">Mado</span>` +
-    `<span style="font-size:${Math.round(size * 0.5)}px;color:${t.note};margin-left:10px;">${BRAND_DESC}</span>` +
     `</div>`
   );
 }
