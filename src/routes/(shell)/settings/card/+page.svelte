@@ -139,8 +139,8 @@
   }
   .swatch {
     position: relative;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
     padding: 0;
     border-radius: var(--suisou-radius-pill);
     border: 2px solid var(--suisou-color-line-strong);
