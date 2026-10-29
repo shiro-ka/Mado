@@ -136,8 +136,11 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
     height: 630,
     format: "png",
     fonts: [zenMaru(400), zenMaru(500), zenMaru(700)],
-    loadAdditionalAsset: async (code, segment) => {
-      if (code === "emoji") return undefined;
+    loadAdditionalAsset: async (code, segment, next) => {
+      if (code === "emoji") {
+        const emoji = await next().catch(() => undefined);
+        if (emoji) return emoji;
+      }
       const loaded = await Promise.all(
         FALLBACK_FAMILIES.map(async (family) => {
           try {
