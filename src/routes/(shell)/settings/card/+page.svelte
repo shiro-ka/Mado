@@ -3,7 +3,7 @@
   import { ArrowLeft, Save, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import { CARD_PALETTE, CARD_SLOTS, DEFAULT_STYLE, type CardSlot } from "$lib/cardStyle.js";
-  import { themeFor, truncate, boxCardHtml, koeCardHtml } from "$lib/ogHtml.js";
+  import { themeFor, boxCardHtml, koeCardHtml } from "$lib/ogHtml.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -21,6 +21,7 @@
   let saved = $state(false);
   let saveError = $state(false);
 
+  const SAMPLE_TITLE = "窓のタイトルが表示されます";
   const SAMPLE_VOICE = "ここに届いた声が入ります";
   const theme = $derived(themeFor(colors));
   const card = $derived({
@@ -28,9 +29,9 @@
     handle: data.sample.handle,
     avatarUri: data.sample.avatar,
   });
-  const boxPreview = $derived(boxCardHtml(theme, { ...card, title: truncate(data.sample.title, 44) }));
+  const boxPreview = $derived(boxCardHtml(theme, { ...card, title: SAMPLE_TITLE }));
   const koePreview = $derived(
-    koeCardHtml(theme, { ...card, body: SAMPLE_VOICE, boxTitle: truncate(data.sample.title, 32) })
+    koeCardHtml(theme, { ...card, body: SAMPLE_VOICE, boxTitle: SAMPLE_TITLE })
   );
   let frameWidth = $state(0);
   const scale = $derived(frameWidth / 1200);
