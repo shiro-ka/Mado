@@ -128,14 +128,14 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
   const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
   if (ctx) cache.setExecutionContext(ctx);
 
-  const zenMaru = (weight: 400 | 500 | 700) =>
+  const zenMaru = (weight: 400 | 700) =>
     new GoogleFont("Zen Maru Gothic", { name: "ZenMaru", weight, text });
 
   const res = await ImageResponse.async(htmlToReact(html), {
     width: 1200,
     height: 630,
     format: "png",
-    fonts: [zenMaru(400), zenMaru(500), zenMaru(700)],
+    fonts: [zenMaru(400), zenMaru(700)],
     loadAdditionalAsset: async (code, segment, next) => {
       if (code !== "symbol" && code !== "emoji") return undefined;
       if (code === "emoji") {

@@ -23,7 +23,7 @@ function render(
   const titleChip = data.boxTitle
     ? `<div style="position:absolute;top:58px;left:74px;z-index:1;display:flex;">` +
       `<div style="display:flex;align-items:center;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius}px;padding:9px 17px;">` +
-      `<span style="display:flex;font-size:27px;font-weight:500;color:${t.text};">${escapeHtml(data.boxTitle)}</span>` +
+      `<span style="display:flex;font-size:27px;font-weight:400;color:${t.text};">${escapeHtml(data.boxTitle)}</span>` +
       `</div></div>`
     : "";
   const brand = `<div style="display:flex;align-items:center;gap:14px;">${logoImg(t.accent, 50)}${wordmark(t, 22)}</div>`;
