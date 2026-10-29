@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
-import { createOAuthClient } from "$lib/oauth.server.js";
+import { createOAuthClient, OAUTH_SCOPE } from "$lib/oauth.server.js";
 import { safeNext } from "$lib/loginNext.js";
 
 const BSKY_ENTRYWAY = "https://bsky.social";
@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const store = new CloudflareStore(env);
     const client = await createOAuthClient(env, store);
     const url = await client.authorize(handle ?? BSKY_ENTRYWAY, {
-      scope: "atproto transition:generic",
+      scope: OAUTH_SCOPE,
       state: safeNext(next),
     });
 
