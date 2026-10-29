@@ -30,6 +30,44 @@ export function escapeHtml(s: string): string {
   );
 }
 
+function charClass(c: string): string {
+  if (/\s/.test(c)) return "space";
+  if (/[\u3041-\u309f]/.test(c)) return "hiragana";
+  if (/[\u30a0-\u30ff\u31f0-\u31ff\uff66-\uff9f]/.test(c)) return "katakana";
+  if (/[\u3400-\u9fff\uf900-\ufaff々〆]/.test(c)) return "kanji";
+  if (/[（「『【〔［｛〈《(\[{]/.test(c)) return "open";
+  if (/[、。，．）」』】〕］｝〉》！？!?,.)\]}…‥・：；:;]/.test(c)) return "close";
+  return "other";
+}
+
+function phrases(text: string): string[] {
+  const out: string[] = [];
+  let current = "";
+  let prev = "";
+  for (const c of text) {
+    const kind = charClass(c);
+    const startsPhrase =
+      current !== "" &&
+      ((kind === "open" && prev !== "open") ||
+        (prev === "space" && kind !== "space") ||
+        ((kind === "kanji" || kind === "katakana" || kind === "other") && (prev === "hiragana" || prev === "close")));
+    if (startsPhrase) {
+      out.push(current);
+      current = "";
+    }
+    current += c;
+    prev = kind;
+  }
+  if (current) out.push(current);
+  return out;
+}
+
+export function phraseHtml(text: string): string {
+  return phrases(text)
+    .map((p) => `<span style="display:flex;white-space:pre-wrap;">${escapeHtml(p)}</span>`)
+    .join("");
+}
+
 export function truncate(s: string, max: number): string {
   if ([...s].length <= max) return s;
   return [...s].slice(0, max - 1).join("") + "…";

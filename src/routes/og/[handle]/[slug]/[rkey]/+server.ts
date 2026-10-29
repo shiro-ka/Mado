@@ -4,6 +4,7 @@ import {
   defaultTheme,
   renderOg,
   escapeHtml,
+  phraseHtml,
   truncate,
   fitVoice,
   fetchImageDataUri,
@@ -31,7 +32,7 @@ function render(
     `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;overflow:hidden;font-family:'ZenMaru';">` +
     titleChip +
     `<div style="position:absolute;top:124px;left:74px;right:74px;bottom:120px;display:flex;align-items:center;justify-content:center;z-index:1;">` +
-    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.text};max-width:1010px;">${escapeHtml(data.body)}</div>` +
+    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.46;font-weight:700;color:${t.text};max-width:1010px;">${phraseHtml(data.body)}</div>` +
     `</div>` +
     `<div style="position:absolute;left:74px;bottom:54px;z-index:1;display:flex;">${brand}</div>` +
     `<div style="position:absolute;right:74px;bottom:54px;z-index:1;display:flex;">${prof}</div>` +

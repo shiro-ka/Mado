@@ -4,6 +4,7 @@ import {
   defaultTheme,
   renderOg,
   escapeHtml,
+  phraseHtml,
   truncate,
   fetchImageDataUri,
   logoImg,
@@ -28,7 +29,7 @@ function render(
     `</div>` +
     `</div>` +
     `<div style="display:flex;flex-direction:column;justify-content:center;flex:1;padding:70px 62px 120px;">` +
-    `<div style="display:flex;flex-wrap:wrap;font-size:60px;line-height:1.3;font-weight:700;letter-spacing:-0.01em;color:${t.text};">${escapeHtml(data.title)}</div>` +
+    `<div style="display:flex;flex-wrap:wrap;font-size:60px;line-height:1.3;font-weight:700;letter-spacing:-0.01em;color:${t.text};">${phraseHtml(data.title)}</div>` +
     `</div>` +
     `</div>` +
     `<div style="position:absolute;right:74px;bottom:66px;display:flex;">${prof}</div>` +
