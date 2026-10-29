@@ -243,8 +243,8 @@ export function koeCardHtml(
     `<div style="position:absolute;top:52px;left:66px;display:flex;">${brand(t, 72, 32)}</div>` +
     `<div style="position:absolute;top:168px;left:120px;right:120px;bottom:140px;display:flex;flex-direction:column;background:${t.panel};border:1.5px solid ${t.line};border-radius:${t.radius * 2}px;padding:28px 40px;">` +
     tag +
-    `<div style="display:flex;flex:1;align-items:center;">` +
-    `<div style="display:flex;flex-wrap:wrap;font-size:${fitVoice(data.body)}px;line-height:1.5;font-weight:700;color:${t.panelText};">${phraseHtml(data.body)}</div>` +
+    `<div style="display:flex;flex:1;align-items:center;justify-content:center;">` +
+    `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:${fitVoice(data.body)}px;line-height:1.5;font-weight:700;color:${t.panelText};">${phraseHtml(data.body)}</div>` +
     `</div>` +
     `</div>` +
     `<div style="position:absolute;left:176px;bottom:100px;display:flex;">${tailImg(t)}</div>` +
