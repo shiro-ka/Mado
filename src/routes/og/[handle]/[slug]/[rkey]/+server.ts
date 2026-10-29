@@ -17,10 +17,11 @@ const FALLBACK_TEXT = "匿名の声が届きました";
 
 function tailImg(t: Theme): string {
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="40" viewBox="0 0 56 40">` +
-    `<path d="M0 0 L10 40 L56 0" fill="${t.panel}" stroke="${t.line}" stroke-width="1.5" stroke-linejoin="round"/>` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="44" viewBox="0 0 56 44">` +
+    `<path d="M0 0 H56 V4 L10 44 L0 4 Z" fill="${t.panel}"/>` +
+    `<path d="M0 4 L10 44 L56 4" fill="none" stroke="${t.line}" stroke-width="1.5" stroke-linejoin="round"/>` +
     `</svg>`;
-  return `<img src="data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}" width="56" height="40" style="width:56px;height:40px;" />`;
+  return `<img src="data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}" width="56" height="44" style="width:56px;height:44px;" />`;
 }
 
 function render(
@@ -40,7 +41,7 @@ function render(
     `<div style="display:flex;flex-wrap:wrap;font-size:${fitVoice(data.body)}px;line-height:1.5;font-weight:700;color:${t.text};">${phraseHtml(data.body)}</div>` +
     `</div>` +
     `</div>` +
-    `<div style="position:absolute;left:176px;bottom:101.5px;display:flex;">${tailImg(t)}</div>` +
+    `<div style="position:absolute;left:176px;bottom:100px;display:flex;">${tailImg(t)}</div>` +
     `<div style="position:absolute;right:120px;bottom:40px;display:flex;">${prof}</div>` +
     `</div>`
   );
