@@ -1,13 +1,15 @@
 import type { RequestHandler } from "./$types";
+import { CloudflareStore } from "$lib/store.js";
+import { parseCardStyle, colorsOf } from "$lib/cardStyle.js";
 import { resolveHandle, getKoeRecord, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
-import { defaultTheme, renderOg, truncate, fetchImageDataUri, koeCardHtml } from "$lib/og";
+import { themeFor, renderOg, truncate, fetchImageDataUri, koeCardHtml } from "$lib/og";
 
 const FALLBACK_TEXT = "匿名の声が届きました";
 
 export const GET: RequestHandler = async ({ params, platform }) => {
 
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
-  const t = defaultTheme;
+  let t = themeFor();
 
   let body = FALLBACK_TEXT;
   let boxTitle = "";
@@ -18,11 +20,13 @@ export const GET: RequestHandler = async ({ params, platform }) => {
   try {
     const did = await resolveHandle(cleanHandle);
     if (did) {
-      const [koe, box, prof] = await Promise.all([
+      const [koe, box, prof, card] = await Promise.all([
         getKoeRecord(did, params.rkey),
         findBoxBySlug(did, params.slug),
         getProfile(did),
+        new CloudflareStore(platform!.env).getCardStyle(did),
       ]);
+      t = themeFor(colorsOf(parseCardStyle(card?.style)));
       if (koe?.body) body = koe.body;
       if (box?.title) boxTitle = box.title;
       if (prof?.handle) handle = prof.handle;

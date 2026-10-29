@@ -364,6 +364,29 @@ export class CloudflareStore {
       .run();
   }
 
+  async getCardStyle(did: string): Promise<{ style: unknown; updatedAt: number } | null> {
+    const row = await this.env.DB.prepare("SELECT style, updated_at FROM card_styles WHERE did = ?")
+      .bind(did)
+      .first<{ style: string; updated_at: number }>();
+    if (!row) return null;
+    try {
+      return { style: JSON.parse(row.style), updatedAt: row.updated_at };
+    } catch {
+      return null;
+    }
+  }
+
+  async setCardStyle(did: string, style: unknown): Promise<number> {
+    const now = Math.floor(Date.now() / 1000);
+    await this.env.DB.prepare(
+      `INSERT INTO card_styles (did, style, updated_at) VALUES (?, ?, ?)
+       ON CONFLICT (did) DO UPDATE SET style = excluded.style, updated_at = excluded.updated_at`
+    )
+      .bind(did, JSON.stringify(style), now)
+      .run();
+    return now;
+  }
+
   async hitLimit(key: string, windowSeconds: number): Promise<number> {
     const now = Math.floor(Date.now() / 1000);
     const row = await this.env.DB.prepare(

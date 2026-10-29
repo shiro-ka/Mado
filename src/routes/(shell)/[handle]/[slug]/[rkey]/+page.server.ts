@@ -46,6 +46,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   }
 
   const senderProfile = senderDid ? await getProfile(senderDid) : null;
+  const card = await new CloudflareStore(platform!.env).getCardStyle(ownerDid);
 
   return {
     cleanHandle,
@@ -58,6 +59,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     koeUri,
     senderDid,
     senderProfile,
+    cardVersion: card?.updatedAt ?? null,
     senderBlocked,
     senderUnknown,
     origin: url.origin,

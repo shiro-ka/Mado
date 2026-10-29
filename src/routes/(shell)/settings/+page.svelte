@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { Bell, Ban, ChevronRight } from "lucide-svelte";
+  import { Bell, Ban, Palette, ChevronRight } from "lucide-svelte";
 
   const items = [
     { href: "/settings/notifications", icon: Bell, label: "通知" },
     { href: "/settings/blocks", icon: Ban, label: "ブロック中の人" },
+    { href: "/settings/card", icon: Palette, label: "リンクカードの見た目" },
   ];
 </script>
 

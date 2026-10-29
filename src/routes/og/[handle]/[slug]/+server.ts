@@ -1,11 +1,13 @@
 import type { RequestHandler } from "./$types";
+import { CloudflareStore } from "$lib/store.js";
+import { parseCardStyle, colorsOf } from "$lib/cardStyle.js";
 import { resolveHandle, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
-import { defaultTheme, renderOg, truncate, fetchImageDataUri, boxCardHtml } from "$lib/og";
+import { themeFor, renderOg, truncate, fetchImageDataUri, boxCardHtml } from "$lib/og";
 
 export const GET: RequestHandler = async ({ params, platform }) => {
 
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
-  const t = defaultTheme;
+  let t = themeFor();
 
   let title = "窓";
   let name = cleanHandle;
@@ -15,7 +17,12 @@ export const GET: RequestHandler = async ({ params, platform }) => {
   try {
     const did = await resolveHandle(cleanHandle);
     if (did) {
-      const [box, prof] = await Promise.all([findBoxBySlug(did, params.slug), getProfile(did)]);
+      const [box, prof, card] = await Promise.all([
+        findBoxBySlug(did, params.slug),
+        getProfile(did),
+        new CloudflareStore(platform!.env).getCardStyle(did),
+      ]);
+      t = themeFor(colorsOf(parseCardStyle(card?.style)));
       if (box?.title) title = box.title;
       if (prof?.handle) handle = prof.handle;
       name = prof?.displayName || prof?.handle || cleanHandle;

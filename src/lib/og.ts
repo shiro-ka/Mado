@@ -221,7 +221,12 @@ export function profile(
 
 const SYMBOL_FAMILIES = ["Noto Sans Symbols 2", "Noto Sans Symbols"];
 
-export async function renderOg(html: string, text: string, ctx?: App.Platform["ctx"]): Promise<Response> {
+export async function renderOg(
+  html: string,
+  text: string,
+  ctx?: App.Platform["ctx"],
+  cacheControl = "public, max-age=86400, s-maxage=86400"
+): Promise<Response> {
   const { ImageResponse, GoogleFont, cache } = await import("@cf-wasm/og/workerd");
   const { htmlToReact } = await import("@cf-wasm/og/html-to-react");
   if (ctx) cache.setExecutionContext(ctx);
@@ -248,7 +253,7 @@ export async function renderOg(html: string, text: string, ctx?: App.Platform["c
       return undefined;
     },
   });
-  res.headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
+  res.headers.set("Cache-Control", cacheControl);
   return res;
 }
 

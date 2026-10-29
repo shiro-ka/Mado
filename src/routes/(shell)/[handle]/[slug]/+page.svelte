@@ -17,11 +17,11 @@
   <meta property="og:title" content={`${data.box.title} - ${ownerName} のMado`} />
   <meta property="og:description" content={data.box.description || "Madoで半匿名の声を送ろう"} />
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}`} />
-  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
+  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}`} />
+  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
 </svelte:head>
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">

@@ -16,10 +16,11 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
 
   const isOwner = session?.did === did;
 
-  const [box, ownerProfile, ownerRegistered] = await Promise.all([
+  const [box, ownerProfile, ownerRegistered, card] = await Promise.all([
     findBoxBySlug(did, params.slug),
     getProfile(did),
     store.ownerHasAnyDevice(did),
+    store.getCardStyle(did),
   ]);
 
   if (!box) throw error(404, "窓が見つかりません");
@@ -32,5 +33,6 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     isOwner,
     inbox: isOwner && session ? buildInbox(store, session, box.rkey) : null,
     origin: url.origin,
+    cardVersion: card?.updatedAt ?? null,
   };
 };

@@ -31,11 +31,11 @@
   <meta property="og:site_name" content="Mado" />
   <meta property="og:title" content={`${data.ownerName} への声 - Mado 半匿名メッセージ`} />
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
-  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
+  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
+  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
 </svelte:head>
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
