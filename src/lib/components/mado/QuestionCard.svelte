@@ -65,11 +65,11 @@
   }
 </script>
 
-<div data-suisou-tray="link" data-suisou-layout="stack gap-0" data-suisou="p-0" class="card">
+<div data-suisou-tray="link" data-suisou-layout="stack gap-0" class="card">
   {#if question.boxTitle}
-    <span data-suisou="bd-bottom py-1 px-2 note" data-suisou-text="fs-12 clamp-1">{question.boxTitle}</span>
+    <span data-suisou-tray="bleed" data-suisou="bd-bottom py-1 px-2 note" data-suisou-text="fs-12 clamp-1">{question.boxTitle}</span>
   {/if}
-  <a {href} data-suisou-item="media" data-suisou="p-2" class="main">
+  <a {href} data-suisou-item="media" data-suisou-tray="stretch" class="main">
     <span data-suisou-item="media-figure">
       {#if question.senderAvatar}
         <img src={question.senderAvatar} alt="" data-suisou-item="circle" />
@@ -118,7 +118,7 @@
     <span data-suisou-item="media-tail" class="go"><ChevronRight data-suisou="note" /></span>
   </a>
 
-  <div data-suisou-layout="row end gap-1" class="actions">
+  <div data-suisou-layout="row end gap-1" data-suisou="mt-2" class="actions">
     <Button variant="ghost" onclick={() => (replying = !replying)} aria-expanded={replying}>
       {#snippet leftIcon()}<MadoIcon data-suisou="accent" />{/snippet}
       返信する
@@ -168,7 +168,7 @@
   {/if}
 
   {#if replying}
-    <div data-suisou="bd-top p-2" class="reply">
+    <div data-suisou-tray="bleed" data-suisou="bd-top p-2" class="reply">
       <AnswerForm
         koeUri={question.uri}
         questionBody={question.body}
@@ -180,35 +180,17 @@
 </div>
 
 <style>
-  .card {
-    position: relative;
-  }
   .card:has(.reply:hover) {
     background-image: none;
   }
   .main {
     color: var(--suisou-color-text);
   }
-  .main::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-  }
-  .actions,
   .reply {
     position: relative;
   }
-  .actions {
-    pointer-events: none;
-  }
-  .actions > :global(*) {
-    pointer-events: auto;
-  }
   .go {
     align-self: center;
-  }
-  .actions {
-    padding: 0 var(--suisou-space-2) var(--suisou-space-2);
   }
   .who {
     min-width: 0;
