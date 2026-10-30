@@ -117,32 +117,34 @@
       </div>
     </div>
   {:else}
-    <div data-suisou-layout="stack gap-3" class="items">
-      {#each filtered as question (question.rkey)}
-        {#if tab === "new" && handled.get(question.rkey) === "through"}
-          <div data-suisou-tray data-suisou-layout="row between" data-suisou="py-1">
-            <span data-suisou-text="fs-14" data-suisou="note">既読にしました</span>
-            <Button variant="ghost" loading={undoing === question.rkey} onclick={() => undoThrough(question.rkey)}>取り消す</Button>
-          </div>
-        {:else}
-          <QuestionCard
-            {question}
-            href={question.href}
-            heard={isHeard(question)}
-            {ownerAvatar}
-            showNewTag={tab !== "new" && !isHeard(question)}
-            sentAnswers={sentAnswers.get(question.rkey)}
-            onReplied={(answerBody) => {
-              setHandled(question.rkey, "replied");
-              sentAnswers = new Map(sentAnswers).set(question.rkey, [...(sentAnswers.get(question.rkey) ?? []), answerBody]);
-            }}
-            onThrough={() => setHandled(question.rkey, "through")}
-            onUnheard={() => setHandled(question.rkey, "unheard")}
-            onBlocked={(did) => (blocked = new Set([...blocked, did]))}
-            onDeleted={() => (deleted = new Set([...deleted, question.rkey]))}
-          />
-        {/if}
-      {/each}
-    </div>
+    {#key tab}
+      <div data-suisou-layout="stack gap-3" class="items">
+        {#each filtered as question (question.rkey)}
+          {#if tab === "new" && handled.get(question.rkey) === "through"}
+            <div data-suisou-tray data-suisou-layout="row between" data-suisou="py-1">
+              <span data-suisou-text="fs-14" data-suisou="note">既読にしました</span>
+              <Button variant="ghost" loading={undoing === question.rkey} onclick={() => undoThrough(question.rkey)}>取り消す</Button>
+            </div>
+          {:else}
+            <QuestionCard
+              {question}
+              href={question.href}
+              heard={isHeard(question)}
+              {ownerAvatar}
+              showNewTag={tab !== "new" && !isHeard(question)}
+              sentAnswers={sentAnswers.get(question.rkey)}
+              onReplied={(answerBody) => {
+                setHandled(question.rkey, "replied");
+                sentAnswers = new Map(sentAnswers).set(question.rkey, [...(sentAnswers.get(question.rkey) ?? []), answerBody]);
+              }}
+              onThrough={() => setHandled(question.rkey, "through")}
+              onUnheard={() => setHandled(question.rkey, "unheard")}
+              onBlocked={(did) => (blocked = new Set([...blocked, did]))}
+              onDeleted={() => (deleted = new Set([...deleted, question.rkey]))}
+            />
+          {/if}
+        {/each}
+      </div>
+    {/key}
   {/if}
 {/await}
