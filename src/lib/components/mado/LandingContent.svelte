@@ -99,15 +99,15 @@
     </div>
   </div>
 
-  <div data-suisou-layout="stack center gap-4" data-suisou-text="center" data-suisou="mt-4 container-s">
-    <h2 data-suisou-text="fs-24 s:fs-28 fw-700">はじめる</h2>
-    {#if !loggedIn}
+  {#if !loggedIn}
+    <div data-suisou-layout="stack center gap-4" data-suisou-text="center" data-suisou="mt-4 container-s">
+      <h2 data-suisou-text="fs-24 s:fs-28 fw-700">はじめる</h2>
       <div data-suisou="mb-4 p-4" data-suisou-tray data-suisou-layout="stack gap-1 center">
         <LoginButton label="窓を開く" data-suisou-text="fs-16" style="--suisou-size-button: 3rem" />
         <LoginButton look="other" />
       </div>
-    {/if}
-  </div>
+    </div>
+  {/if}
 
 </div>
 
