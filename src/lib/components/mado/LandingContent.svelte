@@ -46,24 +46,21 @@
 </script>
 
 <div data-suisou-layout="stack gap-5" data-suisou="container-m py-4 px-3">
-  <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container-s">
 
+  <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container-s">
     <div data-suisou-layout="row">
       <MadoIcon data-suisou-text="fs-32" data-suisou="accent" />
       <p data-suisou-text="fs-28 fw-700">Mado</p>
     </div>
-
     <p data-suisou-text="pre-line fs-16 s:fs-20" data-suisou="note">
       Blueskyで届ける半匿名のメッセージ
     </p>
-
     {#if !loggedIn}
       <div data-suisou="mt-4 mb-4 p-4" data-suisou-tray data-suisou-layout="stack gap-1 center">
         <LoginButton label="窓を開く" data-suisou-text="fs-16" style="--suisou-size-button: 3rem" />
         <LoginButton look="other" />
       </div>
     {/if}
-
   </div>
 
   <div data-suisou-layout="stack gap-4">
@@ -102,12 +99,15 @@
     </div>
   </div>
 
-  {#if !loggedIn}
-    <div data-suisou="mt-4 mb-4 p-4" data-suisou-tray data-suisou-layout="stack gap-1 center">
-      <LoginButton label="窓を開く" data-suisou-text="fs-16" style="--suisou-size-button: 3rem" />
-      <LoginButton look="other" />
-    </div>
-  {/if}
+  <div data-suisou-layout="stack center gap-4" data-suisou-text="center" data-suisou="mt-4 container-s">
+    <h2 data-suisou-text="fs-24 s:fs-28 fw-700">はじめる</h2>
+    {#if !loggedIn}
+      <div data-suisou="mb-4 p-4" data-suisou-tray data-suisou-layout="stack gap-1 center">
+        <LoginButton label="窓を開く" data-suisou-text="fs-16" style="--suisou-size-button: 3rem" />
+        <LoginButton look="other" />
+      </div>
+    {/if}
+  </div>
 
 </div>
 
