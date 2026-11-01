@@ -26,22 +26,35 @@
     },
   ];
 
-  const steps = [
+  const sendSteps = [
     {
       step: "1", icon: UserCheck, tone: "accent",
       title: "Blueskyでログイン",
-      description: "Blueskyアカウントで認証します。窓を開くにはログインが必要です。",
+    },
+    {
+      step: "2", icon: Send, tone: "accent",
+      title: "窓のURLにアクセスして送信",
+    },
+  ];
+
+  const receiveSteps = [
+    {
+      step: "1", icon: UserCheck, tone: "accent",
+      title: "Blueskyでログイン",
     },
     {
       step: "2", icon: MessageCircle, tone: "accent",
       title: "窓を開ける",
-      description: "タイトルと説明文を設定して窓を公開。URLをシェアして声を募集しましょう。",
     },
     {
       step: "3", icon: Inbox, tone: "accent",
       title: "声を受け取る",
-      description: "受信トレイから届いた声を確認・返信。送り主の情報も安全に確認できます。",
     },
+  ];
+
+  const guides = [
+    { title: "声を送る", steps: sendSteps },
+    { title: "声を受け取る", steps: receiveSteps },
   ];
 </script>
 
@@ -52,7 +65,7 @@
       <MadoIcon data-suisou-text="fs-32" data-suisou="accent" />
       <p data-suisou-text="fs-28 fw-700">Mado</p>
     </div>
-    <p data-suisou-text="pre-line fs-16 s:fs-20" data-suisou="note">
+    <p data-suisou-text="pre-line fs-16 s:fs-20 fw-500">
       Blueskyで届ける半匿名のメッセージ
     </p>
     {#if !loggedIn}
@@ -70,33 +83,31 @@
       {#each features as feat}
         <div data-suisou-tray data-suisou-layout="stack">
           <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
-          <h3 data-suisou-text="fs-16 fw-700">{feat.title}</h3>
-          <p data-suisou-text="fs-14" data-suisou="note" class="doc">{feat.description}</p>
+          <h3 data-suisou-text="fs-20 fw-700">{feat.title}</h3>
+          <p data-suisou-text="fs-14 s:fs-16" class="doc">{feat.description}</p>
         </div>
       {/each}
     </div>
   </div>
 
-  <div data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="p-4">
-    <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
-      <h2 data-suisou-text="fs-24 s:fs-28 fw-700">使い方</h2>
-      <p data-suisou-text="fs-14 s:fs-16" data-suisou="note">3ステップで始められます</p>
-    </div>
-
-    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(3, minmax(0, 1fr))">
-      {#each steps as step}
-        <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
-          <span class="tile">
-            <span data-suisou-item="square"><step.icon data-suisou-text="fs-20" data-suisou={step.tone} /></span>
-            <span data-suisou-text="fs-12 fw-700" data-suisou="accent" class="num">{step.step}</span>
-          </span>
-          <div data-suisou-layout="stack gap-1 center">
-            <h3 data-suisou-text="fs-16 fw-700">{step.title}</h3>
-            <p data-suisou-text="fs-14" data-suisou="note" class="doc">{step.description}</p>
-          </div>
+  <div data-suisou-layout="stack gap-4">
+    <h2 data-suisou-text="fs-24 s:fs-28 fw-700 center">つかいかた</h2>
+    {#each guides as guide}
+      <div data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="p-4">
+        <h3 data-suisou-text="fs-20 fw-700 center">{guide.title}</h3>
+        <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat({guide.steps.length}, minmax(0, 1fr))">
+          {#each guide.steps as step}
+            <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
+              <span class="tile">
+                <span data-suisou-item="square"><step.icon data-suisou-text="fs-20" data-suisou={step.tone} /></span>
+                <span data-suisou-text="fs-12 fw-700" data-suisou="accent" class="num">{step.step}</span>
+              </span>
+              <h4 data-suisou-text="fs-16 fw-500">{step.title}</h4>
+            </div>
+          {/each}
         </div>
-      {/each}
-    </div>
+      </div>
+    {/each}
   </div>
 
   {#if !loggedIn}
