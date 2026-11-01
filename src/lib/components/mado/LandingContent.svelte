@@ -105,9 +105,9 @@
   {#if !loggedIn}
     <div data-suisou="mt-4 mb-4 p-4" data-suisou-tray data-suisou-layout="stack gap-1 center">
       <LoginButton label="窓を開く" data-suisou-text="fs-16" style="--suisou-size-button: 3rem" />
-       <LoginButton look="other" />
-     </div>
-   {/if}
+      <LoginButton look="other" />
+    </div>
+  {/if}
 
 </div>
 
