@@ -13,9 +13,11 @@
     addAccount?: boolean;
     block?: boolean;
     leftIcon?: Snippet;
+    style?: string;
+    "data-suisou-text"?: string;
   }
 
-  let { label, variant = "default", look = "button", addAccount = false, block = false, leftIcon }: Props = $props();
+  let { label, variant = "default", look = "button", addAccount = false, block = false, leftIcon, ...rest }: Props = $props();
 
   const uid = $props.id();
   const dialogId = `login-${uid}`;
@@ -67,7 +69,7 @@
       {label ?? "Bluesky でログイン"}
     </button>
   {:else}
-    <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")}>{label ?? "Bluesky でログイン"}</Button>
+    <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")} {...rest}>{label ?? "Bluesky でログイン"}</Button>
   {/if}
 {:else}
   {#if block}
@@ -76,7 +78,7 @@
       {label ?? "ほかのサーバーのアカウントでログイン"}
     </button>
   {:else}
-    <Button variant="ghost" commandfor={dialogId} command="show-modal">{label ?? "ほかのサーバーのアカウントでログイン"}</Button>
+    <Button variant="ghost" commandfor={dialogId} command="show-modal" {...rest}>{label ?? "ほかのサーバーのアカウントでログイン"}</Button>
   {/if}
 
   <dialog

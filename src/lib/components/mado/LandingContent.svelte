@@ -8,7 +8,6 @@
     Send,
     Inbox,
   } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
   import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import LoginButton from "$lib/components/shell/LoginButton.svelte";
 
@@ -58,29 +57,17 @@
       Blueskyで届ける半匿名のメッセージ
     </p>
 
-    <div data-suisou-layout="stack gap-1 center">
-      <div data-suisou-layout="stack s:row s:middle center">
-        {#if !loggedIn}
-          <LoginButton label="窓を開く" />
-        {/if}
-        <Button href="#how-it-works" variant="secondary">使い方を見る</Button>
-      </div>
-      {#if !loggedIn}
+    {#if !loggedIn}
+      <div data-suisou="mt-4 mb-4 p-4" data-suisou-tray data-suisou-layout="stack gap-1 center">
+        <LoginButton label="窓を開く" data-suisou-text="fs-16" style="--suisou-size-button: 3rem" />
         <LoginButton look="other" />
-      {/if}
-    </div>
+      </div>
+    {/if}
 
-    <p data-suisou-text="fs-12" data-suisou="note" class="doc">
-      このサービスは<strong>完全匿名ではありません</strong>。
-      声を送信するにはBlueskyアカウントでのログインが必要です。
-    </p>
   </div>
 
   <div data-suisou-layout="stack gap-4">
-    <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
-      <h2 data-suisou-text="fs-24 s:fs-28 fw-700">Madoの特徴</h2>
-      <p data-suisou-text="fs-14 s:fs-16" data-suisou="note">安全で信頼できる窓を実現する2つの柱</p>
-    </div>
+    <h2 data-suisou-text="fs-24 s:fs-28 fw-700 center">Madoの特徴</h2>
 
     <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))">
       {#each features as feat}
@@ -93,7 +80,7 @@
     </div>
   </div>
 
-  <div id="how-it-works" data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="p-4">
+  <div data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="p-4">
     <div data-suisou-layout="stack gap-1 center" data-suisou-text="center">
       <h2 data-suisou-text="fs-24 s:fs-28 fw-700">使い方</h2>
       <p data-suisou-text="fs-14 s:fs-16" data-suisou="note">3ステップで始められます</p>
@@ -116,13 +103,12 @@
   </div>
 
   {#if !loggedIn}
-    <div data-suisou-tray data-suisou-layout="stack gap-3 center" data-suisou-text="center" data-suisou="w-full p-4" class="cta-box">
-      <Send data-suisou-text="fs-32" data-suisou="accent" />
-      <h2 data-suisou-text="fs-24 s:fs-28 fw-700">今すぐ始めよう</h2>
-      <p data-suisou-text="fs-16" data-suisou="note">Blueskyアカウントがあれば、無料で窓を開けます。</p>
-      <LoginButton label="窓を開く" />
-    </div>
-  {/if}
+    <div data-suisou="mt-4 mb-4 p-4" data-suisou-tray data-suisou-layout="stack gap-1 center">
+      <LoginButton label="窓を開く" data-suisou-text="fs-16" style="--suisou-size-button: 3rem" />
+       <LoginButton look="other" />
+     </div>
+   {/if}
+
 </div>
 
 <style>
@@ -141,11 +127,5 @@
     border-radius: var(--suisou-radius-pill);
     background: var(--suisou-color-bg);
     border: 1px solid var(--suisou-color-accent);
-  }
-
-  .cta-box {
-    max-width: 36rem;
-    margin-inline: auto;
-    border-color: var(--suisou-color-accent);
   }
 </style>
