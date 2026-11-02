@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from "svelte";
-  import { ArrowLeft, Save, AlertCircle } from "lucide-svelte";
+  import { Save, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import { CARD_PALETTE, CARD_SLOTS, DEFAULT_STYLE, type CardSlot } from "$lib/cardStyle.js";
   import { themeFor, boxCardHtml, koeCardHtml } from "$lib/ogHtml.js";
@@ -65,16 +65,10 @@
   <title>リンクカードの見た目 | Mado</title>
 </svelte:head>
 
-<div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
-  <div>
-    <Button href="/settings" variant="ghost">
-      {#snippet leftIcon()}<ArrowLeft />{/snippet}
-      設定に戻る
-    </Button>
-  </div>
+<div data-suisou-layout="stack gap-3" data-suisou="container-m py-4 px-3">
   <h1 data-suisou-text="fs-24 fw-700">リンクカードの見た目</h1>
 
-  <div data-suisou-tray data-suisou-layout="stack gap-2" data-suisou="p-3">
+  <div data-suisou-tray data-suisou-layout="stack s:grid gap-2" data-suisou="p-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))">
     {#each [{ html: boxPreview, label: "窓のリンクカードの見本" }, { html: koePreview, label: "声のリンクカードの見本" }] as preview}
       <div class="frame" bind:clientWidth={frameWidth} style={`height:${630 * scale}px`} role="img" aria-label={preview.label}>
         <div class="card" style={`transform:scale(${scale})`}>{@html preview.html}</div>

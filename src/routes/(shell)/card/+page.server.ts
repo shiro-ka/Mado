@@ -6,7 +6,7 @@ import { getProfile } from "$lib/atproto/index.js";
 
 export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();
-  if (!session) throw redirect(303, "/?next=/settings/card");
+  if (!session) throw redirect(303, "/?next=/card");
   const [card, prof] = await Promise.all([
     new CloudflareStore(platform!.env).getCardStyle(session.did),
     getProfile(session.did),
