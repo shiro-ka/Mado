@@ -33,7 +33,7 @@
       <MadoIcon data-suisou-text="fs-32" data-suisou="accent" />
       <p data-suisou-text="fs-28 fw-700">Mado</p>
     </div>
-    <p data-suisou-text="fs-16 s:fs-20 fw-500">Blueskyで届ける半匿名のメッセージ</p>
+    <p data-suisou-text="fs-16 s:fs-20">Blueskyで届ける半匿名のメッセージ</p>
     {#if !loggedIn}
       {@render loginBox("mt-4 mb-4")}
     {/if}

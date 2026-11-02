@@ -44,7 +44,7 @@
       <h1 data-suisou-text="fs-20 fw-700">{displayName}</h1>
       <p data-suisou-text="fs-14" data-suisou="note">@{profile?.handle ?? data.cleanHandle}</p>
       {#if profile?.description}
-        <p data-suisou-text="fs-14" data-suisou="note" class="doc">{profile.description}</p>
+        <p data-suisou-text="fs-14 pre-line" data-suisou="note" class="doc">{profile.description}</p>
       {/if}
       <a
         data-suisou-layout="row"

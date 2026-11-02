@@ -35,7 +35,7 @@
     </span>
   </div>
   {#if box.description}
-    <p data-suisou-text="fs-14" data-suisou="note" class="doc">{box.description}</p>
+    <p data-suisou-text="fs-14 pre-line" data-suisou="note" class="doc">{box.description}</p>
   {/if}
 </div>
 {/snippet}
