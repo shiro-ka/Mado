@@ -1,30 +1,15 @@
 <script lang="ts">
   import {
     MessageCircle,
-    Lock,
-    Globe,
-    Eye,
     UserCheck,
     Send,
     Inbox,
   } from "lucide-svelte";
   import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import LoginButton from "$lib/components/shell/LoginButton.svelte";
+  import SemiAnonDiagram from "$lib/components/mado/SemiAnonDiagram.svelte";
 
   let { loggedIn = false }: { loggedIn?: boolean } = $props();
-
-  const features = [
-    {
-      icon: Eye, tone: "accent",
-      title: "半匿名性",
-      description: "送り主は窓のオーナーにのみ開示。",
-    },
-    {
-      icon: Globe, tone: "accent",
-      title: "ATProtocol基盤",
-      description: "データはあなたのBlueskyアカウントのPDSに保存されます。特定サービスに依存せず、オープンな分散型プロトコルで動作します。",
-    },
-  ];
 
   const sendSteps = [
     {
@@ -33,7 +18,7 @@
     },
     {
       step: "2", icon: Send, tone: "accent",
-      title: "窓のURLにアクセスして送信",
+      title: "窓から声を送る",
     },
   ];
 
@@ -58,7 +43,7 @@
   ];
 </script>
 
-<div data-suisou-layout="stack gap-5" data-suisou="container-m py-4 px-3">
+<div data-suisou-layout="stack gap-5" data-suisou="container-s py-4 px-3">
 
   <div data-suisou-layout="stack gap-4 center" data-suisou-text="center" data-suisou="container-s">
     <div data-suisou-layout="row">
@@ -76,26 +61,14 @@
     {/if}
   </div>
 
-  <div data-suisou-layout="stack gap-4">
-    <h2 data-suisou-text="fs-24 s:fs-28 fw-700 center">Madoの特徴</h2>
-
-    <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat(2, minmax(0, 1fr))">
-      {#each features as feat}
-        <div data-suisou-tray data-suisou-layout="stack">
-          <span data-suisou-item="square"><feat.icon data-suisou-text="fs-20" data-suisou={feat.tone} /></span>
-          <h3 data-suisou-text="fs-20 fw-700">{feat.title}</h3>
-          <p data-suisou-text="fs-14 s:fs-16" class="doc">{feat.description}</p>
-        </div>
-      {/each}
-    </div>
-  </div>
+  <SemiAnonDiagram />
 
   <div data-suisou-layout="stack gap-4">
     <h2 data-suisou-text="fs-24 s:fs-28 fw-700 center">つかいかた</h2>
     {#each guides as guide}
       <div data-suisou-tray data-suisou-layout="stack gap-4" data-suisou="p-4">
-        <h3 data-suisou-text="fs-20 fw-700 center">{guide.title}</h3>
-        <div data-suisou-layout="stack s:grid gap-3" style="--suisou-grid-cols: repeat({guide.steps.length}, minmax(0, 1fr))">
+        <h3 data-suisou="mb-4" data-suisou-text="fs-20 fw-700 center">{guide.title}</h3>
+        <div data-suisou-layout="stack s:row middle gap-5">
           {#each guide.steps as step}
             <div data-suisou-layout="stack gap-3 center" data-suisou-text="center">
               <span class="tile">
