@@ -5,7 +5,7 @@
 
 <header data-suisou-layout="row between" data-suisou="container-m px-3 py-3">
   <a href="/">
-    <Brand size="lg" beta />
+    <Brand size="lg" />
   </a>
   <div data-suisou-layout="stack s:row">
     <LoginButton label="ログイン" />
