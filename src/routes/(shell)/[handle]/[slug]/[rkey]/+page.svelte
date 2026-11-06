@@ -6,6 +6,7 @@
   import BlockButton from "$lib/components/mado/BlockButton.svelte";
   import DeleteQuestionButton from "$lib/components/mado/DeleteQuestionButton.svelte";
   import { formatDateFull } from "$lib/utils.js";
+  import { CATCHPHRASE } from "$lib/brand.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -29,7 +30,8 @@
   <title>声 | @{data.cleanHandle} | Mado</title>
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content={`${data.ownerName} への声 - Mado 半匿名メッセージ`} />
+  <meta property="og:title" content={`${data.ownerName}への声`} />
+  <meta property="og:description" content={CATCHPHRASE} />
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
   <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
   <meta property="og:image:width" content="1200" />
