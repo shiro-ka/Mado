@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { CATCHPHRASE } from "$lib/brand.js";
   import { MessageCircle, UserCheck, Send, Inbox } from "lucide-svelte";
   import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import LoginButton from "$lib/components/shell/LoginButton.svelte";
@@ -33,7 +34,7 @@
       <MadoIcon data-suisou-text="fs-32" data-suisou="accent" />
       <p data-suisou-text="fs-28 fw-700">Mado</p>
     </div>
-    <p data-suisou-text="fs-16 s:fs-20">Blueskyで届ける半匿名のメッセージ</p>
+    <p data-suisou-text="fs-16 s:fs-20">{CATCHPHRASE}</p>
     {#if !loggedIn}
       {@render loginBox("mt-4 mb-4")}
     {/if}

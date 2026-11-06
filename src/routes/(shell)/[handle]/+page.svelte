@@ -4,13 +4,25 @@
   import QuestionBoxCard from "$lib/components/mado/QuestionBoxCard.svelte";
   import BoxSendView from "$lib/components/mado/BoxSendView.svelte";
   import Skeleton from "$lib/components/ui/Skeleton.svelte";
+  import { CATCHPHRASE } from "$lib/brand.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
-  <title>@{data.cleanHandle} の窓 | Mado</title>
+  <title>{data.ownerName}の窓 - {CATCHPHRASE}</title>
+  <meta name="description" content={CATCHPHRASE} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Mado" />
+  <meta property="og:title" content={`${data.ownerName}の窓`} />
+  <meta property="og:description" content={CATCHPHRASE} />
+  <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}`} />
+  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
 </svelte:head>
 
 {#snippet listHead(count: string)}

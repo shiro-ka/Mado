@@ -1,4 +1,5 @@
 import { DEFAULT_STYLE } from "./cardStyle.js";
+import { CATCHPHRASE } from "./brand.js";
 
 export type CardStyle = {
   icon?: string | null;
@@ -188,12 +189,12 @@ export function profile(
   const initial = [...(name || "@")][0] ?? "@";
   const nameSize = Math.round(size * 0.4);
   return (
-    `<div style="display:flex;align-items:center;gap:15px;">` +
+    `<div style="display:flex;align-items:center;gap:${Math.round(size * 0.26)}px;">` +
     avatarSquare(t, avatarUri, initial, size) +
-    `<div style="display:flex;flex-direction:column;gap:8px;">` +
-    `<div style="display:flex;align-items:baseline;gap:13px;">` +
+    `<div style="display:flex;flex-direction:column;gap:${Math.round(size * 0.14)}px;">` +
+    `<div style="display:flex;align-items:baseline;gap:${Math.round(size * 0.22)}px;">` +
     `<span style="display:flex;font-size:${nameSize}px;font-weight:700;line-height:1.05;color:${t.text};">${escapeHtml(name)}</span>` +
-    `<span style="display:flex;font-size:${nameSize}px;line-height:1.05;color:${t.text};">${suffix}</span>` +
+    `<span style="display:flex;flex-shrink:0;white-space:nowrap;font-size:${nameSize}px;line-height:1.05;color:${t.text};">${suffix}</span>` +
     `</div>` +
     `<span style="display:flex;font-size:${Math.round(size * 0.3)}px;line-height:1.05;color:${t.note};">@${escapeHtml(handle)}</span>` +
     `</div>` +
@@ -217,6 +218,28 @@ export function boxCardHtml(
     `<div style="display:flex;flex-wrap:wrap;justify-content:center;text-align:center;font-size:68px;line-height:1.3;font-weight:700;letter-spacing:-0.01em;color:${t.text};">${phraseHtml(data.title)}</div>` +
     `</div>` +
     `<div style="position:absolute;right:74px;bottom:44px;display:flex;">${prof}</div>` +
+    `</div>`
+  );
+}
+
+export function siteCardHtml(t: Theme): string {
+  return (
+    `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px;width:100%;height:100%;background:${t.bg};font-family:'ZenMaru','Zen Maru Gothic';">` +
+    brand(t, 128, 112) +
+    `<div style="display:flex;font-size:46px;letter-spacing:0.04em;color:${t.note};">${escapeHtml(CATCHPHRASE)}</div>` +
+    `</div>`
+  );
+}
+
+export function userCardHtml(
+  t: Theme,
+  data: { name: string; handle: string; avatarUri: string | null }
+): string {
+  const prof = profile(t, data.name, "の窓", data.handle, data.avatarUri, [...data.name].length <= 8 ? 150 : 120);
+  return (
+    `<div style="display:flex;width:100%;height:100%;background:${t.bg};position:relative;font-family:'ZenMaru','Zen Maru Gothic';">` +
+    `<div style="position:absolute;top:52px;left:66px;display:flex;">${brand(t, 72, 32)}</div>` +
+    `<div style="position:absolute;top:150px;left:74px;right:74px;bottom:110px;display:flex;align-items:center;justify-content:center;">${prof}</div>` +
     `</div>`
   );
 }

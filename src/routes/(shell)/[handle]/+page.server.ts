@@ -8,8 +8,6 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   const { session } = await parent();
   const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
 
-  // Viewing your own page (the sidebar "マイページ" link) is the common case —
-  // the session already holds the DID, so skip the network handle resolution.
   const did =
     session && session.handle.toLowerCase() === cleanHandle.toLowerCase()
       ? session.did
@@ -19,24 +17,30 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   const isOwner = session?.did === did;
   const store = platform ? new CloudflareStore(platform.env) : null;
 
-  // `isOwner`/`did`/`cleanHandle` resolve cheaply (session or a cached handle
-  // lookup) — return them immediately so the page shell paints. The profile
-  // (appview) and box list (PDS scan) are the slow part; stream them as an
-  // un-awaited promise so navigation into/out of マイページ feels instant.
+  const profilePromise = getProfile(did).catch(() => null);
+  const [headProfile, card] = await Promise.all([
+    isOwner ? null : profilePromise,
+    store?.getCardStyle(did) ?? null,
+  ]);
+  const ownerName = isOwner
+    ? session!.displayName || session!.handle
+    : headProfile?.displayName || headProfile?.handle || cleanHandle;
+
   return {
     isOwner,
     cleanHandle,
     did,
     origin: url.origin,
     session,
+    ownerName,
+    cardVersion: card?.updatedAt ?? null,
     detail: (async () => {
-      const [profile, boxes] = await Promise.all([getProfile(did), listBoxes(did)]);
+      const [profile, boxes] = await Promise.all([profilePromise, listBoxes(did)]);
 
       const byAge = [...boxes].sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? ""));
       const mainBoxRkey = resolveMainBoxRkey(boxes, store ? await store.getMainBoxRkey(did) : null);
 
       if (isOwner) {
-        // Owner: manage view — the full box list with the main box pinned on top.
         const openBoxes = [...boxes].sort((a, b) => {
           if (a.rkey === mainBoxRkey) return -1;
           if (b.rkey === mainBoxRkey) return 1;
@@ -52,7 +56,6 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
         };
       }
 
-      // Visitor: send view — the main box's send form up top, sub boxes below.
       const openList = byAge.filter((b) => b.isOpen);
       const mainBox = boxes.find((b) => b.rkey === mainBoxRkey) ?? null;
       const featured = mainBoxRkey === null ? null : mainBox && mainBox.isOpen ? mainBox : openList[0] ?? null;

@@ -11,10 +11,10 @@
 </script>
 
 <svelte:head>
-  <title>{data.box.title} - {ownerName} のMado | Mado</title>
+  <title>{data.box.title} - {ownerName}の窓 | Mado</title>
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content={`${data.box.title} - ${ownerName} のMado`} />
+  <meta property="og:title" content={`${data.box.title} - ${ownerName}の窓`} />
   <meta property="og:description" content={data.box.description || "Madoで半匿名の声を送ろう"} />
   <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}`} />
   <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
