@@ -5,17 +5,28 @@ import { sharedInRequest } from "../requestScope.server.js";
 const DEFAULT_PDS = "https://bsky.social";
 const APPVIEW_URL = "https://public.api.bsky.app";
 
+const agents = new Map<string, AtpAgent>();
+
+function agentFor(service: string): AtpAgent {
+  let agent = agents.get(service);
+  if (!agent) {
+    agent = new AtpAgent({ service });
+    agents.set(service, agent);
+  }
+  return agent;
+}
+
 export function publicAgent(): AtpAgent {
-  return new AtpAgent({ service: DEFAULT_PDS });
+  return agentFor(DEFAULT_PDS);
 }
 
 export async function repoAgent(repoDid: string): Promise<AtpAgent> {
   const pds = await getPdsUrl(repoDid);
-  return new AtpAgent({ service: pds ?? DEFAULT_PDS });
+  return agentFor(pds ?? DEFAULT_PDS);
 }
 
 export function appViewAgent(): AtpAgent {
-  return new AtpAgent({ service: APPVIEW_URL });
+  return agentFor(APPVIEW_URL);
 }
 
 export type RecordScan = Array<{ uri: string; cid: string; value: unknown }>;
