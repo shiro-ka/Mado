@@ -4,7 +4,7 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { fail, readJson, withSession } from "$lib/api.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { createBoxRecord, isSlugTaken, invalidateRecords, NSID } from "$lib/atproto/index.js";
+import { createBoxRecord, isSlugTaken } from "$lib/atproto/index.js";
 import { slugSchema, boxTitleSchema, boxDescriptionSchema } from "$lib/validation.js";
 
 const createBoxSchema = z.object({
@@ -37,6 +37,5 @@ export const POST: RequestHandler = (event) =>
     });
     if (!result) return fail(500, "窓の作成に失敗しました");
 
-    invalidateRecords(session.did, NSID.BOX);
     return json({ rkey: result.rkey, uri: result.uri, slug });
   });

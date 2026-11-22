@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 import { z } from "zod";
 import { fail, readJson, withSession } from "$lib/api.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { getBoxRecord, updateBoxRecord, deleteBoxWithContents, isSlugTaken, invalidateRecords, NSID } from "$lib/atproto/index.js";
+import { getBoxRecord, updateBoxRecord, deleteBoxWithContents, isSlugTaken } from "$lib/atproto/index.js";
 import { slugSchema, boxTitleSchema, boxDescriptionSchema } from "$lib/validation.js";
 
 const updateSchema = z.object({
@@ -40,7 +40,6 @@ export const PATCH: RequestHandler = (event) =>
     });
     if (!success) return fail(500, "更新に失敗しました");
 
-    invalidateRecords(session.did, NSID.BOX);
     return json({});
   });
 

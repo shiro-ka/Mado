@@ -15,7 +15,7 @@ import {
   xrpc,
 } from "./client.js";
 import { byteLength } from "../text.js";
-import { NSID, boxUri } from "../urls.js";
+import { NSID, boxUri, rkeyOfUri } from "../urls.js";
 export { NSID };
 
 const textWithin = (maxBytes: number) => z.string().refine((v) => byteLength(v) <= maxBytes);
@@ -225,6 +225,22 @@ export async function listAnswers(
   }
 }
 
+async function createRecord(
+  sessionFetch: SessionFetch,
+  did: string,
+  collection: string,
+  record: unknown,
+): Promise<{ uri: string; cid: string }> {
+  const res = await xrpc<{ uri: string; cid: string }>({
+    sessionFetch,
+    method: "POST",
+    lexicon: "com.atproto.repo.createRecord",
+    body: { repo: did, collection, record },
+  });
+  invalidateRecords(did, collection);
+  return res;
+}
+
 export async function writeQuestion(params: {
   sessionFetch: SessionFetch;
   ownerDid: string;
@@ -239,12 +255,7 @@ export async function writeQuestion(params: {
       box: boxUri,
       createdAt: new Date().toISOString(),
     };
-    return await xrpc<{ uri: string; cid: string }>({
-      sessionFetch,
-      method: "POST",
-      lexicon: "com.atproto.repo.createRecord",
-      body: { repo: ownerDid, collection: NSID.KOE, record },
-    });
+    return await createRecord(sessionFetch, ownerDid, NSID.KOE, record);
   } catch {
     return null;
   }
@@ -264,12 +275,7 @@ export async function writeAnswer(params: {
       body,
       createdAt: new Date().toISOString(),
     };
-    return await xrpc<{ uri: string; cid: string }>({
-      sessionFetch,
-      method: "POST",
-      lexicon: "com.atproto.repo.createRecord",
-      body: { repo: ownerDid, collection: NSID.ANSWER, record },
-    });
+    return await createRecord(sessionFetch, ownerDid, NSID.ANSWER, record);
   } catch {
     return null;
   }
@@ -293,13 +299,8 @@ export async function createBoxRecord(params: {
       isOpen,
       createdAt: new Date().toISOString(),
     };
-    const res = await xrpc<{ uri: string; cid: string }>({
-      sessionFetch,
-      method: "POST",
-      lexicon: "com.atproto.repo.createRecord",
-      body: { repo: did, collection: NSID.BOX, record },
-    });
-    const rkey = res.uri.split("/").pop() ?? "";
+    const res = await createRecord(sessionFetch, did, NSID.BOX, record);
+    const rkey = rkeyOfUri(res.uri);
     return { ...res, rkey };
   } catch {
     return null;
@@ -333,6 +334,7 @@ export async function updateBoxRecord(params: {
       lexicon: "com.atproto.repo.putRecord",
       body: { repo: did, collection: NSID.BOX, rkey, record },
     });
+    invalidateRecords(did, NSID.BOX);
     return true;
   } catch {
     return false;
