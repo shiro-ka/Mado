@@ -184,16 +184,24 @@ export async function resolveHandle(handle: string): Promise<string | null> {
 const pdsCache = new Map<string, { pds: string; exp: number }>();
 const PDS_CACHE_TTL_MS = 60 * 60 * 1000; // 1h — safe vs. rare PDS migrations
 
+function didDocumentUrl(did: string): string {
+  if (did.startsWith("did:web:")) {
+    const host = decodeURIComponent(did.slice("did:web:".length).split(":")[0]);
+    return `https://${host}/.well-known/did.json`;
+  }
+  return `https://plc.directory/${did}`;
+}
+
 export async function getPdsUrl(did: string): Promise<string | null> {
   const cached = pdsCache.get(did);
   if (cached && cached.exp > Date.now()) return cached.pds;
   try {
-    const res = await fetch(`https://plc.directory/${did}`);
+    const res = await fetch(didDocumentUrl(did));
     if (!res.ok) return null;
     const doc = (await res.json()) as {
       service?: Array<{ id: string; type: string; serviceEndpoint: string }>;
     };
-    const pds = doc.service?.find((s) => s.id === "#atproto_pds")?.serviceEndpoint ?? null;
+    const pds = doc.service?.find((s) => s.id === "#atproto_pds" || s.id.endsWith("#atproto_pds"))?.serviceEndpoint ?? null;
     if (pds) pdsCache.set(did, { pds, exp: Date.now() + PDS_CACHE_TTL_MS });
     return pds;
   } catch {
