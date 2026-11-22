@@ -45,7 +45,10 @@ export function wrapGlobalFetch() {
     if (!als.getStore()) return original(input, init);
     const url = new URL(input instanceof Request ? input.url : String(input));
     const method = init?.method ?? (input instanceof Request ? input.method : "GET");
-    return timed("fetch", url.host, `${method} ${url.pathname}`, () => original(input, init));
+    const collection = url.searchParams.get("collection");
+    const detail = [collection, url.searchParams.has("cursor") ? "cursor" : null].filter(Boolean).join(" ");
+    const op = `${method} ${url.pathname}${detail ? ` (${detail})` : ""}`;
+    return timed("fetch", url.host, op, () => original(input, init));
   }) as typeof fetch;
 }
 
