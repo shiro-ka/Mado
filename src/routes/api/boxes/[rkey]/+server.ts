@@ -120,7 +120,6 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
       );
     }
 
-    await store.deleteDeliveries(session.did, deleted);
     return json({ success: true });
   } catch (err) {
     console.error("[DELETE /api/boxes/[rkey]]", err);

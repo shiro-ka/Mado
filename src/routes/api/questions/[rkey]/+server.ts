@@ -22,6 +22,5 @@ export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
 
   if (!ok) return json({ error: "failed to delete record" }, { status: 500 });
 
-  await store.deleteDeliveries(session.did, [params.rkey]);
   return json({ ok: true });
 };

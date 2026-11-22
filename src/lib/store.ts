@@ -287,11 +287,18 @@ export class CloudflareStore {
       .run();
   }
 
-  async deleteDeliveries(ownerDid: string, koeRkeys: string[]): Promise<void> {
-    const stmts = koeRkeys.map((rkey) =>
-      this.env.DB.prepare("DELETE FROM deliveries WHERE owner_did = ? AND koe_rkey = ?").bind(ownerDid, rkey)
-    );
-    if (stmts.length > 0) await this.env.DB.batch(stmts);
+  async getSentCopy(
+    ownerDid: string,
+    koeRkey: string,
+    senderDid: string
+  ): Promise<{ boxRkey: string | null; sentAt: string; body: string } | null> {
+    const row = await this.env.DB.prepare(
+      "SELECT box_rkey, sent_at, body FROM deliveries WHERE owner_did = ? AND koe_rkey = ? AND sender_did = ? AND sent_at IS NOT NULL AND body IS NOT NULL"
+    )
+      .bind(ownerDid, koeRkey, senderDid)
+      .first<{ box_rkey: string | null; sent_at: number; body: string }>();
+    if (!row) return null;
+    return { boxRkey: row.box_rkey, sentAt: new Date(row.sent_at * 1000).toISOString(), body: row.body };
   }
 
   async listHandled(ownerDid: string): Promise<string[]> {

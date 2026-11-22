@@ -15,17 +15,26 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
 
   const koeUri = `at://${ownerDid}/blue.mado.koe/${params.rkey}`;
 
-  const [question, answers, ownerProfile] = await Promise.all([
+  const [record, answers, ownerProfile] = await Promise.all([
     getKoeRecord(ownerDid, params.rkey),
     listAnswers(ownerDid, koeUri),
-    getProfile(ownerDid), // for the OG/share title (owner display name)
+    getProfile(ownerDid),
   ]);
+
+  const isOwner = session?.did === ownerDid;
+  const store = new CloudflareStore(platform!.env);
+
+  let question = record;
+  if (!question && session && !isOwner) {
+    const copy = await store.getSentCopy(ownerDid, params.rkey, session.did);
+    if (copy && copy.boxRkey === box.rkey) {
+      question = { uri: koeUri, cid: "", rkey: params.rkey, boxUri: box.uri, body: copy.body, isRead: false, createdAt: copy.sentAt };
+    }
+  }
 
   if (!question) throw error(404, "声が見つかりません");
 
   const ownerName = ownerProfile?.displayName || cleanHandle;
-
-  const isOwner = session?.did === ownerDid;
 
   let senderDid: string | null = null;
   let senderUnknown = false;
@@ -33,8 +42,6 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
   let isHandled = false;
 
   if (isOwner) {
-    const env = platform!.env;
-    const store = new CloudflareStore(env);
     isHandled = await store.isHandled(ownerDid, params.rkey);
     senderDid = await store.getSender(ownerDid, params.rkey);
     senderUnknown = !senderDid;
@@ -42,11 +49,11 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
       senderBlocked = await store.isBlocked(ownerDid, senderDid);
     }
   } else if (session) {
-    await new CloudflareStore(platform!.env).markSentRead(session.did, ownerDid, params.rkey);
+    await store.markSentRead(session.did, ownerDid, params.rkey);
   }
 
   const senderProfile = senderDid ? await getProfile(senderDid) : null;
-  const card = await new CloudflareStore(platform!.env).getCardStyle(ownerDid);
+  const card = await store.getCardStyle(ownerDid);
 
   return {
     cleanHandle,
