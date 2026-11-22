@@ -48,40 +48,64 @@ export async function createSession(
 
   await store.setSession(sessionId, session, SESSION_TTL);
 
-  const others: string[] = [];
-  for (const id of knownAccountIds(cookies)) {
-    const existing = await store.getSession(id);
-    if (!existing) continue;
-    if (existing.did === session.did) {
-      if (existing.deviceKey) await endDeviceSession(env, store, existing.did, existing.deviceKey);
-      await store.delSession(id);
+  const others: AccountEntry[] = [];
+  const unreadable: AccountEntry[] = [];
+  for (const entry of readAccounts(cookies)) {
+    const existing = await store.getSession(entry.id);
+    if (!existing) {
+      const kept = keepUnreadable(entry);
+      if (kept) unreadable.push(kept);
       continue;
     }
-    others.push(id);
+    if (existing.did === session.did) {
+      if (existing.deviceKey) await endDeviceSession(env, store, existing.did, existing.deviceKey);
+      await store.delSession(entry.id);
+      continue;
+    }
+    others.push({ id: entry.id });
   }
   const kept = others.slice(0, MAX_ACCOUNTS - 1);
-  for (const id of others.slice(MAX_ACCOUNTS - 1)) await store.delSession(id);
+  for (const entry of others.slice(MAX_ACCOUNTS - 1)) await store.delSession(entry.id);
 
   setSessionCookie(cookies, env, sessionId);
-  setAccountIds(cookies, env, [sessionId, ...kept]);
+  writeAccounts(cookies, env, [{ id: sessionId }, ...kept, ...unreadable]);
 
   return sessionId;
 }
 
-function knownAccountIds(cookies: Cookies): string[] {
-  const ids = (cookies.get(ACCOUNTS_COOKIE) ?? "").split(".").filter((id) => /^[A-Za-z0-9]{32}$/.test(id));
+type AccountEntry = { id: string; unreadableSince?: number };
+
+const UNREADABLE_GRACE_SECONDS = 600;
+
+function readAccounts(cookies: Cookies): AccountEntry[] {
+  const entries: AccountEntry[] = [];
+  for (const part of (cookies.get(ACCOUNTS_COOKIE) ?? "").split(".")) {
+    const m = /^([A-Za-z0-9]{32})(?:~(\d+))?$/.exec(part);
+    if (m) entries.push(m[2] ? { id: m[1], unreadableSince: Number(m[2]) } : { id: m[1] });
+  }
   const active = cookies.get(SESSION_COOKIE);
-  if (active && !ids.includes(active)) ids.unshift(active);
-  return ids;
+  if (active && !entries.some((e) => e.id === active)) entries.unshift({ id: active });
+  return entries;
 }
 
-function setAccountIds(cookies: Cookies, env: App.Platform["env"], ids: string[]): void {
-  if (ids.length === 0) {
+function knownAccountIds(cookies: Cookies): string[] {
+  return readAccounts(cookies).map((e) => e.id);
+}
+
+function keepUnreadable(entry: AccountEntry): AccountEntry | null {
+  const now = Math.floor(Date.now() / 1000);
+  if (entry.unreadableSince === undefined) return { id: entry.id, unreadableSince: now };
+  return now - entry.unreadableSince < UNREADABLE_GRACE_SECONDS ? entry : null;
+}
+
+function writeAccounts(cookies: Cookies, env: App.Platform["env"], entries: AccountEntry[]): void {
+  if (entries.length === 0) {
     cookies.delete(ACCOUNTS_COOKIE, { path: "/" });
     return;
   }
+  const value = entries.map((e) => (e.unreadableSince === undefined ? e.id : `${e.id}~${e.unreadableSince}`)).join(".");
   const appUrl = appOrigin(env);
-  cookies.set(ACCOUNTS_COOKIE, ids.join("."), {
+  cookies.set(ACCOUNTS_COOKIE, value, {
     httpOnly: true,
     secure: appUrl.startsWith("https://"),
     sameSite: "lax",
@@ -97,25 +121,32 @@ export async function listAccounts(
   current?: AppSession
 ): Promise<AccountSummary[]> {
   const active = cookies.get(SESSION_COOKIE);
-  const ids = knownAccountIds(cookies);
+  const entries = readAccounts(cookies);
   const sessions = await Promise.all(
-    ids.map((id) => (id === active && current ? current : store.getSession(id)))
+    entries.map((e) => (e.id === active && current ? current : store.getSession(e.id)))
   );
   const accounts: AccountSummary[] = [];
-  const valid: string[] = [];
-  for (const [i, id] of ids.entries()) {
+  const next: AccountEntry[] = [];
+  for (const [i, entry] of entries.entries()) {
     const session = sessions[i];
-    if (!session) continue;
-    valid.push(id);
+    if (!session) {
+      const kept = keepUnreadable(entry);
+      if (kept) next.push(kept);
+      continue;
+    }
+    next.push({ id: entry.id });
     accounts.push({
       did: session.did,
       handle: session.handle,
       displayName: session.displayName,
       avatar: session.avatar,
-      active: id === active,
+      active: entry.id === active,
     });
   }
-  if (valid.length !== ids.length) setAccountIds(cookies, env, valid);
+  const changed =
+    next.length !== entries.length ||
+    next.some((e, i) => e.id !== entries[i].id || e.unreadableSince !== entries[i].unreadableSince);
+  if (changed) writeAccounts(cookies, env, next);
   return accounts;
 }
 
@@ -174,7 +205,7 @@ export async function renewSession(
     return entry.session;
   }
   setSessionCookie(cookies, env, sessionId);
-  setAccountIds(cookies, env, knownAccountIds(cookies));
+  writeAccounts(cookies, env, readAccounts(cookies));
   return session;
 }
 
@@ -184,16 +215,16 @@ export async function destroySession(
   store: CloudflareStore
 ): Promise<boolean> {
   const sessionId = cookies.get(SESSION_COOKIE);
-  const rest = knownAccountIds(cookies).filter((id) => id !== sessionId);
+  const rest = readAccounts(cookies).filter((e) => e.id !== sessionId);
   if (sessionId) await store.delSession(sessionId);
-  for (const id of rest) {
-    if (await store.getSession(id)) {
-      setSessionCookie(cookies, env, id);
-      setAccountIds(cookies, env, rest);
+  for (const entry of rest) {
+    if (await store.getSession(entry.id)) {
+      setSessionCookie(cookies, env, entry.id);
+      writeAccounts(cookies, env, rest);
       return true;
     }
   }
   cookies.delete(SESSION_COOKIE, { path: "/" });
-  setAccountIds(cookies, env, []);
+  writeAccounts(cookies, env, []);
   return false;
 }
