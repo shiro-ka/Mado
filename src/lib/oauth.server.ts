@@ -3,6 +3,7 @@ import type { AuthorizationServerMetadataCache, DpopNonceCache, ProtectedResourc
 import { JoseKey } from "@atproto/jwk-jose";
 import type { CloudflareStore } from "./store.js";
 import { appOrigin } from "./api.server.js";
+import { edgeGet, edgePut } from "./edgeCache.server.js";
 
 /**
  * A fetch function bound to an OAuthSession.
@@ -103,10 +104,36 @@ function memoryCache<V>(ttlMs: number, max: number) {
   };
 }
 
+function layeredCache<V>(prefix: string, ttlMs: number, max: number) {
+  const memory = memoryCache<V>(ttlMs, max);
+  return {
+    async get(key: string): Promise<V | undefined> {
+      const hit = memory.get(key);
+      if (hit !== undefined) return hit;
+      const raw = await edgeGet(`${prefix}:${key}`);
+      if (raw === null) return undefined;
+      try {
+        const value = JSON.parse(raw) as V;
+        memory.set(key, value);
+        return value;
+      } catch {
+        return undefined;
+      }
+    },
+    async set(key: string, value: V): Promise<void> {
+      memory.set(key, value);
+      await edgePut(`${prefix}:${key}`, JSON.stringify(value), ttlMs / 1000);
+    },
+    async del(key: string): Promise<void> {
+      memory.del(key);
+    },
+  };
+}
+
 const sharedCaches = {
-  dpopNonceCache: memoryCache(60e3, 100) as DpopNonceCache,
-  authorizationServerMetadataCache: memoryCache(600e3, 100) as AuthorizationServerMetadataCache,
-  protectedResourceMetadataCache: memoryCache(600e3, 100) as ProtectedResourceMetadataCache,
+  dpopNonceCache: layeredCache("oauth-nonce", 60e3, 100) as DpopNonceCache,
+  authorizationServerMetadataCache: layeredCache("oauth-as", 600e3, 100) as AuthorizationServerMetadataCache,
+  protectedResourceMetadataCache: layeredCache("oauth-pr", 600e3, 100) as ProtectedResourceMetadataCache,
 };
 
 export const OAUTH_SCOPE = [
