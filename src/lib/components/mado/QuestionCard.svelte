@@ -14,6 +14,7 @@
     heard: boolean;
     ownerAvatar?: string;
     showNewTag?: boolean;
+    showBoxTitle?: boolean;
     sentAnswers?: string[];
     onReplied?: (answerBody: string) => void;
     onThrough?: () => void;
@@ -22,7 +23,7 @@
     onDeleted?: () => void;
   }
 
-  let { question, href, heard, ownerAvatar, sentAnswers = [], showNewTag = false, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
+  let { question, href, heard, ownerAvatar, sentAnswers = [], showNewTag = false, showBoxTitle = true, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
 
   let replying = $state(false);
   const answers = $derived([...(question.answers ?? []), ...sentAnswers]);
@@ -60,7 +61,7 @@
 </script>
 
 <div data-suisou-tray="link" data-suisou-layout="stack gap-0" class="card">
-  {#if question.boxTitle}
+  {#if showBoxTitle && question.boxTitle}
     <span data-suisou-tray="bleed" data-suisou="bd-bottom py-1 px-2 note" data-suisou-text="fs-12 clamp-1">{question.boxTitle}</span>
   {/if}
   <a {href} data-suisou-item="media" data-suisou-tray="stretch" class="main">

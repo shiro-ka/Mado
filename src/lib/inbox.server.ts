@@ -47,7 +47,7 @@ export async function buildInbox(
     return {
       ...q,
       href,
-      boxTitle: boxRkey ? undefined : box?.title,
+      boxTitle: box?.title,
       answers: answerBodies(answers.get(q.uri)),
       senderHandle: profile?.handle,
       senderDisplayName: profile?.displayName,

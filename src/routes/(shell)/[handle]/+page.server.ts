@@ -2,66 +2,71 @@ import type { PageServerLoad } from "./$types";
 import { getProfile, listBoxes } from "$lib/atproto/index.js";
 import { requireOwner } from "$lib/owner.server.js";
 import { resolveMainBoxRkey } from "$lib/mainBox.js";
+import type { CloudflareStore } from "$lib/store.js";
+import type { QuestionBox } from "$lib/../types/index.js";
+
+type Profile = Promise<Awaited<ReturnType<typeof getProfile>>>;
+
+function byAge(a: QuestionBox, b: QuestionBox) {
+  return (a.createdAt ?? "").localeCompare(b.createdAt ?? "");
+}
+
+async function loadBoxes(did: string, store: CloudflareStore | null) {
+  const [boxes, saved] = await Promise.all([listBoxes(did), store?.getMainBoxRkey(did) ?? null]);
+  return { boxes: [...boxes].sort(byAge), mainBoxRkey: resolveMainBoxRkey(boxes, saved) };
+}
+
+async function ownerDetail(did: string, store: CloudflareStore | null, profile: Profile) {
+  const [{ boxes, mainBoxRkey }, p] = await Promise.all([loadBoxes(did, store), profile]);
+  const main = boxes.filter((b) => b.rkey === mainBoxRkey);
+  return {
+    profile: p,
+    mainBoxRkey,
+    boxes: [...main, ...boxes.filter((b) => b.rkey !== mainBoxRkey)],
+  };
+}
+
+async function visitorDetail(did: string, store: CloudflareStore | null, profile: Profile) {
+  const [{ boxes, mainBoxRkey }, p, ownerRegistered] = await Promise.all([
+    loadBoxes(did, store),
+    profile,
+    store?.ownerHasAnyDevice(did) ?? false,
+  ]);
+  const open = boxes.filter((b) => b.isOpen);
+  const box = open.find((b) => b.rkey === mainBoxRkey) ?? null;
+  return {
+    profile: p,
+    box,
+    subBoxes: open.filter((b) => b !== box),
+    ownerRegistered,
+  };
+}
 
 export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
   const { session } = await parent();
   const { handle: cleanHandle, did } = await requireOwner(params.handle, session);
-
-  const isOwner = session?.did === did;
   const store = locals.store;
 
-  const profilePromise = getProfile(did).catch(() => null);
-  const [headProfile, card] = await Promise.all([
-    isOwner ? null : profilePromise,
-    store?.getCardStyle(did) ?? null,
-  ]);
-  const ownerName = isOwner
-    ? session!.displayName || session!.handle
-    : headProfile?.displayName || headProfile?.handle || cleanHandle;
+  const profile = getProfile(did).catch(() => null);
+  const cardVersion = store?.getCardStyle(did).then((c) => c?.updatedAt ?? null) ?? null;
+  const common = { cleanHandle, origin: url.origin };
 
+  if (session?.did === did) {
+    return {
+      ...common,
+      isOwner: true as const,
+      ownerName: session.displayName || session.handle,
+      cardVersion: await cardVersion,
+      detail: ownerDetail(did, store, profile),
+    };
+  }
+
+  const [p, version] = await Promise.all([profile, cardVersion]);
   return {
-    isOwner,
-    cleanHandle,
-    did,
-    origin: url.origin,
-    session,
-    ownerName,
-    cardVersion: card?.updatedAt ?? null,
-    detail: (async () => {
-      const [profile, boxes] = await Promise.all([profilePromise, listBoxes(did)]);
-
-      const byAge = [...boxes].sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? ""));
-      const mainBoxRkey = resolveMainBoxRkey(boxes, store ? await store.getMainBoxRkey(did) : null);
-
-      if (isOwner) {
-        const openBoxes = [...boxes].sort((a, b) => {
-          if (a.rkey === mainBoxRkey) return -1;
-          if (b.rkey === mainBoxRkey) return 1;
-          return (a.createdAt ?? "").localeCompare(b.createdAt ?? "");
-        });
-        return {
-          profile,
-          mainBoxRkey,
-          openBoxes,
-          box: null,
-          subBoxes: [],
-          ownerRegistered: false,
-        };
-      }
-
-      const openList = byAge.filter((b) => b.isOpen);
-      const featured = openList.find((b) => b.rkey === mainBoxRkey) ?? null;
-      const subBoxes = openList.filter((b) => b.rkey !== featured?.rkey);
-      const ownerRegistered = store ? await store.ownerHasAnyDevice(did) : false;
-
-      return {
-        profile,
-        mainBoxRkey,
-        openBoxes: [],
-        box: featured,
-        subBoxes,
-        ownerRegistered,
-      };
-    })(),
+    ...common,
+    isOwner: false as const,
+    ownerName: p?.displayName || p?.handle || cleanHandle,
+    cardVersion: version,
+    detail: visitorDetail(did, store, profile),
   };
 };

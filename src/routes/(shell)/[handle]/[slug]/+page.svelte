@@ -26,7 +26,7 @@
 </svelte:head>
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
-  {#if data.inbox}
+  {#if data.isOwner}
     <div>
       <Button href={profilePath(data.cleanHandle)} variant="ghost">
         {#snippet leftIcon()}<ArrowLeft />{/snippet}
@@ -40,7 +40,7 @@
         設定
       </Button>
     </div>
-    <InboxList inbox={data.inbox} ownerAvatar={data.session?.avatar} />
+    <InboxList inbox={data.inbox} ownerAvatar={data.session?.avatar} showBoxTitle={false} />
   {:else}
     <div>
       <Button variant="ghost" href={profilePath(data.cleanHandle)}>

@@ -13,9 +13,9 @@
 
   let { data }: { data: PageData } = $props();
 
-
   let toggling = $state(false);
   async function toggleHeard() {
+    if (!data.isOwner) return;
     toggling = true;
     try {
       await (data.handled ? markUnheard : markHeard)(data.question.rkey);
@@ -83,7 +83,7 @@
 
     <div data-suisou-layout="stack gap-3" class="inner">
       {#if data.isOwner}
-        {#if data.senderUnknown}
+        {#if !data.senderDid}
           <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
             <Lock data-suisou-text="fs-16" />
             送り主を特定できませんでした。

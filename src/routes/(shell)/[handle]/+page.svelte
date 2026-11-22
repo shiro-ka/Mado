@@ -87,9 +87,9 @@
     {:then detail}
       {@render profileCard(detail.profile)}
 
-      {@render listHead(` (${detail.openBoxes.length})`)}
+      {@render listHead(` (${detail.boxes.length})`)}
 
-      {#if detail.openBoxes.length === 0}
+      {#if detail.boxes.length === 0}
         <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4">
           <p data-suisou-text="fs-14" data-suisou="note">まだ窓がありません</p>
           <Button href={`${profilePath(data.cleanHandle)}/new`} variant="default">
@@ -99,7 +99,7 @@
         </div>
       {:else}
         <div data-suisou-layout="stack gap-3" class="items">
-          {#each detail.openBoxes as box}
+          {#each detail.boxes as box}
             <QuestionBoxCard
               {box}
               ownerHandle={detail.profile?.handle ?? data.cleanHandle}

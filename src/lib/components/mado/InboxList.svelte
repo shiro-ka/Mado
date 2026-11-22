@@ -11,9 +11,10 @@
   interface Props {
     inbox: Promise<{ allQuestions: InboxItem[] }>;
     ownerAvatar?: string;
+    showBoxTitle?: boolean;
   }
 
-  let { inbox, ownerAvatar }: Props = $props();
+  let { inbox, ownerAvatar, showBoxTitle = true }: Props = $props();
 
   const tab = $derived((page.url.searchParams.get("tab") ?? "new") as FilterTab);
 
@@ -47,7 +48,6 @@
   function inHeardTab(q: { rkey: string; handled: boolean }) {
     return settled.get(q.rkey) ?? q.handled;
   }
-
 
   async function undoThrough(rkey: string) {
     undoing = rkey;
@@ -133,6 +133,7 @@
               href={question.href}
               heard={isHeard(question)}
               {ownerAvatar}
+              {showBoxTitle}
               showNewTag={tab !== "new" && !isHeard(question)}
               sentAnswers={sentAnswers.get(question.rkey)}
               onReplied={(answerBody) => {

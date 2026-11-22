@@ -33,42 +33,30 @@ export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
   if (!question || !box) throw error(404, "声が見つかりません");
   if (box.slug !== params.slug) throw redirect(301, koePath(cleanHandle, box.slug, params.rkey));
 
-  const ownerName = ownerProfile?.displayName || cleanHandle;
-
-  let senderDid: string | null = null;
-  let senderUnknown = false;
-  let senderBlocked = false;
-  let isHandled = false;
-
-  if (isOwner) {
-    isHandled = await store.isHandled(ownerDid, params.rkey);
-    senderDid = await store.getSender(ownerDid, params.rkey);
-    senderUnknown = !senderDid;
-    if (senderDid) {
-      senderBlocked = await store.isBlocked(ownerDid, senderDid);
-    }
-  } else if (session) {
-    await store.markSentRead(session.did, ownerDid, params.rkey);
-  }
-
-  const senderProfile = senderDid ? await getProfile(senderDid) : null;
   const card = await store.getCardStyle(ownerDid);
-
-  return {
+  const common = {
     cleanHandle,
-    ownerName,
+    ownerName: ownerProfile?.displayName || cleanHandle,
     ownerAvatar: ownerProfile?.avatar,
     box,
-    isOwner,
     question,
-    handled: isHandled,
     answers,
     koeUri,
-    senderDid,
-    senderProfile,
     cardVersion: card?.updatedAt ?? null,
-    senderBlocked,
-    senderUnknown,
     origin: url.origin,
   };
+
+  if (isOwner) {
+    const [handled, senderDid] = await Promise.all([
+      store.isHandled(ownerDid, params.rkey),
+      store.getSender(ownerDid, params.rkey),
+    ]);
+    const [senderProfile, senderBlocked] = senderDid
+      ? await Promise.all([getProfile(senderDid), store.isBlocked(ownerDid, senderDid)])
+      : [null, false];
+    return { ...common, isOwner: true as const, handled, senderDid, senderProfile, senderBlocked };
+  }
+
+  if (session) await store.markSentRead(session.did, ownerDid, params.rkey);
+  return { ...common, isOwner: false as const };
 };
