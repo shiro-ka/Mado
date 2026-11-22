@@ -56,23 +56,23 @@ async function officialAgent(env: Env): Promise<AtpAgent | null> {
   const password = env.MADO_OFFICIAL_APP_PASSWORD;
   if (!identifier || !password) return null; // notifications not configured
 
+  let storedTokens: string | null = null;
+  const tokensOf = (session: AtpSessionData) => `${session.accessJwt}\n${session.refreshJwt}`;
   const agent = new AtpAgent({
     service: env.MADO_OFFICIAL_PDS ?? DEFAULT_OFFICIAL_PDS,
     persistSession: (_evt, session) => {
-      // Best-effort cache refresh; keeps rotating access/refresh tokens warm.
-      if (session) {
-        void env.MADO_SESSION.put(
-          OFFICIAL_SESSION_KEY,
-          JSON.stringify(session)
-        ).catch(() => {});
-      }
+      if (!session || tokensOf(session) === storedTokens) return;
+      storedTokens = tokensOf(session);
+      void env.MADO_SESSION.put(OFFICIAL_SESSION_KEY, JSON.stringify(session)).catch(() => {});
     },
   });
 
   const cachedRaw = await env.MADO_SESSION.get(OFFICIAL_SESSION_KEY);
   if (cachedRaw) {
     try {
-      await agent.resumeSession(JSON.parse(cachedRaw) as AtpSessionData);
+      const cached = JSON.parse(cachedRaw) as AtpSessionData;
+      storedTokens = tokensOf(cached);
+      await agent.resumeSession(cached);
       return agent;
     } catch {
       // Stale / revoked cache — fall through to a fresh login.
