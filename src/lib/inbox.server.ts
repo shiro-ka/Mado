@@ -5,7 +5,7 @@ import { koePath, rkeyOfUri } from "./urls.js";
 
 const DELIVERY_SLACK_MS = 5000;
 
-export async function loadInbox(store: CloudflareStore, ownerDid: string) {
+async function loadInbox(store: CloudflareStore, ownerDid: string) {
   const [{ handled: handledSet, senders, latestSentAt }, blocks] = await Promise.all([
     store.listDeliveryState(ownerDid),
     store.listBlocks(ownerDid),

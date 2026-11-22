@@ -130,7 +130,6 @@
           {:else}
             <QuestionCard
               {question}
-              href={question.href}
               heard={isHeard(question)}
               {ownerAvatar}
               {showBoxTitle}

@@ -17,7 +17,7 @@ function agentFor(service: string): AtpAgent {
   return agent;
 }
 
-export function publicAgent(): AtpAgent {
+function publicAgent(): AtpAgent {
   return agentFor(DEFAULT_PDS);
 }
 
@@ -26,7 +26,7 @@ export async function repoAgent(repoDid: string): Promise<AtpAgent> {
   return agentFor(pds ?? DEFAULT_PDS);
 }
 
-export function appViewAgent(): AtpAgent {
+function appViewAgent(): AtpAgent {
   return agentFor(APPVIEW_URL);
 }
 

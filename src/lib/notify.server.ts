@@ -92,7 +92,7 @@ async function officialAgent(env: Env): Promise<AtpAgent | null> {
  * Send a DM from the official account to `recipientDid`. Returns whether it
  * was delivered. Never throws.
  */
-export async function sendOfficialDm(
+async function sendOfficialDm(
   env: Env,
   recipientDid: string,
   text: string

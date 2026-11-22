@@ -69,7 +69,7 @@ export function setMainBox(rkey: string, main: boolean) {
 }
 
 export function saveCardStyle(colors: Record<string, string>) {
-  return call<{ updatedAt: string }>("/api/card-style", "POST", colors);
+  return call<{ updatedAt: number }>("/api/card-style", "POST", colors);
 }
 
 export function followOfficial() {

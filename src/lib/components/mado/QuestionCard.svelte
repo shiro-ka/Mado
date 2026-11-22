@@ -6,11 +6,10 @@
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import { formatDate } from "$lib/utils.js";
   import { truncate } from "$lib/text.js";
-  import type { ReceivedQuestion } from "$lib/../types/index.js";
+  import type { InboxItem } from "$lib/../types/index.js";
 
   interface Props {
-    question: ReceivedQuestion & { boxTitle?: string; answers?: string[] };
-    href: string;
+    question: InboxItem;
     heard: boolean;
     ownerAvatar?: string;
     showNewTag?: boolean;
@@ -23,10 +22,10 @@
     onDeleted?: () => void;
   }
 
-  let { question, href, heard, ownerAvatar, sentAnswers = [], showNewTag = false, showBoxTitle = true, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
+  let { question, heard, ownerAvatar, sentAnswers = [], showNewTag = false, showBoxTitle = true, onReplied, onThrough, onUnheard, onBlocked, onDeleted }: Props = $props();
 
   let replying = $state(false);
-  const answers = $derived([...(question.answers ?? []), ...sentAnswers]);
+  const answers = $derived([...question.answers, ...sentAnswers]);
   const shownAnswers = $derived(answers.slice(-2));
   const hiddenAnswers = $derived(answers.length - shownAnswers.length);
   let confirm = $state<"block" | "delete" | null>(null);
@@ -64,7 +63,7 @@
   {#if showBoxTitle && question.boxTitle}
     <span data-suisou-tray="bleed" data-suisou="bd-bottom py-1 px-2 note" data-suisou-text="fs-12 clamp-1">{question.boxTitle}</span>
   {/if}
-  <a {href} data-suisou-item="media" data-suisou-tray="stretch" class="main">
+  <a href={question.href} data-suisou-item="media" data-suisou-tray="stretch" class="main">
     <span data-suisou-item="media-figure">
       {#if question.senderAvatar}
         <img src={question.senderAvatar} alt="" data-suisou-item="circle" />
