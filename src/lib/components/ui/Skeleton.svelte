@@ -1,13 +1,12 @@
 <script lang="ts">
   interface Props {
     height?: string;
-    heightWide?: string;
   }
 
-  let { height = "1rem", heightWide }: Props = $props();
+  let { height = "1rem" }: Props = $props();
 </script>
 
-<div class="skeleton" style:--h={height} style:--h-wide={heightWide ?? height}></div>
+<div class="skeleton" style:--h={height}></div>
 
 <style>
   .skeleton {
@@ -15,11 +14,6 @@
     border-radius: var(--suisou-radius);
     background: var(--suisou-color-item);
     animation: skeleton-pulse 1.6s ease-in-out infinite;
-  }
-  @media (width >= 768px) {
-    .skeleton {
-      height: var(--h-wide);
-    }
   }
 
   @keyframes skeleton-pulse {

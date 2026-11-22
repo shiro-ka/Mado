@@ -1,10 +1,3 @@
-export interface Session {
-  did: string;
-  handle: string;
-  displayName?: string;
-  avatar?: string;
-}
-
 export interface QuestionBox {
   uri: string;
   cid: string;
@@ -36,7 +29,6 @@ export interface Answer {
   uri: string;
   cid: string;
   rkey: string;
-  questionRkey: string;
   body: string;
   createdAt: string;
 }
@@ -86,11 +78,6 @@ export type SentItem = {
   answers: string[];
   hasNewAnswer: boolean;
 };
-
-export interface ApiError {
-  error: string;
-  message?: string;
-}
 
 export type FilterTab = "new" | "heard" | "all";
 

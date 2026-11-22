@@ -15,23 +15,6 @@ const updateSchema = z.object({
   slug: slugSchema.optional(),
 });
 
-export const GET: RequestHandler = async ({ params, cookies, platform }) => {
-  try {
-    const env = platform!.env;
-    const store = new CloudflareStore(env);
-    const session = await getSession(cookies, store);
-    if (!session) return json({ error: "Unauthorized" }, { status: 401 });
-
-    const box = await getBoxRecord(session.did, params.rkey);
-    if (!box) return json({ error: "Not found" }, { status: 404 });
-
-    return json(box);
-  } catch (err) {
-    console.error("[GET /api/boxes/[rkey]]", err);
-    return json({ error: "Internal server error" }, { status: 500 });
-  }
-};
-
 export const PATCH: RequestHandler = async ({ params, request, cookies, platform }) => {
   try {
     const env = platform!.env;

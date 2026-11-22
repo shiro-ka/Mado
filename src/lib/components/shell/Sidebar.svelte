@@ -9,10 +9,9 @@
   interface Props {
     session: AppSession;
     officialHandle?: string | null;
-    onNavigate?: () => void;
   }
 
-  let { session, officialHandle = null, onNavigate }: Props = $props();
+  let { session, officialHandle = null }: Props = $props();
 
   const navItems = $derived([
     { href: "/receive", icon: Inbox, label: "受信トレイ" },
@@ -27,7 +26,7 @@
 </script>
 
 <div data-suisou-layout="row" data-suisou="px-3 py-3" class="brandbar">
-  <a href="/receive" onclick={onNavigate}>
+  <a href="/receive">
     <Brand size="md" />
   </a>
 </div>
@@ -38,7 +37,7 @@
       {@const active = currentPath === item.href || currentPath.startsWith(`${item.href}/`)}
       <a
         href={item.href}
-        onclick={onNavigate}
+       
         aria-current={active ? "page" : undefined}
         data-suisou-button="block"
       >

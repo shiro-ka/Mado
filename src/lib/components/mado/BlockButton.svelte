@@ -72,7 +72,7 @@
 {:else}
   <div data-suisou-layout="row wrap" class="bar">
     <Button
-      variant={state === "confirm" ? "destructive" : "secondary"}
+      variant={state === "confirm" ? "destructive" : "outline"}
       loading={state === "blocking"}
       onclick={handlePrimary}
     >

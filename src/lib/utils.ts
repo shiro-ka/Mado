@@ -4,7 +4,6 @@ export type WithElementRef<T, E extends HTMLElement = HTMLElement> = T & {
   ref?: E | null;
 };
 
-export type WithoutChildren<T> = Omit<T, "children">;
 import { ja } from "date-fns/locale";
 
 export function formatDate(dateString: string): string {
@@ -45,11 +44,6 @@ export function normalizeHandle(handle: string): string {
 export function boxUrl(handle: string, slug: string): string {
   const normalized = normalizeHandle(handle);
   return `/@${normalized}/${slug}`;
-}
-
-export function profileUrl(handle: string): string {
-  const normalized = normalizeHandle(handle);
-  return `/@${normalized}`;
 }
 
 /**

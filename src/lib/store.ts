@@ -106,13 +106,6 @@ export class CloudflareStore {
       .run();
   }
 
-  async listUsers(): Promise<string[]> {
-    const { results } = await this.env.DB.prepare("SELECT did FROM users").all<{
-      did: string;
-    }>();
-    return results.map((r: { did: string }) => r.did);
-  }
-
   /** The owner's chosen "main box" rkey, or null to use the oldest-box default. */
   async getMainBoxRkey(did: string): Promise<string | null> {
     try {
@@ -352,9 +345,6 @@ export class CloudflareStore {
     }
   }
 
-  async isDmNotifyEnabled(did: string): Promise<boolean> {
-    return (await this.getNotificationPrefs(did)).dmEnabled;
-  }
 
   async setDmNotify(did: string, enabled: boolean): Promise<void> {
     await this.env.DB.prepare(

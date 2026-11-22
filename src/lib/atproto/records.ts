@@ -9,7 +9,6 @@ import type {
 } from "../../types/index.js";
 import type { SessionFetch } from "../oauth.server.js";
 import {
-  publicAgent,
   repoAgent,
   listAllRecords,
   invalidateRecords,
@@ -183,7 +182,6 @@ export async function getAnswersByOwner(
         uri: r.uri,
         cid: r.cid,
         rkey,
-        questionRkey: record.koe.split("/").pop() ?? "",
         body: record.body,
         createdAt: record.createdAt,
       };
@@ -215,7 +213,6 @@ export async function listAnswers(
           uri: r.uri,
           cid: r.cid,
           rkey,
-          questionRkey: koeUri.split("/").pop() ?? "",
           body: record.body,
           createdAt: record.createdAt,
         };

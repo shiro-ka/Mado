@@ -2,13 +2,12 @@
   import type { Snippet } from "svelte";
   import { page } from "$app/state";
   import { AlertCircle } from "lucide-svelte";
-  import Button, { type ButtonVariant } from "$lib/components/ui/Button.svelte";
+  import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import { safeNext } from "$lib/loginNext.js";
 
   interface Props {
     label?: string;
-    variant?: ButtonVariant;
     look?: "button" | "other";
     addAccount?: boolean;
     block?: boolean;
@@ -17,7 +16,7 @@
     "data-suisou-text"?: string;
   }
 
-  let { label, variant = "default", look = "button", addAccount = false, block = false, leftIcon, ...rest }: Props = $props();
+  let { label, look = "button", addAccount = false, block = false, leftIcon, ...rest }: Props = $props();
 
   const uid = $props.id();
   const dialogId = `login-${uid}`;
@@ -69,7 +68,7 @@
       {label ?? "Bluesky でログイン"}
     </button>
   {:else}
-    <Button {variant} loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")} {...rest}>{label ?? "Bluesky でログイン"}</Button>
+    <Button loading={loading === "bsky"} disabled={loading !== null} onclick={() => login("bsky")} {...rest}>{label ?? "Bluesky でログイン"}</Button>
   {/if}
 {:else}
   {#if block}
@@ -105,7 +104,7 @@
         </p>
       {/if}
       <div data-suisou-layout="row end">
-        <Button type="button" variant="secondary" commandfor={dialogId} command="close" disabled={loading === "handle"}>
+        <Button type="button" variant="outline" commandfor={dialogId} command="close" disabled={loading === "handle"}>
           キャンセル
         </Button>
         <Button type="submit" variant="default" loading={loading === "handle"} disabled={!handle.trim() || loading !== null}>

@@ -2,14 +2,12 @@
   interface Props {
     checked?: boolean;
     disabled?: boolean;
-    label?: string;
     onCheckedChange?: (checked: boolean) => void;
   }
 
   let {
     checked = $bindable(false),
     disabled = false,
-    label,
     onCheckedChange,
   }: Props = $props();
 </script>
@@ -18,7 +16,6 @@
   type="checkbox"
   role="switch"
   class="switch"
-  aria-label={label}
   bind:checked
   onchange={() => onCheckedChange?.(checked)}
   {disabled}

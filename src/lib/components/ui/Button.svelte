@@ -2,12 +2,11 @@
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
   import type { WithElementRef } from "$lib/utils.js";
 
-  export type ButtonVariant = "default" | "outline" | "secondary" | "ghost" | "destructive";
+  export type ButtonVariant = "default" | "outline" | "ghost" | "destructive";
 
   const VARIANT_MAP: Record<ButtonVariant, [string, string]> = {
     default: ["outline", "accent"],
     outline: ["outline", ""],
-    secondary: ["outline", ""],
     ghost: ["", ""],
     destructive: ["outline", "error"],
   };
@@ -16,7 +15,6 @@
     WithElementRef<HTMLAnchorAttributes> & {
       variant?: ButtonVariant;
       icon?: boolean;
-      wide?: boolean;
       loading?: boolean;
       leftIcon?: import("svelte").Snippet;
       rightIcon?: import("svelte").Snippet;
@@ -28,7 +26,6 @@
     class: className,
     variant = "default",
     icon = false,
-    wide = false,
     ref = $bindable(null),
     href = undefined,
     type = "button",
@@ -42,7 +39,7 @@
 
   const isDisabled = $derived(disabled || loading);
   const suisou = $derived([VARIANT_MAP[variant][0], icon ? "icon" : ""].filter(Boolean).join(" "));
-  const tone = $derived([VARIANT_MAP[variant][1], wide ? "w-full" : ""].filter(Boolean).join(" ") || undefined);
+  const tone = $derived(VARIANT_MAP[variant][1] || undefined);
 </script>
 
 {#if href}

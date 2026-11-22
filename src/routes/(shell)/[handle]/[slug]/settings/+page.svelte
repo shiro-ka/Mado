@@ -211,7 +211,7 @@
     </div>
     <div data-suisou-item="media-tail">
       <Button
-        variant="secondary"
+        variant="outline"
         aria-pressed={copied}
         onclick={copyUrl}
         aria-label="公開URLをコピー"
@@ -235,7 +235,7 @@
       </p>
     </div>
     <div data-suisou-item="media-tail">
-      <Button variant="secondary" loading={settingMain} onclick={toggleMain}>
+      <Button variant="outline" loading={settingMain} onclick={toggleMain}>
         {data.isMain ? "メインを解除" : "メインにする"}
       </Button>
     </div>
@@ -272,7 +272,7 @@
     </p>
   {/if}
   <div data-suisou-layout="row end">
-    <Button type="button" variant="secondary" commandfor="delete-box" command="close" disabled={formState === "deleting"}>
+    <Button type="button" variant="outline" commandfor="delete-box" command="close" disabled={formState === "deleting"}>
       キャンセル
     </Button>
     <Button type="button" variant="destructive" loading={formState === "deleting"} onclick={handleDelete}>

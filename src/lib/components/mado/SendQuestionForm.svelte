@@ -8,10 +8,9 @@
     boxOwnerDid: string;
     boxRkey: string;
     senderHandle: string;
-    onSuccess?: () => void;
   }
 
-  let { boxOwnerDid, boxRkey, senderHandle, onSuccess }: Props = $props();
+  let { boxOwnerDid, boxRkey, senderHandle }: Props = $props();
 
   type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -42,7 +41,6 @@
 
       formState = "success";
       body = "";
-      onSuccess?.();
     } catch (err) {
       formState = "error";
       errorMsg = err instanceof Error ? err.message : "送信に失敗しました";

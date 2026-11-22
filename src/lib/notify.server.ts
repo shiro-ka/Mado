@@ -129,7 +129,7 @@ export async function notifyNewKoe(
   params: { ownerDid: string; boxTitle?: string; body: string }
 ): Promise<void> {
   try {
-    if (!(await store.isDmNotifyEnabled(params.ownerDid))) return;
+    if (!(await store.getNotificationPrefs(params.ownerDid)).dmEnabled) return;
 
     const appUrl = env.APP_URL ?? "https://mado.blue";
     const preview =

@@ -6,11 +6,10 @@
   interface Props {
     box: QuestionBox;
     ownerHandle: string;
-    questionCount?: number;
     isMain?: boolean;
   }
 
-  let { box, ownerHandle, questionCount, isMain = false }: Props = $props();
+  let { box, ownerHandle, isMain = false }: Props = $props();
 
   const href = $derived(boxUrl(ownerHandle, box.slug));
 </script>
@@ -41,9 +40,6 @@
     <span data-suisou-item="tag" data-suisou={box.isOpen ? "success" : undefined}>
       {box.isOpen ? "受付中" : "受付停止"}
     </span>
-    {#if questionCount !== undefined}
-      <span data-suisou-text="fs-12" data-suisou="note" class="count">声 {questionCount}件</span>
-    {/if}
   </div>
 </a>
 
@@ -62,10 +58,5 @@
   }
   .link:hover .title {
     color: var(--suisou-color-accent);
-  }
-  .link:hover
-
-  .count {
-    margin-inline-start: auto;
   }
 </style>
