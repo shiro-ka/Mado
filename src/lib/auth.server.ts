@@ -93,14 +93,18 @@ function setAccountIds(cookies: Cookies, env: App.Platform["env"], ids: string[]
 export async function listAccounts(
   cookies: Cookies,
   env: App.Platform["env"],
-  store: CloudflareStore
+  store: CloudflareStore,
+  current?: AppSession
 ): Promise<AccountSummary[]> {
   const active = cookies.get(SESSION_COOKIE);
   const ids = knownAccountIds(cookies);
+  const sessions = await Promise.all(
+    ids.map((id) => (id === active && current ? current : store.getSession(id)))
+  );
   const accounts: AccountSummary[] = [];
   const valid: string[] = [];
-  for (const id of ids) {
-    const session = await store.getSession(id);
+  for (const [i, id] of ids.entries()) {
+    const session = sessions[i];
     if (!session) continue;
     valid.push(id);
     accounts.push({
