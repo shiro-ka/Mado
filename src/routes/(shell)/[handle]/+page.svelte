@@ -1,6 +1,7 @@
 <script lang="ts">
   import { profilePath, ogImagePath } from "$lib/urls.js";
-  import { Globe, MessageCircle, Plus } from "lucide-svelte";
+  import { MessageCircle, Plus } from "lucide-svelte";
+  import BlueskyIcon from "$lib/components/ui/BlueskyIcon.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import QuestionBoxCard from "$lib/components/mado/QuestionBoxCard.svelte";
   import BoxSendView from "$lib/components/mado/BoxSendView.svelte";
@@ -67,7 +68,7 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Globe data-suisou-text="fs-16" />
+        <BlueskyIcon data-suisou-text="fs-16" />
         Blueskyで見る
       </a>
     </div>
