@@ -32,7 +32,7 @@ export function appViewAgent(): AtpAgent {
 
 export type RecordScan = Array<{ uri: string; cid: string; value: unknown }>;
 
-const recordScanCache = new Map<string, { records: RecordScan; exp: number }>();
+const recordScanCache = new Map<string, { records: RecordScan; exp: number; at: number }>();
 const RECORD_SCAN_TTL_MS = 30 * 1000;
 const PAGE_SIZE = 100;
 
@@ -48,11 +48,13 @@ export async function listAllRecords(
   agent: AtpAgent,
   repo: string,
   collection: string,
+  freshAfter = 0,
   hardCap = 3000
 ): Promise<RecordScan> {
   const cacheKey = recordScanKey(repo, collection);
   const cached = recordScanCache.get(cacheKey);
-  if (cached && cached.exp > Date.now()) return cached.records;
+  if (cached && cached.exp > Date.now() && cached.at > freshAfter) return cached.records;
+  const startedAt = Date.now();
 
   const out: RecordScan = [];
   let cursor: string | undefined;
@@ -71,7 +73,7 @@ export async function listAllRecords(
       `[listAllRecords] hardCap ${hardCap} reached for ${collection} in ${repo} — older records not loaded`
     );
   }
-  recordScanCache.set(cacheKey, { records: out, exp: Date.now() + RECORD_SCAN_TTL_MS });
+  recordScanCache.set(cacheKey, { records: out, exp: startedAt + RECORD_SCAN_TTL_MS, at: startedAt });
   return out;
 }
 

@@ -3,12 +3,14 @@ import type { Answer, ReceivedQuestion } from "../types/index.js";
 import { listQuestions, listBoxes, getProfiles, getAnswersByOwner } from "./atproto/index.js";
 import { koePath } from "./urls.js";
 
+const DELIVERY_SLACK_MS = 5000;
+
 export async function loadInbox(store: CloudflareStore, ownerDid: string) {
-  const [questions, { handled: handledSet, senders }, blocks] = await Promise.all([
-    listQuestions(ownerDid),
+  const [{ handled: handledSet, senders, latestSentAt }, blocks] = await Promise.all([
     store.listDeliveryState(ownerDid),
     store.listBlocks(ownerDid),
   ]);
+  const questions = await listQuestions(ownerDid, latestSentAt * 1000 + DELIVERY_SLACK_MS);
   const blockSet = new Set(blocks);
   return questions
     .map((q): ReceivedQuestion => ({

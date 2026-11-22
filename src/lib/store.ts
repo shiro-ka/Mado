@@ -239,19 +239,23 @@ export class CloudflareStore {
     return row?.sender_did ?? null;
   }
 
-  async listDeliveryState(ownerDid: string): Promise<{ handled: Set<string>; senders: Map<string, string> }> {
+  async listDeliveryState(
+    ownerDid: string
+  ): Promise<{ handled: Set<string>; senders: Map<string, string>; latestSentAt: number }> {
     const { results } = await this.env.DB.prepare(
-      "SELECT koe_rkey, sender_did, owner_handled_at IS NOT NULL AS handled FROM deliveries WHERE owner_did = ?"
+      "SELECT koe_rkey, sender_did, sent_at, owner_handled_at IS NOT NULL AS handled FROM deliveries WHERE owner_did = ?"
     )
       .bind(ownerDid)
-      .all<{ koe_rkey: string; sender_did: string | null; handled: number }>();
+      .all<{ koe_rkey: string; sender_did: string | null; sent_at: number | null; handled: number }>();
     const handled = new Set<string>();
     const senders = new Map<string, string>();
+    let latestSentAt = 0;
     for (const r of results) {
       if (r.handled) handled.add(r.koe_rkey);
       if (r.sender_did) senders.set(r.koe_rkey, r.sender_did);
+      if (r.sent_at && r.sent_at > latestSentAt) latestSentAt = r.sent_at;
     }
-    return { handled, senders };
+    return { handled, senders, latestSentAt };
   }
 
   async markHandled(ownerDid: string, rkey: string): Promise<void> {

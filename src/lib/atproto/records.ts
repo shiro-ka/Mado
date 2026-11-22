@@ -142,10 +142,10 @@ export async function getKoeRecord(
   }
 }
 
-export async function listQuestions(did: string): Promise<Question[]> {
+export async function listQuestions(did: string, freshAfter = 0): Promise<Question[]> {
   const agent = await repoAgent(did);
   try {
-    const records = await listAllRecords(agent, did, NSID.KOE);
+    const records = await listAllRecords(agent, did, NSID.KOE, freshAfter);
     return records.flatMap((r) => {
       const parsed = koeRecord.safeParse(r.value);
       if (!parsed.success) return [];
