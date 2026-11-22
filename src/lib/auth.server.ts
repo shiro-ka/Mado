@@ -167,7 +167,12 @@ export async function renewSession(
         avatar: profile.avatar || undefined,
       }
     : entry.session;
-  await store.setSession(sessionId, session, SESSION_TTL);
+  try {
+    await store.setSession(sessionId, session, SESSION_TTL);
+  } catch (err) {
+    console.error("[renewSession]", err);
+    return entry.session;
+  }
   setSessionCookie(cookies, env, sessionId);
   setAccountIds(cookies, env, knownAccountIds(cookies));
   return session;
