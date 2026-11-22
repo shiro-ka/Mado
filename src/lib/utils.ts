@@ -32,11 +32,6 @@ export function formatDateFull(dateString: string): string {
   return format(date, "yyyy年M月d日 HH:mm", { locale: ja });
 }
 
-export function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength - 1) + "…";
-}
-
 export function normalizeHandle(handle: string): string {
   return handle.startsWith("@") ? handle.slice(1) : handle;
 }

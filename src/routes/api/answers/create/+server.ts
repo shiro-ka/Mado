@@ -5,12 +5,11 @@ import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { writeAnswer, createBskyPost, invalidateRecords, NSID } from "$lib/atproto/index.js";
-import { atUriSchema, limitedText } from "$lib/validation.js";
-import { POST_MAX_GRAPHEMES, POST_MAX_BYTES } from "$lib/text.js";
+import { atUriSchema, postBodySchema } from "$lib/validation.js";
 
 const createAnswerSchema = z.object({
   koeUri: atUriSchema,
-  body: limitedText(POST_MAX_GRAPHEMES, POST_MAX_BYTES).refine((s) => s.length > 0),
+  body: postBodySchema,
   crosspost: z.boolean().optional().default(false),
   pageUrl: z.string().url().optional(),
   questionBody: z.string().max(1000).optional(),

@@ -4,13 +4,12 @@ import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { getBoxRecord, updateBoxRecord, deleteBoxWithContents, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
-import { slugSchema, limitedText } from "$lib/validation.js";
-import { BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES } from "$lib/text.js";
+import { getBoxRecord, updateBoxRecord, deleteBoxWithContents, isSlugTaken, invalidateRecords, NSID } from "$lib/atproto/index.js";
+import { slugSchema, boxTitleSchema, boxDescriptionSchema } from "$lib/validation.js";
 
 const updateSchema = z.object({
-  title: z.string().min(1).max(30).optional(),
-  description: limitedText(BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES).optional(),
+  title: boxTitleSchema.optional(),
+  description: boxDescriptionSchema.optional(),
   isOpen: z.boolean().optional(),
   slug: slugSchema.optional(),
 });
@@ -40,8 +39,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies, platform
     const { title, description, isOpen, slug } = parsed.data;
 
     if (slug && slug !== box.slug) {
-      const existing = await listBoxes(session.did);
-      if (existing.some((b) => b.rkey !== params.rkey && b.slug === slug)) {
+      if (await isSlugTaken(session.did, slug, params.rkey)) {
         return json(
           { error: "Slug taken", message: "そのURLは既に使われています。別のURLにしてください。" },
           { status: 409 }

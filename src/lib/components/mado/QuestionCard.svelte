@@ -4,7 +4,8 @@
   import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
-  import { formatDate, truncate } from "$lib/utils.js";
+  import { formatDate } from "$lib/utils.js";
+  import { truncate } from "$lib/text.js";
   import type { Question } from "$lib/../types/index.js";
 
   interface Props {

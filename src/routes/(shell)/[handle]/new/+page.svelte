@@ -4,8 +4,8 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Input from "$lib/components/ui/Input.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
-  import { BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES, fitsLimit } from "$lib/text.js";
-  import { slugFormatError } from "$lib/validation.js";
+  import { BOX_TITLE_MAX_LENGTH, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES, fitsLimit } from "$lib/text.js";
+  import { slugFormatError, SLUG_MAX_LENGTH } from "$lib/validation.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -67,7 +67,7 @@
       <Input
         label="窓の名前"
         bind:value={title}
-        maxlength={30}
+        maxlength={BOX_TITLE_MAX_LENGTH}
         required
         disabled={formState === "submitting"}
       />
@@ -86,7 +86,7 @@
           label="URL"
           bind:value={slug}
           error={slugErr ?? undefined}
-          maxlength={30}
+          maxlength={SLUG_MAX_LENGTH}
           disabled={formState === "submitting"}
         />
         <p data-suisou-text="fs-12" data-suisou="note">

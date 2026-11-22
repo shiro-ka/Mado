@@ -5,13 +5,12 @@ import { nanoid } from "nanoid";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
-import { createBoxRecord, listBoxes, invalidateRecords, NSID } from "$lib/atproto/index.js";
-import { slugSchema, limitedText } from "$lib/validation.js";
-import { BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES } from "$lib/text.js";
+import { createBoxRecord, isSlugTaken, invalidateRecords, NSID } from "$lib/atproto/index.js";
+import { slugSchema, boxTitleSchema, boxDescriptionSchema } from "$lib/validation.js";
 
 const createBoxSchema = z.object({
-  title: z.string().min(1).max(30),
-  description: limitedText(BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES).optional(),
+  title: boxTitleSchema,
+  description: boxDescriptionSchema.optional(),
   isOpen: z.boolean().default(true),
   slug: slugSchema.optional(),
 });
@@ -52,8 +51,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     let slug = parsed.data.slug;
     if (slug) {
-      const existing = await listBoxes(session.did);
-      if (existing.some((b) => b.slug === slug)) {
+      if (await isSlugTaken(session.did, slug)) {
         return json(
           { error: "Slug taken", message: "そのURLは既に使われています。別のURLにしてください。" },
           { status: 409 }

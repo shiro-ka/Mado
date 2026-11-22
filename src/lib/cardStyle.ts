@@ -1,10 +1,17 @@
 import { z } from "zod";
-import type { CardStyle } from "./og.js";
 
 export const DEFAULT_STYLE = { icon: "#78aef3", background: "#11172b", bubble: "#1a2135" };
 
 export const CARD_SLOTS = ["background", "bubble", "icon"] as const;
 export type CardSlot = (typeof CARD_SLOTS)[number];
+export type CardStyle = Partial<Record<CardSlot, string | null>>;
+
+const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+export const colorSchema = z.string().regex(HEX_COLOR);
+
+export function isColor(value: unknown): value is string {
+  return typeof value === "string" && HEX_COLOR.test(value);
+}
 
 export const CARD_PALETTE: Record<CardSlot, string[]> = {
   background: [DEFAULT_STYLE.background, "#18181b", "#121325", "#262b36", "#f7f8fa", "#e6f0fb"],
@@ -14,14 +21,12 @@ export const CARD_PALETTE: Record<CardSlot, string[]> = {
 
 const colorPart = z.object({
   kind: z.literal("color"),
-  value: z.string().regex(/^#[0-9a-f]{6}$/i),
+  value: colorSchema,
 });
 
-export const cardStyleDoc = z.object({
-  background: colorPart.optional(),
-  bubble: colorPart.optional(),
-  icon: colorPart.optional(),
-});
+export const cardStyleDoc = z.object(
+  Object.fromEntries(CARD_SLOTS.map((slot) => [slot, colorPart.optional()])) as Record<CardSlot, z.ZodOptional<typeof colorPart>>,
+);
 export type CardStyleDoc = z.infer<typeof cardStyleDoc>;
 
 export function parseCardStyle(raw: unknown): CardStyleDoc {
@@ -30,9 +35,5 @@ export function parseCardStyle(raw: unknown): CardStyleDoc {
 }
 
 export function colorsOf(doc: CardStyleDoc): CardStyle {
-  return {
-    background: doc.background?.value ?? null,
-    bubble: doc.bubble?.value ?? null,
-    icon: doc.icon?.value ?? null,
-  };
+  return Object.fromEntries(CARD_SLOTS.map((slot) => [slot, doc[slot]?.value ?? null]));
 }

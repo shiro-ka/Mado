@@ -3,10 +3,9 @@ import type { RequestHandler } from "./$types";
 import { z } from "zod";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
-import type { CardStyleDoc } from "$lib/cardStyle.js";
+import { CARD_SLOTS, colorSchema, type CardStyleDoc } from "$lib/cardStyle.js";
 
-const color = z.string().regex(/^#[0-9a-f]{6}$/i).nullable();
-const requestSchema = z.object({ background: color, bubble: color, icon: color });
+const requestSchema = z.object(Object.fromEntries(CARD_SLOTS.map((slot) => [slot, colorSchema.nullable()])));
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
   const store = new CloudflareStore(platform!.env);
@@ -21,7 +20,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
   }
 
   const doc: CardStyleDoc = {};
-  for (const slot of ["background", "bubble", "icon"] as const) {
+  for (const slot of CARD_SLOTS) {
     const value = parsed.data[slot];
     if (value) doc[slot] = { kind: "color", value: value.toLowerCase() };
   }

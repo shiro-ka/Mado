@@ -1,6 +1,7 @@
 <script lang="ts">
   import { User, ChevronRight } from "lucide-svelte";
-  import { formatDate, truncate } from "$lib/utils.js";
+  import { formatDate } from "$lib/utils.js";
+  import { truncate } from "$lib/text.js";
   import type { SentItem } from "$lib/../types/index.js";
 
   interface Props {

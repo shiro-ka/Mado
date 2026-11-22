@@ -1,5 +1,12 @@
 import { z } from "zod";
-import { fitsLimit } from "./text.js";
+import {
+  fitsLimit,
+  POST_MAX_GRAPHEMES,
+  POST_MAX_BYTES,
+  BOX_TITLE_MAX_LENGTH,
+  BOX_DESCRIPTION_MAX_GRAPHEMES,
+  BOX_DESCRIPTION_MAX_BYTES,
+} from "./text.js";
 
 export const limitedText = (maxGraphemes: number, maxBytes: number) =>
   z.string().max(maxBytes).refine((s) => fitsLimit(s, maxGraphemes, maxBytes));
@@ -21,6 +28,14 @@ export const atUriSchema = z
     "invalid AT-URI"
   );
 
+export const postBodySchema = limitedText(POST_MAX_GRAPHEMES, POST_MAX_BYTES).refine((s) => s.length > 0);
+
+export const boxTitleSchema = z.string().min(1).max(BOX_TITLE_MAX_LENGTH);
+
+export const boxDescriptionSchema = limitedText(BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES);
+
+export const SLUG_MAX_LENGTH = 30;
+
 const RESERVED_SLUGS = new Set(["new"]);
 
 export const slugSchema = z
@@ -28,7 +43,7 @@ export const slugSchema = z
   .trim()
   .toLowerCase()
   .min(2, "URLは2文字以上にしてください")
-  .max(30, "URLは30文字以内にしてください")
+  .max(SLUG_MAX_LENGTH, `URLは${SLUG_MAX_LENGTH}文字以内にしてください`)
   .regex(
     /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
     "英小文字・数字・ハイフンのみ使えます（先頭と末尾は英数字）"

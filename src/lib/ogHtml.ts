@@ -1,11 +1,6 @@
-import { DEFAULT_STYLE } from "./cardStyle.js";
+import { DEFAULT_STYLE, isColor, type CardStyle } from "./cardStyle.js";
 import { CATCHPHRASE } from "./brand.js";
 
-export type CardStyle = {
-  icon?: string | null;
-  background?: string | null;
-  bubble?: string | null;
-};
 
 export type Theme = {
   bg: string;
@@ -22,10 +17,6 @@ export type Theme = {
 
 const LIGHT_TEXT = "#e7ebf6";
 const DARK_TEXT = "#1b2030";
-
-export function isColor(value: unknown): value is string {
-  return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
-}
 
 function channels(hex: string): [number, number, number] {
   const n = parseInt(hex.slice(1), 16);
@@ -130,11 +121,6 @@ export function phraseHtml(text: string): string {
   return phrases(text)
     .map((p) => `<span style="display:flex;white-space:pre-wrap;">${escapeHtml(p)}</span>`)
     .join("");
-}
-
-export function truncate(s: string, max: number): string {
-  if ([...s].length <= max) return s;
-  return [...s].slice(0, max - 1).join("") + "…";
 }
 
 export function fitVoice(s: string): number {

@@ -2,7 +2,8 @@ import type { RequestHandler } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { parseCardStyle, colorsOf } from "$lib/cardStyle.js";
 import { resolveHandle, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
-import { themeFor, renderOg, truncate, fetchImageDataUri, boxCardHtml } from "$lib/og";
+import { themeFor, renderOg, fetchImageDataUri, boxCardHtml } from "$lib/og";
+import { truncate } from "$lib/text.js";
 
 export const GET: RequestHandler = async ({ params, platform }) => {
 

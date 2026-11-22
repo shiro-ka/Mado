@@ -2,7 +2,8 @@ import type { RequestHandler } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { parseCardStyle, colorsOf } from "$lib/cardStyle.js";
 import { resolveHandle, getKoeRecord, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
-import { themeFor, renderOg, truncate, fetchImageDataUri, koeCardHtml } from "$lib/og";
+import { themeFor, renderOg, fetchImageDataUri, koeCardHtml } from "$lib/og";
+import { truncate } from "$lib/text.js";
 
 const FALLBACK_TEXT = "匿名の声が届きました";
 

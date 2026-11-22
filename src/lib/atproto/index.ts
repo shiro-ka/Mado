@@ -10,6 +10,7 @@ export {
   getBoxRecord,
   listBoxes,
   findBoxBySlug,
+  isSlugTaken,
   getKoeRecord,
   listQuestions,
   getAnswersByOwner,

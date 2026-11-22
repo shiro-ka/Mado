@@ -114,6 +114,11 @@ export async function findBoxBySlug(
   return boxes.find((b) => b.slug === slug) ?? null;
 }
 
+export async function isSlugTaken(did: string, slug: string, exceptRkey?: string): Promise<boolean> {
+  const boxes = await listBoxes(did);
+  return boxes.some((b) => b.slug === slug && b.rkey !== exceptRkey);
+}
+
 export async function getKoeRecord(
   did: string,
   rkey: string
