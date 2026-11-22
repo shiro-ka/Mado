@@ -1,4 +1,5 @@
 <script lang="ts">
+  import OgMeta from "$lib/components/shell/OgMeta.svelte";
   import { profilePath, ogImagePath } from "$lib/urls.js";
   import { MessageCircle, Plus } from "lucide-svelte";
   import BlueskyIcon from "$lib/components/ui/BlueskyIcon.svelte";
@@ -15,17 +16,14 @@
 <svelte:head>
   <title>{data.ownerName}の窓 - {CATCHPHRASE}</title>
   <meta name="description" content={CATCHPHRASE} />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content={`${data.ownerName}の窓`} />
-  <meta property="og:description" content={CATCHPHRASE} />
-  <meta property="og:url" content={data.origin + profilePath(data.cleanHandle)} />
-  <meta property="og:image" content={data.origin + ogImagePath(profilePath(data.cleanHandle), data.cardVersion)} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={data.origin + ogImagePath(profilePath(data.cleanHandle), data.cardVersion)} />
 </svelte:head>
+
+<OgMeta
+  title={`${data.ownerName}の窓`}
+  description={CATCHPHRASE}
+  url={data.origin + profilePath(data.cleanHandle)}
+  image={data.origin + ogImagePath(profilePath(data.cleanHandle), data.cardVersion)}
+/>
 
 {#snippet listHead(count: string)}
   <div data-suisou-layout="row between">

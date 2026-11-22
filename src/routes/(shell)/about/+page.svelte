@@ -1,4 +1,5 @@
 <script lang="ts">
+  import OgMeta from "$lib/components/shell/OgMeta.svelte";
   import { page } from "$app/state";
   import LandingContent from "$lib/components/mado/LandingContent.svelte";
   import { CATCHPHRASE } from "$lib/brand.js";
@@ -10,16 +11,8 @@
 <svelte:head>
   <title>Madoについて | Mado</title>
   <meta name="description" content={CATCHPHRASE} />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content={"Madoについて"} />
-  <meta property="og:description" content={CATCHPHRASE} />
-  <meta property="og:url" content={`${page.url.origin}/about`} />
-  <meta property="og:image" content={`${page.url.origin}/og/site`} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={`${page.url.origin}/og/site`} />
 </svelte:head>
+
+<OgMeta title="Madoについて" description={CATCHPHRASE} url={`${page.url.origin}/about`} image={`${page.url.origin}/og/site`} />
 
 <LandingContent loggedIn={!!data.session} />

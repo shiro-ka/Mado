@@ -1,4 +1,5 @@
 <script lang="ts">
+  import OgMeta from "$lib/components/shell/OgMeta.svelte";
   import { AlertCircle } from "lucide-svelte";
   import { page } from "$app/state";
   import LandingContent from "$lib/components/mado/LandingContent.svelte";
@@ -8,17 +9,9 @@
 <svelte:head>
   <title>Mado - {CATCHPHRASE}</title>
   <meta name="description" content={CATCHPHRASE} />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content={"Mado"} />
-  <meta property="og:description" content={CATCHPHRASE} />
-  <meta property="og:url" content={`${page.url.origin}/`} />
-  <meta property="og:image" content={`${page.url.origin}/og/site`} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={`${page.url.origin}/og/site`} />
 </svelte:head>
+
+<OgMeta title="Mado" description={CATCHPHRASE} url={`${page.url.origin}/`} image={`${page.url.origin}/og/site`} />
 
 {#if page.url.searchParams.has("login_error")}
   <div data-suisou="container" class="error">

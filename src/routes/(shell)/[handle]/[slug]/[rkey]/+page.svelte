@@ -1,4 +1,5 @@
 <script lang="ts">
+  import OgMeta from "$lib/components/shell/OgMeta.svelte";
   import { markHeard, markUnheard } from "$lib/api.js";
   import { boxPath, koePath, ogImagePath } from "$lib/urls.js";
   import { ArrowLeft, User, Lock, MessageCircle, Archive, ArchiveRestore } from "lucide-svelte";
@@ -31,17 +32,15 @@
 
 <svelte:head>
   <title>声 | @{data.cleanHandle} | Mado</title>
-  <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="Mado" />
-  <meta property="og:title" content={`${data.ownerName}への声`} />
-  <meta property="og:description" content={CATCHPHRASE} />
-  <meta property="og:url" content={data.origin + koePath(data.cleanHandle, data.box.slug, data.question.rkey)} />
-  <meta property="og:image" content={data.origin + ogImagePath(koePath(data.cleanHandle, data.box.slug, data.question.rkey), data.cardVersion)} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={data.origin + ogImagePath(koePath(data.cleanHandle, data.box.slug, data.question.rkey), data.cardVersion)} />
 </svelte:head>
+
+<OgMeta
+  type="article"
+  title={`${data.ownerName}への声`}
+  description={CATCHPHRASE}
+  url={data.origin + koePath(data.cleanHandle, data.box.slug, data.question.rkey)}
+  image={data.origin + ogImagePath(koePath(data.cleanHandle, data.box.slug, data.question.rkey), data.cardVersion)}
+/>
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div>
