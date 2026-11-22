@@ -2,6 +2,7 @@ import type { Cookies } from "@sveltejs/kit";
 import type { CloudflareStore, AppSession } from "./store.js";
 import { customAlphabet } from "nanoid";
 import { MAX_ACCOUNTS, type AccountSummary } from "./accounts.js";
+import { endDeviceSession } from "./oauth.server.js";
 
 const SESSION_COOKIE = "mado_session";
 const ACCOUNTS_COOKIE = "mado_accounts";
@@ -57,6 +58,7 @@ export async function createSession(
     const existing = await store.getSession(id);
     if (!existing) continue;
     if (existing.did === session.did) {
+      if (existing.deviceKey) await endDeviceSession(env, store, existing.did, existing.deviceKey);
       await store.delSession(id);
       continue;
     }

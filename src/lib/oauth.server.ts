@@ -307,6 +307,16 @@ function collectErrorText(err: unknown, depth = 0): string {
  * Revoke the stored OAuth session for the given DID.
  * Non-fatal — logs a warning on failure.
  */
+export async function endDeviceSession(
+  env: App.Platform["env"],
+  store: CloudflareStore,
+  did: string,
+  deviceKey: string
+): Promise<void> {
+  await revokeOAuthSession(env, store, did, deviceKey);
+  await store.forgetDevice(deviceKey, did);
+}
+
 export async function revokeOAuthSession(
   env: App.Platform["env"],
   store: CloudflareStore,

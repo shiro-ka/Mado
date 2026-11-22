@@ -1,7 +1,7 @@
 import type { RequestHandler } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { getSession, destroySession } from "$lib/auth.server.js";
-import { revokeOAuthSession } from "$lib/oauth.server.js";
+import { endDeviceSession } from "$lib/oauth.server.js";
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
   const env = platform!.env;
@@ -17,8 +17,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
   try {
     const session = await getSession(cookies, store);
     if (session?.did && session.deviceKey) {
-      await revokeOAuthSession(env, store, session.did, session.deviceKey);
-      await store.removeDeviceSession(session.deviceKey);
+      await endDeviceSession(env, store, session.did, session.deviceKey);
     }
     switched = await destroySession(cookies, env, store);
   } catch (err) {

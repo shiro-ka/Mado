@@ -106,10 +106,6 @@ export class CloudflareStore {
       .run();
   }
 
-  async removeUser(did: string): Promise<void> {
-    await this.env.DB.prepare("DELETE FROM users WHERE did = ?").bind(did).run();
-  }
-
   async listUsers(): Promise<string[]> {
     const { results } = await this.env.DB.prepare("SELECT did FROM users").all<{
       did: string;
@@ -136,8 +132,11 @@ export class CloudflareStore {
 
   /** Set (or clear, with null) the owner's main-box override. */
   async setMainBoxRkey(did: string, rkey: string | null): Promise<void> {
-    await this.env.DB.prepare("UPDATE users SET main_box_rkey = ? WHERE did = ?")
-      .bind(rkey, did)
+    await this.env.DB.prepare(
+      `INSERT INTO users (did, added_at, main_box_rkey) VALUES (?, ?, ?)
+       ON CONFLICT(did) DO UPDATE SET main_box_rkey = excluded.main_box_rkey`
+    )
+      .bind(did, Math.floor(Date.now() / 1000), rkey)
       .run();
   }
 
@@ -155,6 +154,11 @@ export class CloudflareStore {
     )
       .bind(deviceKey, did, now, now)
       .run();
+  }
+
+  async forgetDevice(deviceKey: string, did: string): Promise<void> {
+    await this.delOAuthSession(this.oauthSessionKey(deviceKey, did));
+    await this.removeDeviceSession(deviceKey);
   }
 
   async removeDeviceSession(deviceKey: string): Promise<void> {
@@ -192,16 +196,6 @@ export class CloudflareStore {
       .bind(did)
       .first();
     return row !== null;
-  }
-
-  /** Count remaining device sessions for a DID (post-cleanup user pruning). */
-  async countDeviceSessions(did: string): Promise<number> {
-    const row = await this.env.DB.prepare(
-      "SELECT COUNT(*) AS n FROM device_sessions WHERE did = ?"
-    )
-      .bind(did)
-      .first<{ n: number }>();
-    return row?.n ?? 0;
   }
 
   // ── Blocklist (D1) ──────────────────────────────────────────────────────

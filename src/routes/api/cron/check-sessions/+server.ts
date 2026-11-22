@@ -51,12 +51,7 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       // Only delete on a *confirmed* revocation. Transient failures return
       // "error" and are left untouched so a flaky run can't wipe live sessions.
       if (check.status === "revoked") {
-        await store.delOAuthSession(store.oauthSessionKey(deviceKey, did));
-        await store.removeDeviceSession(deviceKey);
-        // Prune the user from the registry once their last device is gone.
-        if ((await store.countDeviceSessions(did)) === 0) {
-          await store.removeUser(did);
-        }
+        await store.forgetDevice(deviceKey, did);
         return "revoked" as const;
       }
       if (check.status === "error") {
