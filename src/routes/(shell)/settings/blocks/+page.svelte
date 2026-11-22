@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { unblockSender } from "$lib/koeActions.js";
   import { User, Ban, ArrowLeft } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import type { PageData } from "./$types";
@@ -11,12 +12,9 @@
   async function unblock(did: string) {
     busy = did;
     try {
-      const res = await fetch("/api/blocks/remove", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senderDid: did }),
-      });
-      if (res.ok) removed = new Set([...removed, did]);
+      await unblockSender(did);
+      removed = new Set([...removed, did]);
+    } catch {
     } finally {
       busy = null;
     }

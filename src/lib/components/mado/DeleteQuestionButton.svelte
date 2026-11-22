@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { deleteKoe } from "$lib/koeActions.js";
   import { Trash2 } from "lucide-svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/Button.svelte";
@@ -21,13 +22,9 @@
     if (state === "confirm") {
       state = "submitting";
       try {
-        const res = await fetch(`/api/questions/${rkey}`, { method: "DELETE" });
-        if (!res.ok) {
-          state = "error";
-        } else {
-          await goto("/receive");
-          await invalidateAll();
-        }
+        await deleteKoe(rkey);
+        await goto("/receive");
+        await invalidateAll();
       } catch {
         state = "error";
       }

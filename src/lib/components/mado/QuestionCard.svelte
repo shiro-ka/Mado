@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { markHeard, markUnheard, blockSender, deleteKoe } from "$lib/koeActions.js";
   import { User, ChevronRight, Archive, ArchiveRestore, EllipsisVertical, Ban, Trash2 } from "lucide-svelte";
-  import { page } from "$app/state";
   import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
@@ -38,17 +38,10 @@
     busy = kind;
     failed = null;
     try {
-      const res =
-        kind === "through" || kind === "unheard"
-          ? await fetch(`/api/questions/${question.rkey}/handled`, { method: kind === "through" ? "POST" : "DELETE" })
-          : kind === "block"
-            ? await fetch("/api/blocks/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ senderDid: question.senderDid }),
-              })
-            : await fetch(`/api/questions/${question.rkey}`, { method: "DELETE" });
-      if (!res.ok) throw new Error();
+      if (kind === "through") await markHeard(question.rkey);
+      else if (kind === "unheard") await markUnheard(question.rkey);
+      else if (kind === "block") await blockSender(question.senderDid!);
+      else await deleteKoe(question.rkey);
       if (kind === "through") onThrough?.();
       else if (kind === "unheard") onUnheard?.();
       else if (kind === "block") onBlocked?.(question.senderDid!);
@@ -172,8 +165,6 @@
     <div data-suisou-tray="bleed" data-suisou="bd-top p-2" class="reply">
       <AnswerForm
         koeUri={question.uri}
-        questionBody={question.body}
-        pageUrl={`${page.url.origin}${href}`}
         onSuccess={(_, answerBody) => onReplied?.(answerBody)}
       />
     </div>

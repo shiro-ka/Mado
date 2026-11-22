@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { markHeard, markUnheard } from "$lib/koeActions.js";
   import { boxPath, koePath, ogImagePath } from "$lib/urls.js";
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle, Archive, ArchiveRestore } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
@@ -17,10 +18,9 @@
   async function toggleHeard() {
     toggling = true;
     try {
-      const res = await fetch(`/api/questions/${data.question.rkey}/handled`, {
-        method: data.question.isRead ? "DELETE" : "POST",
-      });
-      if (res.ok) await invalidateAll();
+      await (data.question.isRead ? markUnheard : markHeard)(data.question.rkey);
+      await invalidateAll();
+    } catch {
     } finally {
       toggling = false;
     }
@@ -159,8 +159,6 @@
     <div data-suisou-tray data-suisou="p-0" class="card reply">
       <AnswerForm
         koeUri={data.koeUri}
-        questionBody={data.question.body}
-        pageUrl={data.origin + koePath(data.cleanHandle, data.box.slug, data.question.rkey)}
         onSuccess={() => invalidateAll()}
       />
     </div>

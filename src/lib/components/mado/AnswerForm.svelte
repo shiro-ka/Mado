@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { postAnswer } from "$lib/koeActions.js";
   import { onMount } from "svelte";
   import { Send, AlertCircle, CheckCircle2, ExternalLink } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -8,12 +9,10 @@
 
   interface Props {
     koeUri: string;
-    questionBody?: string;
-    pageUrl?: string;
     onSuccess?: (answerUri: string, answerBody: string) => void;
   }
 
-  let { koeUri, questionBody, pageUrl, onSuccess }: Props = $props();
+  let { koeUri, onSuccess }: Props = $props();
 
   type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -66,22 +65,7 @@
     const sent = body.trim();
 
     try {
-      const res = await fetch("/api/answers/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ koeUri, body: sent, crosspost, pageUrl, questionBody }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({})) as { message?: string };
-        throw new Error(data.message ?? "返信の投稿に失敗しました");
-      }
-
-      const data = await res.json() as {
-        uri: string;
-        crossposted?: boolean;
-        crosspostUri?: string | null;
-      };
+      const data = await postAnswer(koeUri, sent, crosspost);
       crosspostFailed = crosspost && data.crossposted === false;
       crosspostLink = data.crosspostUri ? bskyPostUrl(data.crosspostUri) : null;
       rememberCrosspost(crosspost);

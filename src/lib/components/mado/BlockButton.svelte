@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { blockSender, unblockSender } from "$lib/koeActions.js";
   import { untrack } from "svelte";
   import { Ban, CheckCircle2, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -24,12 +25,8 @@
   async function block() {
     state = "blocking";
     try {
-      const res = await fetch("/api/blocks/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senderDid }),
-      });
-      state = res.ok ? "blocked" : "block-error";
+      await blockSender(senderDid);
+      state = "blocked";
     } catch {
       state = "block-error";
     }
@@ -38,12 +35,8 @@
   async function unblock() {
     state = "unblocking";
     try {
-      const res = await fetch("/api/blocks/remove", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senderDid }),
-      });
-      state = res.ok ? "idle" : "unblock-error";
+      await unblockSender(senderDid);
+      state = "idle";
     } catch {
       state = "unblock-error";
     }

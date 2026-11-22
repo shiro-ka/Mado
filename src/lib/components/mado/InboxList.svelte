@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { markUnheard } from "$lib/koeActions.js";
   import { Inbox } from "lucide-svelte";
   import { page } from "$app/state";
   import { untrack } from "svelte";
@@ -51,8 +52,9 @@
   async function undoThrough(rkey: string) {
     undoing = rkey;
     try {
-      const res = await fetch(`/api/questions/${rkey}/handled`, { method: "DELETE" });
-      if (res.ok) setHandled(rkey, "unheard");
+      await markUnheard(rkey);
+      setHandled(rkey, "unheard");
+    } catch {
     } finally {
       undoing = null;
     }
