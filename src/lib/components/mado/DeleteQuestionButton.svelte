@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { deleteKoe } from "$lib/koeActions.js";
+  import { deleteKoe } from "$lib/api.js";
   import { Trash2 } from "lucide-svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/Button.svelte";

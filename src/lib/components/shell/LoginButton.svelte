@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { startLogin } from "$lib/api.js";
   import type { Snippet } from "svelte";
   import { page } from "$app/state";
   import { AlertCircle } from "lucide-svelte";
@@ -33,17 +34,12 @@
     loading = kind;
     error = "";
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          next,
-          addAccount,
-          ...(kind === "handle" ? { handle: handle.trim().replace(/^@/, "") } : {}),
-        }),
+      const data = await startLogin({
+        next,
+        addAccount,
+        ...(kind === "handle" ? { handle: handle.trim().replace(/^@/, "") } : {}),
       });
-      const data = (await res.json()) as { redirectUrl?: string; message?: string };
-      if (!res.ok || !data.redirectUrl) throw new Error(data.message ?? "ログインできませんでした");
+      if (!data.redirectUrl) throw new Error("ログインできませんでした");
       window.location.href = data.redirectUrl;
     } catch (err) {
       loading = null;

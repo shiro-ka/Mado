@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { postAnswer } from "$lib/koeActions.js";
+  import { postAnswer } from "$lib/api.js";
   import { onMount } from "svelte";
-  import { Send, AlertCircle, CheckCircle2, ExternalLink } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
-  import Textarea from "$lib/components/ui/Textarea.svelte";
-  import { POST_MAX_GRAPHEMES, POST_MAX_BYTES, fitsLimit } from "$lib/text.js";
+  import { AlertCircle, ExternalLink } from "lucide-svelte";
+  import PostForm from "$lib/components/mado/PostForm.svelte";
   import { bskyPostUrl } from "$lib/utils.js";
 
   interface Props {
@@ -13,8 +11,6 @@
   }
 
   let { koeUri, onSuccess }: Props = $props();
-
-  type FormState = "idle" | "submitting" | "success" | "error";
 
   const CROSSPOST_KEY = "mado:crosspost";
 
@@ -34,10 +30,7 @@
     }
   }
 
-  let body = $state("");
   let crosspost = $state(false);
-  let formState = $state<FormState>("idle");
-  let errorMsg = $state("");
   let crosspostFailed = $state(false);
   let crosspostLink = $state<string | null>(null);
 
@@ -45,103 +38,57 @@
     crosspost = lastCrosspost();
   });
 
+  async function submit(body: string) {
+    const data = await postAnswer(koeUri, body, crosspost);
+    crosspostFailed = crosspost && data.crossposted === false;
+    crosspostLink = data.crosspostUri ? bskyPostUrl(data.crosspostUri) : null;
+    rememberCrosspost(crosspost);
+    onSuccess?.(data.uri, body);
+  }
+
   function reset() {
-    body = "";
     crosspost = lastCrosspost();
     crosspostFailed = false;
     crosspostLink = null;
-    errorMsg = "";
-    formState = "idle";
-  }
-
-  const isValid = $derived(body.trim().length > 0 && fitsLimit(body, POST_MAX_GRAPHEMES, POST_MAX_BYTES));
-
-  async function handleSubmit(e: SubmitEvent) {
-    e.preventDefault();
-    if (!isValid || formState === "submitting") return;
-
-    formState = "submitting";
-    errorMsg = "";
-    const sent = body.trim();
-
-    try {
-      const data = await postAnswer(koeUri, sent, crosspost);
-      crosspostFailed = crosspost && data.crossposted === false;
-      crosspostLink = data.crosspostUri ? bskyPostUrl(data.crosspostUri) : null;
-      rememberCrosspost(crosspost);
-      formState = "success";
-      onSuccess?.(data.uri, sent);
-    } catch (err) {
-      formState = "error";
-      errorMsg = err instanceof Error ? err.message : "返信の投稿に失敗しました";
-    }
   }
 </script>
 
-{#if formState === "success"}
-  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success p-4" role="status">
-    <CheckCircle2 data-suisou-text="fs-32" data-suisou="success" />
-    <div data-suisou-layout="stack gap-1 center">
-      <p data-suisou-text="fs-16 fw-700">返信を投稿しました</p>
-      {#if crosspostFailed}
-        <p data-suisou-layout="row" data-suisou-text="fs-14" data-suisou="warning">
-          <AlertCircle />
-          Blueskyへの転載は失敗しました
-        </p>
-      {:else if crosspostLink}
-        <a
-          data-suisou-layout="row"
-          data-suisou-text="fs-14 link"
-          href={crosspostLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <ExternalLink />
-          Blueskyの投稿を見る
-        </a>
-      {/if}
-    </div>
-    <Button variant="ghost" onclick={reset}>続けて返信する</Button>
-  </div>
-{:else}
-  <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
-    <Textarea
-      label="返信"
-      bind:value={body}
-      maxGraphemes={POST_MAX_GRAPHEMES}
-      showCount={true}
-      rows={4}
-      disabled={formState === "submitting"}
-      error={!fitsLimit(body, POST_MAX_GRAPHEMES, POST_MAX_BYTES) ? `${POST_MAX_GRAPHEMES}文字以内で入力してください` : undefined}
-    />
-
-    {#if formState === "error"}
-      <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
+<PostForm
+  label="返信"
+  rows={4}
+  submitLabel="返信を投稿"
+  failMessage="返信の投稿に失敗しました"
+  successTitle="返信を投稿しました"
+  againLabel="続けて返信する"
+  {submit}
+  onReset={reset}
+>
+  {#snippet successDetail()}
+    {#if crosspostFailed}
+      <p data-suisou-layout="row" data-suisou-text="fs-14" data-suisou="warning">
         <AlertCircle />
-        {errorMsg}
+        Blueskyへの転載は失敗しました
       </p>
-    {/if}
-
-    <div data-suisou-layout="row between wrap">
-      <label data-suisou-layout="row" class="check">
-        <input
-          type="checkbox"
-          bind:checked={crosspost}
-          disabled={formState === "submitting"}
-        />
-        <span data-suisou-text="fs-12" data-suisou="note">Bskyにもポスト</span>
-      </label>
-      <Button
-        type="submit"
-        loading={formState === "submitting"}
-        disabled={!isValid}
+    {:else if crosspostLink}
+      <a
+        data-suisou-layout="row"
+        data-suisou-text="fs-14 link"
+        href={crosspostLink}
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        {#snippet rightIcon()}<Send />{/snippet}
-        返信を投稿
-      </Button>
-    </div>
-  </form>
-{/if}
+        <ExternalLink />
+        Blueskyの投稿を見る
+      </a>
+    {/if}
+  {/snippet}
+  {#snippet options(busy)}
+    <label data-suisou-layout="row" class="check">
+      <input type="checkbox" bind:checked={crosspost} disabled={busy} />
+      <span data-suisou-text="fs-12" data-suisou="note">Bskyにもポスト</span>
+    </label>
+  {/snippet}
+</PostForm>
 
 <style>
   .check {

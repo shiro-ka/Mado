@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { saveCardStyle } from "$lib/api.js";
   import { untrack } from "svelte";
   import { Save, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -46,12 +47,7 @@
     saved = false;
     saveError = false;
     try {
-      const res = await fetch("/api/card-style", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(colors),
-      });
-      if (!res.ok) throw new Error();
+      await saveCardStyle(colors);
       saved = true;
     } catch {
       saveError = true;

@@ -1,57 +1,33 @@
 <script lang="ts">
   import { profilePath } from "$lib/urls.js";
+  import { createBox } from "$lib/api.js";
   import { goto, invalidateAll } from "$app/navigation";
   import { Plus, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
-  import Input from "$lib/components/ui/Input.svelte";
-  import Textarea from "$lib/components/ui/Textarea.svelte";
-  import { BOX_TITLE_MAX_LENGTH, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES, fitsLimit } from "$lib/text.js";
-  import { slugFormatError, SLUG_MAX_LENGTH } from "$lib/validation.js";
+  import BoxFields, { boxFieldsReady, boxFieldsValue } from "$lib/components/mado/BoxFields.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
 
-  type FormState = "idle" | "submitting" | "error";
-
-  let title = $state("");
-  let description = $state("");
-  let slug = $state("");
-  let formState = $state<FormState>("idle");
+  let fields = $state({ title: "", description: "", slug: "" });
+  let submitting = $state(false);
   let errorMsg = $state("");
 
-  const slugPreview = $derived(slug.trim().toLowerCase() || "(空欄だと自動で決まるよ)");
-  const slugErr = $derived(slugFormatError(slug));
-  const descriptionFits = $derived(fitsLimit(description, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES));
+  const ready = $derived(boxFieldsReady(fields));
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    if (!title.trim() || slugErr || !descriptionFits || formState === "submitting") return;
-
-    formState = "submitting";
+    if (!ready || submitting) return;
+    submitting = true;
     errorMsg = "";
-
     try {
-      const res = await fetch("/api/boxes/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim() || undefined,
-          slug: slug.trim() || undefined,
-        }),
-      });
-
-      const json = (await res.json()) as { rkey?: string; error?: string; message?: string };
-
-      if (!res.ok) {
-        throw new Error(json.message ?? "作成に失敗しました");
-      }
-
+      await createBox(boxFieldsValue(fields));
       await goto(profilePath(data.cleanHandle));
       await invalidateAll();
     } catch (err) {
-      formState = "error";
       errorMsg = err instanceof Error ? err.message : "作成に失敗しました";
+    } finally {
+      submitting = false;
     }
   }
 </script>
@@ -65,36 +41,14 @@
 
   <div data-suisou-tray data-suisou="p-4">
     <form onsubmit={handleSubmit} data-suisou-layout="stack gap-4" class="form">
-      <Input
-        label="窓の名前"
-        bind:value={title}
-        maxlength={BOX_TITLE_MAX_LENGTH}
-        required
-        disabled={formState === "submitting"}
+      <BoxFields
+        bind:title={fields.title}
+        bind:description={fields.description}
+        bind:slug={fields.slug}
+        cleanHandle={data.cleanHandle}
+        slugFallback="(空欄だと自動で決まるよ)"
+        disabled={submitting}
       />
-
-      <Textarea
-        label="窓の説明"
-        bind:value={description}
-        maxGraphemes={BOX_DESCRIPTION_MAX_GRAPHEMES}
-        showCount
-        rows={4}
-        disabled={formState === "submitting"}
-      />
-
-      <div data-suisou-layout="stack gap-1" class="slug">
-        <Input
-          label="URL"
-          bind:value={slug}
-          error={slugErr ?? undefined}
-          maxlength={SLUG_MAX_LENGTH}
-          disabled={formState === "submitting"}
-        />
-        <p data-suisou-text="fs-12" data-suisou="note">
-          <code>/@{data.cleanHandle}/<span data-suisou="accent">{slugPreview}</span></code>
-        </p>
-      </div>
-
 
       {#if errorMsg}
         <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
@@ -104,11 +58,11 @@
       {/if}
 
       <div data-suisou-layout="row end">
-        <Button variant="outline" href={profilePath(data.cleanHandle)} disabled={formState === "submitting"}>キャンセル</Button>
+        <Button variant="outline" href={profilePath(data.cleanHandle)} disabled={submitting}>キャンセル</Button>
         <Button
           type="submit"
-          loading={formState === "submitting"}
-          disabled={!title.trim() || !!slugErr || !descriptionFits}
+          loading={submitting}
+          disabled={!ready}
         >
           {#snippet leftIcon()}<Plus />{/snippet}
           作成する

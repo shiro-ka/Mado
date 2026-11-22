@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { markUnheard } from "$lib/koeActions.js";
+  import { markUnheard } from "$lib/api.js";
   import { Inbox } from "lucide-svelte";
   import { page } from "$app/state";
   import { untrack } from "svelte";

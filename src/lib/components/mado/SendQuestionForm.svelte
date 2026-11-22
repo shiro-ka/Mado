@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { Send, AlertCircle, CheckCircle2 } from "lucide-svelte";
-  import Button from "$lib/components/ui/Button.svelte";
-  import Textarea from "$lib/components/ui/Textarea.svelte";
-  import { POST_MAX_GRAPHEMES, POST_MAX_BYTES, fitsLimit } from "$lib/text.js";
+  import { sendKoe } from "$lib/api.js";
+  import PostForm from "$lib/components/mado/PostForm.svelte";
 
   interface Props {
     boxOwnerDid: string;
@@ -11,82 +9,21 @@
   }
 
   let { boxOwnerDid, boxRkey, senderHandle }: Props = $props();
-
-  type FormState = "idle" | "submitting" | "success" | "error";
-
-  let body = $state("");
-  let formState = $state<FormState>("idle");
-  let errorMsg = $state("");
-
-  const isValid = $derived(body.trim().length > 0 && fitsLimit(body, POST_MAX_GRAPHEMES, POST_MAX_BYTES));
-
-  async function handleSubmit(e: SubmitEvent) {
-    e.preventDefault();
-    if (!isValid || formState === "submitting") return;
-
-    formState = "submitting";
-    errorMsg = "";
-
-    try {
-      const res = await fetch("/api/questions/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ body: body.trim(), boxOwnerDid, boxRkey }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({})) as { message?: string };
-        throw new Error(data.message ?? "送信に失敗しました");
-      }
-
-      formState = "success";
-      body = "";
-    } catch (err) {
-      formState = "error";
-      errorMsg = err instanceof Error ? err.message : "送信に失敗しました";
-    }
-  }
 </script>
 
-{#if formState === "success"}
-  <div data-suisou-item="notice" data-suisou-layout="stack center" data-suisou-text="center" data-suisou="success p-4" role="status">
-    <CheckCircle2 data-suisou-text="fs-32" data-suisou="success" />
-    <div data-suisou-layout="stack gap-1 center">
-      <p data-suisou-text="fs-16 fw-700">声を送信しました！</p>
-      <p data-suisou-text="fs-14" data-suisou="note">相手に届くまでしばらくお待ちください。</p>
-    </div>
-    <Button variant="ghost" onclick={() => (formState = "idle")}>別の声を送る</Button>
-  </div>
-{:else}
-  <form onsubmit={handleSubmit} data-suisou-layout="stack gap-3" class="form">
-    <Textarea
-      label="声の内容"
-      bind:value={body}
-      maxGraphemes={POST_MAX_GRAPHEMES}
-      showCount={true}
-      rows={5}
-      helper={`この声は @${senderHandle} からの声として窓のオーナーに届きます。`}
-      disabled={formState === "submitting"}
-      error={!fitsLimit(body, POST_MAX_GRAPHEMES, POST_MAX_BYTES) ? `${POST_MAX_GRAPHEMES}文字以内で入力してください` : undefined}
-    />
-
-    {#if formState === "error"}
-      <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
-        <AlertCircle />
-        {errorMsg}
-      </p>
-    {/if}
-
-    <div data-suisou-layout="row end">
-      <Button
-        type="submit"
-        variant="default"
-        loading={formState === "submitting"}
-        disabled={!isValid}
-      >
-        {#snippet rightIcon()}<Send />{/snippet}
-        声を送る
-      </Button>
-    </div>
-  </form>
-{/if}
+<PostForm
+  label="声の内容"
+  rows={5}
+  helper={`この声は @${senderHandle} からの声として窓のオーナーに届きます。`}
+  submitLabel="声を送る"
+  failMessage="送信に失敗しました"
+  successTitle="声を送信しました！"
+  againLabel="別の声を送る"
+  submit={async (body) => {
+    await sendKoe(boxOwnerDid, boxRkey, body);
+  }}
+>
+  {#snippet successDetail()}
+    <p data-suisou-text="fs-14" data-suisou="note">相手に届くまでしばらくお待ちください。</p>
+  {/snippet}
+</PostForm>

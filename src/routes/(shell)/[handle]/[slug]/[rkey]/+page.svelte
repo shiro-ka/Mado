@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { markHeard, markUnheard } from "$lib/koeActions.js";
+  import { markHeard, markUnheard } from "$lib/api.js";
   import { boxPath, koePath, ogImagePath } from "$lib/urls.js";
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle, Archive, ArchiveRestore } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";

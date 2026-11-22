@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { markHeard, markUnheard, blockSender, deleteKoe } from "$lib/koeActions.js";
+  import { markHeard, markUnheard, blockSender, deleteKoe } from "$lib/api.js";
   import { User, ChevronRight, Archive, ArchiveRestore, EllipsisVertical, Ban, Trash2 } from "lucide-svelte";
   import MadoIcon from "$lib/components/ui/MadoIcon.svelte";
   import Button from "$lib/components/ui/Button.svelte";

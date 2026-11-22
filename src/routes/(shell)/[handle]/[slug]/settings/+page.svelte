@@ -4,21 +4,15 @@
   import { goto, invalidateAll } from "$app/navigation";
   import { Link, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check, Pin } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
-  import Input from "$lib/components/ui/Input.svelte";
-  import Textarea from "$lib/components/ui/Textarea.svelte";
-  import { BOX_TITLE_MAX_LENGTH, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES, fitsLimit } from "$lib/text.js";
   import Toggle from "$lib/components/ui/Toggle.svelte";
-  import { slugFormatError, SLUG_MAX_LENGTH } from "$lib/validation.js";
+  import BoxFields, { boxFieldsReady, boxFieldsValue } from "$lib/components/mado/BoxFields.svelte";
+  import { updateBox, deleteBox, setMainBox } from "$lib/api.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
 
-  const ownerName = $derived(data.ownerProfile?.displayName || data.cleanHandle);
-
   type FormState = "idle" | "submitting" | "error" | "deleting";
-  let title = $state(untrack(() => data.box.title));
-  let description = $state(untrack(() => data.box.description ?? ""));
-  let slug = $state(untrack(() => data.box.slug));
+  let fields = $state(untrack(() => fieldsOf(data.box)));
   let isOpen = $state(untrack(() => data.box.isOpen));
   let formState = $state<FormState>("idle");
   let saved = $state(false);
@@ -29,43 +23,32 @@
   $effect(() => {
     if (data.box.rkey !== seededRkey) {
       seededRkey = data.box.rkey;
-      title = data.box.title;
-      description = data.box.description ?? "";
-      slug = data.box.slug;
+      fields = fieldsOf(data.box);
       isOpen = data.box.isOpen;
       formState = "idle";
       errorMsg = "";
     }
   });
 
+  function fieldsOf(box: { title: string; description?: string; slug: string }) {
+    return { title: box.title, description: box.description ?? "", slug: box.slug };
+  }
+
   async function handleSave(e: SubmitEvent) {
     e.preventDefault();
-    if (!title.trim() || slugErr || !descriptionFits || formState === "submitting") return;
+    if (!ready || formState === "submitting") return;
     formState = "submitting";
     errorMsg = "";
-    const nextSlug = slug.trim().toLowerCase();
-    const slugChanged = nextSlug.length > 0 && nextSlug !== data.box.slug;
+    const value = boxFieldsValue(fields);
+    const slugChanged = !!value.slug && value.slug !== data.box.slug;
     try {
-      const res = await fetch(`/api/boxes/${data.box.rkey}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim() || undefined,
-          slug: nextSlug || undefined,
-          isOpen,
-        }),
-      });
-      if (!res.ok) {
-        const d = (await res.json()) as { message?: string };
-        throw new Error(d.message ?? "更新に失敗しました");
-      }
+      await updateBox(data.box.rkey, { ...value, isOpen });
       formState = "idle";
       saved = true;
       clearTimeout(savedTimer);
       savedTimer = setTimeout(() => (saved = false), 3000);
       if (slugChanged) {
-        await goto(`${boxPath(data.cleanHandle, nextSlug)}/settings`);
+        await goto(`${boxPath(data.cleanHandle, value.slug!)}/settings`);
       }
       await invalidateAll();
     } catch (err) {
@@ -79,11 +62,7 @@
     formState = "deleting";
     deleteError = "";
     try {
-      const res = await fetch(`/api/boxes/${data.box.rkey}`, { method: "DELETE" });
-      if (!res.ok) {
-        const d = (await res.json()) as { message?: string };
-        throw new Error(d.message ?? "削除に失敗しました");
-      }
+      await deleteBox(data.box.rkey);
       await goto(profilePath(data.cleanHandle));
       await invalidateAll();
     } catch (err) {
@@ -93,8 +72,7 @@
   }
 
   const isBusy = $derived(formState === "submitting" || formState === "deleting");
-  const slugErr = $derived(slugFormatError(slug));
-  const descriptionFits = $derived(fitsLimit(description, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES));
+  const ready = $derived(boxFieldsReady(fields));
 
   const publicUrl = $derived(data.origin + boxPath(data.cleanHandle, data.box.slug));
   const publicUrlDisplay = $derived(publicUrl.replace(/^https?:\/\//, ""));
@@ -115,11 +93,7 @@
     settingMain = true;
     mainError = "";
     try {
-      const res = await fetch(`/api/boxes/${data.box.rkey}/main`, { method: data.isMain ? "DELETE" : "POST" });
-      if (!res.ok) {
-        const d = (await res.json()) as { message?: string };
-        throw new Error(d.message ?? "設定に失敗しました");
-      }
+      await setMainBox(data.box.rkey, !data.isMain);
       await invalidateAll();
     } catch (err) {
       mainError = err instanceof Error ? err.message : "設定に失敗しました";
@@ -144,34 +118,15 @@
 
   <div data-suisou-tray data-suisou="p-4">
     <form onsubmit={handleSave} data-suisou-layout="stack gap-4" class="form">
-      <Input
-        label="窓の名前"
-        bind:value={title}
-        maxlength={BOX_TITLE_MAX_LENGTH}
-        required
+      <BoxFields
+        bind:title={fields.title}
+        bind:description={fields.description}
+        bind:slug={fields.slug}
+        cleanHandle={data.cleanHandle}
+        slugFallback={data.box.slug}
+        slugHelper="変更すると以前のURLは開けなくなります。"
         disabled={isBusy}
       />
-      <Textarea
-        label="窓の説明"
-        bind:value={description}
-        maxGraphemes={BOX_DESCRIPTION_MAX_GRAPHEMES}
-        showCount
-        rows={4}
-        disabled={isBusy}
-      />
-      <div data-suisou-layout="stack gap-1" class="slug">
-        <Input
-          label="URL"
-          bind:value={slug}
-          error={slugErr ?? undefined}
-          helper="変更すると以前のURLは開けなくなります。"
-          maxlength={SLUG_MAX_LENGTH}
-          disabled={isBusy}
-        />
-        <p data-suisou-text="fs-12" data-suisou="note">
-          <code>/@{data.cleanHandle}/<span data-suisou="accent">{slug.trim().toLowerCase() || data.box.slug}</span></code>
-        </p>
-      </div>
 
       <label data-suisou-layout="row between">
         <span data-suisou-layout="stack gap-0" class="label">
@@ -195,7 +150,7 @@
         <Button
           type="submit"
           loading={formState === "submitting"}
-          disabled={!title.trim() || !!slugErr || !descriptionFits}
+          disabled={!ready}
         >
           {#snippet leftIcon()}<Save />{/snippet}
           保存する

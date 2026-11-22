@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { followOfficial, saveNotificationPrefs } from "$lib/api.js";
   import { untrack } from "svelte";
   import { Bell, Check, ExternalLink, AlertCircle, UserPlus, ArrowLeft } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
@@ -25,13 +26,9 @@
     following = true;
     followError = false;
     try {
-      const res = await fetch("/api/notifications/follow", { method: "POST" });
-      if (res.ok) {
-        followed = true;
-        await invalidateAll();
-      } else {
-        followError = true;
-      }
+      await followOfficial();
+      followed = true;
+      await invalidateAll();
     } catch {
       followError = true;
     } finally {
@@ -43,12 +40,7 @@
     saving = true;
     toggleError = false;
     try {
-      const res = await fetch("/api/notifications/prefs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dmEnabled: next }),
-      });
-      if (!res.ok) throw new Error();
+      await saveNotificationPrefs(next);
     } catch {
       enabled = !next;
       toggleError = true;

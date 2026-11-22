@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { blockSender, unblockSender } from "$lib/koeActions.js";
+  import { blockSender, unblockSender } from "$lib/api.js";
   import { untrack } from "svelte";
   import { Ban, CheckCircle2, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";

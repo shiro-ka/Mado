@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { unblockSender } from "$lib/koeActions.js";
+  import { unblockSender } from "$lib/api.js";
   import { User, Ban, ArrowLeft } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import type { PageData } from "./$types";
