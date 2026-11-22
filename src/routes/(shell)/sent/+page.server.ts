@@ -5,8 +5,8 @@ import { getAnswersByOwner, getProfiles, listBoxes } from "$lib/atproto/index.js
 import type { SentItem } from "../../../types/index.js";
 import { koePath, koeUri } from "$lib/urls.js";
 
-export const load: PageServerLoad = async ({ parent, platform }) => {
-  const { session } = await parent();
+export const load: PageServerLoad = async ({ locals, platform }) => {
+  const session = await locals.getSession();
   if (!session) throw redirect(303, "/?next=/sent");
 
   const store = new CloudflareStore(platform!.env);

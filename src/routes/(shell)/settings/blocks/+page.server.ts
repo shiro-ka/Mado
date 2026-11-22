@@ -3,8 +3,8 @@ import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { getProfiles } from "$lib/atproto/index.js";
 
-export const load: PageServerLoad = async ({ parent, platform }) => {
-  const { session } = await parent();
+export const load: PageServerLoad = async ({ locals, platform }) => {
+  const session = await locals.getSession();
   if (!session) throw redirect(303, "/?next=/settings/blocks");
 
   const store = new CloudflareStore(platform!.env);

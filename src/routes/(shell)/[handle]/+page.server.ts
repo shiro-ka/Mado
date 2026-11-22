@@ -42,8 +42,8 @@ async function visitorDetail(did: string, store: CloudflareStore | null, profile
   };
 }
 
-export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
-  const { session } = await parent();
+export const load: PageServerLoad = async ({ params, locals, url }) => {
+  const session = await locals.getSession();
   const { handle: cleanHandle, did } = await requireOwner(params.handle, session);
   const store = locals.store;
 

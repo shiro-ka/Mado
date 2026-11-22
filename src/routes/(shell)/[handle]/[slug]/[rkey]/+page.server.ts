@@ -5,8 +5,8 @@ import { requireOwner } from "$lib/owner.server.js";
 import { koePath, koeUri as koeUriOf, rkeyOfUri } from "$lib/urls.js";
 import type { Question, QuestionBox } from "$lib/../types/index.js";
 
-export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
-  const { session } = await parent();
+export const load: PageServerLoad = async ({ params, locals, url }) => {
+  const session = await locals.getSession();
   const { handle: cleanHandle, did: ownerDid } = await requireOwner(params.handle, session);
   const store = locals.store!;
   const koeUri = koeUriOf(ownerDid, params.rkey);

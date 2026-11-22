@@ -5,8 +5,8 @@ import { getProfile, listBoxes } from "$lib/atproto/index.js";
 import { requireOwner, requireBox } from "$lib/owner.server.js";
 import { boxPath } from "$lib/urls.js";
 
-export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
-  const { session } = await parent();
+export const load: PageServerLoad = async ({ params, locals, url }) => {
+  const session = await locals.getSession();
   const { handle: cleanHandle, did } = await requireOwner(params.handle, session);
   if (session?.did !== did) throw redirect(303, boxPath(cleanHandle, params.slug));
 

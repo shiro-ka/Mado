@@ -3,8 +3,8 @@ import type { PageServerLoad } from "./$types";
 import { handleFromParam, requireOwner } from "$lib/owner.server.js";
 import { profilePath } from "$lib/urls.js";
 
-export const load: PageServerLoad = async ({ parent, params }) => {
-  const { session } = await parent();
+export const load: PageServerLoad = async ({ locals, params }) => {
+  const session = await locals.getSession();
   if (!session) throw redirect(303, `/?next=${profilePath(handleFromParam(params.handle))}/new`);
 
   const { handle: cleanHandle, did } = await requireOwner(params.handle, session);

@@ -4,8 +4,8 @@ import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { getViewerFollowsActor } from "$lib/atproto/index.js";
 import { getOfficialAccount } from "$lib/notify.server.js";
 
-export const load: PageServerLoad = async ({ parent, platform, locals }) => {
-  const { session } = await parent();
+export const load: PageServerLoad = async ({ platform, locals }) => {
+  const session = await locals.getSession();
   if (!session) throw redirect(303, "/?next=/settings/notifications");
 
   const env = platform!.env;
@@ -17,9 +17,8 @@ export const load: PageServerLoad = async ({ parent, platform, locals }) => {
   ]);
 
   let following = false;
-  const full = await locals.getSession();
-  if (official && full) {
-    const sessionFetch = await restoreOAuthSession(env, store, full.did, full.deviceKey);
+  if (official) {
+    const sessionFetch = await restoreOAuthSession(env, store, session.did, session.deviceKey);
     if (sessionFetch) {
       following = await getViewerFollowsActor(sessionFetch, official.did);
     }
