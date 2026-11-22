@@ -2,6 +2,7 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { checkOAuthSession } from "$lib/oauth.server.js";
+import { fail } from "$lib/api.server.js";
 
 /**
  * Constant-time string comparison. Hashes both inputs to a fixed length first
@@ -36,10 +37,10 @@ export const GET: RequestHandler = async ({ request, platform }) => {
   // "wrong secret". Compare in constant time to avoid a timing oracle.
   if (!secret) {
     console.error("[cron/check-sessions] CRON_SECRET is not configured — endpoint locked");
-    return json({ error: "Unauthorized" }, { status: 401 });
+    return fail(401, "認証できません");
   }
   if (!(await timingSafeEqual(auth, `Bearer ${secret}`))) {
-    return json({ error: "Unauthorized" }, { status: 401 });
+    return fail(401, "認証できません");
   }
 
   const store = new CloudflareStore(env);

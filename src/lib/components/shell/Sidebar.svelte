@@ -4,10 +4,10 @@
   import UserCard from "./UserCard.svelte";
   import Brand from "./Brand.svelte";
   import Credits from "./Credits.svelte";
-  import type { AppSession } from "$lib/store.js";
+  import type { ViewerSession } from "$lib/accounts.js";
 
   interface Props {
-    session: AppSession;
+    session: ViewerSession;
     officialHandle?: string | null;
   }
 

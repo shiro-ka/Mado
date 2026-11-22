@@ -3,10 +3,10 @@
   import DashboardShell from "./DashboardShell.svelte";
   import Header from "./Header.svelte";
   import Footer from "./Footer.svelte";
-  import type { AppSession } from "$lib/store.js";
+  import type { ViewerSession } from "$lib/accounts.js";
 
   interface Props {
-    session: AppSession | null;
+    session: ViewerSession | null;
     officialHandle?: string | null;
     children: Snippet;
   }

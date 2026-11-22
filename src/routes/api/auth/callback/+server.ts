@@ -1,14 +1,14 @@
 import type { RequestHandler } from "./$types";
-import { CloudflareStore } from "$lib/store.js";
 import { createOAuthClient } from "$lib/oauth.server.js";
 import { createSession } from "$lib/auth.server.js";
 import { getProfile } from "$lib/atproto/index.js";
 import { customAlphabet } from "nanoid";
 import { safeNext } from "$lib/loginNext.js";
+import { appOrigin } from "$lib/api.server.js";
 
-export const GET: RequestHandler = async ({ url, cookies, platform }) => {
+export const GET: RequestHandler = async ({ url, cookies, platform, locals }) => {
   const env = platform!.env;
-  const appUrl = env.APP_URL ?? "https://mado.blue";
+  const appUrl = appOrigin(env);
 
   const error = url.searchParams.get("error");
   const errorDescription = url.searchParams.get("error_description");
@@ -22,7 +22,7 @@ export const GET: RequestHandler = async ({ url, cookies, platform }) => {
   }
 
   try {
-    const store = new CloudflareStore(env);
+    const store = locals.store!;
     // Mint the device key *before* the token exchange so the OAuth session is
     // persisted under this device's namespace (`${deviceKey}:${did}`).
     const deviceKey = customAlphabet(

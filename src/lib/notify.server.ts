@@ -2,6 +2,7 @@ import { AtpAgent, type AtpSessionData } from "@atproto/api";
 import type { CloudflareStore } from "./store.js";
 import { resolveHandle } from "./atproto/index.js";
 import { truncate } from "./text.js";
+import { appOrigin } from "./api.server.js";
 
 /**
  * Official-account DM notifications.
@@ -132,7 +133,7 @@ export async function notifyNewKoe(
   try {
     if (!(await store.getNotificationPrefs(params.ownerDid)).dmEnabled) return;
 
-    const appUrl = env.APP_URL ?? "https://mado.blue";
+    const appUrl = appOrigin(env);
     const preview = truncate(params.body, 60);
     const where = params.boxTitle ? `「${params.boxTitle}」` : "あなたのMado";
     const text = `🪟 ${where}に新しい声が届きました。\n\n${preview}\n\n受信トレイで確認 → ${appUrl}/receive`;

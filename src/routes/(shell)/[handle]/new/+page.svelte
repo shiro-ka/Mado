@@ -43,7 +43,7 @@
       const json = (await res.json()) as { rkey?: string; error?: string; message?: string };
 
       if (!res.ok) {
-        throw new Error(json.message ?? json.error ?? "作成に失敗しました");
+        throw new Error(json.message ?? "作成に失敗しました");
       }
 
       await goto(`/@${data.cleanHandle}`);

@@ -1,8 +1,7 @@
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { z } from "zod";
-import { CloudflareStore } from "$lib/store.js";
-import { getSession } from "$lib/auth.server.js";
+import { fail, readJson, withSession } from "$lib/api.server.js";
 import { restoreAnyOAuthSession } from "$lib/oauth.server.js";
 import { writeQuestion, getBoxRecord, getProfile, deleteRecord, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { notifyNewKoe } from "$lib/notify.server.js";
@@ -27,66 +26,35 @@ async function sha256Hex(input: string): Promise<string> {
 
 const SPAM_SCORE_THRESHOLD = 6;
 
-export const POST: RequestHandler = async ({ request, cookies, platform }) => {
-  try {
-    const env = platform!.env;
-    const store = new CloudflareStore(env);
-    const session = await getSession(cookies, store);
-    if (!session) {
-      return json(
-        { error: "Unauthorized", message: "ログインが必要です" },
-        { status: 401 }
-      );
-    }
+export const POST: RequestHandler = (event) =>
+  withSession(event, async ({ env, store, session }) => {
+    const data = await readJson(event.request, sendSchema);
+    if (!data) return fail(400, "入力内容を確認してください");
 
-    const raw = await request.json().catch(() => null);
-    const parsed = sendSchema.safeParse(raw);
-    if (!parsed.success) {
-      return json(
-        { error: "Invalid request", message: "入力内容を確認してください" },
-        { status: 400 }
-      );
-    }
-
-    const { body, boxOwnerDid, boxRkey } = parsed.data;
+    const { body, boxOwnerDid, boxRkey } = data;
 
     const box = await getBoxRecord(boxOwnerDid, boxRkey);
     if (!box) {
-      return json(
-        { error: "Box not found", message: "窓が見つかりません" },
-        { status: 404 }
-      );
+      return fail(404, "窓が見つかりません");
     }
     if (!box.isOpen) {
-      return json(
-        { error: "Box closed", message: "この窓は現在受け付けていません" },
-        { status: 403 }
-      );
+      return fail(403, "この窓は現在受け付けていません");
     }
 
     const isBlocked = await store.isBlocked(boxOwnerDid, session.did);
     if (isBlocked) {
-      return json(
-        { error: "Blocked", message: "この窓への送信が制限されています" },
-        { status: 403 }
-      );
+      return fail(403, "この窓への送信が制限されています");
     }
 
     const profilePromise = getProfile(session.did);
     const ownerSessionPromise = restoreAnyOAuthSession(env, store, boxOwnerDid);
-    platform!.ctx.waitUntil(ownerSessionPromise);
+    event.platform!.ctx.waitUntil(ownerSessionPromise);
 
     const bodyHash = await sha256Hex(`${boxOwnerDid}:${boxRkey}:${body}`);
     const dedupeKey = `dedupe:send:${session.did}:${bodyHash}`;
     const fresh = (await store.hitLimit(dedupeKey, RATE_BOX_TTL)) === 1;
     if (!fresh) {
-      return json(
-        {
-          error: "Duplicate",
-          message: "同じ声を送信したばかりです。しばらく待ってから再送してください。",
-        },
-        { status: 429 }
-      );
+      return fail(429, "同じ声を送信したばかりです。しばらく待ってから再送してください。");
     }
 
     const boxRateKey = `rate:box:${session.did}:${boxRkey}`;
@@ -94,13 +62,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
     const boxCount = await store.hitLimit(boxRateKey, RATE_BOX_TTL);
     if (boxCount > 1) {
-      return json(
-        {
-          error: "Rate limited",
-          message: "送信が多すぎます。しばらく待ってから再試行してください",
-        },
-        { status: 429 }
-      );
+      return fail(429, "送信が多すぎます。しばらく待ってから再試行してください");
     }
 
     const senderProfile = await profilePromise;
@@ -126,30 +88,18 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       if (follows > 50 && follows > followers * 10) score += 1;
 
       if (score >= SPAM_SCORE_THRESHOLD) {
-        return json(
-          { error: "Spam detected", message: "アカウントの状態により送信できません" },
-          { status: 403 }
-        );
+        return fail(403, "アカウントの状態により送信できません");
       }
     }
 
     const globalCount = await store.hitLimit(globalRateKey, RATE_GLOBAL_TTL);
     if (globalCount > 5) {
-      return json(
-        {
-          error: "Rate limited",
-          message: "送信が多すぎます。しばらく待ってから再試行してください",
-        },
-        { status: 429 }
-      );
+      return fail(429, "送信が多すぎます。しばらく待ってから再試行してください");
     }
 
     const ownerSessionFetch = await ownerSessionPromise;
     if (!ownerSessionFetch) {
-      return json(
-        { error: "Box unavailable", message: "この窓は現在利用できません" },
-        { status: 503 }
-      );
+      return fail(503, "この窓は現在利用できません");
     }
 
     const result = await writeQuestion({
@@ -160,10 +110,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
     });
 
     if (!result) {
-      return json(
-        { error: "Write failed", message: "声の送信に失敗しました" },
-        { status: 500 }
-      );
+      return fail(500, "声の送信に失敗しました");
     }
 
     invalidateRecords(boxOwnerDid, NSID.KOE);
@@ -182,14 +129,11 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       console.error("[/api/questions/send] delivery record failed — rolling back koe", recordErr);
       await deleteRecord({ sessionFetch: ownerSessionFetch, did: boxOwnerDid, collection: NSID.KOE, rkey: koeRkey });
       invalidateRecords(boxOwnerDid, NSID.KOE);
-      return json(
-        { error: "Write failed", message: "声の送信に失敗しました" },
-        { status: 500 }
-      );
+      return fail(500, "声の送信に失敗しました");
     }
 
-    platform!.ctx.waitUntil(store.pruneLimits());
-    platform!.ctx.waitUntil(
+    event.platform!.ctx.waitUntil(store.pruneLimits());
+    event.platform!.ctx.waitUntil(
       notifyNewKoe(env, store, {
         ownerDid: boxOwnerDid,
         boxTitle: box.title,
@@ -197,12 +141,5 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
       })
     );
 
-    return json({ success: true, uri: result.uri });
-  } catch (err) {
-    console.error("[/api/questions/send]", err);
-    return json(
-      { error: "Internal server error", message: "サーバーエラーが発生しました" },
-      { status: 500 }
-    );
-  }
-};
+    return json({ uri: result.uri });
+  });

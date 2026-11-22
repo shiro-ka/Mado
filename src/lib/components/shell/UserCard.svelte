@@ -1,12 +1,12 @@
 <script lang="ts">
   import { LogOut, ChevronsUpDown, UserPlus, Server } from "lucide-svelte";
   import { page } from "$app/state";
-  import type { AppSession } from "$lib/store.js";
+  import type { ViewerSession } from "$lib/accounts.js";
   import { MAX_ACCOUNTS, type AccountSummary } from "$lib/accounts.js";
   import LoginButton from "./LoginButton.svelte";
 
   interface Props {
-    session: AppSession;
+    session: ViewerSession;
   }
 
   let { session }: Props = $props();

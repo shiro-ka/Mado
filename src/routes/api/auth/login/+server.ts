@@ -1,9 +1,9 @@
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { z } from "zod";
-import { CloudflareStore } from "$lib/store.js";
 import { createOAuthClient, OAUTH_SCOPE, LEGACY_OAUTH_SCOPE } from "$lib/oauth.server.js";
 import { safeNext } from "$lib/loginNext.js";
+import { fail, readJson } from "$lib/api.server.js";
 
 const BSKY_ENTRYWAY = "https://bsky.social";
 
@@ -13,21 +13,14 @@ const loginSchema = z.object({
   addAccount: z.boolean().optional(),
 });
 
-export const POST: RequestHandler = async ({ request, platform }) => {
+export const POST: RequestHandler = async ({ request, platform, locals }) => {
   try {
     const env = platform!.env;
-    const body = await request.json().catch(() => null);
-    const parsed = loginSchema.safeParse(body);
-    if (!parsed.success) {
-      return json(
-        { error: "Invalid request", message: "ハンドルを正しく入力してください" },
-        { status: 400 }
-      );
-    }
+    const data = await readJson(request, loginSchema);
+    if (!data) return fail(400, "ハンドルを正しく入力してください");
 
-    const { handle, next, addAccount } = parsed.data;
-    const store = new CloudflareStore(env);
-    const client = await createOAuthClient(env, store);
+    const { handle, next, addAccount } = data;
+    const client = await createOAuthClient(env, locals.store!);
     const authorize = (scope: string) =>
       client.authorize(handle ?? BSKY_ENTRYWAY, {
         scope,
@@ -49,17 +42,8 @@ export const POST: RequestHandler = async ({ request, platform }) => {
       msg.includes("resolve") ||
       msg.includes("not found")
     ) {
-      return json(
-        {
-          error: "Handle not found",
-          message: "ハンドルが見つかりませんでした。正しいハンドルか確認してください。",
-        },
-        { status: 404 }
-      );
+      return fail(404, "ハンドルが見つかりませんでした。正しいハンドルか確認してください。");
     }
-    return json(
-      { error: "Internal server error", message: "サーバーエラーが発生しました" },
-      { status: 500 }
-    );
+    return fail(500, "サーバーでエラーが起きました");
   }
 };

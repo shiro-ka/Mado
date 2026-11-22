@@ -3,6 +3,7 @@ import type { CloudflareStore, AppSession } from "./store.js";
 import { customAlphabet } from "nanoid";
 import { MAX_ACCOUNTS, type AccountSummary } from "./accounts.js";
 import { endDeviceSession } from "./oauth.server.js";
+import { appOrigin } from "./api.server.js";
 
 const SESSION_COOKIE = "mado_session";
 const ACCOUNTS_COOKIE = "mado_accounts";
@@ -85,7 +86,7 @@ function setAccountIds(cookies: Cookies, env: App.Platform["env"], ids: string[]
     cookies.delete(ACCOUNTS_COOKIE, { path: "/" });
     return;
   }
-  const appUrl = env.APP_URL ?? "https://mado.blue";
+  const appUrl = appOrigin(env);
   cookies.set(ACCOUNTS_COOKIE, ids.join("."), {
     httpOnly: true,
     secure: appUrl.startsWith("https://"),
@@ -137,7 +138,7 @@ export async function switchAccount(
 }
 
 function setSessionCookie(cookies: Cookies, env: App.Platform["env"], sessionId: string): void {
-  const appUrl = env.APP_URL ?? "https://mado.blue";
+  const appUrl = appOrigin(env);
   cookies.set(SESSION_COOKIE, sessionId, {
     httpOnly: true,
     secure: appUrl.startsWith("https://"),

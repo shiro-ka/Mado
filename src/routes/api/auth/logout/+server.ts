@@ -1,12 +1,12 @@
 import type { RequestHandler } from "./$types";
-import { CloudflareStore } from "$lib/store.js";
-import { getSession, destroySession } from "$lib/auth.server.js";
+import { destroySession } from "$lib/auth.server.js";
 import { endDeviceSession } from "$lib/oauth.server.js";
+import { appOrigin } from "$lib/api.server.js";
 
-export const POST: RequestHandler = async ({ request, cookies, platform }) => {
+export const POST: RequestHandler = async ({ request, cookies, platform, locals }) => {
   const env = platform!.env;
-  const appUrl = env.APP_URL ?? "https://mado.blue";
-  const store = new CloudflareStore(env);
+  const appUrl = appOrigin(env);
+  const store = locals.store!;
 
   const origin = request.headers.get("origin");
   if (origin && origin !== appUrl) {
@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
 
   let switched = false;
   try {
-    const session = await getSession(cookies, store);
+    const session = await locals.getSession();
     if (session?.did && session.deviceKey) {
       await endDeviceSession(env, store, session.did, session.deviceKey);
     }

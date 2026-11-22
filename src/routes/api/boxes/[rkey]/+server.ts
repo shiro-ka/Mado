@@ -1,8 +1,7 @@
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { z } from "zod";
-import { CloudflareStore } from "$lib/store.js";
-import { getSession } from "$lib/auth.server.js";
+import { fail, readJson, withSession } from "$lib/api.server.js";
 import { restoreOAuthSession } from "$lib/oauth.server.js";
 import { getBoxRecord, updateBoxRecord, deleteBoxWithContents, isSlugTaken, invalidateRecords, NSID } from "$lib/atproto/index.js";
 import { slugSchema, boxTitleSchema, boxDescriptionSchema } from "$lib/validation.js";
@@ -14,96 +13,43 @@ const updateSchema = z.object({
   slug: slugSchema.optional(),
 });
 
-export const PATCH: RequestHandler = async ({ params, request, cookies, platform }) => {
-  try {
-    const env = platform!.env;
-    const store = new CloudflareStore(env);
-    const session = await getSession(cookies, store);
-    if (!session) return json({ error: "Unauthorized" }, { status: 401 });
-
+export const PATCH: RequestHandler = (event) =>
+  withSession(event, async ({ env, store, session }) => {
     const sessionFetch = await restoreOAuthSession(env, store, session.did, session.deviceKey);
-    if (!sessionFetch) {
-      return json(
-        { error: "Session expired", message: "再ログインが必要です" },
-        { status: 401 }
-      );
-    }
+    if (!sessionFetch) return fail(401, "再ログインが必要です");
 
-    const box = await getBoxRecord(session.did, params.rkey);
-    if (!box) return json({ error: "Not found" }, { status: 404 });
+    const box = await getBoxRecord(session.did, event.params.rkey);
+    if (!box) return fail(404, "窓が見つかりません");
 
-    const body = await request.json().catch(() => null);
-    const parsed = updateSchema.safeParse(body);
-    if (!parsed.success) return json({ error: "Invalid request" }, { status: 400 });
+    const data = await readJson(event.request, updateSchema);
+    if (!data) return fail(400, "入力内容を確認してください");
 
-    const { title, description, isOpen, slug } = parsed.data;
-
-    if (slug && slug !== box.slug) {
-      if (await isSlugTaken(session.did, slug, params.rkey)) {
-        return json(
-          { error: "Slug taken", message: "そのURLは既に使われています。別のURLにしてください。" },
-          { status: 409 }
-        );
-      }
+    if (data.slug && data.slug !== box.slug && (await isSlugTaken(session.did, data.slug, event.params.rkey))) {
+      return fail(409, "そのURLは既に使われています。別のURLにしてください。");
     }
 
     const success = await updateBoxRecord({
       sessionFetch,
       did: session.did,
-      rkey: params.rkey,
-      title: title ?? box.title,
-      description: description ?? box.description,
-      isOpen: isOpen ?? box.isOpen,
-      slug: slug ?? box.slug,
+      rkey: event.params.rkey,
+      title: data.title ?? box.title,
+      description: data.description ?? box.description,
+      isOpen: data.isOpen ?? box.isOpen,
+      slug: data.slug ?? box.slug,
       createdAt: box.createdAt,
     });
-
-    if (!success) {
-      return json(
-        { error: "Update failed", message: "更新に失敗しました" },
-        { status: 500 }
-      );
-    }
+    if (!success) return fail(500, "更新に失敗しました");
 
     invalidateRecords(session.did, NSID.BOX);
-    return json({ success: true });
-  } catch (err) {
-    console.error("[PATCH /api/boxes/[rkey]]", err);
-    return json({ error: "Internal server error" }, { status: 500 });
-  }
-};
+    return json({});
+  });
 
-export const DELETE: RequestHandler = async ({ params, cookies, platform }) => {
-  try {
-    const env = platform!.env;
-    const store = new CloudflareStore(env);
-    const session = await getSession(cookies, store);
-    if (!session) return json({ error: "Unauthorized" }, { status: 401 });
-
+export const DELETE: RequestHandler = (event) =>
+  withSession(event, async ({ env, store, session }) => {
     const sessionFetch = await restoreOAuthSession(env, store, session.did, session.deviceKey);
-    if (!sessionFetch) {
-      return json(
-        { error: "Session expired", message: "再ログインが必要です" },
-        { status: 401 }
-      );
-    }
+    if (!sessionFetch) return fail(401, "再ログインが必要です");
 
-    const deleted = await deleteBoxWithContents({
-      sessionFetch,
-      did: session.did,
-      boxRkey: params.rkey,
-    });
-
-    if (!deleted) {
-      return json(
-        { error: "Delete failed", message: "削除に失敗しました" },
-        { status: 500 }
-      );
-    }
-
-    return json({ success: true });
-  } catch (err) {
-    console.error("[DELETE /api/boxes/[rkey]]", err);
-    return json({ error: "Internal server error" }, { status: 500 });
-  }
-};
+    const deleted = await deleteBoxWithContents({ sessionFetch, did: session.did, boxRkey: event.params.rkey });
+    if (!deleted) return fail(500, "削除に失敗しました");
+    return json({});
+  });

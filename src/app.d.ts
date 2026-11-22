@@ -1,5 +1,9 @@
 declare global {
   namespace App {
+    interface Locals {
+      store: import("$lib/store.js").CloudflareStore | null;
+      getSession(): Promise<import("$lib/store.js").AppSession | undefined>;
+    }
     interface Platform {
       env: {
         OAUTH_STATE: KVNamespace;

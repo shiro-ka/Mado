@@ -2,6 +2,7 @@ import { OAuthClient, AtprotoDohHandleResolver } from "@atproto/oauth-client-nod
 import type { AuthorizationServerMetadataCache, DpopNonceCache, ProtectedResourceMetadataCache } from "@atproto/oauth-client-node";
 import { JoseKey } from "@atproto/jwk-jose";
 import type { CloudflareStore } from "./store.js";
+import { appOrigin } from "./api.server.js";
 
 /**
  * A fetch function bound to an OAuthSession.
@@ -126,7 +127,7 @@ export async function createOAuthClient(
   store: CloudflareStore,
   deviceKey?: string
 ): Promise<OAuthClient> {
-  const appUrl = env.APP_URL ?? "https://mado.blue";
+  const appUrl = appOrigin(env);
   const rawKeys = env.OAUTH_PRIVATE_KEYS ?? "[]";
   const keyset = await getKeyset(rawKeys);
 
