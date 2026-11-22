@@ -1,5 +1,6 @@
 import { AtpAgent } from "@atproto/api";
 import type { SessionFetch } from "../oauth.server.js";
+import { sharedInRequest } from "../requestScope.server.js";
 
 const DEFAULT_PDS = "https://bsky.social";
 const APPVIEW_URL = "https://public.api.bsky.app";
@@ -110,10 +111,14 @@ export async function getProfiles(dids: string[]) {
 const handleDidCache = new Map<string, { did: string; exp: number }>();
 const HANDLE_CACHE_TTL_MS = 10 * 60 * 1000;
 
-export async function resolveHandle(handle: string): Promise<string | null> {
-  if (handle.startsWith("did:")) return handle;
+export function resolveHandle(handle: string): Promise<string | null> {
+  if (handle.startsWith("did:")) return Promise.resolve(handle);
   const cached = handleDidCache.get(handle);
-  if (cached && cached.exp > Date.now()) return cached.did;
+  if (cached && cached.exp > Date.now()) return Promise.resolve(cached.did);
+  return sharedInRequest(`handle:${handle}`, () => fetchHandleDid(handle));
+}
+
+async function fetchHandleDid(handle: string): Promise<string | null> {
   const agent = publicAgent();
   try {
     const res = await agent.resolveHandle({ handle });
@@ -135,9 +140,13 @@ function didDocumentUrl(did: string): string {
   return `https://plc.directory/${did}`;
 }
 
-export async function getPdsUrl(did: string): Promise<string | null> {
+export function getPdsUrl(did: string): Promise<string | null> {
   const cached = pdsCache.get(did);
-  if (cached && cached.exp > Date.now()) return cached.pds;
+  if (cached && cached.exp > Date.now()) return Promise.resolve(cached.pds);
+  return sharedInRequest(`pds:${did}`, () => fetchPdsUrl(did));
+}
+
+async function fetchPdsUrl(did: string): Promise<string | null> {
   try {
     const res = await fetch(didDocumentUrl(did));
     if (!res.ok) return null;
