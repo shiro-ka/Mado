@@ -20,7 +20,7 @@ const workerFetch: typeof fetch = (input, init) =>
 
 const STORE_RETRIES = 2;
 const LOCK_WAIT_MS = 10_000;
-const LOCK_RETRY_WAIT_MS = 500;
+const LOCK_RETRY_WAIT_MS = 900;
 const STORE_RETRY_WAIT_MS = 1100;
 
 function refreshTokenOf(raw: unknown): string | undefined {
