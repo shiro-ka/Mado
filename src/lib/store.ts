@@ -13,6 +13,11 @@ export interface AppSession {
   deviceKey?: string;
 }
 
+export interface SessionEntry {
+  session: AppSession;
+  expiresAt: number | null;
+}
+
 interface SessionMeta {
   expiresAt: number; // Unix timestamp (seconds)
 }
@@ -65,9 +70,7 @@ export class CloudflareStore {
     return (await this.getSessionEntry(sessionId))?.session;
   }
 
-  async getSessionEntry(
-    sessionId: string
-  ): Promise<{ session: AppSession; expiresAt: number | null } | undefined> {
+  async getSessionEntry(sessionId: string): Promise<SessionEntry | undefined> {
     const { value, metadata } = await this.env.MADO_SESSION.getWithMetadata<AppSession, SessionMeta>(
       sessionId,
       "json"
@@ -85,15 +88,6 @@ export class CloudflareStore {
 
   async delSession(sessionId: string): Promise<void> {
     await this.env.MADO_SESSION.delete(sessionId);
-  }
-
-  async sessionTtl(sessionId: string): Promise<number> {
-    const { metadata } = await this.env.MADO_SESSION.getWithMetadata<
-      AppSession,
-      SessionMeta
-    >(sessionId, "json");
-    if (!metadata) return 0;
-    return Math.max(0, metadata.expiresAt - Math.floor(Date.now() / 1000));
   }
 
   // ── User registry (D1) ──────────────────────────────────────────────────

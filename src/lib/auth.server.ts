@@ -1,5 +1,6 @@
 import type { Cookies } from "@sveltejs/kit";
-import type { CloudflareStore, AppSession } from "./store.js";
+import type { CloudflareStore, AppSession, SessionEntry } from "./store.js";
+import { getProfile } from "./atproto/index.js";
 import { customAlphabet } from "nanoid";
 import { MAX_ACCOUNTS, type AccountSummary } from "./accounts.js";
 import { endDeviceSession } from "./oauth.server.js";
@@ -9,17 +10,10 @@ const SESSION_COOKIE = "mado_session";
 const ACCOUNTS_COOKIE = "mado_accounts";
 const SESSION_TTL = 30 * 24 * 60 * 60;
 
-export async function getSession(
-  cookies: Cookies,
-  store: CloudflareStore
-): Promise<AppSession | undefined> {
-  return (await getSessionEntry(cookies, store))?.session;
-}
-
 export async function getSessionEntry(
   cookies: Cookies,
   store: CloudflareStore
-): Promise<{ session: AppSession; expiresAt: number | null } | undefined> {
+): Promise<SessionEntry | undefined> {
   const sessionId = cookies.get(SESSION_COOKIE);
   if (!sessionId) return undefined;
   const entry = await store.getSessionEntry(sessionId);
@@ -150,19 +144,29 @@ function setSessionCookie(cookies: Cookies, env: App.Platform["env"], sessionId:
 
 const SESSION_RENEW_AFTER = 24 * 60 * 60;
 
-export async function extendSession(
+export async function renewSession(
   cookies: Cookies,
   env: App.Platform["env"],
   store: CloudflareStore,
-  entry: { session: AppSession; expiresAt: number | null }
-): Promise<void> {
+  entry: SessionEntry
+): Promise<AppSession> {
   const sessionId = cookies.get(SESSION_COOKIE);
-  if (!sessionId) return;
+  if (!sessionId) return entry.session;
   const remaining = entry.expiresAt === null ? 0 : entry.expiresAt - Math.floor(Date.now() / 1000);
-  if (remaining > SESSION_TTL - SESSION_RENEW_AFTER) return;
-  await store.setSession(sessionId, entry.session, SESSION_TTL);
+  if (remaining > SESSION_TTL - SESSION_RENEW_AFTER) return entry.session;
+  const profile = await getProfile(entry.session.did);
+  const session: AppSession = profile
+    ? {
+        ...entry.session,
+        handle: profile.handle,
+        displayName: profile.displayName || undefined,
+        avatar: profile.avatar || undefined,
+      }
+    : entry.session;
+  await store.setSession(sessionId, session, SESSION_TTL);
   setSessionCookie(cookies, env, sessionId);
   setAccountIds(cookies, env, knownAccountIds(cookies));
+  return session;
 }
 
 export async function destroySession(
@@ -183,21 +187,4 @@ export async function destroySession(
   cookies.delete(SESSION_COOKIE, { path: "/" });
   setAccountIds(cookies, env, []);
   return false;
-}
-
-export async function updateSessionProfile(
-  cookies: Cookies,
-  store: CloudflareStore,
-  did: string,
-  profile: { handle: string; displayName?: string; avatar?: string }
-): Promise<void> {
-  const sessionId = cookies.get(SESSION_COOKIE);
-  if (!sessionId) return;
-
-  const session = await store.getSession(sessionId);
-  if (!session || session.did !== did) return;
-
-  const ttl = await store.sessionTtl(sessionId);
-  const updated: AppSession = { ...session, ...profile };
-  await store.setSession(sessionId, updated, ttl > 0 ? ttl : SESSION_TTL);
 }

@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from "./$types";
-import { getSessionEntry, extendSession, listAccounts } from "$lib/auth.server.js";
+import { renewSession, listAccounts } from "$lib/auth.server.js";
 import type { AppSession } from "$lib/store.js";
 import type { ViewerSession } from "$lib/accounts.js";
 
@@ -12,11 +12,11 @@ export const load: LayoutServerLoad = async ({ cookies, platform, locals }) => {
   if (!env) return { session: null, accounts: [], officialHandle: null };
 
   const store = locals.store!;
-  const entry = await getSessionEntry(cookies, store);
-  if (entry) await extendSession(cookies, env, store, entry);
+  const entry = await locals.getSessionEntry();
+  const session = entry ? await renewSession(cookies, env, store, entry) : null;
   return {
-    session: entry ? viewerOf(entry.session) : null,
-    accounts: entry ? await listAccounts(cookies, env, store) : [],
+    session: session ? viewerOf(session) : null,
+    accounts: session ? await listAccounts(cookies, env, store) : [],
     officialHandle: env.MADO_OFFICIAL_HANDLE ?? null,
   };
 };

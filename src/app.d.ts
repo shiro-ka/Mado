@@ -2,6 +2,7 @@ declare global {
   namespace App {
     interface Locals {
       store: import("$lib/store.js").CloudflareStore | null;
+      getSessionEntry(): Promise<import("$lib/store.js").SessionEntry | undefined>;
       getSession(): Promise<import("$lib/store.js").AppSession | undefined>;
     }
     interface Platform {
