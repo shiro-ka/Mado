@@ -41,11 +41,14 @@ async function setWithRetry(store: { set: (k: string, v: unknown) => Promise<voi
   }
 }
 
-function wrapDpopStore<T>(store: {
-  get: (k: string) => Promise<unknown>;
-  set: (k: string, v: unknown) => Promise<void>;
-  del: (k: string) => Promise<void>;
-}) {
+function wrapDpopStore<T>(
+  kind: "session" | "state",
+  store: {
+    get: (k: string) => Promise<unknown>;
+    set: (k: string, v: unknown) => Promise<void>;
+    del: (k: string) => Promise<void>;
+  },
+) {
   const seenRefreshToken = new Map<string, string>();
   return {
     async get(key: string): Promise<T | undefined> {
@@ -75,12 +78,13 @@ function wrapDpopStore<T>(store: {
       if (seen) {
         const current = refreshTokenOf(await store.get(key));
         if (current && current !== seen) {
-          console.warn("[oauth] skip delete: the session was refreshed by another request");
+          console.warn(`[oauth] ${kind} delete skipped: refreshed by another request`);
           return;
         }
       }
       seenRefreshToken.delete(key);
       await store.del(key);
+      if (kind === "session") console.warn(`[oauth] session deleted: ${seen ? "same refresh token" : "not read in this request"}`);
     },
   };
 }
@@ -241,7 +245,7 @@ export async function createOAuthClient(
     // Allow HTTP for local dev (wrangler pages dev); https is enforced in prod
     allowHttp: appUrl.startsWith("http://"),
     keyset,
-    stateStore: wrapDpopStore({
+    stateStore: wrapDpopStore("state", {
       get: (k) => store.getOAuthState(k),
       set: (k, v) => store.setOAuthState(k, v),
       del: (k) => store.delOAuthState(k),
@@ -250,7 +254,7 @@ export async function createOAuthClient(
     // per-device key so each device holds an independent token set; without a
     // deviceKey (metadata/login endpoints that never touch the session store)
     // fall back to the bare DID.
-    sessionStore: wrapDpopStore({
+    sessionStore: wrapDpopStore("session", {
       get: (k) => store.getOAuthSession(deviceKey ? `${deviceKey}:${k}` : k),
       set: (k, v) => store.setOAuthSession(deviceKey ? `${deviceKey}:${k}` : k, v),
       del: (k) => store.delOAuthSession(deviceKey ? `${deviceKey}:${k}` : k),
