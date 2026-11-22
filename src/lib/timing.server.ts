@@ -110,14 +110,18 @@ export function wrapEnv(env: Env): Env {
   return wrapped as Env;
 }
 
+let isolate: string | undefined;
+
 function report(trace: Trace, status: number) {
   if (trace.logged) return;
+  isolate ??= crypto.randomUUID().slice(0, 8);
   trace.logged = true;
   const counts = { fetch: 0, d1: 0, kv: 0 };
   for (const e of trace.entries) counts[e.kind]++;
   console.log(
     JSON.stringify({
       timing: trace.label,
+      isolate,
       status,
       totalMs: Date.now() - trace.start,
       counts,
