@@ -1,7 +1,8 @@
 <script lang="ts">
   import { postAnswer } from "$lib/api.js";
   import { onMount } from "svelte";
-  import { AlertCircle, ExternalLink } from "lucide-svelte";
+  import { AlertCircle } from "lucide-svelte";
+  import BlueskyIcon from "$lib/components/ui/BlueskyIcon.svelte";
   import PostForm from "$lib/components/mado/PostForm.svelte";
   import { bskyPostUrl } from "$lib/utils.js";
 
@@ -77,7 +78,7 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <ExternalLink />
+        <BlueskyIcon />
         Blueskyの投稿を見る
       </a>
     {/if}

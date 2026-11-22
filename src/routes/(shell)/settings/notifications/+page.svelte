@@ -1,7 +1,8 @@
 <script lang="ts">
   import { followOfficial, saveNotificationPrefs } from "$lib/api.js";
   import { untrack } from "svelte";
-  import { Bell, Check, ExternalLink, AlertCircle, UserPlus, ArrowLeft } from "lucide-svelte";
+  import { Bell, Check, AlertCircle, UserPlus, ArrowLeft } from "lucide-svelte";
+  import BlueskyIcon from "$lib/components/ui/BlueskyIcon.svelte";
   import { invalidateAll } from "$app/navigation";
   import Toggle from "$lib/components/ui/Toggle.svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -118,7 +119,7 @@
               rel="noopener noreferrer"
             >
               bsky.appで開く
-              <ExternalLink data-suisou-text="fs-16" />
+              <BlueskyIcon data-suisou-text="fs-16" />
             </a>
           </div>
           {#if followError}

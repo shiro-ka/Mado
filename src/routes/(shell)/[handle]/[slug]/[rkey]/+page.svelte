@@ -1,7 +1,8 @@
 <script lang="ts">
   import { markHeard, markUnheard } from "$lib/api.js";
   import { boxPath, koePath, ogImagePath } from "$lib/urls.js";
-  import { ArrowLeft, User, ExternalLink, Lock, MessageCircle, Archive, ArchiveRestore } from "lucide-svelte";
+  import { ArrowLeft, User, Lock, MessageCircle, Archive, ArchiveRestore } from "lucide-svelte";
+  import BlueskyIcon from "$lib/components/ui/BlueskyIcon.svelte";
   import { invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
@@ -113,7 +114,7 @@
               rel="noopener noreferrer"
               aria-label="Bluesky のプロフィールを開く"
             >
-              <ExternalLink />
+              <BlueskyIcon />
             </Button>
           {/if}
         </div>
