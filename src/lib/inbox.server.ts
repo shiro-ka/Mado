@@ -4,13 +4,11 @@ import { listQuestions, listBoxes, getProfiles, getAnswersByOwner } from "./atpr
 import { koePath } from "./urls.js";
 
 export async function loadInbox(store: CloudflareStore, ownerDid: string) {
-  const [questions, handled, blocks, senders] = await Promise.all([
+  const [questions, { handled: handledSet, senders }, blocks] = await Promise.all([
     listQuestions(ownerDid),
-    store.listHandled(ownerDid),
+    store.listDeliveryState(ownerDid),
     store.listBlocks(ownerDid),
-    store.listSenders(ownerDid),
   ]);
-  const handledSet = new Set(handled);
   const blockSet = new Set(blocks);
   return questions
     .map((q): ReceivedQuestion => ({

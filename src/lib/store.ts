@@ -239,13 +239,19 @@ export class CloudflareStore {
     return row?.sender_did ?? null;
   }
 
-  async listSenders(ownerDid: string): Promise<Map<string, string>> {
+  async listDeliveryState(ownerDid: string): Promise<{ handled: Set<string>; senders: Map<string, string> }> {
     const { results } = await this.env.DB.prepare(
-      "SELECT koe_rkey, sender_did FROM deliveries WHERE owner_did = ? AND sender_did IS NOT NULL"
+      "SELECT koe_rkey, sender_did, owner_handled_at IS NOT NULL AS handled FROM deliveries WHERE owner_did = ?"
     )
       .bind(ownerDid)
-      .all<{ koe_rkey: string; sender_did: string }>();
-    return new Map(results.map((r: { koe_rkey: string; sender_did: string }) => [r.koe_rkey, r.sender_did]));
+      .all<{ koe_rkey: string; sender_did: string | null; handled: number }>();
+    const handled = new Set<string>();
+    const senders = new Map<string, string>();
+    for (const r of results) {
+      if (r.handled) handled.add(r.koe_rkey);
+      if (r.sender_did) senders.set(r.koe_rkey, r.sender_did);
+    }
+    return { handled, senders };
   }
 
   async markHandled(ownerDid: string, rkey: string): Promise<void> {
@@ -286,15 +292,6 @@ export class CloudflareStore {
       .first<{ box_rkey: string | null; sent_at: number; body: string }>();
     if (!row) return null;
     return { boxRkey: row.box_rkey, sentAt: new Date(row.sent_at * 1000).toISOString(), body: row.body };
-  }
-
-  async listHandled(ownerDid: string): Promise<string[]> {
-    const { results } = await this.env.DB.prepare(
-      "SELECT koe_rkey FROM deliveries WHERE owner_did = ? AND owner_handled_at IS NOT NULL"
-    )
-      .bind(ownerDid)
-      .all<{ koe_rkey: string }>();
-    return results.map((r: { koe_rkey: string }) => r.koe_rkey);
   }
 
   async listSent(senderDid: string, limit: number): Promise<SentRef[]> {
