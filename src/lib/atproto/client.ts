@@ -108,17 +108,13 @@ export async function getProfile(handleOrDid: string) {
 
 export async function getProfiles(dids: string[]) {
   const agent = appViewAgent();
+  const chunks: string[][] = [];
+  for (let i = 0; i < dids.length; i += 25) chunks.push(dids.slice(i, i + 25));
+  const results = await Promise.all(
+    chunks.map((actors) => agent.getProfiles({ actors }).then((res) => res.data.profiles, () => [])),
+  );
   const out = new Map<string, { handle: string; displayName?: string; avatar?: string }>();
-  for (let i = 0; i < dids.length; i += 25) {
-    try {
-      const res = await agent.getProfiles({ actors: dids.slice(i, i + 25) });
-      for (const p of res.data.profiles) {
-        out.set(p.did, { handle: p.handle, displayName: p.displayName, avatar: p.avatar });
-      }
-    } catch {
-      continue;
-    }
-  }
+  for (const p of results.flat()) out.set(p.did, { handle: p.handle, displayName: p.displayName, avatar: p.avatar });
   return out;
 }
 
@@ -178,7 +174,7 @@ async function fetchPdsUrl(did: string): Promise<string | null> {
     const doc = (await res.json()) as {
       service?: Array<{ id: string; type: string; serviceEndpoint: string }>;
     };
-    const pds = doc.service?.find((s) => s.id === "#atproto_pds" || s.id.endsWith("#atproto_pds"))?.serviceEndpoint ?? null;
+    const pds = doc.service?.find((s) => s.id.endsWith("#atproto_pds"))?.serviceEndpoint ?? null;
     if (pds) {
       pdsCache.set(did, { pds, exp: Date.now() + PDS_CACHE_TTL_MS });
       await edgePut(`pds:${did}`, pds, PDS_CACHE_TTL_MS / 1000);
