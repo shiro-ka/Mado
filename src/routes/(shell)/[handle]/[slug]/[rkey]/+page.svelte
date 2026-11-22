@@ -5,6 +5,7 @@
   import { invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/Button.svelte";
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
+  import OwnerLine from "$lib/components/mado/OwnerLine.svelte";
   import BlockButton from "$lib/components/mado/BlockButton.svelte";
   import DeleteQuestionButton from "$lib/components/mado/DeleteQuestionButton.svelte";
   import { formatDateFull } from "$lib/utils.js";
@@ -60,25 +61,17 @@
         </span>
       </a>
     {:else}
-      <a href={boxPath(data.cleanHandle, data.box.slug)} data-suisou-item="media" data-suisou="bd-bottom px-4 py-3" class="owner">
-        <span data-suisou-item="media-figure">
-          {#if data.ownerAvatar}
-            <img src={data.ownerAvatar} alt="" data-suisou-item="circle large" />
-          {:else}
-            <span data-suisou-item="circle large"><User data-suisou-text="fs-20" /></span>
-          {/if}
-        </span>
-        <span data-suisou-item="media-content">
-          <span data-suisou-layout="row gap-1">
-            <span data-suisou-text="fs-16 fw-700 clamp-1" class="name">{data.ownerName}</span>
-            <span data-suisou-text="fs-12 clamp-1" data-suisou="note" class="handle">@{data.cleanHandle}</span>
-          </span>
-          <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
-          {#if data.box.description}
-            <span data-suisou-text="fs-12" data-suisou="note">{data.box.description}</span>
-          {/if}
-        </span>
-      </a>
+      <OwnerLine
+        handle={data.cleanHandle}
+        displayName={data.ownerName}
+        avatar={data.ownerAvatar}
+        data-suisou="bd-bottom px-4 py-3"
+      >
+        <a href={boxPath(data.cleanHandle, data.box.slug)} data-suisou-text="fs-14 fw-500">{data.box.title}</a>
+        {#if data.box.description}
+          <span data-suisou-text="fs-12" data-suisou="note">{data.box.description}</span>
+        {/if}
+      </OwnerLine>
     {/if}
 
     <div data-suisou-layout="stack gap-3" class="inner">
@@ -179,17 +172,6 @@
 <style>
   .card {
     overflow: hidden;
-  }
-  .owner {
-    align-items: center;
-  }
-  .name {
-    flex: 0 1 auto;
-    min-width: 0;
-  }
-  .handle {
-    flex: 0 1000 auto;
-    min-width: 0;
   }
   .inner,
   .reply {

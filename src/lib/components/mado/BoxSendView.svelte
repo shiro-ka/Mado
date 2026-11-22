@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { LogIn, Globe } from "lucide-svelte";
+  import { LogIn } from "lucide-svelte";
+  import OwnerLine from "$lib/components/mado/OwnerLine.svelte";
   import SendQuestionForm from "$lib/components/mado/SendQuestionForm.svelte";
   import LoginButton from "$lib/components/shell/LoginButton.svelte";
   import type { QuestionBox } from "$lib/../types/index.js";
@@ -20,10 +21,6 @@
   }
 
   let { box, ownerProfile, cleanHandle, ownerRegistered, session, embedded = false }: Props = $props();
-
-  const ownerDisplayName = $derived(
-    ownerProfile?.displayName ?? `@${ownerProfile?.handle ?? cleanHandle}`
-  );
 </script>
 
 {#snippet summary()}
@@ -87,33 +84,12 @@
     <h1 data-suisou-text="fs-24 fw-700">声を送る</h1>
 
     <div data-suisou-tray data-suisou-layout="stack gap-0" data-suisou="p-0">
-      <div data-suisou-item="media" data-suisou="bd-bottom py-3 px-4" class="owner">
-        {#if ownerProfile?.avatar}
-          <img
-            data-suisou-item="circle large media-figure"
-            src={ownerProfile.avatar}
-            alt={ownerProfile.handle}
-          />
-        {:else}
-          <div data-suisou-item="circle large media-figure">
-            {(ownerProfile?.handle ?? cleanHandle)[0]?.toUpperCase() ?? "?"}
-          </div>
-        {/if}
-        <div data-suisou-item="media-content">
-          <p data-suisou-text="fs-14 fw-700">{ownerDisplayName}</p>
-          <a
-            data-suisou-layout="row"
-            data-suisou-text="fs-12 link"
-            data-suisou="accent"
-            href={`https://bsky.app/profile/${ownerProfile?.handle ?? cleanHandle}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Globe data-suisou-text="fs-16" />
-            @{ownerProfile?.handle ?? cleanHandle}
-          </a>
-        </div>
-      </div>
+      <OwnerLine
+        handle={ownerProfile?.handle ?? cleanHandle}
+        displayName={ownerProfile?.displayName}
+        avatar={ownerProfile?.avatar}
+        data-suisou="bd-bottom py-3 px-4"
+      />
 
       {@render summary()}
     </div>
@@ -125,9 +101,6 @@
 {/if}
 
 <style>
-  .owner {
-    align-items: center;
-  }
   .summary {
     padding: var(--suisou-space-3) var(--suisou-space-4) var(--suisou-space-4);
   }

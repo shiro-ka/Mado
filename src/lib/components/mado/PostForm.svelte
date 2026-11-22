@@ -86,7 +86,7 @@
 
     {#if formState === "error"}
       <p data-suisou-item="notice" data-suisou-layout="row" data-suisou="error" role="alert">
-        <AlertCircle />
+        <AlertCircle data-suisou-text="fs-16" />
         {errorMsg}
       </p>
     {/if}
