@@ -18,18 +18,41 @@ const workerFetch: typeof fetch = (input, init) =>
     ? fetch(input, { ...init, redirect: "manual" })
     : fetch(input, init);
 
-// Mirrors NodeOAuthClient's toDpopKeyStore: serialize dpopKey as JWK on write,
-// reconstruct JoseKey on read. Without this, JSON round-trip through KV drops
-// the class getter `algorithms` and .includes() crashes in the callback.
+const STORE_RETRIES = 2;
+const LOCK_WAIT_MS = 10_000;
+const LOCK_RETRY_WAIT_MS = 500;
+const STORE_RETRY_WAIT_MS = 1100;
+
+function refreshTokenOf(raw: unknown): string | undefined {
+  const token = (raw as { tokenSet?: { refresh_token?: unknown } } | undefined)?.tokenSet?.refresh_token;
+  return typeof token === "string" ? token : undefined;
+}
+
+async function setWithRetry(store: { set: (k: string, v: unknown) => Promise<void> }, key: string, value: unknown) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await store.set(key, value);
+      return;
+    } catch (err) {
+      if (attempt >= STORE_RETRIES) throw err;
+      console.warn("[oauth] store write failed, retrying:", err);
+      await new Promise((r) => setTimeout(r, STORE_RETRY_WAIT_MS));
+    }
+  }
+}
+
 function wrapDpopStore<T>(store: {
   get: (k: string) => Promise<unknown>;
   set: (k: string, v: unknown) => Promise<void>;
   del: (k: string) => Promise<void>;
 }) {
+  const seenRefreshToken = new Map<string, string>();
   return {
     async get(key: string): Promise<T | undefined> {
       const raw = (await store.get(key)) as (Record<string, unknown> & { dpopJwk?: Record<string, unknown> }) | undefined;
       if (!raw) return undefined;
+      const token = refreshTokenOf(raw);
+      if (token) seenRefreshToken.set(key, token);
       const { dpopJwk, ...rest } = raw;
       if (!dpopJwk) return raw as T;
       const dpopKey = await JoseKey.fromJWK(dpopJwk);
@@ -37,15 +60,26 @@ function wrapDpopStore<T>(store: {
     },
     async set(key: string, value: T & { dpopKey?: { privateJwk?: Record<string, unknown> } }): Promise<void> {
       const { dpopKey, ...rest } = value as Record<string, unknown> & { dpopKey?: { privateJwk?: Record<string, unknown> } };
+      let stored: unknown = value;
       if (dpopKey) {
         const dpopJwk = dpopKey.privateJwk;
         if (!dpopJwk) throw new Error("Private DPoP JWK is missing.");
-        await store.set(key, { ...rest, dpopJwk });
-      } else {
-        await store.set(key, value);
+        stored = { ...rest, dpopJwk };
       }
+      await setWithRetry(store, key, stored);
+      const token = refreshTokenOf(stored);
+      if (token) seenRefreshToken.set(key, token);
     },
     async del(key: string): Promise<void> {
+      const seen = seenRefreshToken.get(key);
+      if (seen) {
+        const current = refreshTokenOf(await store.get(key));
+        if (current && current !== seen) {
+          console.warn("[oauth] skip delete: the session was refreshed by another request");
+          return;
+        }
+      }
+      seenRefreshToken.delete(key);
       await store.del(key);
     },
   };
@@ -176,7 +210,7 @@ export async function createOAuthClient(
       requestLock: async <T>(name: string, fn: () => T | PromiseLike<T>): Promise<T> => {
         const lockKey = deviceKey ? `oauthlock:${deviceKey}:${name}` : `oauthlock:${name}`;
         const token = crypto.randomUUID();
-        const deadline = Date.now() + 5000;
+        const deadline = Date.now() + LOCK_WAIT_MS;
         while (Date.now() < deadline) {
           if (await store.acquireLock(lockKey, token, 60)) {
             try {
@@ -185,7 +219,7 @@ export async function createOAuthClient(
               await store.releaseLock(lockKey, token);
             }
           }
-          await new Promise((r) => setTimeout(r, 100 + Math.floor(Math.random() * 120)));
+          await new Promise((r) => setTimeout(r, LOCK_RETRY_WAIT_MS + Math.floor(Math.random() * 200)));
         }
         return fn();
       },
