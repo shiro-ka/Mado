@@ -4,13 +4,13 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Textarea from "$lib/components/ui/Textarea.svelte";
   import { POST_MAX_GRAPHEMES, POST_MAX_BYTES, fitsLimit } from "$lib/text.js";
+  import { errorText } from "$lib/api.js";
 
   interface Props {
     label: string;
     rows: number;
     helper?: string;
     submitLabel: string;
-    failMessage: string;
     successTitle: string;
     againLabel: string;
     submit: (body: string) => Promise<void>;
@@ -24,7 +24,6 @@
     rows,
     helper,
     submitLabel,
-    failMessage,
     successTitle,
     againLabel,
     submit,
@@ -50,7 +49,7 @@
       formState = "success";
     } catch (err) {
       formState = "error";
-      errorMsg = err instanceof Error ? err.message : failMessage;
+      errorMsg = errorText(err);
     }
   }
 

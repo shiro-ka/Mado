@@ -16,7 +16,6 @@
   rows={5}
   helper={`この声は @${senderHandle} からの声として窓のオーナーに届きます。`}
   submitLabel="声を送る"
-  failMessage="送信に失敗しました"
   successTitle="声を送信しました！"
   againLabel="別の声を送る"
   submit={async (body) => {

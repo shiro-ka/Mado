@@ -6,7 +6,7 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Toggle from "$lib/components/ui/Toggle.svelte";
   import BoxFields, { boxFieldsReady, boxFieldsValue } from "$lib/components/mado/BoxFields.svelte";
-  import { updateBox, deleteBox, setMainBox } from "$lib/api.js";
+  import { updateBox, deleteBox, setMainBox, errorText } from "$lib/api.js";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
@@ -51,7 +51,7 @@
       else await invalidateAll();
     } catch (err) {
       formState = "error";
-      errorMsg = err instanceof Error ? err.message : "更新に失敗しました";
+      errorMsg = errorText(err);
     }
   }
 
@@ -64,7 +64,7 @@
       await goto(profilePath(data.cleanHandle), { invalidateAll: true });
     } catch (err) {
       formState = "idle";
-      deleteError = err instanceof Error ? err.message : "削除に失敗しました";
+      deleteError = errorText(err);
     }
   }
 
@@ -93,7 +93,7 @@
       await setMainBox(data.box.rkey, !data.isMain);
       await invalidateAll();
     } catch (err) {
-      mainError = err instanceof Error ? err.message : "設定に失敗しました";
+      mainError = errorText(err);
     } finally {
       settingMain = false;
     }

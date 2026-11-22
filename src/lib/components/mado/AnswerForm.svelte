@@ -58,7 +58,6 @@
   label="返信"
   rows={4}
   submitLabel="返信を投稿"
-  failMessage="返信の投稿に失敗しました"
   successTitle="返信を投稿しました"
   againLabel="続けて返信する"
   {submit}

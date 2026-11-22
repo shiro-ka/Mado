@@ -14,6 +14,10 @@ async function call<T = Record<string, unknown>>(url: string, method: string, bo
   return data;
 }
 
+export function errorText(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
 export function markHeard(rkey: string) {
   return call(`/api/questions/${rkey}/handled`, "POST");
 }

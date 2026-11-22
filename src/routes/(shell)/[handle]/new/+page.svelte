@@ -1,6 +1,6 @@
 <script lang="ts">
   import { profilePath } from "$lib/urls.js";
-  import { createBox } from "$lib/api.js";
+  import { createBox, errorText } from "$lib/api.js";
   import { goto } from "$app/navigation";
   import { Plus, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -24,7 +24,7 @@
       await createBox(boxFieldsValue(fields));
       await goto(profilePath(data.cleanHandle), { invalidateAll: true });
     } catch (err) {
-      errorMsg = err instanceof Error ? err.message : "作成に失敗しました";
+      errorMsg = errorText(err);
     } finally {
       submitting = false;
     }
