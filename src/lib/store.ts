@@ -22,6 +22,10 @@ interface SessionMeta {
   expiresAt: number; // Unix timestamp (seconds)
 }
 
+function nowSec() {
+  return Math.floor(Date.now() / 1000);
+}
+
 export class CloudflareStore {
   constructor(private env: App.Platform["env"]) {}
 
@@ -79,7 +83,7 @@ export class CloudflareStore {
   }
 
   async setSession(sessionId: string, value: AppSession, ttlSeconds: number): Promise<void> {
-    const expiresAt = Math.floor(Date.now() / 1000) + ttlSeconds;
+    const expiresAt = nowSec() + ttlSeconds;
     await this.env.MADO_SESSION.put(sessionId, JSON.stringify(value), {
       expirationTtl: ttlSeconds,
       metadata: { expiresAt } satisfies SessionMeta,
@@ -96,7 +100,7 @@ export class CloudflareStore {
     await this.env.DB.prepare(
       "INSERT OR IGNORE INTO users (did, added_at) VALUES (?, ?)"
     )
-      .bind(did, Math.floor(Date.now() / 1000))
+      .bind(did, nowSec())
       .run();
   }
 
@@ -123,7 +127,7 @@ export class CloudflareStore {
       `INSERT INTO users (did, added_at, main_box_rkey) VALUES (?, ?, ?)
        ON CONFLICT(did) DO UPDATE SET main_box_rkey = excluded.main_box_rkey`
     )
-      .bind(did, Math.floor(Date.now() / 1000), rkey)
+      .bind(did, nowSec(), rkey)
       .run();
   }
 
@@ -135,7 +139,7 @@ export class CloudflareStore {
   }
 
   async addDeviceSession(deviceKey: string, did: string): Promise<void> {
-    const now = Math.floor(Date.now() / 1000);
+    const now = nowSec();
     await this.env.DB.prepare(
       "INSERT OR REPLACE INTO device_sessions (device_key, did, created_at, last_seen) VALUES (?, ?, ?, ?)"
     )
@@ -191,7 +195,7 @@ export class CloudflareStore {
     await this.env.DB.prepare(
       "INSERT OR IGNORE INTO blocks (owner_did, target_did, blocked_at) VALUES (?, ?, ?)"
     )
-      .bind(ownerDid, targetDid, Math.floor(Date.now() / 1000))
+      .bind(ownerDid, targetDid, nowSec())
       .run();
   }
 
@@ -221,22 +225,22 @@ export class CloudflareStore {
     return row !== null;
   }
 
-  async recordDelivery(d: { ownerDid: string; koeRkey: string; boxRkey: string; senderDid: string; sentAt: string; body: string }): Promise<void> {
+  async recordDelivery(d: { ownerDid: string; koeRkey: string; boxRkey: string; senderDid: string; body: string }): Promise<void> {
     await this.env.DB.prepare(
       `INSERT INTO deliveries (owner_did, koe_rkey, box_rkey, sender_did, sent_at, body) VALUES (?, ?, ?, ?, ?, ?)
        ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET box_rkey = excluded.box_rkey, sender_did = excluded.sender_did, sent_at = excluded.sent_at, body = excluded.body`
     )
-      .bind(d.ownerDid, d.koeRkey, d.boxRkey, d.senderDid, Math.floor(new Date(d.sentAt).getTime() / 1000), d.body)
+      .bind(d.ownerDid, d.koeRkey, d.boxRkey, d.senderDid, nowSec(), d.body)
       .run();
   }
 
-  async getSender(ownerDid: string, koeRkey: string): Promise<string | null> {
+  async getDelivery(ownerDid: string, koeRkey: string): Promise<{ senderDid: string | null; handled: boolean }> {
     const row = await this.env.DB.prepare(
-      "SELECT sender_did FROM deliveries WHERE owner_did = ? AND koe_rkey = ?"
+      "SELECT sender_did, owner_handled_at IS NOT NULL AS handled FROM deliveries WHERE owner_did = ? AND koe_rkey = ?"
     )
       .bind(ownerDid, koeRkey)
-      .first<{ sender_did: string | null }>();
-    return row?.sender_did ?? null;
+      .first<{ sender_did: string | null; handled: number }>();
+    return { senderDid: row?.sender_did ?? null, handled: !!row?.handled };
   }
 
   async listDeliveryState(
@@ -263,17 +267,8 @@ export class CloudflareStore {
       `INSERT INTO deliveries (owner_did, koe_rkey, owner_handled_at) VALUES (?, ?, ?)
        ON CONFLICT (owner_did, koe_rkey) DO UPDATE SET owner_handled_at = COALESCE(owner_handled_at, excluded.owner_handled_at)`
     )
-      .bind(ownerDid, rkey, Math.floor(Date.now() / 1000))
+      .bind(ownerDid, rkey, nowSec())
       .run();
-  }
-
-  async isHandled(ownerDid: string, rkey: string): Promise<boolean> {
-    const row = await this.env.DB.prepare(
-      "SELECT 1 FROM deliveries WHERE owner_did = ? AND koe_rkey = ? AND owner_handled_at IS NOT NULL"
-    )
-      .bind(ownerDid, rkey)
-      .first();
-    return row !== null;
   }
 
   async unmarkHandled(ownerDid: string, rkey: string): Promise<void> {
@@ -319,7 +314,7 @@ export class CloudflareStore {
     await this.env.DB.prepare(
       "UPDATE deliveries SET sender_read_at = ? WHERE sender_did = ? AND owner_did = ? AND koe_rkey = ?"
     )
-      .bind(Math.floor(Date.now() / 1000), senderDid, ownerDid, koeRkey)
+      .bind(nowSec(), senderDid, ownerDid, koeRkey)
       .run();
   }
 
@@ -346,7 +341,7 @@ export class CloudflareStore {
       `INSERT INTO notification_prefs (did, dm_enabled, updated_at) VALUES (?, ?, ?)
        ON CONFLICT(did) DO UPDATE SET dm_enabled = excluded.dm_enabled, updated_at = excluded.updated_at`
     )
-      .bind(did, enabled ? 1 : 0, Math.floor(Date.now() / 1000))
+      .bind(did, enabled ? 1 : 0, nowSec())
       .run();
   }
 
@@ -363,7 +358,7 @@ export class CloudflareStore {
   }
 
   async setCardStyle(did: string, style: unknown): Promise<number> {
-    const now = Math.floor(Date.now() / 1000);
+    const now = nowSec();
     await this.env.DB.prepare(
       `INSERT INTO card_styles (did, style, updated_at) VALUES (?, ?, ?)
        ON CONFLICT (did) DO UPDATE SET style = excluded.style, updated_at = excluded.updated_at`
@@ -374,7 +369,7 @@ export class CloudflareStore {
   }
 
   async hitLimit(key: string, windowSeconds: number): Promise<number> {
-    const now = Math.floor(Date.now() / 1000);
+    const now = nowSec();
     const row = await this.env.DB.prepare(
       `INSERT INTO send_limits (key, count, expires_at) VALUES (?1, 1, ?2 + ?3)
        ON CONFLICT (key) DO UPDATE SET
@@ -389,12 +384,12 @@ export class CloudflareStore {
 
   async pruneLimits(): Promise<void> {
     await this.env.DB.prepare("DELETE FROM send_limits WHERE expires_at <= ?")
-      .bind(Math.floor(Date.now() / 1000))
+      .bind(nowSec())
       .run();
   }
 
   async acquireLock(key: string, token: string, ttlSeconds: number): Promise<boolean> {
-    const now = Math.floor(Date.now() / 1000);
+    const now = nowSec();
     const row = await this.env.DB.prepare(
       `INSERT INTO oauth_locks (key, token, expires_at) VALUES (?1, ?2, ?3 + ?4)
        ON CONFLICT (key) DO UPDATE SET token = excluded.token, expires_at = excluded.expires_at

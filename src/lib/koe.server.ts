@@ -113,7 +113,6 @@ async function deliverKoe(
       koeRkey,
       boxRkey: koe.boxRkey,
       senderDid: koe.senderDid,
-      sentAt: new Date().toISOString(),
       body: koe.body,
     });
   } catch (err) {

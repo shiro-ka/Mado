@@ -49,10 +49,7 @@ export const load: PageServerLoad = async ({ params, locals, url, platform }) =>
   };
 
   if (isOwner) {
-    const [handled, senderDid] = await Promise.all([
-      store.isHandled(ownerDid, params.rkey),
-      store.getSender(ownerDid, params.rkey),
-    ]);
+    const { handled, senderDid } = await store.getDelivery(ownerDid, params.rkey);
     const [senderProfile, senderBlocked] = senderDid
       ? await Promise.all([getProfile(senderDid), store.isBlocked(ownerDid, senderDid)])
       : [null, false];
