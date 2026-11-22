@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { profilePath, ogImagePath } from "$lib/urls.js";
   import { Globe, MessageCircle, Plus } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import QuestionBoxCard from "$lib/components/mado/QuestionBoxCard.svelte";
@@ -17,12 +18,12 @@
   <meta property="og:site_name" content="Mado" />
   <meta property="og:title" content={`${data.ownerName}の窓`} />
   <meta property="og:description" content={CATCHPHRASE} />
-  <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}`} />
-  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
+  <meta property="og:url" content={data.origin + profilePath(data.cleanHandle)} />
+  <meta property="og:image" content={data.origin + ogImagePath(profilePath(data.cleanHandle), data.cardVersion)} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
+  <meta name="twitter:image" content={data.origin + ogImagePath(profilePath(data.cleanHandle), data.cardVersion)} />
 </svelte:head>
 
 {#snippet listHead(count: string)}
@@ -31,7 +32,7 @@
       <MessageCircle data-suisou-text="fs-16" data-suisou="note" />
       <h2 data-suisou-text="fs-14 fw-700" data-suisou="note">窓{count}</h2>
     </div>
-    <Button href={`/@${data.cleanHandle}/new`} variant="default">
+    <Button href={`${profilePath(data.cleanHandle)}/new`} variant="default">
       {#snippet leftIcon()}<Plus />{/snippet}
       新しい窓を開ける
     </Button>
@@ -91,7 +92,7 @@
       {#if detail.openBoxes.length === 0}
         <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4">
           <p data-suisou-text="fs-14" data-suisou="note">まだ窓がありません</p>
-          <Button href={`/@${data.cleanHandle}/new`} variant="default">
+          <Button href={`${profilePath(data.cleanHandle)}/new`} variant="default">
             {#snippet leftIcon()}<Plus />{/snippet}
             最初の窓を開ける
           </Button>

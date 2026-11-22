@@ -1,29 +1,20 @@
-import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { CloudflareStore } from "$lib/store.js";
-import { resolveHandle, findBoxBySlug, getProfile } from "$lib/atproto/index.js";
+import { getProfile } from "$lib/atproto/index.js";
 import { buildInbox } from "$lib/inbox.server.js";
+import { requireOwner, requireBox } from "$lib/owner.server.js";
 
-export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
+export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
   const { session } = await parent();
-  const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
-
-  const did = await resolveHandle(cleanHandle);
-  if (!did) throw error(404, "窓が見つかりません");
-
-  const env = platform!.env;
-  const store = new CloudflareStore(env);
-
+  const { handle: cleanHandle, did } = await requireOwner(params.handle, session);
+  const store = locals.store!;
   const isOwner = session?.did === did;
 
   const [box, ownerProfile, ownerRegistered, card] = await Promise.all([
-    findBoxBySlug(did, params.slug),
+    requireBox(did, params.slug),
     getProfile(did),
     store.ownerHasAnyDevice(did),
     store.getCardStyle(did),
   ]);
-
-  if (!box) throw error(404, "窓が見つかりません");
 
   return {
     cleanHandle,

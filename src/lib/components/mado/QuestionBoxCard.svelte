@@ -1,6 +1,6 @@
 <script lang="ts">
   import { MessageCircle, ChevronRight, Pin } from "lucide-svelte";
-  import { boxUrl } from "$lib/utils.js";
+  import { boxPath } from "$lib/urls.js";
   import type { QuestionBox } from "$lib/../types/index.js";
 
   interface Props {
@@ -11,7 +11,7 @@
 
   let { box, ownerHandle, isMain = false }: Props = $props();
 
-  const href = $derived(boxUrl(ownerHandle, box.slug));
+  const href = $derived(boxPath(ownerHandle, box.slug));
 </script>
 
 <a {href} data-suisou-tray="link" data-suisou-layout="stack" class="link">

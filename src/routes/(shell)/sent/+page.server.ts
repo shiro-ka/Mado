@@ -3,6 +3,7 @@ import type { PageServerLoad } from "./$types";
 import { CloudflareStore } from "$lib/store.js";
 import { getAnswersByOwner, getProfiles, listBoxes } from "$lib/atproto/index.js";
 import type { SentItem } from "../../../types/index.js";
+import { koePath, koeUri } from "$lib/urls.js";
 
 export const load: PageServerLoad = async ({ parent, platform }) => {
   const { session } = await parent();
@@ -30,7 +31,7 @@ export const load: PageServerLoad = async ({ parent, platform }) => {
         const owner = byOwner.get(r.ownerDid);
         const profile = profiles.get(r.ownerDid);
         const box = r.boxRkey ? owner?.boxes.get(r.boxRkey) : undefined;
-        const answers = [...(owner?.answers.get(`at://${r.ownerDid}/blue.mado.koe/${r.koeRkey}`) ?? [])].sort((a, b) =>
+        const answers = [...(owner?.answers.get(koeUri(r.ownerDid, r.koeRkey)) ?? [])].sort((a, b) =>
           a.createdAt.localeCompare(b.createdAt),
         );
         const latest = answers.at(-1)?.createdAt;
@@ -39,7 +40,7 @@ export const load: PageServerLoad = async ({ parent, platform }) => {
           koeRkey: r.koeRkey,
           body: r.body,
           sentAt: r.sentAt,
-          href: box && profile?.handle ? `/@${profile.handle}/${box.slug}/${r.koeRkey}` : undefined,
+          href: box && profile?.handle ? koePath(profile.handle, box.slug, r.koeRkey) : undefined,
           boxTitle: box?.title,
           ownerHandle: profile?.handle,
           ownerDisplayName: profile?.displayName,

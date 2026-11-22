@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { profilePath } from "$lib/urls.js";
   import { goto, invalidateAll } from "$app/navigation";
   import { Plus, AlertCircle } from "lucide-svelte";
   import Button from "$lib/components/ui/Button.svelte";
@@ -46,7 +47,7 @@
         throw new Error(json.message ?? "作成に失敗しました");
       }
 
-      await goto(`/@${data.cleanHandle}`);
+      await goto(profilePath(data.cleanHandle));
       await invalidateAll();
     } catch (err) {
       formState = "error";
@@ -103,7 +104,7 @@
       {/if}
 
       <div data-suisou-layout="row end">
-        <Button variant="outline" href={`/@${data.cleanHandle}`} disabled={formState === "submitting"}>キャンセル</Button>
+        <Button variant="outline" href={profilePath(data.cleanHandle)} disabled={formState === "submitting"}>キャンセル</Button>
         <Button
           type="submit"
           loading={formState === "submitting"}

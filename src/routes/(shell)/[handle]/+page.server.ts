@@ -1,21 +1,14 @@
-import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { CloudflareStore } from "$lib/store.js";
-import { resolveHandle, getProfile, listBoxes } from "$lib/atproto/index.js";
+import { getProfile, listBoxes } from "$lib/atproto/index.js";
+import { requireOwner } from "$lib/owner.server.js";
 import { resolveMainBoxRkey } from "$lib/mainBox.js";
 
-export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
+export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
   const { session } = await parent();
-  const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
-
-  const did =
-    session && session.handle.toLowerCase() === cleanHandle.toLowerCase()
-      ? session.did
-      : await resolveHandle(cleanHandle);
-  if (!did) throw error(404, "ユーザーが見つかりません");
+  const { handle: cleanHandle, did } = await requireOwner(params.handle, session);
 
   const isOwner = session?.did === did;
-  const store = platform ? new CloudflareStore(platform.env) : null;
+  const store = locals.store;
 
   const profilePromise = getProfile(did).catch(() => null);
   const [headProfile, card] = await Promise.all([

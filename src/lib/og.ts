@@ -1,3 +1,9 @@
+import type { CloudflareStore } from "./store.js";
+import { themeFor, type Theme } from "./ogHtml.js";
+import { parseCardStyle, colorsOf } from "./cardStyle.js";
+import { resolveHandle, getProfile } from "./atproto/index.js";
+import { handleFromParam } from "./owner.server.js";
+
 export * from "./ogHtml.js";
 
 const SYMBOL_FAMILIES = ["Noto Sans Symbols 2", "Noto Sans Symbols"];
@@ -54,4 +60,25 @@ export async function renderOg(
   });
   res.headers.set("Cache-Control", cacheControl);
   return res;
+}
+
+export type OgOwner = { did: string | null; handle: string; name: string; avatarUri: string | null; theme: Theme };
+
+export async function loadOgOwner(rawHandle: string, store: CloudflareStore | null): Promise<OgOwner> {
+  const handle = handleFromParam(rawHandle);
+  const fallback: OgOwner = { did: null, handle, name: handle, avatarUri: null, theme: themeFor() };
+  try {
+    const did = await resolveHandle(handle);
+    if (!did) return fallback;
+    const [prof, card] = await Promise.all([getProfile(did), store?.getCardStyle(did) ?? null]);
+    return {
+      did,
+      handle: prof?.handle ?? handle,
+      name: prof?.displayName || prof?.handle || handle,
+      avatarUri: await fetchImageDataUri(prof?.avatar),
+      theme: themeFor(colorsOf(parseCardStyle(card?.style))),
+    };
+  } catch {
+    return fallback;
+  }
 }

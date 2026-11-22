@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { profilePath, boxPath } from "$lib/urls.js";
   import { untrack } from "svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import { Link, Save, AlertCircle, Trash2, ArrowLeft, Copy, Check, Pin } from "lucide-svelte";
@@ -64,7 +65,7 @@
       clearTimeout(savedTimer);
       savedTimer = setTimeout(() => (saved = false), 3000);
       if (slugChanged) {
-        await goto(`/@${data.cleanHandle}/${nextSlug}/settings`);
+        await goto(`${boxPath(data.cleanHandle, nextSlug)}/settings`);
       }
       await invalidateAll();
     } catch (err) {
@@ -83,7 +84,7 @@
         const d = (await res.json()) as { message?: string };
         throw new Error(d.message ?? "削除に失敗しました");
       }
-      await goto(`/@${data.cleanHandle}`);
+      await goto(profilePath(data.cleanHandle));
       await invalidateAll();
     } catch (err) {
       formState = "idle";
@@ -95,7 +96,7 @@
   const slugErr = $derived(slugFormatError(slug));
   const descriptionFits = $derived(fitsLimit(description, BOX_DESCRIPTION_MAX_GRAPHEMES, BOX_DESCRIPTION_MAX_BYTES));
 
-  const publicUrl = $derived(`${data.origin}/@${data.cleanHandle}/${data.box.slug}`);
+  const publicUrl = $derived(data.origin + boxPath(data.cleanHandle, data.box.slug));
   const publicUrlDisplay = $derived(publicUrl.replace(/^https?:\/\//, ""));
   let copied = $state(false);
   async function copyUrl() {
@@ -134,7 +135,7 @@
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div>
-    <Button href={`/@${data.cleanHandle}/${data.box.slug}`} variant="ghost">
+    <Button href={boxPath(data.cleanHandle, data.box.slug)} variant="ghost">
       {#snippet leftIcon()}<ArrowLeft />{/snippet}
       窓に戻る
     </Button>

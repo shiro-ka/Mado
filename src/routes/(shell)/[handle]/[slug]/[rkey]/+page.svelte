@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { boxPath, koePath, ogImagePath } from "$lib/urls.js";
   import { ArrowLeft, User, ExternalLink, Lock, MessageCircle, Archive, ArchiveRestore } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import Button from "$lib/components/ui/Button.svelte";
@@ -32,17 +33,17 @@
   <meta property="og:site_name" content="Mado" />
   <meta property="og:title" content={`${data.ownerName}への声`} />
   <meta property="og:description" content={CATCHPHRASE} />
-  <meta property="og:url" content={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`} />
-  <meta property="og:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
+  <meta property="og:url" content={data.origin + koePath(data.cleanHandle, data.box.slug, data.question.rkey)} />
+  <meta property="og:image" content={data.origin + ogImagePath(koePath(data.cleanHandle, data.box.slug, data.question.rkey), data.cardVersion)} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content={`${data.origin}/og/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}${data.cardVersion ? `?v=${data.cardVersion}` : ""}`} />
+  <meta name="twitter:image" content={data.origin + ogImagePath(koePath(data.cleanHandle, data.box.slug, data.question.rkey), data.cardVersion)} />
 </svelte:head>
 
 <div data-suisou-layout="stack gap-3" data-suisou="container-s py-4 px-3">
   <div>
-    <Button variant="ghost" href={data.isOwner ? "/receive" : `/@${data.cleanHandle}/${data.box.slug}`}>
+    <Button variant="ghost" href={data.isOwner ? "/receive" : boxPath(data.cleanHandle, data.box.slug)}>
       {#snippet leftIcon()}<ArrowLeft />{/snippet}
       {data.isOwner ? "受信トレイに戻る" : "窓に戻る"}
     </Button>
@@ -50,7 +51,7 @@
 
   <div data-suisou-tray data-suisou-layout="stack gap-0" data-suisou="p-0" class="card">
     {#if data.isOwner}
-      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom py-2 px-4">
+      <a href={boxPath(data.cleanHandle, data.box.slug)} data-suisou-item="media" data-suisou="bd-bottom py-2 px-4">
         <span data-suisou-item="media-content">
           <span data-suisou-text="fs-14 fw-500">{data.box.title}</span>
           {#if data.box.description}
@@ -59,7 +60,7 @@
         </span>
       </a>
     {:else}
-      <a href={`/@${data.cleanHandle}/${data.box.slug}`} data-suisou-item="media" data-suisou="bd-bottom px-4 py-3" class="owner">
+      <a href={boxPath(data.cleanHandle, data.box.slug)} data-suisou-item="media" data-suisou="bd-bottom px-4 py-3" class="owner">
         <span data-suisou-item="media-figure">
           {#if data.ownerAvatar}
             <img src={data.ownerAvatar} alt="" data-suisou-item="circle large" />
@@ -159,7 +160,7 @@
       <AnswerForm
         koeUri={data.koeUri}
         questionBody={data.question.body}
-        pageUrl={`${data.origin}/@${data.cleanHandle}/${data.box.slug}/${data.question.rkey}`}
+        pageUrl={data.origin + koePath(data.cleanHandle, data.box.slug, data.question.rkey)}
         onSuccess={() => invalidateAll()}
       />
     </div>

@@ -1,6 +1,7 @@
 import type { CloudflareStore } from "./store.js";
 import type { Answer, Question } from "../types/index.js";
 import { listQuestions, listBoxes, getProfiles, getAnswersByOwner } from "./atproto/index.js";
+import { koePath } from "./urls.js";
 
 export async function loadInbox(store: CloudflareStore, ownerDid: string) {
   const [questions, handled, blocks, senders] = await Promise.all([
@@ -41,7 +42,7 @@ export async function buildInbox(
   ]);
   const allQuestions = questions.map((q) => {
     const box = boxMap.get(q.boxUri.split("/").pop() ?? "");
-    const href = box ? `/@${owner.handle}/${box.slug}/${q.rkey}` : `/receive`;
+    const href = box ? koePath(owner.handle, box.slug, q.rkey) : `/receive`;
     const profile = q.senderDid ? profiles.get(q.senderDid) : undefined;
     return {
       ...q,

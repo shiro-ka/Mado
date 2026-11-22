@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { profilePath } from "$lib/urls.js";
   import { page } from "$app/state";
   import { Inbox, Send, User, Palette, Settings, Info } from "lucide-svelte";
   import UserCard from "./UserCard.svelte";
@@ -15,7 +16,7 @@
 
   const navItems = $derived([
     { href: "/receive", icon: Inbox, label: "受信トレイ" },
-    { href: `/@${session.handle}`, icon: User, label: "マイページ" },
+    { href: profilePath(session.handle), icon: User, label: "マイページ" },
     { href: "/sent", icon: Send, label: "送信トレイ" },
     { href: "/card", icon: Palette, label: "リンクカード" },
     { href: "/settings", icon: Settings, label: "設定" },

@@ -32,15 +32,6 @@ export function formatDateFull(dateString: string): string {
   return format(date, "yyyy年M月d日 HH:mm", { locale: ja });
 }
 
-export function normalizeHandle(handle: string): string {
-  return handle.startsWith("@") ? handle.slice(1) : handle;
-}
-
-export function boxUrl(handle: string, slug: string): string {
-  const normalized = normalizeHandle(handle);
-  return `/@${normalized}/${slug}`;
-}
-
 /**
  * Convert an app.bsky.feed.post AT-URI (at://did/app.bsky.feed.post/rkey) into a
  * clickable bsky.app permalink. Returns null if the URI isn't a post URI.

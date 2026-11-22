@@ -1,5 +1,6 @@
 import type { SessionFetch } from "../oauth.server.js";
 import { xrpc } from "./client.js";
+import { ogImagePath } from "../urls.js";
 
 export async function getViewerFollowsActor(
   sessionFetch: SessionFetch,
@@ -79,7 +80,8 @@ export async function createBskyPost(params: {
   };
 
   if (pageUrl) {
-    const ogImageUrl = pageUrl.replace("/@", "/og/@");
+    const page = new URL(pageUrl);
+    const ogImageUrl = page.origin + ogImagePath(page.pathname);
     const thumb = await uploadThumb(sessionFetch, ogImageUrl);
     record.embed = {
       $type: "app.bsky.embed.external",

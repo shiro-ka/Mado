@@ -1,34 +1,10 @@
 import type { RequestHandler } from "./$types";
-import { CloudflareStore } from "$lib/store.js";
-import { parseCardStyle, colorsOf } from "$lib/cardStyle.js";
-import { resolveHandle, getProfile } from "$lib/atproto/index.js";
-import { themeFor, renderOg, fetchImageDataUri, userCardHtml } from "$lib/og";
+import { renderOg, userCardHtml, loadOgOwner } from "$lib/og";
 import { truncate } from "$lib/text.js";
 
-export const GET: RequestHandler = async ({ params, platform }) => {
-  const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
-  let t = themeFor();
-
-  let name = cleanHandle;
-  let handle = cleanHandle;
-  let avatarUri: string | null = null;
-
-  try {
-    const did = await resolveHandle(cleanHandle);
-    if (did) {
-      const [prof, card] = await Promise.all([
-        getProfile(did),
-        new CloudflareStore(platform!.env).getCardStyle(did),
-      ]);
-      t = themeFor(colorsOf(parseCardStyle(card?.style)));
-      if (prof?.handle) handle = prof.handle;
-      name = prof?.displayName || prof?.handle || cleanHandle;
-      avatarUri = await fetchImageDataUri(prof?.avatar);
-    }
-  } catch {
-  }
-
-  const displayName = truncate(name, 12);
-  const allText = displayName + "の窓" + "@" + handle + "Mado";
-  return renderOg(userCardHtml(t, { name: displayName, handle, avatarUri }), allText, platform?.ctx);
+export const GET: RequestHandler = async ({ params, platform, locals }) => {
+  const owner = await loadOgOwner(params.handle, locals.store);
+  const name = truncate(owner.name, 12);
+  const allText = name + "の窓" + "@" + owner.handle + "Mado";
+  return renderOg(userCardHtml(owner.theme, { name, handle: owner.handle, avatarUri: owner.avatarUri }), allText, platform?.ctx);
 };

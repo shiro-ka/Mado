@@ -1,19 +1,16 @@
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { CloudflareStore } from "$lib/store.js";
-import { resolveHandle, findBoxBySlug, getKoeRecord, listAnswers, getProfile } from "$lib/atproto/index.js";
+import { getKoeRecord, getBoxRecord, listAnswers, getProfile } from "$lib/atproto/index.js";
+import { requireOwner } from "$lib/owner.server.js";
+import { koePath, koeUri as koeUriOf, rkeyOfUri } from "$lib/urls.js";
+import type { Question, QuestionBox } from "$lib/../types/index.js";
 
-export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
+export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
   const { session } = await parent();
-  const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
-
-  const ownerDid = await resolveHandle(cleanHandle);
-  if (!ownerDid) throw error(404, "ユーザーが見つかりません");
-
-  const box = await findBoxBySlug(ownerDid, params.slug);
-  if (!box) throw error(404, "窓が見つかりません");
-
-  const koeUri = `at://${ownerDid}/blue.mado.koe/${params.rkey}`;
+  const { handle: cleanHandle, did: ownerDid } = await requireOwner(params.handle, session);
+  const store = locals.store!;
+  const koeUri = koeUriOf(ownerDid, params.rkey);
+  const isOwner = session?.did === ownerDid;
 
   const [record, answers, ownerProfile] = await Promise.all([
     getKoeRecord(ownerDid, params.rkey),
@@ -21,18 +18,20 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
     getProfile(ownerDid),
   ]);
 
-  const isOwner = session?.did === ownerDid;
-  const store = new CloudflareStore(platform!.env);
-
-  let question = record;
-  if (!question && session && !isOwner) {
+  let question: Question | null = record;
+  let box: QuestionBox | null = null;
+  if (record) {
+    box = await getBoxRecord(ownerDid, rkeyOfUri(record.boxUri));
+  } else if (session && !isOwner) {
     const copy = await store.getSentCopy(ownerDid, params.rkey, session.did);
-    if (copy && copy.boxRkey === box.rkey) {
-      question = { uri: koeUri, cid: "", rkey: params.rkey, boxUri: box.uri, body: copy.body, isRead: false, createdAt: copy.sentAt };
+    if (copy?.boxRkey) {
+      box = await getBoxRecord(ownerDid, copy.boxRkey);
+      if (box) question = { uri: koeUri, cid: "", rkey: params.rkey, boxUri: box.uri, body: copy.body, isRead: false, createdAt: copy.sentAt };
     }
   }
 
-  if (!question) throw error(404, "声が見つかりません");
+  if (!question || !box) throw error(404, "声が見つかりません");
+  if (box.slug !== params.slug) throw redirect(301, koePath(cleanHandle, box.slug, params.rkey));
 
   const ownerName = ownerProfile?.displayName || cleanHandle;
 

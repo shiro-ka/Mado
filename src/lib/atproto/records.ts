@@ -15,12 +15,8 @@ import {
   xrpc,
 } from "./client.js";
 import { byteLength } from "../text.js";
-
-export const NSID = {
-  BOX: "blue.mado.box",
-  KOE: "blue.mado.koe",
-  ANSWER: "blue.mado.answer",
-} as const;
+import { NSID, boxUri } from "../urls.js";
+export { NSID };
 
 const textWithin = (maxBytes: number) => z.string().refine((v) => byteLength(v) <= maxBytes);
 const dateText = z.string().refine((v) => !Number.isNaN(Date.parse(v)));
@@ -398,8 +394,8 @@ export async function deleteBoxWithContents(params: {
   boxRkey: string;
 }): Promise<string[] | null> {
   const { sessionFetch, did, boxRkey } = params;
-  const boxUri = `at://${did}/${NSID.BOX}/${boxRkey}`;
-  return deleteKoesWithAnswers(sessionFetch, did, (k) => k.box === boxUri, [
+  const uri = boxUri(did, boxRkey);
+  return deleteKoesWithAnswers(sessionFetch, did, (k) => k.box === uri, [
     { collection: NSID.BOX, rkey: boxRkey },
   ]);
 }

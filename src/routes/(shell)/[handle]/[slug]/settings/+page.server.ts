@@ -1,30 +1,19 @@
-import { error, redirect } from "@sveltejs/kit";
-import { resolveMainBoxRkey } from "$lib/mainBox.js";
+import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { CloudflareStore } from "$lib/store.js";
-import { resolveHandle, findBoxBySlug, getProfile, listBoxes } from "$lib/atproto/index.js";
+import { resolveMainBoxRkey } from "$lib/mainBox.js";
+import { getProfile, listBoxes } from "$lib/atproto/index.js";
+import { requireOwner, requireBox } from "$lib/owner.server.js";
+import { boxPath } from "$lib/urls.js";
 
-export const load: PageServerLoad = async ({ parent, params, platform, url }) => {
+export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
   const { session } = await parent();
-  const cleanHandle = decodeURIComponent(params.handle).replace(/^@/, "");
+  const { handle: cleanHandle, did } = await requireOwner(params.handle, session);
+  if (session?.did !== did) throw redirect(303, boxPath(cleanHandle, params.slug));
 
-  const did = await resolveHandle(cleanHandle);
-  if (!did) throw error(404, "窓が見つかりません");
-
-  const env = platform!.env;
-  const store = new CloudflareStore(env);
-
-  if (session?.did !== did) throw redirect(303, `/@${cleanHandle}/${params.slug}`);
-
-  const [box, ownerProfile] = await Promise.all([
-    findBoxBySlug(did, params.slug),
+  const [box, ownerProfile, overrideRkey, boxes] = await Promise.all([
+    requireBox(did, params.slug),
     getProfile(did),
-  ]);
-
-  if (!box) throw error(404, "窓が見つかりません");
-
-  const [overrideRkey, boxes] = await Promise.all([
-    store.getMainBoxRkey(did),
+    locals.store!.getMainBoxRkey(did),
     listBoxes(did),
   ]);
   const isMain = box.rkey === resolveMainBoxRkey(boxes, overrideRkey);
