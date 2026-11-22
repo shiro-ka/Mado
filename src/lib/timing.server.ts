@@ -14,18 +14,27 @@ export function timingEnabled(env: Env | undefined) {
   return env?.MADO_TIMING === "1";
 }
 
-export async function timed<T>(kind: Entry["kind"], target: string, op: string, run: () => Promise<T>): Promise<T> {
+export async function timed<T>(
+  kind: Entry["kind"],
+  target: string,
+  op: string,
+  run: () => Promise<T>,
+  describe?: (result: T) => string,
+): Promise<T> {
   const trace = als.getStore();
   if (!trace) return run();
   const t0 = Date.now();
   let ok = true;
+  let suffix = "";
   try {
-    return await run();
+    const result = await run();
+    if (describe) suffix = describe(result);
+    return result;
   } catch (err) {
     ok = false;
     throw err;
   } finally {
-    const entry: Entry = { kind, target, op, at: t0 - trace.start, ms: Date.now() - t0, ok };
+    const entry: Entry = { kind, target, op: op + suffix, at: t0 - trace.start, ms: Date.now() - t0, ok };
     if (trace.logged) console.log(JSON.stringify({ timing_late: trace.label, entry: row(entry) }));
     else trace.entries.push(entry);
   }
@@ -48,7 +57,7 @@ export function wrapGlobalFetch() {
     const collection = url.searchParams.get("collection");
     const detail = [collection, url.searchParams.has("cursor") ? "cursor" : null].filter(Boolean).join(" ");
     const op = `${method} ${url.pathname}${detail ? ` (${detail})` : ""}`;
-    return timed("fetch", url.host, op, () => original(input, init));
+    return timed("fetch", url.host, op, () => original(input, init), (res) => ` → ${res.status}`);
   }) as typeof fetch;
 }
 
