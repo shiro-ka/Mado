@@ -1,31 +1,34 @@
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { getKoeRecord, getBoxRecord, listAnswers, getProfile } from "$lib/atproto/index.js";
+import { getKoeRecord, getBoxRecord, findBoxBySlug, listAnswers, getProfile } from "$lib/atproto/index.js";
 import { requireOwner } from "$lib/owner.server.js";
 import { koePath, koeUri as koeUriOf, rkeyOfUri } from "$lib/urls.js";
 import type { Question, QuestionBox } from "$lib/../types/index.js";
 
-export const load: PageServerLoad = async ({ params, locals, url }) => {
+export const load: PageServerLoad = async ({ params, locals, url, platform }) => {
   const session = await locals.getSession();
   const { handle: cleanHandle, did: ownerDid } = await requireOwner(params.handle, session);
   const store = locals.store!;
   const koeUri = koeUriOf(ownerDid, params.rkey);
   const isOwner = session?.did === ownerDid;
 
-  const [record, answers, ownerProfile] = await Promise.all([
+  const [record, answers, ownerProfile, card, slugBox] = await Promise.all([
     getKoeRecord(ownerDid, params.rkey),
     listAnswers(ownerDid, koeUri),
     getProfile(ownerDid),
+    store.getCardStyle(ownerDid),
+    findBoxBySlug(ownerDid, params.slug),
   ]);
+  const boxOf = (rkey: string) => (slugBox?.rkey === rkey ? Promise.resolve(slugBox) : getBoxRecord(ownerDid, rkey));
 
   let question: Question | null = record;
   let box: QuestionBox | null = null;
   if (record) {
-    box = await getBoxRecord(ownerDid, rkeyOfUri(record.boxUri));
+    box = await boxOf(rkeyOfUri(record.boxUri));
   } else if (session && !isOwner) {
     const copy = await store.getSentCopy(ownerDid, params.rkey, session.did);
     if (copy?.boxRkey) {
-      box = await getBoxRecord(ownerDid, copy.boxRkey);
+      box = await boxOf(copy.boxRkey);
       if (box) question = { uri: koeUri, cid: "", rkey: params.rkey, boxUri: box.uri, body: copy.body, createdAt: copy.sentAt };
     }
   }
@@ -33,7 +36,6 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
   if (!question || !box) throw error(404, "声が見つかりません");
   if (box.slug !== params.slug) throw redirect(301, koePath(cleanHandle, box.slug, params.rkey));
 
-  const card = await store.getCardStyle(ownerDid);
   const common = {
     cleanHandle,
     ownerName: ownerProfile?.displayName || cleanHandle,
@@ -57,6 +59,10 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     return { ...common, isOwner: true as const, handled, senderDid, senderProfile, senderBlocked };
   }
 
-  if (session) await store.markSentRead(session.did, ownerDid, params.rkey);
+  if (session) {
+    const marking = store.markSentRead(session.did, ownerDid, params.rkey);
+    if (platform?.ctx) platform.ctx.waitUntil(marking);
+    else await marking;
+  }
   return { ...common, isOwner: false as const };
 };
