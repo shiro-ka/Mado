@@ -39,3 +39,6 @@ binding = "DB"
 database_name = "mado-stg"
 database_id = "97141331-8a64-474e-a903-32ea80639d2c"
 migrations_dir = "migrations"
+
+[env.preview.vars]
+MADO_TIMING = "1"
