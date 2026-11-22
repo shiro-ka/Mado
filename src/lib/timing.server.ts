@@ -5,7 +5,7 @@ type KVNamespace = Env["MADO_SESSION"];
 type D1Database = Env["DB"];
 type D1PreparedStatement = ReturnType<D1Database["prepare"]>;
 
-type Entry = { kind: "fetch" | "d1" | "kv"; target: string; op: string; at: number; ms: number; ok: boolean };
+type Entry = { kind: "fetch" | "d1" | "kv" | "cache"; target: string; op: string; at: number; ms: number; ok: boolean };
 type Trace = { start: number; entries: Entry[]; logged: boolean; label: string };
 
 const als = new AsyncLocalStorage<Trace>();
@@ -14,7 +14,7 @@ export function timingEnabled(env: Env | undefined) {
   return env?.MADO_TIMING === "1";
 }
 
-async function timed<T>(kind: Entry["kind"], target: string, op: string, run: () => Promise<T>): Promise<T> {
+export async function timed<T>(kind: Entry["kind"], target: string, op: string, run: () => Promise<T>): Promise<T> {
   const trace = als.getStore();
   if (!trace) return run();
   const t0 = Date.now();
@@ -116,7 +116,7 @@ function report(trace: Trace, status: number) {
   if (trace.logged) return;
   isolate ??= crypto.randomUUID().slice(0, 8);
   trace.logged = true;
-  const counts = { fetch: 0, d1: 0, kv: 0 };
+  const counts = { fetch: 0, d1: 0, kv: 0, cache: 0 };
   for (const e of trace.entries) counts[e.kind]++;
   console.log(
     JSON.stringify({

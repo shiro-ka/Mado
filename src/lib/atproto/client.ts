@@ -1,6 +1,7 @@
 import { AtpAgent } from "@atproto/api";
 import type { SessionFetch } from "../oauth.server.js";
 import { sharedInRequest } from "../requestScope.server.js";
+import { edgeGet, edgePut } from "../edgeCache.server.js";
 
 const DEFAULT_PDS = "https://bsky.social";
 const APPVIEW_URL = "https://public.api.bsky.app";
@@ -130,10 +131,16 @@ export function resolveHandle(handle: string): Promise<string | null> {
 }
 
 async function fetchHandleDid(handle: string): Promise<string | null> {
+  const remembered = await edgeGet(`handle:${handle}`);
+  if (remembered) {
+    handleDidCache.set(handle, { did: remembered, exp: Date.now() + HANDLE_CACHE_TTL_MS });
+    return remembered;
+  }
   const agent = publicAgent();
   try {
     const res = await agent.resolveHandle({ handle });
     handleDidCache.set(handle, { did: res.data.did, exp: Date.now() + HANDLE_CACHE_TTL_MS });
+    await edgePut(`handle:${handle}`, res.data.did, HANDLE_CACHE_TTL_MS / 1000);
     return res.data.did;
   } catch {
     return null;
@@ -158,6 +165,11 @@ export function getPdsUrl(did: string): Promise<string | null> {
 }
 
 async function fetchPdsUrl(did: string): Promise<string | null> {
+  const remembered = await edgeGet(`pds:${did}`);
+  if (remembered) {
+    pdsCache.set(did, { pds: remembered, exp: Date.now() + PDS_CACHE_TTL_MS });
+    return remembered;
+  }
   try {
     const res = await fetch(didDocumentUrl(did));
     if (!res.ok) return null;
@@ -165,7 +177,10 @@ async function fetchPdsUrl(did: string): Promise<string | null> {
       service?: Array<{ id: string; type: string; serviceEndpoint: string }>;
     };
     const pds = doc.service?.find((s) => s.id === "#atproto_pds" || s.id.endsWith("#atproto_pds"))?.serviceEndpoint ?? null;
-    if (pds) pdsCache.set(did, { pds, exp: Date.now() + PDS_CACHE_TTL_MS });
+    if (pds) {
+      pdsCache.set(did, { pds, exp: Date.now() + PDS_CACHE_TTL_MS });
+      await edgePut(`pds:${did}`, pds, PDS_CACHE_TTL_MS / 1000);
+    }
     return pds;
   } catch {
     return null;
