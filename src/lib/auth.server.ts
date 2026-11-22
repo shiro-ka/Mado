@@ -46,8 +46,7 @@ export async function createSession(
   );
   const sessionId = nanoid();
 
-  await store.setSession(sessionId, session, SESSION_TTL);
-
+  const replaces: { sessionId: string; deviceKey?: string }[] = [];
   const others: AccountEntry[] = [];
   const unreadable: AccountEntry[] = [];
   for (const entry of readAccounts(cookies)) {
@@ -58,14 +57,15 @@ export async function createSession(
       continue;
     }
     if (existing.did === session.did) {
-      if (existing.deviceKey) await endDeviceSession(env, store, existing.did, existing.deviceKey);
-      await store.delSession(entry.id);
+      replaces.push({ sessionId: entry.id, deviceKey: existing.deviceKey });
       continue;
     }
     others.push({ id: entry.id });
   }
   const kept = others.slice(0, MAX_ACCOUNTS - 1);
   for (const entry of others.slice(MAX_ACCOUNTS - 1)) await store.delSession(entry.id);
+
+  await store.setSession(sessionId, replaces.length ? { ...session, replaces } : session, SESSION_TTL);
 
   setSessionCookie(cookies, env, sessionId);
   writeAccounts(cookies, env, [{ id: sessionId }, ...kept, ...unreadable]);
@@ -178,6 +178,32 @@ function setSessionCookie(cookies: Cookies, env: App.Platform["env"], sessionId:
 }
 
 const SESSION_RENEW_AFTER = 24 * 60 * 60;
+
+export function finishReplacedSessions(
+  cookies: Cookies,
+  env: App.Platform["env"],
+  store: CloudflareStore,
+  entry: SessionEntry,
+  ctx: App.Platform["ctx"] | undefined,
+): AppSession {
+  const { replaces, ...session } = entry.session;
+  const sessionId = cookies.get(SESSION_COOKIE);
+  if (!replaces?.length || !sessionId) return entry.session;
+  const remaining = entry.expiresAt === null ? 0 : entry.expiresAt - Math.floor(Date.now() / 1000);
+  const work = (async () => {
+    await store.setSession(sessionId, session, remaining > 0 ? remaining : SESSION_TTL);
+    for (const old of replaces) {
+      try {
+        if (old.deviceKey) await endDeviceSession(env, store, session.did, old.deviceKey);
+        await store.delSession(old.sessionId);
+      } catch (err) {
+        console.warn("[auth] ending the replaced session failed:", err);
+      }
+    }
+  })().catch((err) => console.warn("[auth] finishing replaced sessions failed:", err));
+  if (ctx) ctx.waitUntil(work);
+  return session;
+}
 
 export async function renewSession(
   cookies: Cookies,

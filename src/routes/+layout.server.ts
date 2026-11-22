@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from "./$types";
-import { renewSession, listAccounts } from "$lib/auth.server.js";
+import { renewSession, listAccounts, finishReplacedSessions } from "$lib/auth.server.js";
 import type { AppSession } from "$lib/store.js";
 import type { ViewerSession } from "$lib/accounts.js";
 
@@ -13,7 +13,8 @@ export const load: LayoutServerLoad = async ({ cookies, platform, locals }) => {
 
   const store = locals.store!;
   const entry = await locals.getSessionEntry();
-  const session = entry ? await renewSession(cookies, env, store, entry) : null;
+  const current = entry ? { ...entry, session: finishReplacedSessions(cookies, env, store, entry, platform?.ctx) } : null;
+  const session = current ? await renewSession(cookies, env, store, current) : null;
   return {
     session: session ? viewerOf(session) : null,
     accounts: session ? await listAccounts(cookies, env, store, session) : [],

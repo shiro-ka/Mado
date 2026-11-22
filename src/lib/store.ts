@@ -5,12 +5,8 @@ export interface AppSession {
   handle: string;
   displayName?: string;
   avatar?: string;
-  // Per-login device key. Also namespaces this device's atproto OAuth session in
-  // KV (`${deviceKey}:${did}`) so each device holds an independent token set and
-  // a logout on one device doesn't take down the others. Optional for backward
-  // compatibility with sessions minted before per-device login shipped;
-  // getSession treats a missing deviceKey as logged out (forces clean re-login).
   deviceKey?: string;
+  replaces?: { sessionId: string; deviceKey?: string }[];
 }
 
 export interface SessionEntry {
