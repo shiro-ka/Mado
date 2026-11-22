@@ -61,10 +61,10 @@ export async function sendKoe(
 ): Promise<Outcome<{ uri: string }>> {
   const { body, ownerDid, boxRkey } = input;
 
-  const box = await getBoxRecord(ownerDid, boxRkey);
+  const [box, blocked] = await Promise.all([getBoxRecord(ownerDid, boxRkey), store.isBlocked(ownerDid, senderDid)]);
   if (!box) return refuse(404, "窓が見つかりません");
   if (!box.isOpen) return refuse(403, "この窓は現在受け付けていません");
-  if (await store.isBlocked(ownerDid, senderDid)) return refuse(403, "この窓への送信が制限されています");
+  if (blocked) return refuse(403, "この窓への送信が制限されています");
 
   const profilePromise = getProfile(senderDid);
   const ownerSessionPromise = restoreAnyOAuthSession(env, store, ownerDid);
