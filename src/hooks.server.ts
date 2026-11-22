@@ -1,6 +1,9 @@
+import { installRedirectShim } from "$lib/redirect-shim";
 import type { Handle } from "@sveltejs/kit";
 import { CloudflareStore, type AppSession } from "$lib/store.js";
 import { getSession } from "$lib/auth.server.js";
+
+installRedirectShim();
 
 export const handle: Handle = async ({ event, resolve }) => {
   const env = event.platform?.env;
