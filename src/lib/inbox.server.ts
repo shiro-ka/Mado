@@ -1,5 +1,5 @@
 import type { CloudflareStore } from "./store.js";
-import type { Answer, Question } from "../types/index.js";
+import type { Answer, ReceivedQuestion } from "../types/index.js";
 import { listQuestions, listBoxes, getProfiles, getAnswersByOwner } from "./atproto/index.js";
 import { koePath } from "./urls.js";
 
@@ -13,9 +13,9 @@ export async function loadInbox(store: CloudflareStore, ownerDid: string) {
   const handledSet = new Set(handled);
   const blockSet = new Set(blocks);
   return questions
-    .map((q): Question => ({
+    .map((q): ReceivedQuestion => ({
       ...q,
-      isRead: handledSet.has(q.rkey),
+      handled: handledSet.has(q.rkey),
       senderDid: senders.get(q.rkey),
     }))
     .filter((q) => !q.senderDid || !blockSet.has(q.senderDid));

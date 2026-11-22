@@ -34,9 +34,9 @@
     handled = new Map(handled).set(rkey, kind);
   }
 
-  function isHeard(q: { rkey: string; isRead: boolean }) {
+  function isHeard(q: { rkey: string; handled: boolean }) {
     const kind = handled.get(q.rkey);
-    return kind ? kind !== "unheard" : q.isRead;
+    return kind ? kind !== "unheard" : q.handled;
   }
 
   const settled = $derived.by(() => {
@@ -44,8 +44,8 @@
     return untrack(() => new Map([...handled].map(([rkey, kind]) => [rkey, kind !== "unheard"])));
   });
 
-  function inHeardTab(q: { rkey: string; isRead: boolean }) {
-    return settled.get(q.rkey) ?? q.isRead;
+  function inHeardTab(q: { rkey: string; handled: boolean }) {
+    return settled.get(q.rkey) ?? q.handled;
   }
 
 

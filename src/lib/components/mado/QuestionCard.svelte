@@ -6,10 +6,10 @@
   import AnswerForm from "$lib/components/mado/AnswerForm.svelte";
   import { formatDate } from "$lib/utils.js";
   import { truncate } from "$lib/text.js";
-  import type { Question } from "$lib/../types/index.js";
+  import type { ReceivedQuestion } from "$lib/../types/index.js";
 
   interface Props {
-    question: Question & { boxTitle?: string; answers?: string[] };
+    question: ReceivedQuestion & { boxTitle?: string; answers?: string[] };
     href: string;
     heard: boolean;
     ownerAvatar?: string;

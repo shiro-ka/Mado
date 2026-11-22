@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
     const copy = await store.getSentCopy(ownerDid, params.rkey, session.did);
     if (copy?.boxRkey) {
       box = await getBoxRecord(ownerDid, copy.boxRkey);
-      if (box) question = { uri: koeUri, cid: "", rkey: params.rkey, boxUri: box.uri, body: copy.body, isRead: false, createdAt: copy.sentAt };
+      if (box) question = { uri: koeUri, cid: "", rkey: params.rkey, boxUri: box.uri, body: copy.body, createdAt: copy.sentAt };
     }
   }
 
@@ -60,7 +60,8 @@ export const load: PageServerLoad = async ({ parent, params, locals, url }) => {
     ownerAvatar: ownerProfile?.avatar,
     box,
     isOwner,
-    question: { ...question, isRead: isHandled },
+    question,
+    handled: isHandled,
     answers,
     koeUri,
     senderDid,

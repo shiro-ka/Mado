@@ -17,13 +17,16 @@ export interface Question {
   rkey: string;
   boxUri: string;
   body: string;
+  createdAt: string;
+}
+
+export type ReceivedQuestion = Question & {
+  handled: boolean;
   senderDid?: string;
   senderHandle?: string;
   senderDisplayName?: string;
   senderAvatar?: string;
-  isRead: boolean;
-  createdAt: string;
-}
+};
 
 export interface Answer {
   uri: string;
@@ -81,11 +84,8 @@ export type SentItem = {
 
 export type FilterTab = "new" | "heard" | "all";
 
-export type InboxItem = Question & {
+export type InboxItem = ReceivedQuestion & {
   href: string;
   boxTitle?: string;
   answers: string[];
-  senderHandle?: string;
-  senderDisplayName?: string;
-  senderAvatar?: string;
 };

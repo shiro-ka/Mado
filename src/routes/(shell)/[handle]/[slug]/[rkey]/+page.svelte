@@ -18,7 +18,7 @@
   async function toggleHeard() {
     toggling = true;
     try {
-      await (data.question.isRead ? markUnheard : markHeard)(data.question.rkey);
+      await (data.handled ? markUnheard : markHeard)(data.question.rkey);
       await invalidateAll();
     } catch {
     } finally {
@@ -130,8 +130,8 @@
 
       <div data-suisou-layout="row gap-1">
         {#if data.isOwner}
-          <span data-suisou-item="tag" data-suisou={data.question.isRead ? undefined : "accent"}>
-            {data.question.isRead ? "聞いた声" : "新しい声"}
+          <span data-suisou-item="tag" data-suisou={data.handled ? undefined : "accent"}>
+            {data.handled ? "聞いた声" : "新しい声"}
           </span>
         {/if}
         <span data-suisou-text="fs-12" data-suisou="note">{formatDateFull(data.question.createdAt)}</span>
@@ -165,8 +165,8 @@
 
     <div data-suisou-layout="row end wrap">
       <Button variant="ghost" loading={toggling} onclick={toggleHeard}>
-        {#snippet leftIcon()}{#if data.question.isRead}<ArchiveRestore />{:else}<Archive />{/if}{/snippet}
-        {data.question.isRead ? "未読に戻す" : "既読にする"}
+        {#snippet leftIcon()}{#if data.handled}<ArchiveRestore />{:else}<Archive />{/if}{/snippet}
+        {data.handled ? "未読に戻す" : "既読にする"}
       </Button>
       {#if data.senderDid}
         <BlockButton senderDid={data.senderDid} isBlocked={data.senderBlocked} />

@@ -135,7 +135,6 @@ export async function getKoeRecord(
       rkey,
       boxUri: record.box,
       body: record.body,
-      isRead: false,
       createdAt: record.createdAt,
     };
   } catch {
@@ -158,8 +157,7 @@ export async function listQuestions(did: string): Promise<Question[]> {
         rkey,
         boxUri: record.box,
         body: record.body,
-        isRead: false,
-        createdAt: record.createdAt,
+          createdAt: record.createdAt,
       };
     });
   } catch {
