@@ -1,6 +1,7 @@
 import type { SessionFetch } from "../oauth.server.js";
 import { xrpc } from "./client.js";
 import { ogImagePath } from "../urls.js";
+import { CATCHPHRASE } from "../brand.js";
 
 export async function getViewerFollowsActor(
   sessionFetch: SessionFetch,
@@ -87,8 +88,8 @@ export async function createBskyPost(params: {
       $type: "app.bsky.embed.external",
       external: {
         uri: pageUrl,
-        title: ownerName ? `${ownerName} への声 - Mado 半匿名メッセージ` : "Mado 半匿名メッセージ",
-        description: "",
+        title: ownerName ? `${ownerName}への声` : "Mado",
+        description: CATCHPHRASE,
         ...(thumb ? { thumb } : {}),
       },
     };
