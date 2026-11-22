@@ -31,9 +31,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
         const owner = byOwner.get(r.ownerDid);
         const profile = profiles.get(r.ownerDid);
         const box = r.boxRkey ? owner?.boxes.get(r.boxRkey) : undefined;
-        const answers = [...(owner?.answers.get(koeUri(r.ownerDid, r.koeRkey)) ?? [])].sort((a, b) =>
-          a.createdAt.localeCompare(b.createdAt),
-        );
+        const answers = owner?.answers.get(koeUri(r.ownerDid, r.koeRkey)) ?? [];
         const latest = answers.at(-1)?.createdAt;
         return {
           ownerDid: r.ownerDid,

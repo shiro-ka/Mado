@@ -46,31 +46,56 @@ function refOf(value: unknown, key: "box" | "koe"): string {
   return typeof ref === "string" ? ref : "";
 }
 
-export async function getBoxRecord(
-  did: string,
-  rkey: string
-): Promise<QuestionBox | null> {
+function toBox(value: unknown, uri: string, cid: string | undefined, did: string): QuestionBox | null {
+  const parsed = boxRecord.safeParse(value);
+  if (!parsed.success) return null;
+  const record = parsed.data;
+  return {
+    uri,
+    cid: cid ?? "",
+    rkey: rkeyOfUri(uri),
+    slug: record.slug,
+    title: record.title,
+    description: record.description,
+    isOpen: record.isOpen,
+    createdAt: record.createdAt,
+    ownerDid: did,
+  };
+}
+
+function toKoe(value: unknown, uri: string, cid: string | undefined): Question | null {
+  const parsed = koeRecord.safeParse(value);
+  if (!parsed.success) return null;
+  const record = parsed.data;
+  return {
+    uri,
+    cid: cid ?? "",
+    rkey: rkeyOfUri(uri),
+    boxUri: record.box,
+    body: record.body,
+    createdAt: record.createdAt,
+  };
+}
+
+function toAnswer(value: unknown, uri: string, cid: string): { koeUri: string; answer: Answer } | null {
+  const parsed = answerRecord.safeParse(value);
+  if (!parsed.success) return null;
+  const record = parsed.data;
+  return {
+    koeUri: record.koe,
+    answer: { uri, cid, rkey: rkeyOfUri(uri), body: record.body, createdAt: record.createdAt },
+  };
+}
+
+function byCreatedAt(a: { createdAt: string }, b: { createdAt: string }) {
+  return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+}
+
+export async function getBoxRecord(did: string, rkey: string): Promise<QuestionBox | null> {
   const agent = await repoAgent(did);
   try {
-    const res = await agent.com.atproto.repo.getRecord({
-      repo: did,
-      collection: NSID.BOX,
-      rkey,
-    });
-    const parsed = boxRecord.safeParse(res.data.value);
-    if (!parsed.success) return null;
-    const record = parsed.data;
-    return {
-      uri: res.data.uri,
-      cid: res.data.cid ?? "",
-      rkey,
-      slug: record.slug,
-      title: record.title,
-      description: record.description,
-      isOpen: record.isOpen,
-      createdAt: record.createdAt,
-      ownerDid: did,
-    };
+    const res = await agent.com.atproto.repo.getRecord({ repo: did, collection: NSID.BOX, rkey });
+    return toBox(res.data.value, res.data.uri, res.data.cid, did);
   } catch {
     return null;
   }
@@ -80,32 +105,13 @@ export async function listBoxes(did: string): Promise<QuestionBox[]> {
   const agent = await repoAgent(did);
   try {
     const records = await listAllRecords(agent, did, NSID.BOX);
-    return records.flatMap((r) => {
-      const parsed = boxRecord.safeParse(r.value);
-      if (!parsed.success) return [];
-      const record = parsed.data;
-      const rkey = r.uri.split("/").pop() ?? "";
-      return {
-        uri: r.uri,
-        cid: r.cid,
-        rkey,
-        slug: record.slug,
-        title: record.title,
-        description: record.description,
-        isOpen: record.isOpen,
-        createdAt: record.createdAt,
-        ownerDid: did,
-      };
-    });
+    return records.flatMap((r) => toBox(r.value, r.uri, r.cid, did) ?? []);
   } catch {
     return [];
   }
 }
 
-export async function findBoxBySlug(
-  did: string,
-  slug: string
-): Promise<QuestionBox | null> {
+export async function findBoxBySlug(did: string, slug: string): Promise<QuestionBox | null> {
   const boxes = await listBoxes(did);
   return boxes.find((b) => b.slug === slug) ?? null;
 }
@@ -115,28 +121,11 @@ export async function isSlugTaken(did: string, slug: string, exceptRkey?: string
   return boxes.some((b) => b.slug === slug && b.rkey !== exceptRkey);
 }
 
-export async function getKoeRecord(
-  did: string,
-  rkey: string
-): Promise<Question | null> {
+export async function getKoeRecord(did: string, rkey: string): Promise<Question | null> {
   const agent = await repoAgent(did);
   try {
-    const res = await agent.com.atproto.repo.getRecord({
-      repo: did,
-      collection: NSID.KOE,
-      rkey,
-    });
-    const parsed = koeRecord.safeParse(res.data.value);
-    if (!parsed.success) return null;
-    const record = parsed.data;
-    return {
-      uri: res.data.uri,
-      cid: res.data.cid ?? "",
-      rkey,
-      boxUri: record.box,
-      body: record.body,
-      createdAt: record.createdAt,
-    };
+    const res = await agent.com.atproto.repo.getRecord({ repo: did, collection: NSID.KOE, rkey });
+    return toKoe(res.data.value, res.data.uri, res.data.cid);
   } catch {
     return null;
   }
@@ -146,83 +135,33 @@ export async function listQuestions(did: string, freshAfter = 0): Promise<Questi
   const agent = await repoAgent(did);
   try {
     const records = await listAllRecords(agent, did, NSID.KOE, freshAfter);
-    return records.flatMap((r) => {
-      const parsed = koeRecord.safeParse(r.value);
-      if (!parsed.success) return [];
-      const record = parsed.data;
-      const rkey = r.uri.split("/").pop() ?? "";
-      return {
-        uri: r.uri,
-        cid: r.cid,
-        rkey,
-        boxUri: record.box,
-        body: record.body,
-          createdAt: record.createdAt,
-      };
-    });
+    return records.flatMap((r) => toKoe(r.value, r.uri, r.cid) ?? []);
   } catch {
     return [];
   }
 }
 
-export async function getAnswersByOwner(
-  ownerDid: string
-): Promise<Map<string, Answer[]>> {
+export async function getAnswersByOwner(ownerDid: string): Promise<Map<string, Answer[]>> {
   const agent = await repoAgent(ownerDid);
   try {
     const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
     const map = new Map<string, Answer[]>();
     for (const r of records) {
-      const parsed = answerRecord.safeParse(r.value);
-      if (!parsed.success) continue;
-      const record = parsed.data;
-      const rkey = r.uri.split("/").pop() ?? "";
-      const answer: Answer = {
-        uri: r.uri,
-        cid: r.cid,
-        rkey,
-        body: record.body,
-        createdAt: record.createdAt,
-      };
-      const list = map.get(record.koe) ?? [];
-      list.push(answer);
-      map.set(record.koe, list);
+      const found = toAnswer(r.value, r.uri, r.cid);
+      if (!found) continue;
+      const list = map.get(found.koeUri) ?? [];
+      list.push(found.answer);
+      map.set(found.koeUri, list);
     }
+    for (const list of map.values()) list.sort(byCreatedAt);
     return map;
   } catch {
     return new Map();
   }
 }
 
-export async function listAnswers(
-  ownerDid: string,
-  koeUri: string
-): Promise<Answer[]> {
-  const agent = await repoAgent(ownerDid);
-  try {
-    const records = await listAllRecords(agent, ownerDid, NSID.ANSWER);
-    return records
-      .flatMap((r) => {
-        const parsed = answerRecord.safeParse(r.value);
-        return parsed.success && parsed.data.koe === koeUri ? [{ r, record: parsed.data }] : [];
-      })
-      .map(({ r, record }) => {
-        const rkey = r.uri.split("/").pop() ?? "";
-        return {
-          uri: r.uri,
-          cid: r.cid,
-          rkey,
-          body: record.body,
-          createdAt: record.createdAt,
-        };
-      })
-      .sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-  } catch {
-    return [];
-  }
+export async function listAnswers(ownerDid: string, koeUri: string): Promise<Answer[]> {
+  return (await getAnswersByOwner(ownerDid)).get(koeUri) ?? [];
 }
 
 async function createRecord(
@@ -357,16 +296,15 @@ async function deleteKoesWithAnswers(
       listAllRecords(agent, did, NSID.KOE),
       listAllRecords(agent, did, NSID.ANSWER),
     ]);
-    const rkeyOf = (uri: string) => uri.split("/").pop() ?? "";
     const koeRkeys = koes
-      .map((r) => ({ rkey: rkeyOf(r.uri), box: refOf(r.value, "box") }))
+      .map((r) => ({ rkey: rkeyOfUri(r.uri), box: refOf(r.value, "box") }))
       .filter(pick)
       .map((k) => k.rkey);
     const picked = new Set(koeRkeys);
     const writes = [
       ...answers
-        .filter((r) => picked.has(rkeyOf(refOf(r.value, "koe"))))
-        .map((r) => ({ collection: NSID.ANSWER, rkey: rkeyOf(r.uri) })),
+        .filter((r) => picked.has(rkeyOfUri(refOf(r.value, "koe"))))
+        .map((r) => ({ collection: NSID.ANSWER, rkey: rkeyOfUri(r.uri) })),
       ...koeRkeys.map((rkey) => ({ collection: NSID.KOE, rkey })),
       ...last,
     ].map((w) => ({ $type: "com.atproto.repo.applyWrites#delete", ...w }));
