@@ -8,15 +8,17 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
   const { handle: cleanHandle, did } = await requireOwner(params.handle, session);
   const store = locals.store!;
 
-  const [box, ownerProfile, card] = await Promise.all([
+  const isOwner = session?.did === did;
+  const [box, ownerProfile, card, ownerRegistered] = await Promise.all([
     requireBox(did, params.slug),
     getProfile(did),
     store.getCardStyle(did),
+    isOwner ? true : store.ownerHasAnyDevice(did),
   ]);
   const common = { cleanHandle, box, ownerProfile, origin: url.origin, cardVersion: card?.updatedAt ?? null };
 
-  if (session?.did === did) {
+  if (isOwner && session) {
     return { ...common, isOwner: true as const, inbox: buildInbox(store, session, box.rkey) };
   }
-  return { ...common, isOwner: false as const, ownerRegistered: await store.ownerHasAnyDevice(did) };
+  return { ...common, isOwner: false as const, ownerRegistered };
 };
