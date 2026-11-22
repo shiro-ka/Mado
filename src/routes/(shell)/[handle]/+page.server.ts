@@ -8,7 +8,7 @@ import type { QuestionBox } from "$lib/../types/index.js";
 type Profile = Promise<Awaited<ReturnType<typeof getProfile>>>;
 
 function byAge(a: QuestionBox, b: QuestionBox) {
-  return (a.createdAt ?? "").localeCompare(b.createdAt ?? "");
+  return a.createdAt.localeCompare(b.createdAt);
 }
 
 async function loadBoxes(did: string, store: CloudflareStore | null) {
