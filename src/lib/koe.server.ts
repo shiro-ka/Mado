@@ -134,14 +134,16 @@ export async function answerKoe(
   const rkey = rkeyOfUri(input.koeUri);
   if (input.koeUri !== koeUriOf(owner.did, rkey)) return refuse(403, "この声に返信する権限がありません");
 
+  const boxPromise = input.crosspost
+    ? getKoeRecord(owner.did, rkey).then((koe) => (koe ? getBoxRecord(owner.did, rkeyOfUri(koe.boxUri)) : null))
+    : null;
   const result = await writeAnswer({ sessionFetch: ownerFetch, ownerDid: owner.did, koeUri: input.koeUri, body: input.body });
   if (!result) return refuse(500, "返信の投稿に失敗しました");
   await store.markHandled(owner.did, rkey);
 
-  if (!input.crosspost) return { ok: true, value: { uri: result.uri, crossposted: false, crosspostUri: null } };
+  if (!boxPromise) return { ok: true, value: { uri: result.uri, crossposted: false, crosspostUri: null } };
 
-  const koe = await getKoeRecord(owner.did, rkey);
-  const box = koe ? await getBoxRecord(owner.did, rkeyOfUri(koe.boxUri)) : null;
+  const box = await boxPromise;
   const post = await createBskyPost({
     sessionFetch: ownerFetch,
     ownerDid: owner.did,
