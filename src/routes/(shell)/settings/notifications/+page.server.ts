@@ -28,6 +28,5 @@ export const load: PageServerLoad = async ({ platform, locals }) => {
     dmEnabled: prefs.dmEnabled,
     official,
     following,
-    configured: official !== null,
   };
 };

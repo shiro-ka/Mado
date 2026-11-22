@@ -3,7 +3,6 @@
   import { untrack } from "svelte";
   import { Bell, Check, AlertCircle, UserPlus, ArrowLeft } from "lucide-svelte";
   import BlueskyIcon from "$lib/components/ui/BlueskyIcon.svelte";
-  import { invalidateAll } from "$app/navigation";
   import Toggle from "$lib/components/ui/Toggle.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import type { PageData } from "./$types";
@@ -13,7 +12,7 @@
   let followed = $state(untrack(() => data.following));
   let enabled = $state(untrack(() => data.dmEnabled));
 
-  let following = $state(false);
+  let followBusy = $state(false);
   let followError = $state(false);
   let saving = $state(false);
   let toggleError = $state(false);
@@ -23,17 +22,16 @@
   );
 
   async function follow() {
-    if (following) return;
-    following = true;
+    if (followBusy) return;
+    followBusy = true;
     followError = false;
     try {
       await followOfficial();
       followed = true;
-      await invalidateAll();
     } catch {
       followError = true;
     } finally {
-      following = false;
+      followBusy = false;
     }
   }
 
@@ -64,7 +62,7 @@
   </div>
   <h1 data-suisou-text="fs-24 fw-700">通知設定</h1>
 
-  {#if !data.configured}
+  {#if !data.official}
     <div data-suisou-tray data-suisou-layout="stack center" data-suisou="bd-dash p-4">
       <Bell data-suisou-text="fs-32" data-suisou="note" />
       <p data-suisou-text="fs-14" data-suisou="note">
@@ -106,7 +104,7 @@
             </p>
           </div>
           <div data-suisou-layout="row wrap">
-            <Button variant="default" loading={following} onclick={follow}>
+            <Button variant="default" loading={followBusy} onclick={follow}>
               {#snippet leftIcon()}<UserPlus />{/snippet}
               公式（@{data.official?.handle}）をフォロー
             </Button>
