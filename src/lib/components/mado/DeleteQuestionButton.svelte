@@ -1,7 +1,7 @@
 <script lang="ts">
   import { deleteKoe } from "$lib/api.js";
   import { Trash2 } from "lucide-svelte";
-  import { goto, invalidateAll } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import Button from "$lib/components/ui/Button.svelte";
 
   interface Props {
@@ -23,8 +23,7 @@
       state = "submitting";
       try {
         await deleteKoe(rkey);
-        await goto("/receive");
-        await invalidateAll();
+        await goto("/receive", { invalidateAll: true });
       } catch {
         state = "error";
       }

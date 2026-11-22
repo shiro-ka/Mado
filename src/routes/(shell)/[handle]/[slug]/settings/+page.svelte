@@ -47,10 +47,8 @@
       saved = true;
       clearTimeout(savedTimer);
       savedTimer = setTimeout(() => (saved = false), 3000);
-      if (slugChanged) {
-        await goto(`${boxPath(data.cleanHandle, value.slug!)}/settings`);
-      }
-      await invalidateAll();
+      if (slugChanged) await goto(`${boxPath(data.cleanHandle, value.slug!)}/settings`, { invalidateAll: true });
+      else await invalidateAll();
     } catch (err) {
       formState = "error";
       errorMsg = err instanceof Error ? err.message : "更新に失敗しました";
@@ -63,8 +61,7 @@
     deleteError = "";
     try {
       await deleteBox(data.box.rkey);
-      await goto(profilePath(data.cleanHandle));
-      await invalidateAll();
+      await goto(profilePath(data.cleanHandle), { invalidateAll: true });
     } catch (err) {
       formState = "idle";
       deleteError = err instanceof Error ? err.message : "削除に失敗しました";
