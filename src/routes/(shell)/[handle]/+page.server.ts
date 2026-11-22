@@ -57,8 +57,7 @@ export const load: PageServerLoad = async ({ parent, params, platform, url }) =>
       }
 
       const openList = byAge.filter((b) => b.isOpen);
-      const mainBox = boxes.find((b) => b.rkey === mainBoxRkey) ?? null;
-      const featured = mainBoxRkey === null ? null : mainBox && mainBox.isOpen ? mainBox : openList[0] ?? null;
+      const featured = openList.find((b) => b.rkey === mainBoxRkey) ?? null;
       const subBoxes = openList.filter((b) => b.rkey !== featured?.rkey);
       const ownerRegistered = store ? await store.ownerHasAnyDevice(did) : false;
 
