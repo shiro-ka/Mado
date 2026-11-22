@@ -15,14 +15,15 @@ const updateSchema = z.object({
 
 export const PATCH: RequestHandler = (event) =>
   withSession(event, async ({ env, store, session }) => {
-    const sessionFetch = await restoreOAuthSession(env, store, session.did, session.deviceKey);
-    if (!sessionFetch) return fail(401, "再ログインが必要です");
-
-    const box = await getBoxRecord(session.did, event.params.rkey);
-    if (!box) return fail(404, "窓が見つかりません");
-
     const data = await readJson(event.request, updateSchema);
     if (!data) return fail(400, "入力内容を確認してください");
+
+    const [sessionFetch, box] = await Promise.all([
+      restoreOAuthSession(env, store, session.did, session.deviceKey),
+      getBoxRecord(session.did, event.params.rkey),
+    ]);
+    if (!sessionFetch) return fail(401, "再ログインが必要です");
+    if (!box) return fail(404, "窓が見つかりません");
 
     if (data.slug && data.slug !== box.slug && (await isSlugTaken(session.did, data.slug, event.params.rkey))) {
       return fail(409, "そのURLは既に使われています。別のURLにしてください。");
