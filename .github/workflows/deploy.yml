@@ -48,6 +48,7 @@ jobs:
       # ★出力の URL を Actions のサマリに出す。ブランチ別名は dev.mado-sveltekit.pages.dev。
       - name: Deploy
         id: deploy
+        shell: bash
         run: |
           npx wrangler pages deploy .svelte-kit/cloudflare \
             --project-name mado --branch ${{ github.ref_name }} | tee /tmp/deploy.log
