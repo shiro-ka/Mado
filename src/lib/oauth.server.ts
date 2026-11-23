@@ -4,6 +4,7 @@ import { JoseKey } from "@atproto/jwk-jose";
 import type { CloudflareStore } from "./store.js";
 import { appOrigin } from "./api.server.js";
 import { edgeGet, edgePut } from "./edgeCache.server.js";
+import { requestColo } from "./requestScope.server.js";
 
 /**
  * A fetch function bound to an OAuthSession.
@@ -41,13 +42,33 @@ async function setWithRetry(store: { set: (k: string, v: unknown) => Promise<voi
   }
 }
 
+async function shortHash(text: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`mado-oauth-events:${text}`));
+  return [...new Uint8Array(digest).slice(0, 5)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+type SessionEvent = "deleted-same-token" | "deleted-unread" | "kept-refreshed-elsewhere";
+
+function sessionEventReporter(env: App.Platform["env"]) {
+  return async (event: SessionEvent, key: string) => {
+    console.warn(`[oauth] session ${event}`);
+    if (!env.EVENTS) return;
+    try {
+      const didHash = await shortHash(key);
+      env.EVENTS.writeDataPoint({ blobs: [event, requestColo() ?? "?", didHash], doubles: [1], indexes: [event] });
+    } catch (err) {
+      console.warn("[oauth] writing the session event failed:", err);
+    }
+  };
+}
+
 function wrapDpopStore<T>(
-  kind: "session" | "state",
   store: {
     get: (k: string) => Promise<unknown>;
     set: (k: string, v: unknown) => Promise<void>;
     del: (k: string) => Promise<void>;
   },
+  report?: (event: SessionEvent, key: string) => Promise<void>,
 ) {
   const seenRefreshToken = new Map<string, string>();
   return {
@@ -78,13 +99,13 @@ function wrapDpopStore<T>(
       if (seen) {
         const current = refreshTokenOf(await store.get(key));
         if (current && current !== seen) {
-          console.warn(`[oauth] ${kind} delete skipped: refreshed by another request`);
+          await report?.("kept-refreshed-elsewhere", key);
           return;
         }
       }
       seenRefreshToken.delete(key);
       await store.del(key);
-      if (kind === "session") console.warn(`[oauth] session deleted: ${seen ? "same refresh token" : "not read in this request"}`);
+      await report?.(seen ? "deleted-same-token" : "deleted-unread", key);
     },
   };
 }
@@ -245,7 +266,7 @@ export async function createOAuthClient(
     // Allow HTTP for local dev (wrangler pages dev); https is enforced in prod
     allowHttp: appUrl.startsWith("http://"),
     keyset,
-    stateStore: wrapDpopStore("state", {
+    stateStore: wrapDpopStore({
       get: (k) => store.getOAuthState(k),
       set: (k, v) => store.setOAuthState(k, v),
       del: (k) => store.delOAuthState(k),
@@ -254,11 +275,11 @@ export async function createOAuthClient(
     // per-device key so each device holds an independent token set; without a
     // deviceKey (metadata/login endpoints that never touch the session store)
     // fall back to the bare DID.
-    sessionStore: wrapDpopStore("session", {
+    sessionStore: wrapDpopStore({
       get: (k) => store.getOAuthSession(deviceKey ? `${deviceKey}:${k}` : k),
       set: (k, v) => store.setOAuthSession(deviceKey ? `${deviceKey}:${k}` : k, v),
       del: (k) => store.delOAuthSession(deviceKey ? `${deviceKey}:${k}` : k),
-    }),
+    }, sessionEventReporter(env)),
   });
 }
 

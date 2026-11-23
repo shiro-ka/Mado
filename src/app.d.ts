@@ -15,6 +15,7 @@ declare global {
         APP_URL: string;
         CRON_SECRET: string;
         MADO_TIMING?: string;
+        EVENTS?: { writeDataPoint(point: { blobs?: string[]; doubles?: number[]; indexes?: string[] }): void };
         // Official Mado account used for opt-in DM notifications. When unset,
         // notifications are silently skipped. The app password must have DM
         // access enabled. MADO_OFFICIAL_PDS defaults to https://bsky.social.

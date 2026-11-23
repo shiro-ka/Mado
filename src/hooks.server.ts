@@ -18,7 +18,8 @@ export const handle: Handle = async ({ event, resolve }) => {
   event.locals.getSessionEntry = () =>
     (entry ??= store ? getSessionEntry(event.cookies, store) : Promise.resolve(undefined));
   event.locals.getSession = () => event.locals.getSessionEntry().then((e) => e?.session);
-  const run = () => withRequestScope(async () => resolve(event));
+  const colo = (event.platform?.cf as { colo?: string } | undefined)?.colo;
+  const run = () => withRequestScope(colo, async () => resolve(event));
   if (!timing) return run();
   return traced(`${event.request.method} ${event.url.pathname}`, run);
 };

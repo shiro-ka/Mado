@@ -16,6 +16,10 @@ id = "7ca15b3015334b979a955da014209e2e"
 binding = "MADO_SESSION"
 id = "78246f681d304c87800b15fedb04d719"
 
+[[analytics_engine_datasets]]
+binding = "EVENTS"
+dataset = "mado_oauth_events"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "mado"
@@ -39,6 +43,10 @@ binding = "DB"
 database_name = "mado-stg"
 database_id = "97141331-8a64-474e-a903-32ea80639d2c"
 migrations_dir = "migrations"
+
+[[env.preview.analytics_engine_datasets]]
+binding = "EVENTS"
+dataset = "mado_oauth_events_preview"
 
 [env.preview.vars]
 MADO_TIMING = "1"
